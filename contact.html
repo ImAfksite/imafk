@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact & Support | I’m Afk</title>
+<style>
+    /* --- INTEGRATED SITE STYLES --- */
+    body { 
+        font-family: 'Segoe UI', Arial, sans-serif; 
+        margin: 0; 
+        padding: 40px 20px; 
+        background-color: #f0f2f5; /* Matches Home Page */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: fadeIn 0.8s ease-in;
+    }
+
+    .form-container { 
+        background: #ffffff; 
+        padding: 30px; 
+        border-radius: 12px; 
+        border: 1px solid #e0e0e0; 
+        max-width: 450px; 
+        width: 100%;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        animation: containerEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        position: relative;
+        overflow: hidden;
+        border-top: 5px solid #1a73e8; /* Matches Home Page Blue */
+    }
+
+    h2 { font-size: 22px; color: #1a73e8; margin-top: 0; text-align: center; margin-bottom: 20px; }
+    
+    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #555; }
+    
+    input, select, textarea { 
+        width: 100%; 
+        padding: 12px; 
+        margin-bottom: 15px; 
+        border: 1px solid #ccc; 
+        border-radius: 6px; 
+        box-sizing: border-box; 
+        font-size: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background-color: #fcfcfc;
+    }
+
+    input:focus, select:focus, textarea:focus { 
+        border-color: #1a73e8; 
+        outline: none; 
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+        transform: translateY(-1px);
+    }
+
+    button { 
+        background-color: #1a73e8; 
+        color: white; 
+        padding: 14px; 
+        border: none; 
+        border-radius: 6px; 
+        cursor: pointer; 
+        width: 100%; 
+        font-size: 16px; 
+        font-weight: bold;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 6px rgba(26, 115, 232, 0.2);
+    }
+
+    button:hover { 
+        background-color: #1557b0; 
+        box-shadow: 0 6px 12px rgba(26, 115, 232, 0.3);
+        transform: translateY(-2px);
+    }
+
+    button:active { transform: scale(0.98); }
+
+    /* Back to Home Link */
+    .back-btn {
+        margin-top: 25px;
+        text-decoration: none;
+        color: #5f6368;
+        font-size: 14px;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+    .back-btn:hover { color: #1a73e8; }
+
+    /* Shining light effect on button hover */
+    button::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+        transform: rotate(45deg);
+        transition: 0.5s;
+        pointer-events: none;
+    }
+    button:hover::after { left: 100%; }
+
+    /* ANIMATIONS */
+    @keyframes containerEntrance {
+        0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .official-seal {
+        font-size: 10px;
+        color: #aaa;
+        text-align: center;
+        margin-top: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Inquiry Department</h2>
+    
+    <!-- Your Formspree URL is maintained -->
+    <form action="https://formspree.io/f/mjybeepe" method="POST">
+        
+        <label>Reason for Inquiry</label>
+        <select name="Category" required>
+            <option value="General Contact">General Contact</option>
+            <option value="Report Issue">Report a Problem</option>
+            <option value="Copyright/DMCA">Copyright / DMCA</option>
+        </select>
+
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Enter your full name" required>
+
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="email@example.com" required>
+
+        <label>Detailed Message</label>
+        <textarea name="message" rows="5" placeholder="Please provide specific details..." required></textarea>
+
+        <!-- Anti-spam -->
+        <input type="text" name="_gotcha" style="display:none">
+
+        <button type="submit">Submit Official Request</button>
+    </form>
+
+    <div class="official-seal">Secure Submission Portal | I'm Afk</div>
+</div>
+
+<a href="index.html" class="back-btn">← Return to Welcome Page</a>
+
+</body>
+</html>
