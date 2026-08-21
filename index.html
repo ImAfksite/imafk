@@ -25,6 +25,7 @@
             animation: slideUp 0.8s ease-out;
         }
 
+        /* AGREEMENT BANNER */
         #tos-banner {
             text-align: center;
             padding: 10px;
@@ -44,44 +45,7 @@
         }
         h1 { color: #1a73e8; font-size: 2.5em; margin-bottom: 10px; }
         h2 { color: #202124; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; margin-top: 35px; }
-        p { margin-bottom: 20px; font-size: 1.1em; }
         
-        ul { list-style-type: none; padding: 0; }
-        li {
-            background: #f8f9fa;
-            margin-bottom: 12px;
-            padding: 15px 20px;
-            border-left: 5px solid #1a73e8;
-            border-radius: 6px;
-            transition: transform 0.2s ease;
-            animation: slideInLeft 0.5s ease-out backwards;
-        }
-        li:hover { transform: translateX(10px); background: #f1f3f4; }
-
-        .link-section {
-            margin-top: 40px;
-            text-align: center;
-            padding: 20px;
-            background-color: #ffffff;
-            border-top: 2px solid #f0f2f5;
-        }
-        .btn-container { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        
-        .action-btn {
-            display: inline-block;
-            text-decoration: none;
-            background-color: #1a73e8;
-            color: white !important;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            font-size: 0.95em;
-        }
-        .action-btn:hover { background-color: #1557b0; transform: translateY(-3px); }
-        .action-btn.secondary { background-color: #5f6368; }
-
-        /* --- GAME GRID STYLES --- */
         .game-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -100,8 +64,22 @@
             animation: cardScale 0.5s ease-out backwards;
         }
         .game-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .game-thumb { width: 100%; height: 130px; background: #eee; background-size: cover; background-position: center; }
+        .game-thumb { width: 100%; height: 130px; background: #eee; background-size: cover; background-position: center; border-bottom: 1px solid #eee; }
         .game-title { padding: 12px; font-weight: bold; font-size: 0.95em; text-align: center; }
+
+        .btn-container { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .action-btn {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #1a73e8;
+            color: white !important;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .action-btn:hover { background-color: #1557b0; transform: translateY(-3px); }
+        .action-btn.secondary { background-color: #5f6368; }
 
         #loading-status { text-align: center; padding: 20px; color: #1a73e8; font-weight: bold; animation: blink 1.5s infinite; }
 
@@ -120,48 +98,37 @@
 
     <header>
         <h1>Welcome to I’m Afk</h1>
+        <p>High-quality games accessible directly in your browser.</p>
     </header>
 
     <main>
-        <section>
-            <p>Welcome to <strong>I’m Afk</strong>. High-quality games accessible directly on your web browser.</p>
-        </section>
-
-        <!-- OFFICIAL GAMES SECTION -->
-        <section id="featured-games">
-            <h2>Official I’m Afk Games</h2>
-            <div class="game-grid">
-                <a href="games/snake.html" class="game-card">
-                    <div class="game-thumb" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400')"></div>
-                    <div class="game-title">Snake (Official)</div>
-                </a>
-                <!-- Add more official games here later -->
-            </div>
-        </section>
-
-        <!-- AUTO SCRAPER SECTION -->
         <section id="auto-games">
-            <h2>Explore More Games</h2>
-            <div id="loading-status">Finding games...</div>
+            <h2>Game Library</h2>
+            <div id="loading-status">Scanning GitHub for games...</div>
             <div class="game-grid" id="game-container"></div>
         </section>
 
-        <section class="link-section">
+        <section style="margin-top: 50px; text-align: center; border-top: 2px solid #f0f2f5; padding-top: 30px;">
             <h2>Support & Contributions</h2>
             <div class="btn-container">
                 <a href="contact.html" class="action-btn">Contact / Report</a>
                 <a href="submit.html" class="action-btn secondary">Submit Project</a>
             </div>
         </section>
-
     </main>
 
-    <footer>Last updated: 15 August 2026</footer>
+    <footer style="margin-top: 40px; text-align: center; color: #9aa0a6; font-size: 0.8em;">
+        Last updated: 15 August 2026
+    </footer>
 </div>
 
 <script>
+    // --- CONFIGURATION ---
+    const GITHUB_USER = 'YOUR_GITHUB_USERNAME'; // <--- CHANGE THIS
+    const GITHUB_REPO = 'imafk';               // <--- CHANGE THIS (Repo Name)
     const STORAGE_KEY = 'imAfk_Agreed_Final';
-    
+
+    // 1. Check Agreement
     function checkTOS() {
         const banner = document.getElementById('tos-banner');
         const hasAgreed = localStorage.getItem(STORAGE_KEY);
@@ -175,50 +142,51 @@
         }
     }
 
-    async function autoLoadGames() {
+    // 2. Automatic Game Loader
+    async function loadGames() {
         const container = document.getElementById('game-container');
         const status = document.getElementById('loading-status');
-        const target = "https://sites.google.com/view/imafksite/home";
-        const proxy = "https://api.codetabs.com/v1/proxy?quest=" + target;
-
+        
         try {
-            const response = await fetch(proxy);
-            const html = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const links = Array.from(doc.querySelectorAll('a[href*="/view/imafksite/"]'));
-            
-            const uniqueGames = [];
-            const seenUrls = new Set();
+            // Scan your GitHub folder
+            const repoUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`;
+            const response = await fetch(repoUrl);
+            const files = await response.json();
 
-            links.forEach(link => {
-                let url = link.getAttribute('href');
-                let title = link.textContent.trim();
-                if (url.startsWith('/view/')) url = "https://sites.google.com" + url;
-                if (title.length > 2 && !seenUrls.has(url) && !url.includes('/home') && !url.includes('/contact')) {
-                    uniqueGames.push({ title, url });
-                    seenUrls.add(url);
-                }
-            });
+            if (Array.isArray(files)) {
+                files.forEach((file, index) => {
+                    if (file.name.endsWith('.html')) {
+                        // Create Title from Filename (snake-game.html -> Snake Game)
+                        const title = file.name.replace('.html', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        const url = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${file.name}`;
+                        const thumb = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=400`;
 
-            status.style.display = 'none';
-            uniqueGames.forEach((game, index) => {
-                const thumbUrl = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(game.url)}?w=400`;
-                const card = document.createElement('a');
-                card.className = 'game-card';
-                card.href = game.url;
-                card.target = "_blank";
-                card.style.animationDelay = (index * 0.1) + 's';
-                card.innerHTML = `<div class="game-thumb" style="background-image: url('${thumbUrl}')"></div><div class="game-title">${game.title}</div>`;
-                container.appendChild(card);
-            });
-        } catch (err) {
-            status.innerHTML = "Offline games only available.";
+                        addCard(title, url, thumb, index);
+                    }
+                });
+                status.style.display = 'none';
+            }
+        } catch (e) {
+            status.innerHTML = "Error loading games. Make sure the 'games' folder exists on GitHub.";
         }
     }
 
+    function addCard(title, url, thumb, delay) {
+        const container = document.getElementById('game-container');
+        const card = document.createElement('a');
+        card.className = 'game-card';
+        card.href = url;
+        card.target = "_blank";
+        card.style.animationDelay = (delay * 0.1) + 's';
+        card.innerHTML = `
+            <div class="game-thumb" style="background-image: url('${thumb}')"></div>
+            <div class="game-title">${title}</div>
+        `;
+        container.appendChild(card);
+    }
+
     checkTOS();
-    autoLoadGames();
+    loadGames();
 </script>
 
 </body>
