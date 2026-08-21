@@ -7,263 +7,195 @@
     <style>
         :root {
             --primary: #1a73e8;
-            --primary-hover: #1557b0;
             --bg: #f8f9fa;
             --card-bg: #ffffff;
             --text-main: #202124;
             --text-dim: #5f6368;
             --border: #dadce0;
-            --shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--bg);
+            color: var(--text-main);
             margin: 0;
             padding: 20px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        /* AGREEMENT BANNER */
-        #tos-banner {
-            text-align: center;
-            padding: 12px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            font-size: 0.9em;
-            display: none;
-            transition: all 0.3s ease;
-        }
-        .tos-pending { background: #fff4e5; color: #664d03; border: 1px solid #ffe69c; }
-        .tos-verified { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
-        #tos-banner a { color: inherit; font-weight: bold; }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        h1 { font-size: 2.5rem; margin-bottom: 8px; color: var(--primary); letter-spacing: -0.5px; }
-        header p { color: var(--text-dim); font-size: 1.1rem; }
-
-        /* SEARCH BAR */
-        .search-container {
-            margin-bottom: 30px;
-            position: relative;
-        }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary); margin-bottom: 5px; }
+        
+        /* Search Bar */
         #game-search {
             width: 100%;
             padding: 12px 20px;
-            font-size: 1rem;
+            margin-bottom: 20px;
             border: 2px solid var(--border);
-            border-radius: 30px;
-            outline: none;
-            transition: border-color 0.3s;
+            border-radius: 25px;
+            font-size: 16px;
             box-sizing: border-box;
+            outline: none;
         }
         #game-search:focus { border-color: var(--primary); }
 
-        /* GAME GRID (List Style) */
+        /* Game List Style */
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
         }
 
         .game-card {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 12px;
             background: #fff;
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             text-decoration: none;
             color: var(--text-main);
-            transition: all 0.2s ease;
-            animation: fadeIn 0.5s ease forwards;
-        }
-        .game-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-color: var(--primary);
+            transition: 0.2s;
         }
 
-        /* Letter Icon */
+        .game-card:hover {
+            border-color: var(--primary);
+            background: #f1f7fe;
+            transform: translateY(-2px);
+        }
+
         .game-icon {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             background: var(--primary);
             color: white;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.2rem;
-            margin-right: 15px;
+            margin-right: 12px;
             flex-shrink: 0;
-            text-transform: uppercase;
         }
 
         .game-title {
-            font-weight: 600;
-            font-size: 1rem;
+            font-weight: 500;
+            font-size: 0.95rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        /* UTILITY */
-        .btn-container { display: flex; gap: 15px; justify-content: center; margin-top: 40px; }
-        .action-btn {
+        .footer-btns {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border-radius: 6px;
             text-decoration: none;
-            background-color: var(--primary);
-            color: white !important;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-        .action-btn:hover { background-color: var(--primary-hover); }
-        .action-btn.secondary { background-color: #5f6368; }
-
-        #loading-status { text-align: center; padding: 40px; color: var(--text-dim); }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            font-weight: bold;
+            font-size: 14px;
+            background: #eee;
+            color: #333;
         }
 
-        @media (max-width: 600px) {
-            .container { padding: 20px; }
-            .game-grid { grid-template-columns: 1fr; }
-        }
+        .btn-primary { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="tos-banner"></div>
-
     <header>
         <h1>I’m Afk</h1>
-        <p>Premium browser gaming, simplified.</p>
+        <p>Select a game to start playing</p>
     </header>
 
-    <div class="search-container">
-        <input type="text" id="game-search" placeholder="Search for a game..." onkeyup="filterGames()">
+    <input type="text" id="game-search" placeholder="Search games..." onkeyup="filterGames()">
+
+    <div class="game-grid" id="game-container">
+        <!-- Games will appear here -->
     </div>
 
-    <main>
-        <div id="loading-status">Connecting to library...</div>
-        <div class="game-grid" id="game-container"></div>
-
-        <section style="margin-top: 60px; text-align: center; border-top: 1px solid var(--border); padding-top: 40px;">
-            <div class="btn-container">
-                <a href="contact.html" class="action-btn">Report Issue</a>
-                <a href="submit.html" class="action-btn secondary">Submit Project</a>
-            </div>
-        </section>
-    </main>
-
-    <footer style="margin-top: 40px; text-align: center; color: var(--text-dim); font-size: 0.85em;">
-        &copy; 2024 I’m Afk Hub &bull; Version 2.0
-    </footer>
+    <div class="footer-btns">
+        <a href="contact.html" class="btn">Report</a>
+        <a href="submit.html" class="btn btn-primary">Submit Game</a>
+    </div>
 </div>
 
 <script>
-    // --- CONFIGURATION ---
-    const GITHUB_USER = 'YOUR_GITHUB_USERNAME'; // <--- Update this
-    const GITHUB_REPO = 'imafk';               // <--- Update this
-    const STORAGE_KEY = 'imAfk_Agreed_Final';
+    // --- 1. CONFIGURATION (REQUIRED) ---
+    const GITHUB_USER = 'imafksite'; // Your GitHub Username
+    const GITHUB_REPO = 'imafk';               // Your Repo Name
 
-    // 1. Check Agreement
-    function checkTOS() {
-        const banner = document.getElementById('tos-banner');
-        const hasAgreed = localStorage.getItem(STORAGE_KEY);
-        banner.style.display = 'block';
-        if (hasAgreed === 'true') {
-            banner.className = 'tos-verified';
-            banner.innerHTML = '✓ Privacy & Terms Accepted';
-        } else {
-            banner.className = 'tos-pending';
-            banner.innerHTML = '⚠️ Agreement required to save progress. <a href="tos.html">Read Terms</a>';
-        }
-    }
+    // --- 2. LIST YOUR GAME FILES HERE ---
+    // Example: ['game1.html', 'my-cool-game.html']
+    const GAME_FILES = [
+        'snake.html',
+        'CS1.6.html',
+        'Orbit-Switch.html',
+        'unity-game.html'
+        // Add more filenames as you add them to your /games folder
+    ];
 
-    // 2. Load Games from GitHub
-    async function loadGames() {
+    function init() {
         const container = document.getElementById('game-container');
-        const status = document.getElementById('loading-status');
         
-        try {
-            const repoUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`;
-            const response = await fetch(repoUrl);
-            const files = await response.json();
+        GAME_FILES.forEach(fileName => {
+            // Clean up the name (e.g., "drive-mad.html" -> "Drive Mad")
+            const title = fileName
+                .replace('.html', '')
+                .replace(/-/g, ' ')
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
 
-            if (Array.isArray(files)) {
-                container.innerHTML = ''; // Clear status
-                files.forEach((file) => {
-                    if (file.name.endsWith('.html')) {
-                        const title = file.name
-                            .replace('.html', '')
-                            .replace(/-/g, ' ')
-                            .replace(/\b\w/g, l => l.toUpperCase());
-                        
-                        const url = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${file.name}`;
-                        addCard(title, url);
-                    }
-                });
-                status.style.display = 'none';
-            }
-        } catch (e) {
-            status.innerHTML = "Unable to load games. Please check connection.";
-        }
+            // Create the URL
+            const url = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${fileName}`;
+            
+            // Create the card
+            const card = document.createElement('a');
+            card.className = 'game-card';
+            card.href = url;
+            card.target = "_blank"; // Opens in new tab
+            
+            const firstLetter = title.charAt(0);
+            
+            card.innerHTML = `
+                <div class="game-icon">${firstLetter}</div>
+                <div class="game-title">${title}</div>
+            `;
+            
+            container.appendChild(card);
+        });
     }
 
-    function addCard(title, url) {
-        const container = document.getElementById('game-container');
-        const firstLetter = title.charAt(0);
-        
-        const card = document.createElement('a');
-        card.className = 'game-card';
-        card.href = url;
-        card.target = "_blank";
-        
-        // Use different colors for the icons based on the letter
-        const colors = ['#1a73e8', '#d93025', '#188038', '#f9ab00', '#9334e6', '#12b5cb'];
-        const randomColor = colors[title.length % colors.length];
-
-        card.innerHTML = `
-            <div class="game-icon" style="background-color: ${randomColor}">${firstLetter}</div>
-            <div class="game-title">${title}</div>
-        `;
-        container.appendChild(card);
-    }
-
-    // 3. Search Filter
+    // Search Logic
     function filterGames() {
         const input = document.getElementById('game-search').value.toLowerCase();
         const cards = document.getElementsByClassName('game-card');
         
         Array.from(cards).forEach(card => {
-            const title = card.querySelector('.game-title').innerText.toLowerCase();
+            const title = card.innerText.toLowerCase();
             card.style.display = title.includes(input) ? 'flex' : 'none';
         });
     }
 
-    checkTOS();
-    loadGames();
+    // Start
+    init();
 </script>
 
 </body>
