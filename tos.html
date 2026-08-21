@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - I'm Afk</title>
+    <style>
+        /* --- DYNAMIC BACKGROUND & ANIMATIONS --- */
+        @keyframes backgroundMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        @keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+
+        @keyframes pulseWarning {
+            0%, 100% { border-color: #000; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+            50% { border-color: #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2); }
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0e0e0 25%, #f0f0f0 25%, #f0f0f0 50%, #e0e0e0 50%, #e0e0e0 75%, #f0f0f0 75%, #f0f0f0 100%);
+            background-size: 40px 40px;
+            animation: backgroundMove 60s linear infinite, fadeInPage 1.5s ease-out;
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.5;
+            color: #222;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .agreement-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 80px;
+            border: 1px solid #999;
+            box-shadow: 20px 20px 0px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agreement-container::before {
+            content: "LEGAL BINDING";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 150px;
+            color: rgba(255, 0, 0, 0.03);
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            border-bottom: 3px double #333;
+            padding-bottom: 20px;
+            font-size: 2.5em;
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            border-bottom: 1px solid #333;
+            margin-top: 60px;
+            text-transform: uppercase;
+            font-size: 1.4em;
+            background: #f9f9f9;
+            padding: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .effective-date {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 50px;
+            color: #555;
+        }
+
+        .scroll-box {
+            height: 600px;
+            overflow-y: scroll;
+            border: 2px solid #333;
+            padding: 40px;
+            background: #fff;
+            text-align: justify;
+            position: relative;
+            z-index: 1;
+        }
+
+        .important-callout {
+            border: 4px double #000;
+            padding: 30px;
+            margin: 30px 0;
+            font-weight: bold;
+            background: #ffffcc;
+            font-size: 1.1em;
+            animation: pulseWarning 4s infinite;
+        }
+
+        ol { counter-reset: item; padding-left: 20px; }
+        li { display: block; margin-bottom: 25px; position: relative; }
+        li:before {
+            content: counters(item, ".") ". ";
+            counter-increment: item;
+            font-weight: bold;
+            position: absolute;
+            left: -40px;
+        }
+
+        .sub-content { margin-left: 20px; margin-top: 15px; font-style: normal; }
+        .definition-box { background: #eee; padding: 20px; border-left: 5px solid #333; margin: 20px 0; }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.85em;
+            color: #444;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        #success-stamp {
+            display: none;
+            color: #d32f2f;
+            border: 5px solid #d32f2f;
+            padding: 10px;
+            font-size: 2.5em;
+            font-weight: bold;
+            transform: rotate(-15deg);
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            z-index: 100;
+            background: white;
+            opacity: 0.9;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #accept-btn, .home-btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 15px 60px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            background: #333; 
+            color: #fff; 
+            border: none; 
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        #accept-btn:hover:not(:disabled), .home-btn:hover {
+            background: #1a73e8;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            color: white;
+        }
+
+        #accept-btn:disabled { background: #999; cursor: not-allowed; }
+        
+        .home-btn { 
+            background: #1a73e8; 
+            margin-top: 20px;
+            display: none; /* Only show after signing */
+        }
+    </style>
+</head>
+<body>
+
+<div id="success-stamp">EXECUTED & FILED</div>
+
+<div class="agreement-container">
+    <h1>End-User License & Content Hosting Agreement</h1>
+    <p class="effective-date">Last Comprehensive Audit: January 2024 | Revision: 9.9.2-AFK-ULTRA</p>
+
+    <div class="important-callout">
+        <h3>READ THIS CAREFULLY OR BE FOREVER BOUND</h3>
+        <p>This document is a legally binding contract between You (the "User," "Entity," or "Bored Human") and "I'm Afk" (the "Platform," "Service," or "Developer"). By scrolling past this box, you acknowledge that you have the mental capacity of a reasonably functioning adult, or at least a teenager with a high enough GPA to understand what "Indemnification" means. If you do not agree to every single syllable in this 5,000+ word manifesto, you must close your browser, turn off your computer, and go outside to touch grass immediately.</p>
+    </div>
+
+    <div class="scroll-box" id="scroll-box">
+
+        <h2>Article I: Definitions and Universal Scope</h2>
+        <div class="definition-box">
+            <p><strong>1.1 "The Platform":</strong> Refers to the website "I'm Afk," including all subdomains, directories, hidden folders, CSS files, JavaScript assets, and the digital aura surrounding the server rack.</p>
+            <p><strong>1.2 "The Content":</strong> Refers to any game, script, asset, image, sound file, or line of code uploaded to or hosted by the Platform, regardless of whether it actually works.</p>
+            <p><strong>1.3 "The Developer":</strong> Refers to the individual(s) responsible for the existence of this site, often found in a state of sleep deprivation or intense focus on bug fixes.</p>
+            <p><strong>1.4 "Afk":</strong> An acronym for "Away From Keyboard," representing the state of mind required to enjoy the services provided herein.</p>
+        </div>
+
+        <ol>
+            <li><strong>Global Governance:</strong> This Agreement governs your access to and use of the Platform. This is not a mere suggestion; it is the law of this digital land.</li>
+            <li><strong>Electronic Signature:</strong> You agree that by clicking "Agree" or by simply staying on this page for longer than 3.5 seconds, you are providing a digital signature with the same weight as a wax-sealed parchment signed in blood.</li>
+            <li><strong>The "Long-Form" Clause:</strong> You acknowledge that this document is intentionally long to discourage casual reading, yet you agree to be bound by the parts you skimmed just as much as the parts you read.</li>
+        </ol>
+
+        <h2>Article II: The Nature of the Hosting Intermediary</h2>
+        <ol>
+            <li><strong>Passive Transmission:</strong> The Platform is a "Passive Conduit." We do not "publish" in the traditional sense; we merely allow bits and bytes to reside on our server like uninvited houseguests who occasionally entertain our visitors.</li>
+            <li><strong>Lack of Curation:</strong> While we try to keep the "good stuff," the Platform is under no legal, moral, or spiritual obligation to ensure that the games provided are fun, educational, or even functional.</li>
+            <li><strong>The "Not My Circus" Rule:</strong> Since the games are created by third parties, the Platform disclaims all responsibility for the narrative content of said games. If a game’s plot is nonsensical, it is not our fault.</li>
+            <li><strong>No Agency:</strong> No joint venture, partnership, employment, or agency relationship exists between the Platform and the creators of the hosted games. We are strangers passing in the digital night.</li>
+            <li><strong>Platform Autonomy:</strong> The Platform reserves the right to change its color scheme, font size, or core philosophy at 3:00 AM without notifying you.</li>
+        </ol>
+
+        <h2>Article III: Comprehensive Liability and Hardware Disclaimers</h2>
+        <ol>
+            <li><strong>General Limitation:</strong> To the maximum extent permitted by applicable law (and perhaps a bit beyond that), the Platform shall not be liable for any indirect, incidental, special, consequential, or punitive damages.</li>
+            <li><strong>Hardware Degradation:</strong> You acknowledge that running complex JavaScript games can be taxing on hardware. The Platform is not responsible for:
+                <div class="sub-content">
+                    a) Overheating of Central Processing Units (CPUs).<br>
+                    b) Thermal throttling of Graphics Processing Units (GPUs).<br>
+                    c) Excessive wear on mechanical keyboard switches (especially the W, A, S, D, and Space keys).<br>
+                    d) Mouse sensor fatigue or "double-clicking" issues resulting from high-intensity gaming.<br>
+                    e) Liquid Crystal Display (LCD) burn-in from leaving the "Afk" screen open for three consecutive weeks.<br>
+                    f) Battery swelling in laptops or mobile devices due to poor power management in unoptimized game code.
+                </div>
+            </li>
+            <li><strong>Software Conflicts:</strong> The Platform is not responsible if our site causes your browser to consume 14GB of RAM, leading to the crashing of your unsaved spreadsheet or that 40-page thesis you were working on in another tab.</li>
+            <li><strong>Existential Dread:</strong> If the repetitive nature of an "Idle Game" causes you to question the value of time, the linearity of human existence, or the heat death of the universe, the Platform is not liable for your subsequent mid-life crisis.</li>
+            <li><strong>Force Majeure:</strong> We are not responsible for site downtime caused by:
+                <div class="sub-content">
+                    i) Solar flares disrupting satellite communications.<br>
+                    ii) Undersea fiber-optic cables being chewed by sharks.<br>
+                    iii) Accidental deletion of the database by a tired developer.<br>
+                    iv) Electromagnetic pulses (EMPs) from localized lightning strikes.<br>
+                    v) Large-scale societal collapse.
+                </div>
+            </li>
+        </ol>
+
+        <h2>Article IV: Intellectual Property, Ownership, and the "Anti-Drama" Protocol</h2>
+        <ol>
+            <li><strong>User Representations:</strong> If you submit a game to "I'm Afk," you swear upon your digital honor that you own the rights to it. You represent that you are not a "code-thief" or a "re-skinner" without permission.</li>
+            <li><strong>Grant of Irrevocable (Mostly) License:</strong> By submitting, you grant the Platform a non-exclusive, sub-licensable, transferable, royalty-free, worldwide license to host, cache, store, and display your work. We won't sell your soul, but we will show your game.</li>
+            <li><strong>The Plagiarism Ban:</strong> Users are strictly prohibited from scraping the Platform to create "I'm Even More Afk" or any other derivative site. Plagiarism is the highest form of laziness, and we do not appreciate it.</li>
+            <li><strong>Third-Party Intellectual Property:</strong> We respect the DMCA. If you see something that belongs to you and you didn't give permission, follow the 24-hour vaporization rule outlined in Article V.</li>
+            <li><strong>Trademark Usage:</strong> The name "I'm Afk" and the associated logo are the property of the Platform. You may not use them to sell t-shirts, mugs, or NFTs without express written consent.</li>
+        </ol>
+
+        <h2>Article V: The 24-Hour "Vaporization" Rule and Removal Procedures</h2>
+        <ol>
+            <li><strong>The Removal Request:</strong> To request a removal, you must send an email that includes:
+                <div class="sub-content">
+                    a) A link to the offending content.<br>
+                    b) Proof that you are the creator (e.g., a link to your GitHub, a secret handshake, or a signed PDF).<br>
+                    c) A statement that you have a "good faith belief" that the use is not authorized.
+                </div>
+            </li>
+            <li><strong>Timeline:</strong> Once verified, we will "vaporize" the content within 24 to 72 hours. "Vaporization" refers to the deletion of the entry from our active index.</li>
+            <li><strong>The "Ghost" Clause:</strong> You acknowledge that once something is on the internet, it never truly dies. We cannot control the Wayback Machine, Google Cache, or that one guy in Sweden who downloaded your source code in 2022.</li>
+            <li><strong>Troll Protection:</strong> We reserve the right to ignore removal requests from individuals who are clearly just trying to ruin someone else's fun without having any actual claim to the intellectual property.</li>
+        </ol>
+
+        <h2>Article VI: Editorial Discretion and the "Boredom" Standard</h2>
+        <ol>
+            <li><strong>The Right to Refuse:</strong> We are not a public utility. We reserve the right to refuse to host any game for any reason, including but not limited to:
+                <div class="sub-content">
+                    - The game is too laggy.<br>
+                    - The game has too many "pop-ups."<br>
+                    - The game uses "Comic Sans" in a non-ironic way.
+                </div>
+            </li>
+            <li><strong>The Subjectivity of Quality:</strong> The "Lead Developer" is the sole arbiter of what is "interesting." If your game is rejected because it is "boring," this is a final judgment and cannot be appealed to any court, including the International Court of Justice in The Hague.</li>
+            <li><strong>Malicious Code:</strong> If we find a "crypto-miner," "key-logger," or "browser-hijacker" in your code, we will not only delete the game, but we will also ban your IP address until the year 2099.</li>
+        </ol>
+
+        <h2>Article VII: User Conduct and Social Contract</h2>
+        <ol>
+            <li><strong>No Botting:</strong> Do not use automated scripts to play these games. If the game is "Idle," let it be idle. Do not build a robot to click the button for you; that defeats the purpose of the existential dread we discussed in Article III.</li>
+            <li><strong>No Scraping:</strong> Do not use "BeautifulSoup," "Selenium," or any other scraping tool to harvest our list of games. We spent time curating this; go do your own work.</li>
+            <li><strong>Community Respect:</strong> If there is a comment section or a high-score board, do not use it to spread hate, vitriol, or your unwanted political manifestos. This is a place for gaming, not for shouting into the void about the gold standard.</li>
+            <li><strong>High Score Integrity:</strong> If you hack the high scores, you are only lying to yourself. We reserve the right to reset any score that looks mathematically impossible for a human being.</li>
+        </ol>
+
+        <h2>Article VIII: Privacy, Data, and the Cookie Monster</h2>
+        <ol>
+            <li><strong>Data Collection:</strong> We collect as little data as possible because storing data is expensive and stressful. We might know your IP address, your browser type, and how long you played "Generic Clicker 2."</li>
+            <li><strong>Cookies:</strong> We use cookies to remember that you muted the music. If you disable cookies, the music might start again every time you refresh. You have been warned.</li>
+            <li><strong>Third-Party Analytics:</strong> We might use Google Analytics to see how many people are visiting from Antarctica. By using the site, you agree to let Google know you are playing games instead of working.</li>
+            <li><strong>No Sale of Data:</strong> We will not sell your data to shady advertisers. We wouldn't even know how to package it. Your secret obsession with "Poodle Jump" is safe with us.</li>
+        </ol>
+
+        <h2>Article IX: Indemnification and Financial Responsibility</h2>
+        <ol>
+            <li><strong>The "Hold Harmless" Shield:</strong> You agree to defend, indemnify, and hold harmless the Platform and its Developer from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees) arising from:
+                <div class="sub-content">
+                    a) Your use of and access to the Platform.<br>
+                    b) Your violation of any term of these Terms of Service.<br>
+                    c) Your violation of any third-party right, including without limitation any copyright, property, or privacy right.
+                </div>
+            </li>
+            <li><strong>Legal Fees:</strong> If you sue us and lose, you agree to pay for our lawyer’s very expensive coffee and billable hours.</li>
+            <li><strong>Settlement Authority:</strong> You may not settle any claim that involves the Platform without our written consent, especially if that settlement involves us admitting we were wrong.</li>
+        </ol>
+
+        <h2>Article X: Governing Law and Dispute Resolution</h2>
+        <ol>
+            <li><strong>Jurisdiction:</strong> These terms shall be governed by the laws of the State of Digital Bliss, or failing that, the jurisdiction where the Lead Developer currently resides.</li>
+            <li><strong>Arbitration:</strong> Any dispute shall be settled by binding arbitration in a coffee shop of the Developer's choosing. The arbitrator shall be anyone who can explain the difference between `let` and `var` in JavaScript.</li>
+            <li><strong>Class Action Waiver:</strong> You agree to bring claims against us only in your individual capacity and not as a plaintiff or class member in any purported class or representative proceeding. You are a lone wolf.</li>
+        </ol>
+
+        <h2>Article XI: Miscellaneous and The "Kitchen Sink" Clauses</h2>
+        <ol>
+            <li><strong>Severability:</strong> If a judge decides that Section 3.2.f is "insane" or "unenforceable," the rest of the document remains 100% valid.</li>
+            <li><strong>Entire Agreement:</strong> These Terms constitute the entire agreement between you and "I'm Afk." Any previous promises made in a Discord chat or via carrier pigeon are null and void.</li>
+            <li><strong>No Waiver:</strong> Just because we don't ban you today for being annoying doesn't mean we waive our right to ban you tomorrow for being annoying.</li>
+            <li><strong>Assignment:</strong> We can sell this site to a billionaire tomorrow, and these terms will still apply to you under the new overlord. You, however, cannot sell your "User" status to anyone else.</li>
+            <li><strong>The "Ending" Clause:</strong> This agreement ends when the internet ends, or when you delete your browser, whichever comes first.</li>
+        </ol>
+
+        <p style="text-align: center; margin-top: 100px; font-weight: bold; font-size: 1.5em;">*** DOCUMENT COMPLETE ***</p>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center; background: #eee; padding: 30px; border: 1px solid #ccc; position: relative; z-index: 1;">
+        <p style="margin-bottom: 20px;">By checking the box below and clicking the button, you acknowledge that you have read all 11 Articles and agree to be bound by the laws of the "I'm Afk" domain.</p>
+        <label style="font-weight: bold; cursor: pointer;">
+            <input type="checkbox" id="agree"> I SOLEMNLY SWEAR I AM UP TO NO GOOD (AND AGREE TO THE TERMS)
+        </label>
+        <br><br>
+        <button id="accept-btn" onclick="handleAcceptance()">I ACCEPT MY FATE</button>
+        <div id="navigation-zone">
+            <a href="index.html" class="home-btn">← GO TO HOME PAGE</a>
+        </div>
+        <p id="status-msg" style="margin-top:15px; color: #666; font-style: italic;"></p>
+    </div>
+
+    <footer>
+        &copy; 2023-2025 I'm Afk Portal. <br>
+        Version 9.9.2-AFK-ULTRA | Printed on 100% Recycled Pixels.
+    </footer>
+</div>
+
+<script>
+    const STORAGE_KEY = 'imAfk_Agreed_Final'; // Syncs with index.html
+
+    window.onload = function() {
+        checkExistingAgreement();
+    };
+
+    function checkExistingAgreement() {
+        const hasAgreed = localStorage.getItem(STORAGE_KEY);
+        if (hasAgreed === 'true') {
+            showAlreadySignedState();
+        }
+    }
+
+    function handleAcceptance() {
+        const checkbox = document.getElementById('agree');
+        const statusMsg = document.getElementById('status-msg');
+        
+        if (checkbox.checked) {
+            localStorage.setItem(STORAGE_KEY, 'true');
+            document.getElementById('success-stamp').style.display = 'block';
+            statusMsg.innerText = "Agreement Securely Stored.";
+            statusMsg.style.color = "green";
+            
+            setTimeout(() => {
+                alert('Signature recorded. Welcome to I\'m Afk.');
+                showAlreadySignedState();
+            }, 600);
+        } else {
+            alert('You must check the box to confirm you have read the terms.');
+        }
+    }
+
+    function showAlreadySignedState() {
+        const btn = document.getElementById('accept-btn');
+        const checkbox = document.getElementById('agree');
+        const statusMsg = document.getElementById('status-msg');
+        const homeBtn = document.querySelector('.home-btn');
+        
+        document.getElementById('success-stamp').style.display = 'block';
+        btn.disabled = true;
+        btn.innerText = "AGREEMENT VERIFIED";
+        checkbox.checked = true;
+        checkbox.disabled = true;
+        homeBtn.style.display = 'inline-block'; // Show the home button
+        statusMsg.innerText = "Official Record Found. Access Granted.";
+        statusMsg.style.color = "#1a73e8";
+        document.getElementById('scroll-box').style.opacity = "0.5";
+    }
+</script>
+
+</body>
+</html>
