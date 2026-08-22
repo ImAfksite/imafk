@@ -53,7 +53,7 @@
             overflow-x: hidden;
             min-height: 100vh;
             line-height: 1.6;
-            perspective: 1200px;
+            /* Perspective removed from body so modals are 100% upfront */
         }
 
         #webgl-bg {
@@ -675,21 +675,23 @@
             border-right: 3px solid var(--neon-mint);
         }
 
-        /* --- Full Screen Game Arcade Modal --- */
+        /* --- Crisp, Upfront Game Modal (Perspective-Isolated) --- */
         .arcade-modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(4, 6, 12, 0.9);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            z-index: 9999;
+            background: rgba(4, 6, 12, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 999999;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 20px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            perspective: none !important;
+            transform: none !important;
+            transition: opacity 0.25s ease-out;
         }
 
         .arcade-modal-backdrop.is-open {
@@ -698,31 +700,31 @@
         }
 
         .arcade-modal-window {
-            width: 100%;
-            max-width: 1100px;
-            height: 85vh;
+            width: min(95vw, 1200px);
+            height: min(90vh, 880px);
             background: #090d16;
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 255, 214, 0.15);
-            transform: scale(0.95) translateY(20px);
-            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), 0 0 50px rgba(0, 255, 214, 0.2);
+            transform: scale(0.92);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .arcade-modal-backdrop.is-open .arcade-modal-window {
-            transform: scale(1) translateY(0);
+            transform: scale(1);
         }
 
         .modal-bar {
-            padding: 14px 24px;
-            background: rgba(18, 24, 38, 0.95);
+            padding: 12px 20px;
+            background: rgba(18, 24, 38, 0.98);
             border-bottom: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .modal-title-group {
@@ -772,6 +774,8 @@
             flex: 1;
             position: relative;
             background: #000;
+            width: 100%;
+            height: 100%;
         }
 
         #game-frame {
@@ -779,6 +783,7 @@
             height: 100%;
             border: none;
             background: #000;
+            display: block;
         }
 
         footer {
@@ -829,7 +834,7 @@
             .stage-panel { grid-template-columns: 1fr; }
             .info-grid-section { grid-template-columns: 1fr; }
             .nav-links { display: none; }
-            .arcade-modal-window { height: 95vh; }
+            .arcade-modal-window { width: 98vw; height: 94vh; }
         }
     </style>
 </head>
@@ -995,7 +1000,7 @@
         </section>
     </main>
 
-    <!-- Glassmorphic In-Game Player Overlay -->
+    <!-- Upfront In-Game Player Overlay -->
     <div class="arcade-modal-backdrop" id="game-modal">
         <div class="arcade-modal-window">
             <div class="modal-bar">
@@ -1011,7 +1016,6 @@
                 </div>
             </div>
             <div class="arcade-iframe-container">
-                <!-- Sandbox permissions enabling full HTML5 Canvas & WebGL Audio execution -->
                 <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-modals allow-popups" allow="fullscreen; autoplay; gamepad"></iframe>
             </div>
         </div>
@@ -1240,7 +1244,7 @@
         dots.forEach((dot, i) => dot.addEventListener('click', () => updateCarousel(i)));
 
         /* -------------------------------------------------------------
-           4. BULLETPROOF IN-GAME ARCADE MODAL & RUNNER SYSTEM
+           4. UPFRONT IN-GAME ARCADE MODAL & RUNNER SYSTEM
         ------------------------------------------------------------- */
         const modal = document.getElementById('game-modal');
         const gameFrame = document.getElementById('game-frame');
@@ -1250,9 +1254,12 @@
         function openGameModal(title, url, rawCode = null) {
             modalTitle.textContent = title;
             activeGameRecord = { title, url, code: rawCode };
+            
+            // Lock body scroll so viewport stays in place
+            document.body.style.overflow = 'hidden';
             modal.classList.add('is-open');
 
-            // Force clean mount to prevent browser caching or blank screens
+            // Clean mount
             gameFrame.src = 'about:blank';
             setTimeout(() => {
                 if (rawCode) {
@@ -1262,11 +1269,13 @@
                     gameFrame.removeAttribute('srcdoc');
                     gameFrame.src = url;
                 }
+                setTimeout(() => gameFrame.focus(), 150);
             }, 60);
         }
 
         function closeGameModal() {
             modal.classList.remove('is-open');
+            document.body.style.overflow = '';
             gameFrame.srcdoc = '';
             gameFrame.src = 'about:blank';
         }
@@ -1284,10 +1293,11 @@
                 } else if (tempUrl) {
                     gameFrame.src = tempUrl;
                 }
+                setTimeout(() => gameFrame.focus(), 150);
             }, 80);
         });
 
-        // Fixed: Reliable New Tab Launcher that never triggers about:blank#blocked
+        // Safe new tab launcher
         document.getElementById('modal-tab-btn').addEventListener('click', () => {
             if (activeGameRecord.code) {
                 const newWin = window.open('', '_blank');
@@ -1296,7 +1306,7 @@
                     newWin.document.write(activeGameRecord.code);
                     newWin.document.close();
                 } else {
-                    alert('Please allow popups to open game in a dedicated tab.');
+                    alert('Please allow popups to open the game in a dedicated tab.');
                 }
             } else if (activeGameRecord.url) {
                 window.open(activeGameRecord.url, '_blank');
@@ -1357,7 +1367,6 @@
             { bg: 'linear-gradient(135deg, #ec4899, #f43f5e)', glow: 'rgba(236, 72, 153, 0.4)' }
         ];
 
-        // Standalone Canvas Games ready to execute with zero 404s
         const BUILTIN_GAMES = [
             {
                 title: 'Retro Snake 2026',
@@ -1380,7 +1389,7 @@
 
             let allGames = [];
 
-            // 1. Fetch live submissions from Supabase
+            // 1. Supabase live fetch
             if (sbClient) {
                 try {
                     const { data: supaGames, error } = await sbClient
@@ -1424,7 +1433,7 @@
                 }
             }
 
-            // 2. Fetch GitHub Repository folder
+            // 2. GitHub contents scan
             try {
                 const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
                 const files = await res.json();
@@ -1447,12 +1456,11 @@
                 console.warn('GitHub folder scan bypassed.');
             }
 
-            // 3. Fallback to built-in games if no community/GitHub games are found
+            // 3. Fallback builtins
             if (!allGames.length) {
                 allGames = [...BUILTIN_GAMES];
             }
 
-            // Render all cards
             if (indicator) indicator.style.display = 'none';
             container.innerHTML = '';
             statCount.textContent = allGames.length;
