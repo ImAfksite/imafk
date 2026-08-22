@@ -135,6 +135,12 @@
             box-shadow: 0 15px 25px rgba(0, 255, 214, 0.4);
         }
 
+        .btn-unlock:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .attempts-counter {
             font-size: 0.78rem;
             color: var(--danger);
@@ -258,7 +264,7 @@
 </head>
 <body>
 
-    <!-- Security Gate (Locked State) -->
+    <!-- Security Gate -->
     <div class="container" id="auth-gate">
         <div class="auth-card">
             <div class="shield-icon">🛡️</div>
@@ -276,7 +282,7 @@
         </div>
     </div>
 
-    <!-- Active Moderator Dashboard (Rendered Only Upon Verification) -->
+    <!-- Active Moderator Dashboard -->
     <div class="container" id="admin-panel">
         <header>
             <div>
@@ -294,7 +300,7 @@
     </div>
 
     <!-- Sandbox Test Modal -->
-    <div class="preview-modal" id="preview-modal">
+    <div class="preview-modal" id="preview-modal" onclick="if(event.target === this) closePreview();">
         <div class="preview-box">
             <div style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; background: #111; border-bottom: 1px solid var(--glass-border);">
                 <span id="preview-title" style="font-weight: 700; color: var(--neon-mint);">Test Environment</span>
@@ -305,29 +311,37 @@
     </div>
 
     <script>
-        /* -------------------------------------------------------------
-           1. CRYPTOGRAPHIC ZERO-KNOWLEDGE SECURITY SYSTEM
-           Password is stored ONLY as an irreversible SHA-256 Hash.
-        ------------------------------------------------------------- */
-        // SHA-256 Hash of: "Broyfdsagbjh"
         const ENCRYPTED_AUTH_HASH = "8e95df18e470125c15e21e25e378c772cb33bebfd6cf08db0e21ea5cbf15be96";
-        
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         
         const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let allGames = [];
-        let failedAttempts = parseInt(sessionStorage.getItem('afk_fails') || '0');
+        let failedAttempts = parseInt(sessionStorage.getItem('afk_fails') || '0', 10);
 
-        // Check if locked out
+        // Check & handle lockout
         const lockoutTime = localStorage.getItem('afk_lockout');
-        if (lockoutTime && Date.now() < parseInt(lockoutTime)) {
-            lockInterface();
+        if (lockoutTime) {
+            if (Date.now() < parseInt(lockoutTime, 10)) {
+                lockInterface();
+            } else {
+                localStorage.removeItem('afk_lockout');
+                sessionStorage.removeItem('afk_fails');
+                failedAttempts = 0;
+            }
         }
 
-        // Auto-restore active session if already unlocked in this tab
+        // Restore active session
         if (sessionStorage.getItem('afk_authenticated') === 'true') {
             grantAccess();
+        }
+
+        // Escape helper for secure text insertion
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
 
         async function computeSHA256(text) {
@@ -352,7 +366,6 @@
                 document.getElementById('pass-input').value = '';
                 
                 if (failedAttempts >= 3) {
-                    // Lock out for 15 minutes
                     localStorage.setItem('afk_lockout', (Date.now() + 15 * 60 * 1000).toString());
                     lockInterface();
                 } else {
@@ -379,9 +392,7 @@
             window.location.href = 'index.html';
         }
 
-        /* -------------------------------------------------------------
-           2. MODERATION DATABASE ENGINE
-        ------------------------------------------------------------- */
+        /* Moderation Database Engine */
         async function fetchModerationList() {
             const feed = document.getElementById('games-feed');
             const { data, error } = await sbClient
@@ -390,51 +401,72 @@
                 .order('created_at', { ascending: false });
 
             if (error) {
-                feed.innerHTML = `<p style="color: var(--danger);">Failed to query database: ${error.message}</p>`;
+                feed.innerHTML = `<p style="color: var(--danger);">Failed to query database: ${escapeHtml(error.message)}</p>`;
                 return;
             }
 
-            allGames = data;
-            if (!data.length) {
+            allGames = data || [];
+            if (!allGames.length) {
                 feed.innerHTML = "<p style='color: var(--text-muted);'>No game submissions recorded in database.</p>";
                 return;
             }
 
             feed.innerHTML = '';
-            data.forEach(game => {
+            allGames.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
+                
+                const isLive = game.status === 'live';
+                const safeTitle = escapeHtml(game.title);
+                const safeAuthor = escapeHtml(game.author);
+                const safeEmail = escapeHtml(game.email);
+                const safeStatus = escapeHtml((game.status || '').toUpperCase());
+                const safeDate = game.created_at ? new Date(game.created_at).toLocaleDateString() : 'Unknown';
+                const safeReason = game.takedown_reason ? escapeHtml(game.takedown_reason) : '';
+
                 card.innerHTML = `
                     <div>
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <h3 style="margin: 0; font-size: 1.2rem;">${game.title}</h3>
-                            <span class="status-pill ${game.status === 'live' ? 'status-live' : 'status-removed'}">
-                                ${game.status.toUpperCase()}
+                            <h3 style="margin: 0; font-size: 1.2rem;">${safeTitle}</h3>
+                            <span class="status-pill ${isLive ? 'status-live' : 'status-removed'}">
+                                ${safeStatus}
                             </span>
                         </div>
                         <p style="color: var(--text-muted); font-size: 0.85rem; margin: 6px 0;">
-                            Author: <strong>${game.author}</strong> &bull; Contact: ${game.email} &bull; Published: ${new Date(game.created_at).toLocaleDateString()}
+                            Author: <strong>${safeAuthor}</strong> &bull; Contact: ${safeEmail} &bull; Published: ${safeDate}
                         </p>
-                        ${game.takedown_reason ? `<p style="color: var(--danger); font-size: 0.82rem; margin: 0;"><strong>Active Takedown Notice:</strong> "${game.takedown_reason}"</p>` : ''}
+                        ${safeReason ? `<p style="color: var(--danger); font-size: 0.82rem; margin: 0;"><strong>Active Takedown Notice:</strong> "${safeReason}"</p>` : ''}
                     </div>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn-action btn-test" onclick="testGame('${game.id}')">⚡ Test Code</button>
-                        ${game.status === 'live' 
-                            ? `<button class="btn-action btn-takedown" onclick="triggerTakedown('${game.id}', '${game.title}')">🚨 Take Down</button>`
-                            : `<button class="btn-action btn-restore" onclick="restoreGame('${game.id}')">✓ Restore to Hub</button>`
+                        <button class="btn-action btn-test" data-action="test" data-id="${escapeHtml(game.id)}">⚡ Test Code</button>
+                        ${isLive 
+                            ? `<button class="btn-action btn-takedown" data-action="takedown" data-id="${escapeHtml(game.id)}">🚨 Take Down</button>`
+                            : `<button class="btn-action btn-restore" data-action="restore" data-id="${escapeHtml(game.id)}">✓ Restore to Hub</button>`
                         }
                     </div>
                 `;
                 feed.appendChild(card);
             });
+
+            // Delegate event listeners securely
+            feed.onclick = (e) => {
+                const btn = e.target.closest('button[data-action]');
+                if (!btn) return;
+                const action = btn.dataset.action;
+                const id = btn.dataset.id;
+
+                if (action === 'test') testGame(id);
+                if (action === 'takedown') triggerTakedown(id);
+                if (action === 'restore') restoreGame(id);
+            };
         }
 
         function testGame(id) {
-            const game = allGames.find(g => g.id === id);
+            const game = allGames.find(g => String(g.id) === String(id));
             if (!game) return;
             document.getElementById('preview-title').textContent = `Testing Sandbox: ${game.title}`;
             const frame = document.getElementById('preview-frame');
-            frame.srcdoc = game.html_code;
+            frame.srcdoc = game.html_code || '';
             document.getElementById('preview-modal').style.display = 'flex';
         }
 
@@ -443,7 +475,16 @@
             document.getElementById('preview-frame').srcdoc = '';
         }
 
-        async function triggerTakedown(id, title) {
+        // Close preview on Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('preview-modal').style.display === 'flex') {
+                closePreview();
+            }
+        });
+
+        async function triggerTakedown(id) {
+            const game = allGames.find(g => String(g.id) === String(id));
+            const title = game ? game.title : 'Game';
             const reason = prompt(`Specify public reason for taking down "${title}":\n(e.g., "Contains infinite loop / breaking code", "DMCA request", "Malicious script")`);
             if (!reason) return;
 
@@ -465,11 +506,16 @@
         }
 
         async function restoreGame(id) {
-            await sbClient
+            const { error } = await sbClient
                 .from('games')
                 .update({ status: 'live', takedown_reason: null, takedown_date: null })
                 .eq('id', id);
-            fetchModerationList();
+
+            if (error) {
+                alert('Restore error: ' + error.message);
+            } else {
+                fetchModerationList();
+            }
         }
     </script>
 </body>
