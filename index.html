@@ -56,7 +56,6 @@
             perspective: 1200px;
         }
 
-        /* --- WebGL Canvas Underlay --- */
         #webgl-bg {
             position: fixed;
             top: 0;
@@ -68,7 +67,6 @@
             opacity: 0.85;
         }
 
-        /* --- Global Ambient Grid --- */
         body::before {
             content: "";
             position: fixed;
@@ -82,7 +80,6 @@
             mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
         }
 
-        /* --- Glassmorphic Sticky Header --- */
         .glass-nav {
             position: sticky;
             top: 0;
@@ -177,7 +174,6 @@
             transform: scale(1.05);
         }
 
-        /* --- Hero Section & Clay Elements --- */
         .hero {
             position: relative;
             padding: 80px 24px 60px;
@@ -309,7 +305,6 @@
             box-shadow: 0 0 8px var(--neon-mint);
         }
 
-        /* --- Search & Filter Bar --- */
         .search-wrapper {
             max-width: 1200px;
             margin: 0 auto 30px;
@@ -354,7 +349,6 @@
             right: 45px;
         }
 
-        /* --- Takedown Notice & Moderation Board --- */
         .takedown-board {
             max-width: 1200px;
             margin: 0 auto 35px;
@@ -399,7 +393,6 @@
             justify-content: space-between;
             align-items: center;
             backdrop-filter: blur(12px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         html[dir="rtl"] .takedown-item {
@@ -407,18 +400,6 @@
             border-right: 4px solid #ef4444;
         }
 
-        .takedown-item strong {
-            color: #ffffff;
-        }
-
-        .takedown-date {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            margin-left: 14px;
-        }
-
-        /* --- Featured Spotlight Deck (Carousel) --- */
         .spotlight-section {
             max-width: 1200px;
             margin: 0 auto 70px;
@@ -451,7 +432,6 @@
         .stage-viewport {
             overflow: hidden;
             width: 100%;
-            touch-action: pan-y pinch-zoom;
         }
 
         .stage-track {
@@ -488,11 +468,7 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
-        .stage-dots {
-            display: flex;
-            gap: 8px;
-        }
-
+        .stage-dots { display: flex; gap: 8px; }
         .stage-dot {
             width: 10px;
             height: 10px;
@@ -523,12 +499,8 @@
             transition: 0.2s;
         }
 
-        .stage-btn:hover {
-            background: var(--neon-mint);
-            color: black;
-        }
+        .stage-btn:hover { background: var(--neon-mint); color: black; }
 
-        /* --- 3D Interactive Game Grid --- */
         .game-grid-section {
             max-width: 1200px;
             margin: 0 auto 80px;
@@ -561,7 +533,6 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 24px;
-            text-decoration: none;
             color: var(--text-main);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
@@ -656,7 +627,6 @@
             box-shadow: 0 0 15px var(--neon-mint);
         }
 
-        /* --- Information & Guidelines Grid --- */
         .info-grid-section {
             max-width: 1200px;
             margin: 0 auto 80px;
@@ -705,11 +675,11 @@
             border-right: 3px solid var(--neon-mint);
         }
 
-        /* --- In-Game Glassmorphic Arcade Modal --- */
+        /* --- Full Screen Game Arcade Modal --- */
         .arcade-modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(4, 6, 12, 0.85);
+            background: rgba(4, 6, 12, 0.9);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             z-index: 9999;
@@ -808,9 +778,9 @@
             width: 100%;
             height: 100%;
             border: none;
+            background: #000;
         }
 
-        /* --- Footer --- */
         footer {
             border-top: 1px solid var(--glass-border);
             padding: 50px 24px;
@@ -865,12 +835,10 @@
 </head>
 <body>
 
-    <!-- WebGL Canvas Underlay -->
     <canvas id="webgl-bg"></canvas>
 
-    <!-- Glass Header Navigation -->
     <header class="glass-nav">
-        <a href="#main" class="brand-block" id="main-brand-logo" title="I'm Afk Game Hub">
+        <a href="#main" class="brand-block" id="main-brand-logo" title="Triple click for Admin Node">
             <div class="brand-icon">AFK</div>
             <span class="brand-title">I’M AFK</span>
         </a>
@@ -888,7 +856,6 @@
     </header>
 
     <main id="main">
-        <!-- Hero Region -->
         <section class="hero">
             <div class="hero-bg-text">IM AFK HUB</div>
             
@@ -937,7 +904,6 @@
             <div class="stage-shell" id="carousel">
                 <div class="stage-viewport">
                     <div class="stage-track" id="stage-track">
-                        <!-- Panel 1 -->
                         <div class="stage-panel">
                             <div class="stage-panel-img">🎮</div>
                             <div>
@@ -947,7 +913,6 @@
                                 <a href="#library" class="clay-pill clay-pill-mint" data-i18n="panel1.btn">Play Instant</a>
                             </div>
                         </div>
-                        <!-- Panel 2 -->
                         <div class="stage-panel">
                             <div class="stage-panel-img" style="background: linear-gradient(135deg, #a855f7, #ec4899);">⚡</div>
                             <div>
@@ -1021,7 +986,6 @@
             </div>
         </section>
 
-        <!-- Footer Action Strip -->
         <section id="support" style="text-align: center; margin-bottom: 50px;">
             <div class="footer-links">
                 <a href="contact.html" class="footer-btn" data-i18n="foot.report">Report / Contact</a>
@@ -1031,7 +995,7 @@
         </section>
     </main>
 
-    <!-- Glassmorphic In-Game Player Overlay (Modal) -->
+    <!-- Glassmorphic In-Game Player Overlay -->
     <div class="arcade-modal-backdrop" id="game-modal">
         <div class="arcade-modal-window">
             <div class="modal-bar">
@@ -1047,7 +1011,8 @@
                 </div>
             </div>
             <div class="arcade-iframe-container">
-                <iframe id="game-frame" sandbox="allow-scripts allow-pointer-lock allow-forms" allow="fullscreen; autoplay; gamepad"></iframe>
+                <!-- Sandbox permissions enabling full HTML5 Canvas & WebGL Audio execution -->
+                <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-modals allow-popups" allow="fullscreen; autoplay; gamepad"></iframe>
             </div>
         </div>
     </div>
@@ -1166,7 +1131,7 @@
         });
 
         /* -------------------------------------------------------------
-           2. THREE.JS METABALL BACKGROUND (RETINA SAFE)
+           2. THREE.JS METABALL BACKGROUND
         ------------------------------------------------------------- */
         const bgCanvas = document.getElementById('webgl-bg');
         const renderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: false });
@@ -1275,25 +1240,29 @@
         dots.forEach((dot, i) => dot.addEventListener('click', () => updateCarousel(i)));
 
         /* -------------------------------------------------------------
-           4. IN-GAME ARCADE MODAL & RUNNER SYSTEM
+           4. BULLETPROOF IN-GAME ARCADE MODAL & RUNNER SYSTEM
         ------------------------------------------------------------- */
         const modal = document.getElementById('game-modal');
         const gameFrame = document.getElementById('game-frame');
         const modalTitle = document.getElementById('modal-game-title');
-        let currentGameData = { title: '', code: '', url: '' };
+        let activeGameRecord = { title: '', code: '', url: '' };
 
         function openGameModal(title, url, rawCode = null) {
             modalTitle.textContent = title;
-            currentGameData = { title, url, code: rawCode };
+            activeGameRecord = { title, url, code: rawCode };
             modal.classList.add('is-open');
 
-            if (rawCode) {
-                gameFrame.removeAttribute('src');
-                gameFrame.srcdoc = rawCode;
-            } else {
-                gameFrame.removeAttribute('srcdoc');
-                gameFrame.src = url;
-            }
+            // Force clean mount to prevent browser caching or blank screens
+            gameFrame.src = 'about:blank';
+            setTimeout(() => {
+                if (rawCode) {
+                    gameFrame.removeAttribute('src');
+                    gameFrame.srcdoc = rawCode;
+                } else if (url) {
+                    gameFrame.removeAttribute('srcdoc');
+                    gameFrame.src = url;
+                }
+            }, 60);
         }
 
         function closeGameModal() {
@@ -1303,25 +1272,34 @@
         }
 
         document.getElementById('modal-close-btn').addEventListener('click', closeGameModal);
+
         document.getElementById('modal-reload-btn').addEventListener('click', () => {
-            if (currentGameData.code) {
-                const current = currentGameData.code;
-                gameFrame.srcdoc = '';
-                setTimeout(() => { gameFrame.srcdoc = current; }, 50);
-            } else if (currentGameData.url) {
-                const current = currentGameData.url;
-                gameFrame.src = 'about:blank';
-                setTimeout(() => { gameFrame.src = current; }, 50);
-            }
+            const tempCode = activeGameRecord.code;
+            const tempUrl = activeGameRecord.url;
+            gameFrame.srcdoc = '';
+            gameFrame.src = 'about:blank';
+            setTimeout(() => {
+                if (tempCode) {
+                    gameFrame.srcdoc = tempCode;
+                } else if (tempUrl) {
+                    gameFrame.src = tempUrl;
+                }
+            }, 80);
         });
 
+        // Fixed: Reliable New Tab Launcher that never triggers about:blank#blocked
         document.getElementById('modal-tab-btn').addEventListener('click', () => {
-            if (currentGameData.code) {
-                const blob = new Blob([currentGameData.code], { type: 'text/html' });
-                const blobUrl = URL.createObjectURL(blob);
-                window.open(blobUrl, '_blank');
-            } else if (currentGameData.url) {
-                window.open(currentGameData.url, '_blank');
+            if (activeGameRecord.code) {
+                const newWin = window.open('', '_blank');
+                if (newWin) {
+                    newWin.document.open();
+                    newWin.document.write(activeGameRecord.code);
+                    newWin.document.close();
+                } else {
+                    alert('Please allow popups to open game in a dedicated tab.');
+                }
+            } else if (activeGameRecord.url) {
+                window.open(activeGameRecord.url, '_blank');
             }
         });
 
@@ -1362,7 +1340,7 @@
         });
 
         /* -------------------------------------------------------------
-           6. RESILIENT GAME LOADER (SUPABASE + GITHUB + BUILT-INS)
+           6. RESILIENT DUAL GAME ENGINE (SUPABASE + GITHUB + BUILTINS)
         ------------------------------------------------------------- */
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
@@ -1379,17 +1357,17 @@
             { bg: 'linear-gradient(135deg, #ec4899, #f43f5e)', glow: 'rgba(236, 72, 153, 0.4)' }
         ];
 
-        // Built-in playable fallback games (Canvas-ready)
+        // Standalone Canvas Games ready to execute with zero 404s
         const BUILTIN_GAMES = [
             {
                 title: 'Retro Snake 2026',
                 type: 'supabase',
-                html_code: `<!DOCTYPE html><html><head><style>body{margin:0;background:#06080e;color:#00ffd6;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{border:2px solid #00ffd6;background:#090d16;box-shadow:0 0 20px rgba(0,255,214,0.3);}</style></head><body><h2>🐍 RETRO SNAKE</h2><canvas id="c" width="400" height="400"></canvas><p>Use Arrow Keys to Move</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let s=[{x:10,y:10}],d={x:1,y:0},f={x:15,y:15},score=0;setInterval(()=>{let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.some(p=>p.x===h.x&&p.y===h.y)){s=[{x:10,y:10}];d={x:1,y:0};score=0;return;}s.unshift(h);if(h.x===f.x&&h.y===f.y){score+=10;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else s.pop();x.fillStyle="#090d16";x.fillRect(0,0,400,400);x.fillStyle="#ff3b82";x.fillRect(f.x*20,f.y*20,18,18);x.fillStyle="#00ffd6";s.forEach(p=>x.fillRect(p.x*20,p.y*20,18,18));x.fillStyle="#fff";x.fillText("Score: "+score,10,20);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&d.y===0)d={x:0,y:-1};if(e.key==="ArrowDown"&&d.y===0)d={x:0,y:1};if(e.key==="ArrowLeft"&&d.x===0)d={x:-1,y:0};if(e.key==="ArrowRight"&&d.x===0)d={x:1,y:0};};<\/script></body></html>`
+                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#06080e;color:#00ffd6;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{border:2px solid #00ffd6;background:#090d16;box-shadow:0 0 20px rgba(0,255,214,0.3);}</style></head><body><h2>🐍 RETRO SNAKE</h2><canvas id="c" width="400" height="400"></canvas><p style="color:#aaa;font-size:14px;">Use Arrow Keys to Move</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let s=[{x:10,y:10}],d={x:1,y:0},f={x:15,y:15},score=0;setInterval(()=>{let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.some(p=>p.x===h.x&&p.y===h.y)){s=[{x:10,y:10}];d={x:1,y:0};score=0;return;}s.unshift(h);if(h.x===f.x&&h.y===f.y){score+=10;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else s.pop();x.fillStyle="#090d16";x.fillRect(0,0,400,400);x.fillStyle="#ff3b82";x.fillRect(f.x*20,f.y*20,18,18);x.fillStyle="#00ffd6";s.forEach(p=>x.fillRect(p.x*20,p.y*20,18,18));x.fillStyle="#fff";x.fillText("Score: "+score,10,20);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&d.y===0)d={x:0,y:-1};if(e.key==="ArrowDown"&&d.y===0)d={x:0,y:1};if(e.key==="ArrowLeft"&&d.x===0)d={x:-1,y:0};if(e.key==="ArrowRight"&&d.x===0)d={x:1,y:0};};<\/script></body></html>`
             },
             {
                 title: 'Neon Pong Arena',
                 type: 'supabase',
-                html_code: `<!DOCTYPE html><html><head><style>body{margin:0;background:#090d16;display:flex;justify-content:center;align-items:center;height:100vh;color:#a855f7;font-family:sans-serif;}canvas{border:2px solid #a855f7;box-shadow:0 0 25px rgba(168,85,247,0.3);}</style></head><body><canvas id="c" width="500" height="350"></canvas><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#090d16";x.fillRect(0,0,500,350);x.fillStyle="#a855f7";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.beginPath();x.arc(bx,by,7,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
+                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#a855f7;font-family:sans-serif;}canvas{border:2px solid #a855f7;box-shadow:0 0 25px rgba(168,85,247,0.3);}</style></head><body><h2>⚡ NEON PONG</h2><canvas id="c" width="500" height="350"></canvas><p style="color:#aaa;font-size:14px;">Move mouse on canvas to defend</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#090d16";x.fillRect(0,0,500,350);x.fillStyle="#a855f7";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.fillStyle="#00ffd6";x.beginPath();x.arc(bx,by,7,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
             }
         ];
 
@@ -1469,7 +1447,7 @@
                 console.warn('GitHub folder scan bypassed.');
             }
 
-            // 3. Merge Built-ins if empty
+            // 3. Fallback to built-in games if no community/GitHub games are found
             if (!allGames.length) {
                 allGames = [...BUILTIN_GAMES];
             }
