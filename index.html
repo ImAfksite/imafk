@@ -912,7 +912,14 @@
             <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="game-search" class="search-glass-input" placeholder="Search arcade database..." oninput="filterGames()">
         </div>
-
+        <!-- Public Takedown & Moderation Changelog -->
+        <div class="takedown-board" id="takedown-board" style="display: none;">
+            <div class="takedown-header">
+                <span class="takedown-badge">🛡️ Moderation Log</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time Node Takedown Notices</span>
+            </div>
+            <div class="takedown-feed" id="takedown-feed"></div>
+        </div>
         <!-- 3D Card Game Library -->
         <section class="game-grid-section" id="library">
             <div class="section-header">
