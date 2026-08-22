@@ -104,6 +104,7 @@
             gap: 14px;
             text-decoration: none;
             color: var(--text-main);
+            cursor: pointer;
         }
 
         .brand-icon {
@@ -118,6 +119,7 @@
             color: #040807;
             font-weight: 800;
             font-family: var(--font-display);
+            user-select: none;
         }
 
         .brand-title {
@@ -224,7 +226,6 @@
             max-width: 540px;
         }
 
-        /* Clay Navigation Pills */
         .hero-pills {
             display: flex;
             gap: 14px;
@@ -269,7 +270,6 @@
             transform: translateY(-4px) scale(1.03);
         }
 
-        /* Hero Right Widgets */
         .hero-widget-card {
             background: rgba(17, 24, 39, 0.65);
             border: 1px solid var(--glass-border);
@@ -870,7 +870,7 @@
 
     <!-- Glass Header Navigation -->
     <header class="glass-nav">
-        <a href="#main" class="brand-block">
+        <a href="#main" class="brand-block" id="main-brand-logo" title="I'm Afk Game Hub">
             <div class="brand-icon">AFK</div>
             <span class="brand-title">I’M AFK</span>
         </a>
@@ -1047,7 +1047,7 @@
                 </div>
             </div>
             <div class="arcade-iframe-container">
-                <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms" allow="fullscreen; autoplay; gamepad"></iframe>
+                <iframe id="game-frame" sandbox="allow-scripts allow-pointer-lock allow-forms" allow="fullscreen; autoplay; gamepad"></iframe>
             </div>
         </div>
     </div>
@@ -1166,11 +1166,12 @@
         });
 
         /* -------------------------------------------------------------
-           2. THREE.JS METABALL BACKGROUND
+           2. THREE.JS METABALL BACKGROUND (RETINA SAFE)
         ------------------------------------------------------------- */
         const bgCanvas = document.getElementById('webgl-bg');
         const renderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: false });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        renderer.setPixelRatio(dpr);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         const scene = new THREE.Scene();
@@ -1191,7 +1192,7 @@
                 float d = 0.0;
                 for (int i = 0; i < 4; i++) {
                     float fi = float(i);
-                    vec2 c = vec2(sin(uTime * 0.4 + fi * 1.5) * 0.4 * asp, cos(uTime * 0.3 + fi * 1.2) * 0.3);
+                    vec2 c = vec2(sin(uTime * 0.35 + fi * 1.5) * 0.4 * asp, cos(uTime * 0.28 + fi * 1.2) * 0.3);
                     d += 0.015 / (length(p - c) + 0.001);
                 }
 
@@ -1204,7 +1205,7 @@
         `;
 
         const uniforms = {
-            uRes: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            uRes: { value: new THREE.Vector2(window.innerWidth * dpr, window.innerHeight * dpr) },
             uTime: { value: 0 },
             uMouse: { value: new THREE.Vector2(99, 99) }
         };
@@ -1218,8 +1219,10 @@
         scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
 
         window.addEventListener('resize', () => {
+            const newDpr = Math.min(window.devicePixelRatio || 1, 2);
+            renderer.setPixelRatio(newDpr);
             renderer.setSize(window.innerWidth, window.innerHeight);
-            uniforms.uRes.value.set(window.innerWidth, window.innerHeight);
+            uniforms.uRes.value.set(window.innerWidth * newDpr, window.innerHeight * newDpr);
         });
 
         window.addEventListener('pointermove', (e) => {
@@ -1277,42 +1280,49 @@
         const modal = document.getElementById('game-modal');
         const gameFrame = document.getElementById('game-frame');
         const modalTitle = document.getElementById('modal-game-title');
-        let currentGameUrl = '';
+        let currentGameData = { title: '', code: '', url: '' };
 
-        function openGameModal(title, url, downloadUrl = null) {
+        function openGameModal(title, url, rawCode = null) {
             modalTitle.textContent = title;
-            currentGameUrl = url;
+            currentGameData = { title, url, code: rawCode };
             modal.classList.add('is-open');
 
-            if (downloadUrl) {
-                fetch(downloadUrl)
-                    .then(res => res.text())
-                    .then(html => {
-                        const blob = new Blob([html], { type: 'text/html' });
-                        gameFrame.src = URL.createObjectURL(blob);
-                    })
-                    .catch(() => {
-                        gameFrame.src = url;
-                    });
+            if (rawCode) {
+                gameFrame.removeAttribute('src');
+                gameFrame.srcdoc = rawCode;
             } else {
+                gameFrame.removeAttribute('srcdoc');
                 gameFrame.src = url;
             }
         }
 
         function closeGameModal() {
             modal.classList.remove('is-open');
+            gameFrame.srcdoc = '';
             gameFrame.src = 'about:blank';
         }
 
         document.getElementById('modal-close-btn').addEventListener('click', closeGameModal);
         document.getElementById('modal-reload-btn').addEventListener('click', () => {
-            const current = gameFrame.src;
-            gameFrame.src = 'about:blank';
-            setTimeout(() => { gameFrame.src = current; }, 50);
+            if (currentGameData.code) {
+                const current = currentGameData.code;
+                gameFrame.srcdoc = '';
+                setTimeout(() => { gameFrame.srcdoc = current; }, 50);
+            } else if (currentGameData.url) {
+                const current = currentGameData.url;
+                gameFrame.src = 'about:blank';
+                setTimeout(() => { gameFrame.src = current; }, 50);
+            }
         });
 
         document.getElementById('modal-tab-btn').addEventListener('click', () => {
-            if (currentGameUrl) window.open(currentGameUrl, '_blank');
+            if (currentGameData.code) {
+                const blob = new Blob([currentGameData.code], { type: 'text/html' });
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, '_blank');
+            } else if (currentGameData.url) {
+                window.open(currentGameData.url, '_blank');
+            }
         });
 
         document.getElementById('modal-fullscreen-btn').addEventListener('click', () => {
@@ -1334,14 +1344,30 @@
         });
 
         /* -------------------------------------------------------------
-           5. SUPABASE & GITHUB DUAL LOADER
+           5. SECRET ADMIN SHORTCUT (Ctrl+Shift+A or Triple Click Logo)
+        ------------------------------------------------------------- */
+        let logoClicks = 0;
+        document.getElementById('main-brand-logo').addEventListener('click', (e) => {
+            logoClicks++;
+            if (logoClicks === 3) {
+                window.location.href = 'admin.html';
+            }
+            setTimeout(() => { logoClicks = 0; }, 1000);
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+                window.location.href = 'admin.html';
+            }
+        });
+
+        /* -------------------------------------------------------------
+           6. RESILIENT GAME LOADER (SUPABASE + GITHUB + BUILT-INS)
         ------------------------------------------------------------- */
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         
-        // Use separate name to avoid variable conflicts
-        const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+        const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
         const GITHUB_USER = 'imafksite'; 
         const GITHUB_REPO = 'imafk';     
 
@@ -1353,6 +1379,20 @@
             { bg: 'linear-gradient(135deg, #ec4899, #f43f5e)', glow: 'rgba(236, 72, 153, 0.4)' }
         ];
 
+        // Built-in playable fallback games (Canvas-ready)
+        const BUILTIN_GAMES = [
+            {
+                title: 'Retro Snake 2026',
+                type: 'supabase',
+                html_code: `<!DOCTYPE html><html><head><style>body{margin:0;background:#06080e;color:#00ffd6;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{border:2px solid #00ffd6;background:#090d16;box-shadow:0 0 20px rgba(0,255,214,0.3);}</style></head><body><h2>🐍 RETRO SNAKE</h2><canvas id="c" width="400" height="400"></canvas><p>Use Arrow Keys to Move</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let s=[{x:10,y:10}],d={x:1,y:0},f={x:15,y:15},score=0;setInterval(()=>{let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.some(p=>p.x===h.x&&p.y===h.y)){s=[{x:10,y:10}];d={x:1,y:0};score=0;return;}s.unshift(h);if(h.x===f.x&&h.y===f.y){score+=10;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else s.pop();x.fillStyle="#090d16";x.fillRect(0,0,400,400);x.fillStyle="#ff3b82";x.fillRect(f.x*20,f.y*20,18,18);x.fillStyle="#00ffd6";s.forEach(p=>x.fillRect(p.x*20,p.y*20,18,18));x.fillStyle="#fff";x.fillText("Score: "+score,10,20);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&d.y===0)d={x:0,y:-1};if(e.key==="ArrowDown"&&d.y===0)d={x:0,y:1};if(e.key==="ArrowLeft"&&d.x===0)d={x:-1,y:0};if(e.key==="ArrowRight"&&d.x===0)d={x:1,y:0};};<\/script></body></html>`
+            },
+            {
+                title: 'Neon Pong Arena',
+                type: 'supabase',
+                html_code: `<!DOCTYPE html><html><head><style>body{margin:0;background:#090d16;display:flex;justify-content:center;align-items:center;height:100vh;color:#a855f7;font-family:sans-serif;}canvas{border:2px solid #a855f7;box-shadow:0 0 25px rgba(168,85,247,0.3);}</style></head><body><canvas id="c" width="500" height="350"></canvas><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#090d16";x.fillRect(0,0,500,350);x.fillStyle="#a855f7";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.beginPath();x.arc(bx,by,7,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
+            }
+        ];
+
         async function loadAllGames() {
             const container = document.getElementById('game-container');
             const indicator = document.getElementById('loading-indicator');
@@ -1362,50 +1402,51 @@
 
             let allGames = [];
 
-            // 1. Fetch from Supabase (Live Auto-Published Games + Takedown Log)
-            try {
-                const { data: supaGames, error } = await sbClient
-                    .from('games')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+            // 1. Fetch live submissions from Supabase
+            if (sbClient) {
+                try {
+                    const { data: supaGames, error } = await sbClient
+                        .from('games')
+                        .select('*')
+                        .order('created_at', { ascending: false });
 
-                if (!error && Array.isArray(supaGames)) {
-                    const liveSupa = supaGames.filter(g => g.status === 'live');
-                    const takedownSupa = supaGames.filter(g => g.status === 'takedown');
+                    if (!error && Array.isArray(supaGames)) {
+                        const liveSupa = supaGames.filter(g => g.status === 'live');
+                        const takedownSupa = supaGames.filter(g => g.status === 'takedown');
 
-                    // Populate Takedown Board
-                    if (takedownSupa.length > 0) {
-                        takedownBoard.style.display = 'block';
-                        takedownFeed.innerHTML = '';
-                        takedownSupa.forEach(item => {
-                            const date = new Date(item.takedown_date || item.created_at).toLocaleDateString();
-                            const notice = document.createElement('div');
-                            notice.className = 'takedown-item';
-                            notice.innerHTML = `
-                                <div>
-                                    <strong>[REMOVED] ${item.title}</strong> — 
-                                    <span>Reason: <em>"${item.takedown_reason || 'Breaking code or policy violation'}"</em></span>
-                                </div>
-                                <span class="takedown-date">${date}</span>
-                            `;
-                            takedownFeed.appendChild(notice);
+                        if (takedownSupa.length > 0) {
+                            takedownBoard.style.display = 'block';
+                            takedownFeed.innerHTML = '';
+                            takedownSupa.forEach(item => {
+                                const date = new Date(item.takedown_date || item.created_at).toLocaleDateString();
+                                const notice = document.createElement('div');
+                                notice.className = 'takedown-item';
+                                notice.innerHTML = `
+                                    <div>
+                                        <strong>[REMOVED] ${item.title}</strong> — 
+                                        <span>Reason: <em>"${item.takedown_reason || 'Breaking code or policy violation'}"</em></span>
+                                    </div>
+                                    <span class="takedown-date">${date}</span>
+                                `;
+                                takedownFeed.appendChild(notice);
+                            });
+                        }
+
+                        liveSupa.forEach(g => {
+                            allGames.push({
+                                title: g.title,
+                                author: g.author,
+                                html_code: g.html_code,
+                                type: 'supabase'
+                            });
                         });
                     }
-
-                    liveSupa.forEach(g => {
-                        allGames.push({
-                            title: g.title,
-                            author: g.author,
-                            html_code: g.html_code,
-                            type: 'supabase'
-                        });
-                    });
+                } catch (err) {
+                    console.warn('Supabase fetch bypassed:', err);
                 }
-            } catch (err) {
-                console.warn('Supabase offline or table pending:', err);
             }
 
-            // 2. Fetch from GitHub Repository Folder
+            // 2. Fetch GitHub Repository folder
             try {
                 const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
                 const files = await res.json();
@@ -1420,45 +1461,32 @@
                         allGames.push({
                             title: title,
                             url: `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${file.name}`,
-                            downloadUrl: file.download_url,
                             type: 'github'
                         });
                     });
                 }
             } catch (err) {
-                console.warn('GitHub API rate limit or offline mode.');
+                console.warn('GitHub folder scan bypassed.');
             }
 
-            // 3. Fallback Demo Games if everything is fresh
+            // 3. Merge Built-ins if empty
             if (!allGames.length) {
-                allGames = [
-                    { title: '2048 Puzzle', url: 'https://imafksite.github.io/imafk/games/2048-puzzle.html', type: 'github' },
-                    { title: 'Retro Snake', url: 'https://imafksite.github.io/imafk/games/snake-retro.html', type: 'github' },
-                    { title: 'Space Invaders', url: 'https://imafksite.github.io/imafk/games/space-invaders.html', type: 'github' }
-                ];
+                allGames = [...BUILTIN_GAMES];
             }
 
-            // Render Cards
+            // Render all cards
             if (indicator) indicator.style.display = 'none';
             container.innerHTML = '';
             statCount.textContent = allGames.length;
 
             allGames.forEach((game, index) => {
-                let targetUrl = game.url;
-                let downUrl = game.downloadUrl || null;
-
-                if (game.type === 'supabase') {
-                    const blob = new Blob([game.html_code], { type: 'text/html' });
-                    targetUrl = URL.createObjectURL(blob);
-                }
-
-                create3DCard(game.title, targetUrl, downUrl, index, container);
+                create3DCard(game, index, container);
             });
         }
 
-        function create3DCard(title, pagesUrl, downloadUrl, index, container) {
+        function create3DCard(game, index, container) {
             const theme = cardThemes[index % cardThemes.length];
-            const firstLetter = title.charAt(0);
+            const firstLetter = game.title.charAt(0);
 
             const cardWrap = document.createElement('div');
             cardWrap.className = 'ux-parent';
@@ -1469,8 +1497,8 @@
                     <div class="card-top">
                         <div class="game-avatar" style="--card-theme: ${theme.bg};">${firstLetter}</div>
                         <div class="game-info">
-                            <span class="game-tag">Arcade Node</span>
-                            <h3 class="game-card-title">${title}</h3>
+                            <span class="game-tag">${game.type === 'supabase' ? 'Community Node' : 'Core Arcade'}</span>
+                            <h3 class="game-card-title">${game.title}</h3>
                         </div>
                     </div>
                     <div class="card-body">
@@ -1484,7 +1512,11 @@
             `;
 
             cardWrap.addEventListener('click', () => {
-                openGameModal(title, pagesUrl, downloadUrl);
+                if (game.type === 'supabase') {
+                    openGameModal(game.title, null, game.html_code);
+                } else {
+                    openGameModal(game.title, game.url, null);
+                }
             });
 
             container.appendChild(cardWrap);
