@@ -1,168 +1,624 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact & Support | I’m Afk</title>
-<style>
-    /* --- INTEGRATED SITE STYLES --- */
-    body { 
-        font-family: 'Segoe UI', Arial, sans-serif; 
-        margin: 0; 
-        padding: 40px 20px; 
-        background-color: #f0f2f5; /* Matches Home Page */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        animation: fadeIn 0.8s ease-in;
-    }
-
-    .form-container { 
-        background: #ffffff; 
-        padding: 30px; 
-        border-radius: 12px; 
-        border: 1px solid #e0e0e0; 
-        max-width: 450px; 
-        width: 100%;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        animation: containerEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-        position: relative;
-        overflow: hidden;
-        border-top: 5px solid #1a73e8; /* Matches Home Page Blue */
-    }
-
-    h2 { font-size: 22px; color: #1a73e8; margin-top: 0; text-align: center; margin-bottom: 20px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="meta.title">Contact & Support Node — I’m Afk</title>
     
-    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #555; }
+    <!-- Google Fonts & CDN Libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     
-    input, select, textarea { 
-        width: 100%; 
-        padding: 12px; 
-        margin-bottom: 15px; 
-        border: 1px solid #ccc; 
-        border-radius: 6px; 
-        box-sizing: border-box; 
-        font-size: 14px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background-color: #fcfcfc;
-    }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-    input:focus, select:focus, textarea:focus { 
-        border-color: #1a73e8; 
-        outline: none; 
-        background-color: #ffffff;
-        box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
-        transform: translateY(-1px);
-    }
+    <style>
+        :root {
+            --page-deep: #06080e;
+            --page-mid: #0d131f;
+            --card-bg: rgba(18, 24, 38, 0.75);
+            --neon-mint: #00ffd6;
+            --neon-blue: #3b82f6;
+            --neon-purple: #a855f7;
+            --neon-orange: #f97316;
+            --neon-pink: #ec4899;
+            --text-main: #f3f4f6;
+            --text-muted: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --shadow-clay: 8px 12px 24px rgba(0, 0, 0, 0.4), inset 1px 1px 2px rgba(255, 255, 255, 0.25);
+            --shadow-neon: 0 0 30px rgba(0, 255, 214, 0.25);
+            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
+        }
 
-    button { 
-        background-color: #1a73e8; 
-        color: white; 
-        padding: 14px; 
-        border: none; 
-        border-radius: 6px; 
-        cursor: pointer; 
-        width: 100%; 
-        font-size: 16px; 
-        font-weight: bold;
-        transition: 0.3s;
-        position: relative;
-        overflow: hidden;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 6px rgba(26, 115, 232, 0.2);
-    }
+        html[lang="ar"] {
+            --font-main: 'Tajawal', system-ui, sans-serif;
+        }
 
-    button:hover { 
-        background-color: #1557b0; 
-        box-shadow: 0 6px 12px rgba(26, 115, 232, 0.3);
-        transform: translateY(-2px);
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    button:active { transform: scale(0.98); }
+        body {
+            background-color: var(--page-deep);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
 
-    /* Back to Home Link */
-    .back-btn {
-        margin-top: 25px;
-        text-decoration: none;
-        color: #5f6368;
-        font-size: 14px;
-        font-weight: 600;
-        transition: color 0.2s;
-    }
-    .back-btn:hover { color: #1a73e8; }
+        /* --- WebGL Background Canvas --- */
+        #webgl-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.8;
+        }
 
-    /* Shining light effect on button hover */
-    button::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-        transform: rotate(45deg);
-        transition: 0.5s;
-        pointer-events: none;
-    }
-    button:hover::after { left: 100%; }
+        /* --- Ambient Grid Pattern --- */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 214, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 214, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+        }
 
-    /* ANIMATIONS */
-    @keyframes containerEntrance {
-        0% { opacity: 0; transform: translateY(20px) scale(0.98); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
+        /* --- Glassmorphic Sticky Header --- */
+        .glass-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 36px;
+            background: rgba(6, 8, 14, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
 
-    .official-seal {
-        font-size: 10px;
-        color: #aaa;
-        text-align: center;
-        margin-top: 20px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--neon-mint), var(--neon-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 255, 214, 0.4);
+            color: #040807;
+            font-weight: 800;
+            font-family: var(--font-display);
+        }
 
-</style>
+        .brand-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .nav-back-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--neon-mint);
+            border-color: var(--neon-mint);
+        }
+
+        .lang-toggle {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--neon-mint);
+            padding: 7px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+
+        .lang-toggle:hover {
+            border-color: var(--neon-mint);
+            box-shadow: var(--shadow-neon);
+            transform: scale(1.05);
+        }
+
+        /* --- Main Contact Container --- */
+        .contact-container {
+            max-width: 800px;
+            margin: 60px auto 80px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .contact-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .contact-header h1 span {
+            background: linear-gradient(135deg, var(--neon-mint), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 520px;
+            margin: 0 auto 20px;
+        }
+
+        /* Quick SLA Badge Strip */
+        .status-strip {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .status-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            backdrop-filter: blur(10px);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-pill strong {
+            color: var(--neon-mint);
+        }
+
+        /* --- 3D Frosted Glass Form Card --- */
+        .glass-form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: var(--shadow-clay), 0 30px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #d1d5db;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            background: rgba(13, 19, 31, 0.7);
+            border: 1px solid var(--glass-border);
+            padding: 14px 18px;
+            border-radius: 14px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .input-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2300ffd6' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+        }
+
+        html[dir="rtl"] .input-group select {
+            background-position: left 18px center;
+        }
+
+        .input-group select option {
+            background: #0d131f;
+            color: #fff;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 140px;
+            line-height: 1.5;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            border-color: var(--neon-mint);
+            box-shadow: 0 0 15px rgba(0, 255, 214, 0.2);
+            background: rgba(13, 19, 31, 0.95);
+        }
+
+        .char-counter {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        html[dir="rtl"] .char-counter {
+            text-align: left;
+        }
+
+        /* --- Tactile Clay Submit Button --- */
+        .submit-btn-clay {
+            width: 100%;
+            background: linear-gradient(135deg, var(--neon-mint), var(--neon-blue));
+            color: #040807;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 50px;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 255, 214, 0.3);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .submit-btn-clay:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 15px 35px rgba(0, 255, 214, 0.45);
+        }
+
+        .submit-btn-clay:active {
+            transform: scale(0.98);
+        }
+
+        .official-seal {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 24px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* --- Footer --- */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 40px 24px;
+            text-align: center;
+            background: rgba(6, 8, 14, 0.9);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .glass-form-card { padding: 24px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h2>Inquiry Department</h2>
-    
-    <!-- Your Formspree URL is maintained -->
-    <form action="https://formspree.io/f/mjybeepe" method="POST">
-        
-        <label>Reason for Inquiry</label>
-        <select name="Category" required>
-            <option value="General Contact">General Contact</option>
-            <option value="Report Issue">Report a Problem</option>
-            <option value="Copyright/DMCA">Copyright / DMCA</option>
-        </select>
+    <!-- WebGL Background Canvas -->
+    <canvas id="webgl-bg"></canvas>
 
-        <label>Full Name</label>
-        <input type="text" name="name" placeholder="Enter your full name" required>
+    <!-- Header Navigation -->
+    <header class="glass-nav">
+        <a href="index.html" class="brand-block">
+            <div class="brand-icon">AFK</div>
+            <span class="brand-title">I’M AFK</span>
+        </a>
 
-        <label>Email Address</label>
-        <input type="email" name="email" placeholder="email@example.com" required>
+        <div class="nav-actions">
+            <a href="index.html" class="nav-back-btn" data-i18n="nav.back">← Return to Hub</a>
+            <button type="button" class="lang-toggle" id="lang-btn" aria-label="Switch Language">العربية</button>
+        </div>
+    </header>
 
-        <label>Detailed Message</label>
-        <textarea name="message" rows="5" placeholder="Please provide specific details..." required></textarea>
+    <main class="contact-container">
+        <!-- Header Copy & SLAs -->
+        <div class="contact-header">
+            <h1 data-i18n="contact.title">Inquiry & <span>Support Node</span></h1>
+            <p data-i18n="contact.lead">Have a bug report, general feedback, or copyright concern? Direct your request into our decentralized relay.</p>
+            
+            <div class="status-strip">
+                <span class="status-pill">⚡ <span data-i18n="status.response">Response Time:</span> <strong>&lt; 24h</strong></span>
+                <span class="status-pill">🛡️ <span data-i18n="status.dmca">DMCA Rapid Review</span></span>
+                <span class="status-pill">🔒 <span data-i18n="status.secure">Encrypted Relay</span></span>
+            </div>
+        </div>
 
-        <!-- Anti-spam -->
-        <input type="text" name="_gotcha" style="display:none">
+        <!-- 3D Frosted Glass Contact Card -->
+        <div class="glass-form-card">
+            <form action="https://formspree.io/f/mjybeepe" method="POST" id="contactForm">
+                
+                <div class="form-grid">
+                    <div class="input-group full-width">
+                        <label for="category" data-i18n="form.category">Reason for Inquiry *</label>
+                        <select name="Category" id="category" required>
+                            <option value="General Contact" data-i18n="opt.general">General Contact / Feedback</option>
+                            <option value="Report Issue" data-i18n="opt.bug">Report a Broken Game / Problem</option>
+                            <option value="Copyright/DMCA" data-i18n="opt.dmca">Copyright / DMCA Notice</option>
+                        </select>
+                    </div>
 
-        <button type="submit">Submit Official Request</button>
-    </form>
+                    <div class="input-group">
+                        <label for="name" data-i18n="form.name">Full Name *</label>
+                        <input type="text" name="name" id="name" placeholder="Alex Morgan" required>
+                    </div>
 
-    <div class="official-seal">Secure Submission Portal | I'm Afk</div>
-</div>
+                    <div class="input-group">
+                        <label for="email" data-i18n="form.email">Email Address *</label>
+                        <input type="email" name="email" id="email" placeholder="alex@domain.com" required>
+                    </div>
 
-<a href="index.html" class="back-btn">← Return to Welcome Page</a>
+                    <div class="input-group full-width">
+                        <label for="message">
+                            <span data-i18n="form.message">Detailed Message *</span>
+                        </label>
+                        <textarea name="message" id="message" placeholder="Please describe the issue, specify game titles or urls, and include any relevant details..." required></textarea>
+                        <div class="char-counter" id="char-counter">0 / 2000 chars</div>
+                    </div>
+                </div>
 
+                <!-- Formspree Anti-Spam HoneyPot -->
+                <input type="text" name="_gotcha" style="display:none">
+
+                <button type="submit" class="submit-btn-clay" id="submitBtn">
+                    <span data-i18n="form.submitBtn">Submit Official Request ➔</span>
+                </button>
+            </form>
+
+            <div class="official-seal" data-i18n="contact.seal">
+                Secure Submission Portal &bull; I'm Afk Network Relay
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024–2026 I’m Afk &bull; Support & Ticket System &bull; Hosted on GitHub Pages</p>
+    </footer>
+
+    <!-- ================= LOGIC & THREE.JS ================= -->
+    <script>
+        /* -------------------------------------------------------------
+           1. BILINGUAL DICTIONARY (EN / AR)
+        ------------------------------------------------------------- */
+        const I18N = {
+            en: {
+                "meta.title": "Contact & Support Node — I’m Afk",
+                "nav.back": "← Return to Hub",
+                "contact.title": "Inquiry & <span>Support Node</span>",
+                "contact.lead": "Have a bug report, general feedback, or copyright concern? Direct your request into our decentralized relay.",
+                "status.response": "Response Time:",
+                "status.dmca": "DMCA Rapid Review",
+                "status.secure": "Encrypted Relay",
+                "form.category": "Reason for Inquiry *",
+                "opt.general": "General Contact / Feedback",
+                "opt.bug": "Report a Broken Game / Problem",
+                "opt.dmca": "Copyright / DMCA Notice",
+                "form.name": "Full Name *",
+                "form.email": "Email Address *",
+                "form.message": "Detailed Message *",
+                "form.submitBtn": "Submit Official Request ➔",
+                "contact.seal": "Secure Submission Portal • I'm Afk Network Relay"
+            },
+            ar: {
+                "meta.title": "مركز الدعم والاستفسارات — I’m Afk",
+                "nav.back": "← العودة إلى الرئيسية",
+                "contact.title": "مركز <span>الدعم والاستفسارات</span>",
+                "contact.lead": "هل لديك بلاغ عن مشكلة، اقتراح عام، أو استفسار بخصوص حقوق النشر؟ أرسل طلبك مباشرة إلى فريق الدعم.",
+                "status.response": "متوسط الرد:",
+                "status.dmca": "مراجعة فورية لحقوق النشر",
+                "status.secure": "اتصال مشفر وآمن",
+                "form.category": "سبب التواصل *",
+                "opt.general": "استفسار عام / اقتراح",
+                "opt.bug": "الإبلاغ عن لعبة متوقفة أو خلل",
+                "opt.dmca": "إشعار حقوق النشر / DMCA",
+                "form.name": "الاسم الكامل *",
+                "form.email": "البريد الإلكتروني *",
+                "form.message": "تفاصيل الرسالة *",
+                "form.submitBtn": "إرسال الطلب الرسمي ➔",
+                "contact.seal": "بوابة اتصال آمنة • شبكة I'm Afk"
+            }
+        };
+
+        let currentLang = 'en';
+        const langBtn = document.getElementById('lang-btn');
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (I18N[lang][key]) {
+                    el.innerHTML = I18N[lang][key];
+                }
+            });
+        }
+
+        langBtn.addEventListener('click', () => {
+            setLanguage(currentLang === 'en' ? 'ar' : 'en');
+        });
+
+        /* -------------------------------------------------------------
+           2. THREE.JS METABALL BACKGROUND
+        ------------------------------------------------------------- */
+        const bgCanvas = document.getElementById('webgl-bg');
+        const renderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: false });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+        const vertShader = `void main() { gl_Position = vec4(position, 1.0); }`;
+        const fragShader = `
+            precision highp float;
+            uniform vec2 uRes;
+            uniform float uTime;
+            uniform vec2 uMouse;
+
+            void main() {
+                vec2 uv = gl_FragCoord.xy / uRes.xy;
+                float asp = uRes.x / uRes.y;
+                vec2 p = (uv - 0.5) * vec2(asp, 1.0);
+
+                float d = 0.0;
+                for (int i = 0; i < 3; i++) {
+                    float fi = float(i);
+                    vec2 c = vec2(sin(uTime * 0.3 + fi * 1.6) * 0.45 * asp, cos(uTime * 0.22 + fi * 1.3) * 0.35);
+                    d += 0.015 / (length(p - c) + 0.001);
+                }
+
+                d += 0.02 / (length(p - uMouse) + 0.001);
+
+                vec3 col = mix(vec3(0.02, 0.03, 0.06), vec3(0.0, 0.9, 0.7), smoothstep(0.7, 1.2, d) * 0.2);
+                col += vec3(0.5, 0.2, 0.9) * smoothstep(0.9, 1.5, d) * 0.2;
+                gl_FragColor = vec4(col, 1.0);
+            }
+        `;
+
+        const uniforms = {
+            uRes: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            uTime: { value: 0 },
+            uMouse: { value: new THREE.Vector2(99, 99) }
+        };
+
+        const material = new THREE.ShaderMaterial({
+            vertexShader: vertShader,
+            fragmentShader: fragShader,
+            uniforms: uniforms
+        });
+
+        scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            uniforms.uRes.value.set(window.innerWidth, window.innerHeight);
+        });
+
+        window.addEventListener('pointermove', (e) => {
+            const asp = window.innerWidth / window.innerHeight;
+            uniforms.uMouse.value.set(
+                (e.clientX / window.innerWidth - 0.5) * asp,
+                0.5 - e.clientY / window.innerHeight
+            );
+        });
+
+        function animateBg(time) {
+            uniforms.uTime.value = time * 0.001;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animateBg);
+        }
+        requestAnimationFrame(animateBg);
+
+        /* -------------------------------------------------------------
+           3. GSAP ANIMATIONS & COUNTER
+        ------------------------------------------------------------- */
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.from(".contact-header", { y: -20, opacity: 0, duration: 0.8, ease: "power3.out" });
+            gsap.from(".glass-form-card", { y: 30, opacity: 0, duration: 1, delay: 0.15, ease: "power3.out" });
+        });
+
+        const messageInput = document.getElementById('message');
+        const counter = document.getElementById('char-counter');
+
+        messageInput.addEventListener('input', () => {
+            const len = messageInput.value.length;
+            counter.textContent = `${len} / 2000 chars`;
+            if (len > 2000) {
+                counter.style.color = '#ef4444';
+            } else {
+                counter.style.color = 'var(--text-muted)';
+            }
+        });
+    </script>
 </body>
 </html>
