@@ -1,0 +1,6578 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/gh/deformed-steve/yohohoio@main/yohoho.js" async=""></script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Yohoho.io">
+
+  <meta name="viewport" content="minimal-ui, user-scalable=no, initial-scale=1, maximum-scale=1, width=device-width">
+  <title>Yohoho.io</title>
+  <base href="https://cdn.jsdelivr.net/gh/deformed-steve/yohohoio@main/">
+
+  <meta name="description" content="Ye have been marrooned on a tropical island! Fight other pirates with yer cutlass and survive the battle royale! Fun &amp; cool IO game!">
+  <meta name="keywords" content="io game, online, multiplayer, arena, browser, html5, cutlass, pike, evowars, pirate, weapon, dash, battle royale, chicken dinner, yex, games, io, github, yohoho">
+  <link rel="canonical" href="https://deformed-steve.github.io/yohohoio/">
+
+  <meta property="og:title" content="yexex.github.io">
+  <meta property="og:description" content="Ye have been marrooned on a tropical island! Fight other pirates with yer cutlass and survive the battle royale! Fun &amp; cool IO game!">
+  <meta property="og:url" content="https://deformed-steve.github.io/yohohoio/">
+
+  <meta property="og:image" content="img/banner1200x630.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Free pirate battle royale game">
+  <meta name="twitter:image" content="img/banner1024x512.jpg">
+  <meta name="twitter:site" content="@ExodragonGames">
+
+  <script src="https://cdn.jsdelivr.net/gh/Deformed-steve/x@main/raven.min.js" crossorigin="anonymous"></script>
+
+  <link rel="apple-touch-startup-image" href="favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="manifest" href="favicon/site.webmanifest">
+  <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#000000">
+  <link rel="icon" href="favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-config" content="favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- GOOGLE SIGNIN -->
+  <script src="https://apis.google.com/js/platform.js" async="" defer="" onload="gapi.load('auth2');"></script>
+  <meta name="google-signin-client_id" content="552269683638-j09fatlh9eldn4n857459p0h18usu025.apps.googleusercontent.com">
+  <script type="text/javascript">
+    function onGoogleSignIn(u) {
+      if (typeof yohoho === "undefined") {
+        setTimeout(function() {
+          onGoogleSignIn(u);
+        }, 100);
+      } else
+        yohoho.onGoogleSignIn(u);
+    }
+
+    function onFacebookLogin() {
+      if (typeof yohoho === "undefined") {
+        setTimeout(function() {
+          onFacebookLogin();
+        }, 100);
+      } else
+        FB.getLoginStatus(yohoho.onFacebookLoginStatus);
+    }
+  </script>
+
+  <style type="text/css">
+    @charset "UTF-8";
+
+    @-webkit-keyframes bounce {
+
+      0%,
+      20%,
+      53%,
+      80%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      40%,
+      43% {
+        -webkit-animation-timing-function: cubic-bezier(.755, .05, .855, .06);
+        animation-timing-function: cubic-bezier(.755, .05, .855, .06);
+        -webkit-transform: translate3d(0, -30px, 0);
+        transform: translate3d(0, -30px, 0)
+      }
+
+      70% {
+        -webkit-animation-timing-function: cubic-bezier(.755, .05, .855, .06);
+        animation-timing-function: cubic-bezier(.755, .05, .855, .06);
+        -webkit-transform: translate3d(0, -15px, 0);
+        transform: translate3d(0, -15px, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(0, -4px, 0);
+        transform: translate3d(0, -4px, 0)
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      53%,
+      80%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      40%,
+      43% {
+        -webkit-animation-timing-function: cubic-bezier(.755, .05, .855, .06);
+        animation-timing-function: cubic-bezier(.755, .05, .855, .06);
+        -webkit-transform: translate3d(0, -30px, 0);
+        transform: translate3d(0, -30px, 0)
+      }
+
+      70% {
+        -webkit-animation-timing-function: cubic-bezier(.755, .05, .855, .06);
+        animation-timing-function: cubic-bezier(.755, .05, .855, .06);
+        -webkit-transform: translate3d(0, -15px, 0);
+        transform: translate3d(0, -15px, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(0, -4px, 0);
+        transform: translate3d(0, -4px, 0)
+      }
+    }
+
+    .bounce {
+      -webkit-animation-name: bounce;
+      animation-name: bounce;
+      -webkit-transform-origin: center bottom;
+      transform-origin: center bottom
+    }
+
+    @-webkit-keyframes flash {
+
+      0%,
+      50%,
+      to {
+        opacity: 1
+      }
+
+      25%,
+      75% {
+        opacity: 0
+      }
+    }
+
+    @keyframes flash {
+
+      0%,
+      50%,
+      to {
+        opacity: 1
+      }
+
+      25%,
+      75% {
+        opacity: 0
+      }
+    }
+
+    .flash {
+      -webkit-animation-name: flash;
+      animation-name: flash
+    }
+
+    @-webkit-keyframes pulse {
+      0% {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+
+      50% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05)
+      }
+
+      to {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+
+      50% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05)
+      }
+
+      to {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+    }
+
+    .pulse {
+      -webkit-animation-name: pulse;
+      animation-name: pulse
+    }
+
+    @-webkit-keyframes rubberBand {
+      0% {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+
+      30% {
+        -webkit-transform: scale3d(1.25, .75, 1);
+        transform: scale3d(1.25, .75, 1)
+      }
+
+      40% {
+        -webkit-transform: scale3d(.75, 1.25, 1);
+        transform: scale3d(.75, 1.25, 1)
+      }
+
+      50% {
+        -webkit-transform: scale3d(1.15, .85, 1);
+        transform: scale3d(1.15, .85, 1)
+      }
+
+      65% {
+        -webkit-transform: scale3d(.95, 1.05, 1);
+        transform: scale3d(.95, 1.05, 1)
+      }
+
+      75% {
+        -webkit-transform: scale3d(1.05, .95, 1);
+        transform: scale3d(1.05, .95, 1)
+      }
+
+      to {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+    }
+
+    @keyframes rubberBand {
+      0% {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+
+      30% {
+        -webkit-transform: scale3d(1.25, .75, 1);
+        transform: scale3d(1.25, .75, 1)
+      }
+
+      40% {
+        -webkit-transform: scale3d(.75, 1.25, 1);
+        transform: scale3d(.75, 1.25, 1)
+      }
+
+      50% {
+        -webkit-transform: scale3d(1.15, .85, 1);
+        transform: scale3d(1.15, .85, 1)
+      }
+
+      65% {
+        -webkit-transform: scale3d(.95, 1.05, 1);
+        transform: scale3d(.95, 1.05, 1)
+      }
+
+      75% {
+        -webkit-transform: scale3d(1.05, .95, 1);
+        transform: scale3d(1.05, .95, 1)
+      }
+
+      to {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+    }
+
+    .rubberBand {
+      -webkit-animation-name: rubberBand;
+      animation-name: rubberBand
+    }
+
+    @-webkit-keyframes shake {
+
+      0%,
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0)
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        -webkit-transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0)
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0)
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        -webkit-transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0)
+      }
+    }
+
+    .shake {
+      -webkit-animation-name: shake;
+      animation-name: shake
+    }
+
+    @-webkit-keyframes headShake {
+      0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+      }
+
+      6.5% {
+        -webkit-transform: translateX(-6px) rotateY(-9deg);
+        transform: translateX(-6px) rotateY(-9deg)
+      }
+
+      18.5% {
+        -webkit-transform: translateX(5px) rotateY(7deg);
+        transform: translateX(5px) rotateY(7deg)
+      }
+
+      31.5% {
+        -webkit-transform: translateX(-3px) rotateY(-5deg);
+        transform: translateX(-3px) rotateY(-5deg)
+      }
+
+      43.5% {
+        -webkit-transform: translateX(2px) rotateY(3deg);
+        transform: translateX(2px) rotateY(3deg)
+      }
+
+      50% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+      }
+    }
+
+    @keyframes headShake {
+      0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+      }
+
+      6.5% {
+        -webkit-transform: translateX(-6px) rotateY(-9deg);
+        transform: translateX(-6px) rotateY(-9deg)
+      }
+
+      18.5% {
+        -webkit-transform: translateX(5px) rotateY(7deg);
+        transform: translateX(5px) rotateY(7deg)
+      }
+
+      31.5% {
+        -webkit-transform: translateX(-3px) rotateY(-5deg);
+        transform: translateX(-3px) rotateY(-5deg)
+      }
+
+      43.5% {
+        -webkit-transform: translateX(2px) rotateY(3deg);
+        transform: translateX(2px) rotateY(3deg)
+      }
+
+      50% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+      }
+    }
+
+    .headShake {
+      -webkit-animation-timing-function: ease-in-out;
+      animation-timing-function: ease-in-out;
+      -webkit-animation-name: headShake;
+      animation-name: headShake
+    }
+
+    @-webkit-keyframes swing {
+      20% {
+        -webkit-transform: rotate(15deg);
+        transform: rotate(15deg)
+      }
+
+      40% {
+        -webkit-transform: rotate(-10deg);
+        transform: rotate(-10deg)
+      }
+
+      60% {
+        -webkit-transform: rotate(5deg);
+        transform: rotate(5deg)
+      }
+
+      80% {
+        -webkit-transform: rotate(-5deg);
+        transform: rotate(-5deg)
+      }
+
+      to {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+      }
+    }
+
+    @keyframes swing {
+      20% {
+        -webkit-transform: rotate(15deg);
+        transform: rotate(15deg)
+      }
+
+      40% {
+        -webkit-transform: rotate(-10deg);
+        transform: rotate(-10deg)
+      }
+
+      60% {
+        -webkit-transform: rotate(5deg);
+        transform: rotate(5deg)
+      }
+
+      80% {
+        -webkit-transform: rotate(-5deg);
+        transform: rotate(-5deg)
+      }
+
+      to {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+      }
+    }
+
+    .swing {
+      -webkit-transform-origin: top center;
+      transform-origin: top center;
+      -webkit-animation-name: swing;
+      animation-name: swing
+    }
+
+    @-webkit-keyframes tada {
+      0% {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+
+      10%,
+      20% {
+        -webkit-transform: scale3d(.9, .9, .9) rotate(-3deg);
+        transform: scale3d(.9, .9, .9) rotate(-3deg)
+      }
+
+      30%,
+      50%,
+      70%,
+      90% {
+        -webkit-transform: scale3d(1.1, 1.1, 1.1) rotate(3deg);
+        transform: scale3d(1.1, 1.1, 1.1) rotate(3deg)
+      }
+
+      40%,
+      60%,
+      80% {
+        -webkit-transform: scale3d(1.1, 1.1, 1.1) rotate(-3deg);
+        transform: scale3d(1.1, 1.1, 1.1) rotate(-3deg)
+      }
+
+      to {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+    }
+
+    @keyframes tada {
+      0% {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+
+      10%,
+      20% {
+        -webkit-transform: scale3d(.9, .9, .9) rotate(-3deg);
+        transform: scale3d(.9, .9, .9) rotate(-3deg)
+      }
+
+      30%,
+      50%,
+      70%,
+      90% {
+        -webkit-transform: scale3d(1.1, 1.1, 1.1) rotate(3deg);
+        transform: scale3d(1.1, 1.1, 1.1) rotate(3deg)
+      }
+
+      40%,
+      60%,
+      80% {
+        -webkit-transform: scale3d(1.1, 1.1, 1.1) rotate(-3deg);
+        transform: scale3d(1.1, 1.1, 1.1) rotate(-3deg)
+      }
+
+      to {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+    }
+
+    .tada {
+      -webkit-animation-name: tada;
+      animation-name: tada
+    }
+
+    @-webkit-keyframes wobble {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      15% {
+        -webkit-transform: translate3d(-25%, 0, 0) rotate(-5deg);
+        transform: translate3d(-25%, 0, 0) rotate(-5deg)
+      }
+
+      30% {
+        -webkit-transform: translate3d(20%, 0, 0) rotate(3deg);
+        transform: translate3d(20%, 0, 0) rotate(3deg)
+      }
+
+      45% {
+        -webkit-transform: translate3d(-15%, 0, 0) rotate(-3deg);
+        transform: translate3d(-15%, 0, 0) rotate(-3deg)
+      }
+
+      60% {
+        -webkit-transform: translate3d(10%, 0, 0) rotate(2deg);
+        transform: translate3d(10%, 0, 0) rotate(2deg)
+      }
+
+      75% {
+        -webkit-transform: translate3d(-5%, 0, 0) rotate(-1deg);
+        transform: translate3d(-5%, 0, 0) rotate(-1deg)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes wobble {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      15% {
+        -webkit-transform: translate3d(-25%, 0, 0) rotate(-5deg);
+        transform: translate3d(-25%, 0, 0) rotate(-5deg)
+      }
+
+      30% {
+        -webkit-transform: translate3d(20%, 0, 0) rotate(3deg);
+        transform: translate3d(20%, 0, 0) rotate(3deg)
+      }
+
+      45% {
+        -webkit-transform: translate3d(-15%, 0, 0) rotate(-3deg);
+        transform: translate3d(-15%, 0, 0) rotate(-3deg)
+      }
+
+      60% {
+        -webkit-transform: translate3d(10%, 0, 0) rotate(2deg);
+        transform: translate3d(10%, 0, 0) rotate(2deg)
+      }
+
+      75% {
+        -webkit-transform: translate3d(-5%, 0, 0) rotate(-1deg);
+        transform: translate3d(-5%, 0, 0) rotate(-1deg)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .wobble {
+      -webkit-animation-name: wobble;
+      animation-name: wobble
+    }
+
+    @-webkit-keyframes jello {
+
+      0%,
+      11.1%,
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      22.2% {
+        -webkit-transform: skewX(-12.5deg) skewY(-12.5deg);
+        transform: skewX(-12.5deg) skewY(-12.5deg)
+      }
+
+      33.3% {
+        -webkit-transform: skewX(6.25deg) skewY(6.25deg);
+        transform: skewX(6.25deg) skewY(6.25deg)
+      }
+
+      44.4% {
+        -webkit-transform: skewX(-3.125deg) skewY(-3.125deg);
+        transform: skewX(-3.125deg) skewY(-3.125deg)
+      }
+
+      55.5% {
+        -webkit-transform: skewX(1.5625deg) skewY(1.5625deg);
+        transform: skewX(1.5625deg) skewY(1.5625deg)
+      }
+
+      66.6% {
+        -webkit-transform: skewX(-.78125deg) skewY(-.78125deg);
+        transform: skewX(-.78125deg) skewY(-.78125deg)
+      }
+
+      77.7% {
+        -webkit-transform: skewX(.390625deg) skewY(.390625deg);
+        transform: skewX(.390625deg) skewY(.390625deg)
+      }
+
+      88.8% {
+        -webkit-transform: skewX(-.1953125deg) skewY(-.1953125deg);
+        transform: skewX(-.1953125deg) skewY(-.1953125deg)
+      }
+    }
+
+    @keyframes jello {
+
+      0%,
+      11.1%,
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      22.2% {
+        -webkit-transform: skewX(-12.5deg) skewY(-12.5deg);
+        transform: skewX(-12.5deg) skewY(-12.5deg)
+      }
+
+      33.3% {
+        -webkit-transform: skewX(6.25deg) skewY(6.25deg);
+        transform: skewX(6.25deg) skewY(6.25deg)
+      }
+
+      44.4% {
+        -webkit-transform: skewX(-3.125deg) skewY(-3.125deg);
+        transform: skewX(-3.125deg) skewY(-3.125deg)
+      }
+
+      55.5% {
+        -webkit-transform: skewX(1.5625deg) skewY(1.5625deg);
+        transform: skewX(1.5625deg) skewY(1.5625deg)
+      }
+
+      66.6% {
+        -webkit-transform: skewX(-.78125deg) skewY(-.78125deg);
+        transform: skewX(-.78125deg) skewY(-.78125deg)
+      }
+
+      77.7% {
+        -webkit-transform: skewX(.390625deg) skewY(.390625deg);
+        transform: skewX(.390625deg) skewY(.390625deg)
+      }
+
+      88.8% {
+        -webkit-transform: skewX(-.1953125deg) skewY(-.1953125deg);
+        transform: skewX(-.1953125deg) skewY(-.1953125deg)
+      }
+    }
+
+    .jello {
+      -webkit-animation-name: jello;
+      animation-name: jello;
+      -webkit-transform-origin: center;
+      transform-origin: center
+    }
+
+    @-webkit-keyframes heartBeat {
+      0% {
+        -webkit-transform: scale(1);
+        transform: scale(1)
+      }
+
+      14% {
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3)
+      }
+
+      28% {
+        -webkit-transform: scale(1);
+        transform: scale(1)
+      }
+
+      42% {
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3)
+      }
+
+      70% {
+        -webkit-transform: scale(1);
+        transform: scale(1)
+      }
+    }
+
+    @keyframes heartBeat {
+      0% {
+        -webkit-transform: scale(1);
+        transform: scale(1)
+      }
+
+      14% {
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3)
+      }
+
+      28% {
+        -webkit-transform: scale(1);
+        transform: scale(1)
+      }
+
+      42% {
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3)
+      }
+
+      70% {
+        -webkit-transform: scale(1);
+        transform: scale(1)
+      }
+    }
+
+    .heartBeat {
+      -webkit-animation-name: heartBeat;
+      animation-name: heartBeat;
+      -webkit-animation-duration: 1.3s;
+      animation-duration: 1.3s;
+      -webkit-animation-timing-function: ease-in-out;
+      animation-timing-function: ease-in-out
+    }
+
+    @-webkit-keyframes bounceIn {
+
+      0%,
+      20%,
+      40%,
+      60%,
+      80%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3)
+      }
+
+      20% {
+        -webkit-transform: scale3d(1.1, 1.1, 1.1);
+        transform: scale3d(1.1, 1.1, 1.1)
+      }
+
+      40% {
+        -webkit-transform: scale3d(.9, .9, .9);
+        transform: scale3d(.9, .9, .9)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(1.03, 1.03, 1.03);
+        transform: scale3d(1.03, 1.03, 1.03)
+      }
+
+      80% {
+        -webkit-transform: scale3d(.97, .97, .97);
+        transform: scale3d(.97, .97, .97)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+    }
+
+    @keyframes bounceIn {
+
+      0%,
+      20%,
+      40%,
+      60%,
+      80%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3)
+      }
+
+      20% {
+        -webkit-transform: scale3d(1.1, 1.1, 1.1);
+        transform: scale3d(1.1, 1.1, 1.1)
+      }
+
+      40% {
+        -webkit-transform: scale3d(.9, .9, .9);
+        transform: scale3d(.9, .9, .9)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(1.03, 1.03, 1.03);
+        transform: scale3d(1.03, 1.03, 1.03)
+      }
+
+      80% {
+        -webkit-transform: scale3d(.97, .97, .97);
+        transform: scale3d(.97, .97, .97)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1)
+      }
+    }
+
+    .bounceIn {
+      -webkit-animation-duration: .75s;
+      animation-duration: .75s;
+      -webkit-animation-name: bounceIn;
+      animation-name: bounceIn
+    }
+
+    @-webkit-keyframes bounceInDown {
+
+      0%,
+      60%,
+      75%,
+      90%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -3000px, 0);
+        transform: translate3d(0, -3000px, 0)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 25px, 0);
+        transform: translate3d(0, 25px, 0)
+      }
+
+      75% {
+        -webkit-transform: translate3d(0, -10px, 0);
+        transform: translate3d(0, -10px, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(0, 5px, 0);
+        transform: translate3d(0, 5px, 0)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes bounceInDown {
+
+      0%,
+      60%,
+      75%,
+      90%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -3000px, 0);
+        transform: translate3d(0, -3000px, 0)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 25px, 0);
+        transform: translate3d(0, 25px, 0)
+      }
+
+      75% {
+        -webkit-transform: translate3d(0, -10px, 0);
+        transform: translate3d(0, -10px, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(0, 5px, 0);
+        transform: translate3d(0, 5px, 0)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .bounceInDown {
+      -webkit-animation-name: bounceInDown;
+      animation-name: bounceInDown
+    }
+
+    @-webkit-keyframes bounceInLeft {
+
+      0%,
+      60%,
+      75%,
+      90%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-3000px, 0, 0);
+        transform: translate3d(-3000px, 0, 0)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(25px, 0, 0);
+        transform: translate3d(25px, 0, 0)
+      }
+
+      75% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes bounceInLeft {
+
+      0%,
+      60%,
+      75%,
+      90%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-3000px, 0, 0);
+        transform: translate3d(-3000px, 0, 0)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(25px, 0, 0);
+        transform: translate3d(25px, 0, 0)
+      }
+
+      75% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .bounceInLeft {
+      -webkit-animation-name: bounceInLeft;
+      animation-name: bounceInLeft
+    }
+
+    @-webkit-keyframes bounceInRight {
+
+      0%,
+      60%,
+      75%,
+      90%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(3000px, 0, 0);
+        transform: translate3d(3000px, 0, 0)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(-25px, 0, 0);
+        transform: translate3d(-25px, 0, 0)
+      }
+
+      75% {
+        -webkit-transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(-5px, 0, 0);
+        transform: translate3d(-5px, 0, 0)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes bounceInRight {
+
+      0%,
+      60%,
+      75%,
+      90%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(3000px, 0, 0);
+        transform: translate3d(3000px, 0, 0)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(-25px, 0, 0);
+        transform: translate3d(-25px, 0, 0)
+      }
+
+      75% {
+        -webkit-transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(-5px, 0, 0);
+        transform: translate3d(-5px, 0, 0)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .bounceInRight {
+      -webkit-animation-name: bounceInRight;
+      animation-name: bounceInRight
+    }
+
+    @-webkit-keyframes bounceInUp {
+
+      0%,
+      60%,
+      75%,
+      90%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 3000px, 0);
+        transform: translate3d(0, 3000px, 0)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, -20px, 0);
+        transform: translate3d(0, -20px, 0)
+      }
+
+      75% {
+        -webkit-transform: translate3d(0, 10px, 0);
+        transform: translate3d(0, 10px, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(0, -5px, 0);
+        transform: translate3d(0, -5px, 0)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes bounceInUp {
+
+      0%,
+      60%,
+      75%,
+      90%,
+      to {
+        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+      }
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 3000px, 0);
+        transform: translate3d(0, 3000px, 0)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, -20px, 0);
+        transform: translate3d(0, -20px, 0)
+      }
+
+      75% {
+        -webkit-transform: translate3d(0, 10px, 0);
+        transform: translate3d(0, 10px, 0)
+      }
+
+      90% {
+        -webkit-transform: translate3d(0, -5px, 0);
+        transform: translate3d(0, -5px, 0)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .bounceInUp {
+      -webkit-animation-name: bounceInUp;
+      animation-name: bounceInUp
+    }
+
+    @-webkit-keyframes bounceOut {
+      20% {
+        -webkit-transform: scale3d(.9, .9, .9);
+        transform: scale3d(.9, .9, .9)
+      }
+
+      50%,
+      55% {
+        opacity: 1;
+        -webkit-transform: scale3d(1.1, 1.1, 1.1);
+        transform: scale3d(1.1, 1.1, 1.1)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3)
+      }
+    }
+
+    @keyframes bounceOut {
+      20% {
+        -webkit-transform: scale3d(.9, .9, .9);
+        transform: scale3d(.9, .9, .9)
+      }
+
+      50%,
+      55% {
+        opacity: 1;
+        -webkit-transform: scale3d(1.1, 1.1, 1.1);
+        transform: scale3d(1.1, 1.1, 1.1)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3)
+      }
+    }
+
+    .bounceOut {
+      -webkit-animation-duration: .75s;
+      animation-duration: .75s;
+      -webkit-animation-name: bounceOut;
+      animation-name: bounceOut
+    }
+
+    @-webkit-keyframes bounceOutDown {
+      20% {
+        -webkit-transform: translate3d(0, 10px, 0);
+        transform: translate3d(0, 10px, 0)
+      }
+
+      40%,
+      45% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, -20px, 0);
+        transform: translate3d(0, -20px, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 2000px, 0);
+        transform: translate3d(0, 2000px, 0)
+      }
+    }
+
+    @keyframes bounceOutDown {
+      20% {
+        -webkit-transform: translate3d(0, 10px, 0);
+        transform: translate3d(0, 10px, 0)
+      }
+
+      40%,
+      45% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, -20px, 0);
+        transform: translate3d(0, -20px, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 2000px, 0);
+        transform: translate3d(0, 2000px, 0)
+      }
+    }
+
+    .bounceOutDown {
+      -webkit-animation-name: bounceOutDown;
+      animation-name: bounceOutDown
+    }
+
+    @-webkit-keyframes bounceOutLeft {
+      20% {
+        opacity: 1;
+        -webkit-transform: translate3d(20px, 0, 0);
+        transform: translate3d(20px, 0, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(-2000px, 0, 0);
+        transform: translate3d(-2000px, 0, 0)
+      }
+    }
+
+    @keyframes bounceOutLeft {
+      20% {
+        opacity: 1;
+        -webkit-transform: translate3d(20px, 0, 0);
+        transform: translate3d(20px, 0, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(-2000px, 0, 0);
+        transform: translate3d(-2000px, 0, 0)
+      }
+    }
+
+    .bounceOutLeft {
+      -webkit-animation-name: bounceOutLeft;
+      animation-name: bounceOutLeft
+    }
+
+    @-webkit-keyframes bounceOutRight {
+      20% {
+        opacity: 1;
+        -webkit-transform: translate3d(-20px, 0, 0);
+        transform: translate3d(-20px, 0, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(2000px, 0, 0);
+        transform: translate3d(2000px, 0, 0)
+      }
+    }
+
+    @keyframes bounceOutRight {
+      20% {
+        opacity: 1;
+        -webkit-transform: translate3d(-20px, 0, 0);
+        transform: translate3d(-20px, 0, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(2000px, 0, 0);
+        transform: translate3d(2000px, 0, 0)
+      }
+    }
+
+    .bounceOutRight {
+      -webkit-animation-name: bounceOutRight;
+      animation-name: bounceOutRight
+    }
+
+    @-webkit-keyframes bounceOutUp {
+      20% {
+        -webkit-transform: translate3d(0, -10px, 0);
+        transform: translate3d(0, -10px, 0)
+      }
+
+      40%,
+      45% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 20px, 0);
+        transform: translate3d(0, 20px, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -2000px, 0);
+        transform: translate3d(0, -2000px, 0)
+      }
+    }
+
+    @keyframes bounceOutUp {
+      20% {
+        -webkit-transform: translate3d(0, -10px, 0);
+        transform: translate3d(0, -10px, 0)
+      }
+
+      40%,
+      45% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 20px, 0);
+        transform: translate3d(0, 20px, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -2000px, 0);
+        transform: translate3d(0, -2000px, 0)
+      }
+    }
+
+    .bounceOutUp {
+      -webkit-animation-name: bounceOutUp;
+      animation-name: bounceOutUp
+    }
+
+    @-webkit-keyframes fadeIn {
+      0% {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    .fadeIn {
+      -webkit-animation-name: fadeIn;
+      animation-name: fadeIn
+    }
+
+    @-webkit-keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .fadeInDown {
+      -webkit-animation-name: fadeInDown;
+      animation-name: fadeInDown
+    }
+
+    @-webkit-keyframes fadeInDownBig {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -2000px, 0);
+        transform: translate3d(0, -2000px, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes fadeInDownBig {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -2000px, 0);
+        transform: translate3d(0, -2000px, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .fadeInDownBig {
+      -webkit-animation-name: fadeInDownBig;
+      animation-name: fadeInDownBig
+    }
+
+    @-webkit-keyframes fadeInLeft {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes fadeInLeft {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .fadeInLeft {
+      -webkit-animation-name: fadeInLeft;
+      animation-name: fadeInLeft
+    }
+
+    @-webkit-keyframes fadeInLeftBig {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-2000px, 0, 0);
+        transform: translate3d(-2000px, 0, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes fadeInLeftBig {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-2000px, 0, 0);
+        transform: translate3d(-2000px, 0, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .fadeInLeftBig {
+      -webkit-animation-name: fadeInLeftBig;
+      animation-name: fadeInLeftBig
+    }
+
+    @-webkit-keyframes fadeInRight {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes fadeInRight {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .fadeInRight {
+      -webkit-animation-name: fadeInRight;
+      animation-name: fadeInRight
+    }
+
+    @-webkit-keyframes fadeInRightBig {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(2000px, 0, 0);
+        transform: translate3d(2000px, 0, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes fadeInRightBig {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(2000px, 0, 0);
+        transform: translate3d(2000px, 0, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .fadeInRightBig {
+      -webkit-animation-name: fadeInRightBig;
+      animation-name: fadeInRightBig
+    }
+
+    @-webkit-keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .fadeInUp {
+      -webkit-animation-name: fadeInUp;
+      animation-name: fadeInUp
+    }
+
+    @-webkit-keyframes fadeInUpBig {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 2000px, 0);
+        transform: translate3d(0, 2000px, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes fadeInUpBig {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 2000px, 0);
+        transform: translate3d(0, 2000px, 0)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .fadeInUpBig {
+      -webkit-animation-name: fadeInUpBig;
+      animation-name: fadeInUpBig
+    }
+
+    @-webkit-keyframes fadeOut {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0
+      }
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0
+      }
+    }
+
+    .fadeOut {
+      -webkit-animation-name: fadeOut;
+      animation-name: fadeOut
+    }
+
+    @-webkit-keyframes fadeOutDown {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0)
+      }
+    }
+
+    @keyframes fadeOutDown {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0)
+      }
+    }
+
+    .fadeOutDown {
+      -webkit-animation-name: fadeOutDown;
+      animation-name: fadeOutDown
+    }
+
+    @-webkit-keyframes fadeOutDownBig {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 2000px, 0);
+        transform: translate3d(0, 2000px, 0)
+      }
+    }
+
+    @keyframes fadeOutDownBig {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 2000px, 0);
+        transform: translate3d(0, 2000px, 0)
+      }
+    }
+
+    .fadeOutDownBig {
+      -webkit-animation-name: fadeOutDownBig;
+      animation-name: fadeOutDownBig
+    }
+
+    @-webkit-keyframes fadeOutLeft {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0)
+      }
+    }
+
+    @keyframes fadeOutLeft {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0)
+      }
+    }
+
+    .fadeOutLeft {
+      -webkit-animation-name: fadeOutLeft;
+      animation-name: fadeOutLeft
+    }
+
+    @-webkit-keyframes fadeOutLeftBig {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(-2000px, 0, 0);
+        transform: translate3d(-2000px, 0, 0)
+      }
+    }
+
+    @keyframes fadeOutLeftBig {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(-2000px, 0, 0);
+        transform: translate3d(-2000px, 0, 0)
+      }
+    }
+
+    .fadeOutLeftBig {
+      -webkit-animation-name: fadeOutLeftBig;
+      animation-name: fadeOutLeftBig
+    }
+
+    @-webkit-keyframes fadeOutRight {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0)
+      }
+    }
+
+    @keyframes fadeOutRight {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0)
+      }
+    }
+
+    .fadeOutRight {
+      -webkit-animation-name: fadeOutRight;
+      animation-name: fadeOutRight
+    }
+
+    @-webkit-keyframes fadeOutRightBig {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(2000px, 0, 0);
+        transform: translate3d(2000px, 0, 0)
+      }
+    }
+
+    @keyframes fadeOutRightBig {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(2000px, 0, 0);
+        transform: translate3d(2000px, 0, 0)
+      }
+    }
+
+    .fadeOutRightBig {
+      -webkit-animation-name: fadeOutRightBig;
+      animation-name: fadeOutRightBig
+    }
+
+    @-webkit-keyframes fadeOutUp {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
+      }
+    }
+
+    @keyframes fadeOutUp {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
+      }
+    }
+
+    .fadeOutUp {
+      -webkit-animation-name: fadeOutUp;
+      animation-name: fadeOutUp
+    }
+
+    @-webkit-keyframes fadeOutUpBig {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -2000px, 0);
+        transform: translate3d(0, -2000px, 0)
+      }
+    }
+
+    @keyframes fadeOutUpBig {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -2000px, 0);
+        transform: translate3d(0, -2000px, 0)
+      }
+    }
+
+    .fadeOutUpBig {
+      -webkit-animation-name: fadeOutUpBig;
+      animation-name: fadeOutUpBig
+    }
+
+    @-webkit-keyframes flip {
+      0% {
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(0) rotateY(-1turn);
+        transform: perspective(400px) scaleX(1) translateZ(0) rotateY(-1turn);
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out
+      }
+
+      40% {
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-190deg);
+        transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-190deg);
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out
+      }
+
+      50% {
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-170deg);
+        transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-170deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+
+      80% {
+        -webkit-transform: perspective(400px) scale3d(.95, .95, .95) translateZ(0) rotateY(0);
+        transform: perspective(400px) scale3d(.95, .95, .95) translateZ(0) rotateY(0);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+
+      to {
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(0) rotateY(0);
+        transform: perspective(400px) scaleX(1) translateZ(0) rotateY(0);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+    }
+
+    @keyframes flip {
+      0% {
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(0) rotateY(-1turn);
+        transform: perspective(400px) scaleX(1) translateZ(0) rotateY(-1turn);
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out
+      }
+
+      40% {
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-190deg);
+        transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-190deg);
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out
+      }
+
+      50% {
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-170deg);
+        transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-170deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+
+      80% {
+        -webkit-transform: perspective(400px) scale3d(.95, .95, .95) translateZ(0) rotateY(0);
+        transform: perspective(400px) scale3d(.95, .95, .95) translateZ(0) rotateY(0);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+
+      to {
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(0) rotateY(0);
+        transform: perspective(400px) scaleX(1) translateZ(0) rotateY(0);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+    }
+
+    .animated.flip {
+      -webkit-backface-visibility: visible;
+      backface-visibility: visible;
+      -webkit-animation-name: flip;
+      animation-name: flip
+    }
+
+    @-webkit-keyframes flipInX {
+      0% {
+        -webkit-transform: perspective(400px) rotateX(90deg);
+        transform: perspective(400px) rotateX(90deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+        opacity: 0
+      }
+
+      40% {
+        -webkit-transform: perspective(400px) rotateX(-20deg);
+        transform: perspective(400px) rotateX(-20deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+
+      60% {
+        -webkit-transform: perspective(400px) rotateX(10deg);
+        transform: perspective(400px) rotateX(10deg);
+        opacity: 1
+      }
+
+      80% {
+        -webkit-transform: perspective(400px) rotateX(-5deg);
+        transform: perspective(400px) rotateX(-5deg)
+      }
+
+      to {
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px)
+      }
+    }
+
+    @keyframes flipInX {
+      0% {
+        -webkit-transform: perspective(400px) rotateX(90deg);
+        transform: perspective(400px) rotateX(90deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+        opacity: 0
+      }
+
+      40% {
+        -webkit-transform: perspective(400px) rotateX(-20deg);
+        transform: perspective(400px) rotateX(-20deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+
+      60% {
+        -webkit-transform: perspective(400px) rotateX(10deg);
+        transform: perspective(400px) rotateX(10deg);
+        opacity: 1
+      }
+
+      80% {
+        -webkit-transform: perspective(400px) rotateX(-5deg);
+        transform: perspective(400px) rotateX(-5deg)
+      }
+
+      to {
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px)
+      }
+    }
+
+    .flipInX {
+      -webkit-backface-visibility: visible !important;
+      backface-visibility: visible !important;
+      -webkit-animation-name: flipInX;
+      animation-name: flipInX
+    }
+
+    @-webkit-keyframes flipInY {
+      0% {
+        -webkit-transform: perspective(400px) rotateY(90deg);
+        transform: perspective(400px) rotateY(90deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+        opacity: 0
+      }
+
+      40% {
+        -webkit-transform: perspective(400px) rotateY(-20deg);
+        transform: perspective(400px) rotateY(-20deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+
+      60% {
+        -webkit-transform: perspective(400px) rotateY(10deg);
+        transform: perspective(400px) rotateY(10deg);
+        opacity: 1
+      }
+
+      80% {
+        -webkit-transform: perspective(400px) rotateY(-5deg);
+        transform: perspective(400px) rotateY(-5deg)
+      }
+
+      to {
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px)
+      }
+    }
+
+    @keyframes flipInY {
+      0% {
+        -webkit-transform: perspective(400px) rotateY(90deg);
+        transform: perspective(400px) rotateY(90deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+        opacity: 0
+      }
+
+      40% {
+        -webkit-transform: perspective(400px) rotateY(-20deg);
+        transform: perspective(400px) rotateY(-20deg);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in
+      }
+
+      60% {
+        -webkit-transform: perspective(400px) rotateY(10deg);
+        transform: perspective(400px) rotateY(10deg);
+        opacity: 1
+      }
+
+      80% {
+        -webkit-transform: perspective(400px) rotateY(-5deg);
+        transform: perspective(400px) rotateY(-5deg)
+      }
+
+      to {
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px)
+      }
+    }
+
+    .flipInY {
+      -webkit-backface-visibility: visible !important;
+      backface-visibility: visible !important;
+      -webkit-animation-name: flipInY;
+      animation-name: flipInY
+    }
+
+    @-webkit-keyframes flipOutX {
+      0% {
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px)
+      }
+
+      30% {
+        -webkit-transform: perspective(400px) rotateX(-20deg);
+        transform: perspective(400px) rotateX(-20deg);
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform: perspective(400px) rotateX(90deg);
+        transform: perspective(400px) rotateX(90deg);
+        opacity: 0
+      }
+    }
+
+    @keyframes flipOutX {
+      0% {
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px)
+      }
+
+      30% {
+        -webkit-transform: perspective(400px) rotateX(-20deg);
+        transform: perspective(400px) rotateX(-20deg);
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform: perspective(400px) rotateX(90deg);
+        transform: perspective(400px) rotateX(90deg);
+        opacity: 0
+      }
+    }
+
+    .flipOutX {
+      -webkit-animation-duration: .75s;
+      animation-duration: .75s;
+      -webkit-animation-name: flipOutX;
+      animation-name: flipOutX;
+      -webkit-backface-visibility: visible !important;
+      backface-visibility: visible !important
+    }
+
+    @-webkit-keyframes flipOutY {
+      0% {
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px)
+      }
+
+      30% {
+        -webkit-transform: perspective(400px) rotateY(-15deg);
+        transform: perspective(400px) rotateY(-15deg);
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform: perspective(400px) rotateY(90deg);
+        transform: perspective(400px) rotateY(90deg);
+        opacity: 0
+      }
+    }
+
+    @keyframes flipOutY {
+      0% {
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px)
+      }
+
+      30% {
+        -webkit-transform: perspective(400px) rotateY(-15deg);
+        transform: perspective(400px) rotateY(-15deg);
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform: perspective(400px) rotateY(90deg);
+        transform: perspective(400px) rotateY(90deg);
+        opacity: 0
+      }
+    }
+
+    .flipOutY {
+      -webkit-animation-duration: .75s;
+      animation-duration: .75s;
+      -webkit-backface-visibility: visible !important;
+      backface-visibility: visible !important;
+      -webkit-animation-name: flipOutY;
+      animation-name: flipOutY
+    }
+
+    @-webkit-keyframes lightSpeedIn {
+      0% {
+        -webkit-transform: translate3d(100%, 0, 0) skewX(-30deg);
+        transform: translate3d(100%, 0, 0) skewX(-30deg);
+        opacity: 0
+      }
+
+      60% {
+        -webkit-transform: skewX(20deg);
+        transform: skewX(20deg);
+        opacity: 1
+      }
+
+      80% {
+        -webkit-transform: skewX(-5deg);
+        transform: skewX(-5deg)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes lightSpeedIn {
+      0% {
+        -webkit-transform: translate3d(100%, 0, 0) skewX(-30deg);
+        transform: translate3d(100%, 0, 0) skewX(-30deg);
+        opacity: 0
+      }
+
+      60% {
+        -webkit-transform: skewX(20deg);
+        transform: skewX(20deg);
+        opacity: 1
+      }
+
+      80% {
+        -webkit-transform: skewX(-5deg);
+        transform: skewX(-5deg)
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .lightSpeedIn {
+      -webkit-animation-name: lightSpeedIn;
+      animation-name: lightSpeedIn;
+      -webkit-animation-timing-function: ease-out;
+      animation-timing-function: ease-out
+    }
+
+    @-webkit-keyframes lightSpeedOut {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform: translate3d(100%, 0, 0) skewX(30deg);
+        transform: translate3d(100%, 0, 0) skewX(30deg);
+        opacity: 0
+      }
+    }
+
+    @keyframes lightSpeedOut {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform: translate3d(100%, 0, 0) skewX(30deg);
+        transform: translate3d(100%, 0, 0) skewX(30deg);
+        opacity: 0
+      }
+    }
+
+    .lightSpeedOut {
+      -webkit-animation-name: lightSpeedOut;
+      animation-name: lightSpeedOut;
+      -webkit-animation-timing-function: ease-in;
+      animation-timing-function: ease-in
+    }
+
+    @-webkit-keyframes rotateIn {
+      0% {
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        -webkit-transform: rotate(-200deg);
+        transform: rotate(-200deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    @keyframes rotateIn {
+      0% {
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        -webkit-transform: rotate(-200deg);
+        transform: rotate(-200deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    .rotateIn {
+      -webkit-animation-name: rotateIn;
+      animation-name: rotateIn
+    }
+
+    @-webkit-keyframes rotateInDownLeft {
+      0% {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    @keyframes rotateInDownLeft {
+      0% {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    .rotateInDownLeft {
+      -webkit-animation-name: rotateInDownLeft;
+      animation-name: rotateInDownLeft
+    }
+
+    @-webkit-keyframes rotateInDownRight {
+      0% {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    @keyframes rotateInDownRight {
+      0% {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    .rotateInDownRight {
+      -webkit-animation-name: rotateInDownRight;
+      animation-name: rotateInDownRight
+    }
+
+    @-webkit-keyframes rotateInUpLeft {
+      0% {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    @keyframes rotateInUpLeft {
+      0% {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    .rotateInUpLeft {
+      -webkit-animation-name: rotateInUpLeft;
+      animation-name: rotateInUpLeft
+    }
+
+    @-webkit-keyframes rotateInUpRight {
+      0% {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    @keyframes rotateInUpRight {
+      0% {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+        opacity: 0
+      }
+
+      to {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+      }
+    }
+
+    .rotateInUpRight {
+      -webkit-animation-name: rotateInUpRight;
+      animation-name: rotateInUpRight
+    }
+
+    @-webkit-keyframes rotateOut {
+      0% {
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        -webkit-transform: rotate(200deg);
+        transform: rotate(200deg);
+        opacity: 0
+      }
+    }
+
+    @keyframes rotateOut {
+      0% {
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        -webkit-transform: rotate(200deg);
+        transform: rotate(200deg);
+        opacity: 0
+      }
+    }
+
+    .rotateOut {
+      -webkit-animation-name: rotateOut;
+      animation-name: rotateOut
+    }
+
+    @-webkit-keyframes rotateOutDownLeft {
+      0% {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        opacity: 0
+      }
+    }
+
+    @keyframes rotateOutDownLeft {
+      0% {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        opacity: 0
+      }
+    }
+
+    .rotateOutDownLeft {
+      -webkit-animation-name: rotateOutDownLeft;
+      animation-name: rotateOutDownLeft
+    }
+
+    @-webkit-keyframes rotateOutDownRight {
+      0% {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        opacity: 0
+      }
+    }
+
+    @keyframes rotateOutDownRight {
+      0% {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        opacity: 0
+      }
+    }
+
+    .rotateOutDownRight {
+      -webkit-animation-name: rotateOutDownRight;
+      animation-name: rotateOutDownRight
+    }
+
+    @-webkit-keyframes rotateOutUpLeft {
+      0% {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        opacity: 0
+      }
+    }
+
+    @keyframes rotateOutUpLeft {
+      0% {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        opacity: 0
+      }
+    }
+
+    .rotateOutUpLeft {
+      -webkit-animation-name: rotateOutUpLeft;
+      animation-name: rotateOutUpLeft
+    }
+
+    @-webkit-keyframes rotateOutUpRight {
+      0% {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+        opacity: 0
+      }
+    }
+
+    @keyframes rotateOutUpRight {
+      0% {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform-origin: right bottom;
+        transform-origin: right bottom;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+        opacity: 0
+      }
+    }
+
+    .rotateOutUpRight {
+      -webkit-animation-name: rotateOutUpRight;
+      animation-name: rotateOutUpRight
+    }
+
+    @-webkit-keyframes hinge {
+      0% {
+        -webkit-transform-origin: top left;
+        transform-origin: top left;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out
+      }
+
+      20%,
+      60% {
+        -webkit-transform: rotate(80deg);
+        transform: rotate(80deg);
+        -webkit-transform-origin: top left;
+        transform-origin: top left;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out
+      }
+
+      40%,
+      80% {
+        -webkit-transform: rotate(60deg);
+        transform: rotate(60deg);
+        -webkit-transform-origin: top left;
+        transform-origin: top left;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform: translate3d(0, 700px, 0);
+        transform: translate3d(0, 700px, 0);
+        opacity: 0
+      }
+    }
+
+    @keyframes hinge {
+      0% {
+        -webkit-transform-origin: top left;
+        transform-origin: top left;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out
+      }
+
+      20%,
+      60% {
+        -webkit-transform: rotate(80deg);
+        transform: rotate(80deg);
+        -webkit-transform-origin: top left;
+        transform-origin: top left;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out
+      }
+
+      40%,
+      80% {
+        -webkit-transform: rotate(60deg);
+        transform: rotate(60deg);
+        -webkit-transform-origin: top left;
+        transform-origin: top left;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
+        opacity: 1
+      }
+
+      to {
+        -webkit-transform: translate3d(0, 700px, 0);
+        transform: translate3d(0, 700px, 0);
+        opacity: 0
+      }
+    }
+
+    .hinge {
+      -webkit-animation-duration: 2s;
+      animation-duration: 2s;
+      -webkit-animation-name: hinge;
+      animation-name: hinge
+    }
+
+    @-webkit-keyframes jackInTheBox {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(.1) rotate(30deg);
+        transform: scale(.1) rotate(30deg);
+        -webkit-transform-origin: center bottom;
+        transform-origin: center bottom
+      }
+
+      50% {
+        -webkit-transform: rotate(-10deg);
+        transform: rotate(-10deg)
+      }
+
+      70% {
+        -webkit-transform: rotate(3deg);
+        transform: rotate(3deg)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1)
+      }
+    }
+
+    @keyframes jackInTheBox {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale(.1) rotate(30deg);
+        transform: scale(.1) rotate(30deg);
+        -webkit-transform-origin: center bottom;
+        transform-origin: center bottom
+      }
+
+      50% {
+        -webkit-transform: rotate(-10deg);
+        transform: rotate(-10deg)
+      }
+
+      70% {
+        -webkit-transform: rotate(3deg);
+        transform: rotate(3deg)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1)
+      }
+    }
+
+    .jackInTheBox {
+      -webkit-animation-name: jackInTheBox;
+      animation-name: jackInTheBox
+    }
+
+    @-webkit-keyframes rollIn {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-100%, 0, 0) rotate(-120deg);
+        transform: translate3d(-100%, 0, 0) rotate(-120deg)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes rollIn {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-100%, 0, 0) rotate(-120deg);
+        transform: translate3d(-100%, 0, 0) rotate(-120deg)
+      }
+
+      to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .rollIn {
+      -webkit-animation-name: rollIn;
+      animation-name: rollIn
+    }
+
+    @-webkit-keyframes rollOut {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(100%, 0, 0) rotate(120deg);
+        transform: translate3d(100%, 0, 0) rotate(120deg)
+      }
+    }
+
+    @keyframes rollOut {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: translate3d(100%, 0, 0) rotate(120deg);
+        transform: translate3d(100%, 0, 0) rotate(120deg)
+      }
+    }
+
+    .rollOut {
+      -webkit-animation-name: rollOut;
+      animation-name: rollOut
+    }
+
+    @-webkit-keyframes zoomIn {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3)
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    @keyframes zoomIn {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3)
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    .zoomIn {
+      -webkit-animation-name: zoomIn;
+      animation-name: zoomIn
+    }
+
+    @-webkit-keyframes zoomInDown {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    @keyframes zoomInDown {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    .zoomInDown {
+      -webkit-animation-name: zoomInDown;
+      animation-name: zoomInDown
+    }
+
+    @-webkit-keyframes zoomInLeft {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(-1000px, 0, 0);
+        transform: scale3d(.1, .1, .1) translate3d(-1000px, 0, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(10px, 0, 0);
+        transform: scale3d(.475, .475, .475) translate3d(10px, 0, 0);
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    @keyframes zoomInLeft {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(-1000px, 0, 0);
+        transform: scale3d(.1, .1, .1) translate3d(-1000px, 0, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(10px, 0, 0);
+        transform: scale3d(.475, .475, .475) translate3d(10px, 0, 0);
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    .zoomInLeft {
+      -webkit-animation-name: zoomInLeft;
+      animation-name: zoomInLeft
+    }
+
+    @-webkit-keyframes zoomInRight {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+        transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+        transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    @keyframes zoomInRight {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+        transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+        transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    .zoomInRight {
+      -webkit-animation-name: zoomInRight;
+      animation-name: zoomInRight
+    }
+
+    @-webkit-keyframes zoomInUp {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, 1000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, 1000px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    @keyframes zoomInUp {
+      0% {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, 1000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, 1000px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    .zoomInUp {
+      -webkit-animation-name: zoomInUp;
+      animation-name: zoomInUp
+    }
+
+    @-webkit-keyframes zoomOut {
+      0% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3)
+      }
+
+      to {
+        opacity: 0
+      }
+    }
+
+    @keyframes zoomOut {
+      0% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3)
+      }
+
+      to {
+        opacity: 0
+      }
+    }
+
+    .zoomOut {
+      -webkit-animation-name: zoomOut;
+      animation-name: zoomOut
+    }
+
+    @-webkit-keyframes zoomOutDown {
+      40% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, 2000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, 2000px, 0);
+        -webkit-transform-origin: center bottom;
+        transform-origin: center bottom;
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    @keyframes zoomOutDown {
+      40% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, 2000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, 2000px, 0);
+        -webkit-transform-origin: center bottom;
+        transform-origin: center bottom;
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    .zoomOutDown {
+      -webkit-animation-name: zoomOutDown;
+      animation-name: zoomOutDown
+    }
+
+    @-webkit-keyframes zoomOutLeft {
+      40% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(42px, 0, 0);
+        transform: scale3d(.475, .475, .475) translate3d(42px, 0, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale(.1) translate3d(-2000px, 0, 0);
+        transform: scale(.1) translate3d(-2000px, 0, 0);
+        -webkit-transform-origin: left center;
+        transform-origin: left center
+      }
+    }
+
+    @keyframes zoomOutLeft {
+      40% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(42px, 0, 0);
+        transform: scale3d(.475, .475, .475) translate3d(42px, 0, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale(.1) translate3d(-2000px, 0, 0);
+        transform: scale(.1) translate3d(-2000px, 0, 0);
+        -webkit-transform-origin: left center;
+        transform-origin: left center
+      }
+    }
+
+    .zoomOutLeft {
+      -webkit-animation-name: zoomOutLeft;
+      animation-name: zoomOutLeft
+    }
+
+    @-webkit-keyframes zoomOutRight {
+      40% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(-42px, 0, 0);
+        transform: scale3d(.475, .475, .475) translate3d(-42px, 0, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale(.1) translate3d(2000px, 0, 0);
+        transform: scale(.1) translate3d(2000px, 0, 0);
+        -webkit-transform-origin: right center;
+        transform-origin: right center
+      }
+    }
+
+    @keyframes zoomOutRight {
+      40% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(-42px, 0, 0);
+        transform: scale3d(.475, .475, .475) translate3d(-42px, 0, 0)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale(.1) translate3d(2000px, 0, 0);
+        transform: scale(.1) translate3d(2000px, 0, 0);
+        -webkit-transform-origin: right center;
+        transform-origin: right center
+      }
+    }
+
+    .zoomOutRight {
+      -webkit-animation-name: zoomOutRight;
+      animation-name: zoomOutRight
+    }
+
+    @-webkit-keyframes zoomOutUp {
+      40% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, -2000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, -2000px, 0);
+        -webkit-transform-origin: center bottom;
+        transform-origin: center bottom;
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    @keyframes zoomOutUp {
+      40% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(.55, .055, .675, .19);
+        animation-timing-function: cubic-bezier(.55, .055, .675, .19)
+      }
+
+      to {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, -2000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, -2000px, 0);
+        -webkit-transform-origin: center bottom;
+        transform-origin: center bottom;
+        -webkit-animation-timing-function: cubic-bezier(.175, .885, .32, 1);
+        animation-timing-function: cubic-bezier(.175, .885, .32, 1)
+      }
+    }
+
+    .zoomOutUp {
+      -webkit-animation-name: zoomOutUp;
+      animation-name: zoomOutUp
+    }
+
+    @-webkit-keyframes slideInDown {
+      0% {
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0);
+        visibility: visible
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes slideInDown {
+      0% {
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0);
+        visibility: visible
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .slideInDown {
+      -webkit-animation-name: slideInDown;
+      animation-name: slideInDown
+    }
+
+    @-webkit-keyframes slideInLeft {
+      0% {
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+        visibility: visible
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes slideInLeft {
+      0% {
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+        visibility: visible
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .slideInLeft {
+      -webkit-animation-name: slideInLeft;
+      animation-name: slideInLeft
+    }
+
+    @-webkit-keyframes slideInRight {
+      0% {
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0);
+        visibility: visible
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes slideInRight {
+      0% {
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0);
+        visibility: visible
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .slideInRight {
+      -webkit-animation-name: slideInRight;
+      animation-name: slideInRight
+    }
+
+    @-webkit-keyframes slideInUp {
+      0% {
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0);
+        visibility: visible
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    @keyframes slideInUp {
+      0% {
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0);
+        visibility: visible
+      }
+
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+    }
+
+    .slideInUp {
+      -webkit-animation-name: slideInUp;
+      animation-name: slideInUp
+    }
+
+    @-webkit-keyframes slideOutDown {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      to {
+        visibility: hidden;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0)
+      }
+    }
+
+    @keyframes slideOutDown {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      to {
+        visibility: hidden;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0)
+      }
+    }
+
+    .slideOutDown {
+      -webkit-animation-name: slideOutDown;
+      animation-name: slideOutDown
+    }
+
+    @-webkit-keyframes slideOutLeft {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      to {
+        visibility: hidden;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0)
+      }
+    }
+
+    @keyframes slideOutLeft {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      to {
+        visibility: hidden;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0)
+      }
+    }
+
+    .slideOutLeft {
+      -webkit-animation-name: slideOutLeft;
+      animation-name: slideOutLeft
+    }
+
+    @-webkit-keyframes slideOutRight {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      to {
+        visibility: hidden;
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0)
+      }
+    }
+
+    @keyframes slideOutRight {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      to {
+        visibility: hidden;
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0)
+      }
+    }
+
+    .slideOutRight {
+      -webkit-animation-name: slideOutRight;
+      animation-name: slideOutRight
+    }
+
+    @-webkit-keyframes slideOutUp {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      to {
+        visibility: hidden;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
+      }
+    }
+
+    @keyframes slideOutUp {
+      0% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      to {
+        visibility: hidden;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
+      }
+    }
+
+    .slideOutUp {
+      -webkit-animation-name: slideOutUp;
+      animation-name: slideOutUp
+    }
+
+    .animated {
+      -webkit-animation-duration: 1s;
+      animation-duration: 1s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both
+    }
+
+    .animated.infinite {
+      -webkit-animation-iteration-count: infinite;
+      animation-iteration-count: infinite
+    }
+
+    .animated.delay-1s {
+      -webkit-animation-delay: 1s;
+      animation-delay: 1s
+    }
+
+    .animated.delay-2s {
+      -webkit-animation-delay: 2s;
+      animation-delay: 2s
+    }
+
+    .animated.delay-3s {
+      -webkit-animation-delay: 3s;
+      animation-delay: 3s
+    }
+
+    .animated.delay-4s {
+      -webkit-animation-delay: 4s;
+      animation-delay: 4s
+    }
+
+    .animated.delay-5s {
+      -webkit-animation-delay: 5s;
+      animation-delay: 5s
+    }
+
+    .animated.fast {
+      -webkit-animation-duration: .8s;
+      animation-duration: .8s
+    }
+
+    .animated.faster {
+      -webkit-animation-duration: .5s;
+      animation-duration: .5s
+    }
+
+    .animated.slow {
+      -webkit-animation-duration: 2s;
+      animation-duration: 2s
+    }
+
+    .animated.slower {
+      -webkit-animation-duration: 3s;
+      animation-duration: 3s
+    }
+
+    @media (prefers-reduced-motion:reduce),
+    (print) {
+      .animated {
+        -webkit-animation-duration: 1ms !important;
+        animation-duration: 1ms !important;
+        -webkit-transition-duration: 1ms !important;
+        transition-duration: 1ms !important;
+        -webkit-animation-iteration-count: 1 !important;
+        animation-iteration-count: 1 !important
+      }
+    }
+
+    @font-face {
+      font-family: Nunito;
+      src: url('fonts/nunito-bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal
+    }
+
+    @font-face {
+      font-family: Nunito;
+      src: url('fonts/nunito-extrabold.ttf') format('truetype');
+      font-weight: 900;
+      font-style: normal
+    }
+
+    @font-face {
+      font-family: Nunito;
+      src: url('fonts/nunito-regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal
+    }
+
+    body,
+    html {
+      height: 100%;
+      font-family: Arial;
+      font-family: Nunito, sans-serif
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+      overflow: hidden
+    }
+
+    .button {
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      display: inline-block;
+      outline: 0;
+      text-align: center;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: none;
+      border: none;
+      color: #fff;
+      text-decoration: none;
+      margin: 16px auto;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 1px;
+      background-color: #3d5dff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #374ebf
+    }
+
+    .button:hover {
+      background-color: #5b76ff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #5064c7
+    }
+
+    .button.back {
+      background-color: #95a5a6;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #95a5a6
+    }
+
+    .button.back:hover {
+      background-color: #798d8f;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #647071
+    }
+
+    .orange.button {
+      background-color: #ff8a2a;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #c56c22
+    }
+
+    .orange.button:hover {
+      background-color: #f59444;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #dc7a28
+    }
+
+    .red.button {
+      background-color: #dc0000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #c50000
+    }
+
+    .red.button:hover {
+      background-color: #ff1212;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #e01212
+    }
+
+    .black.button {
+      background-color: #2b2b2b;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #000
+    }
+
+    .black.button:hover {
+      background-color: #4e4e4e;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #333
+    }
+
+    .disabled.button {
+      background-color: #95a5a6;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 4px 0 #95a5a6
+    }
+
+    .green.button {
+      background-color: #35c500;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #2fb000
+    }
+
+    .green.button:hover {
+      background-color: #3ad600;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #35c500
+    }
+
+    @keyframes spinner {
+      0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+      }
+    }
+
+    @-webkit-keyframes spinner {
+      0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+      }
+    }
+
+    .spinner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+      transform: translate(-100px, -100px) scale(1) translate(100px, 100px)
+    }
+
+    .spinner div {
+      width: 26px;
+      height: 26px;
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 4px solid #000;
+      border-color: #fdfdfd transparent #fdfdfd transparent;
+      -webkit-animation: spinner 1s linear infinite;
+      animation: spinner 1s linear infinite
+    }
+
+    .spinner.black div {
+      border-color: #000 transparent #000 transparent
+    }
+
+    @-webkit-keyframes pulsate {
+      0% {
+        transform: scale(.7, .7);
+        opacity: 0
+      }
+
+      50% {
+        opacity: 1
+      }
+
+      100% {
+        transform: scale(1.5, 1.5);
+        opacity: 0
+      }
+    }
+
+    @keyframes pulsate {
+      0% {
+        transform: scale(.7, .7);
+        opacity: 0
+      }
+
+      50% {
+        opacity: 1
+      }
+
+      100% {
+        transform: scale(1.5, 1.5);
+        opacity: 0
+      }
+    }
+
+    #homepage {
+      z-index: 10;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      text-align: center;
+      overflow: auto
+    }
+
+    #homepage .background {
+      width: 100%;
+      height: 100%
+    }
+
+    #homepage .fade {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, .7);
+      display: table;
+      table-layout: fixed
+    }
+
+    #homepage .row {
+      display: table-row
+    }
+
+    #homepage .logo {
+      position: absolute;
+      left: 0;
+      top: 32px;
+      width: 100%
+    }
+
+    #homepage .logo .title {
+      font-variant: small-caps;
+      font-weight: 900;
+      font-size: 8vh;
+      line-height: 8vh;
+      margin: auto auto
+    }
+
+    #homepage .logo .title>div {
+      position: relative;
+      display: inline-block
+    }
+
+    #homepage .logo .title>div #flag {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateX(-130%)
+    }
+
+    #homepage .logo .title>div #flag img,
+    #homepage .logo .title>div #flag svg {
+      overflow: visible;
+      height: 11vh;
+      width: auto
+    }
+
+    #homepage .logo .subtitle {
+      font-variant: small-caps;
+      font-size: 3vh;
+      margin: auto auto;
+      text-transform: uppercase
+    }
+
+    #homepage .logo .subtitle2 {
+      font-size: 2.5vh;
+      margin: auto auto;
+      margin-top: 1vh
+    }
+
+    @media screen and (max-width:768px) {
+      #homepage .logo .subtitle2 {
+        font-size: 2vh
+      }
+    }
+
+    @media screen and (max-width:700px) {
+      #homepage .logo {
+        top: 16px
+      }
+
+      #homepage .logo .title {
+        font-size: 8vw
+      }
+
+      #homepage .logo .subtitle {
+        font-size: 3vw
+      }
+
+      #homepage .logo .subtitle2 {
+        font-size: 1.5vw
+      }
+    }
+
+    @media screen and (max-height:700px) {
+      #homepage .logo {
+        top: 16px
+      }
+
+      #homepage .logo .title {
+        font-size: 8vh
+      }
+
+      #homepage .logo .subtitle {
+        font-size: 3vh
+      }
+
+      #homepage .logo .subtitle2 {
+        font-size: 1.5vh
+      }
+    }
+
+    @media screen and (max-height:610px) {
+      #homepage .logo {
+        top: 8px
+      }
+    }
+
+    #homepage .content {
+      height: 100%;
+      position: absolute;
+      width: 100%;
+      pointer-events: none;
+      font-size: 0
+    }
+
+    #homepage .content>div {
+      width: 33%;
+      display: inline-block;
+      height: 95%;
+      position: relative
+    }
+
+    #homepage .content>div .inside {
+      margin: auto auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%)
+    }
+
+    #homepage .content .left-box {
+      min-width: 300px;
+      left: 0
+    }
+
+    #homepage .content .left-box .inside {
+      min-width: 80%;
+      pointer-events: all;
+      color: #fff
+    }
+
+    #homepage .content .left-box .inside .box {
+      background-color: rgba(0, 0, 0, .5);
+      padding: 16px 16px;
+      border-radius: 16px
+    }
+
+    #homepage .content .left-box .inside .cp {
+      margin-top: 16px;
+      overflow: hidden;
+      display: inline-block;
+      position: relative;
+      width: 267px;
+      height: 120px
+    }
+
+    @media screen and (max-height:550px) {
+      #homepage .content .left-box .inside .cp {
+        margin-top: 4px
+      }
+    }
+
+    #homepage .content .left-box .inside .cp iframe {
+      border: none;
+      border-radius: 16px
+    }
+
+    #homepage .content .left-box .inside .cp img {
+      border-radius: 16px
+    }
+
+    #homepage .content .left-box .inside .cp .label {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      background-color: #b0f;
+      padding: 2px 28px;
+      transform: rotate(-45deg) translate(28px, 12px);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: normal
+    }
+
+    #homepage .content .left-box .inside div {
+      font-size: 2vh;
+      margin-bottom: .5vh;
+      line-height: 2.5vh
+    }
+
+    #homepage .content .left-box .inside .title,
+    #homepage .content .left-box .inside .title2 {
+      font-size: 2.5vh;
+      line-height: 4vh;
+      margin-bottom: 1vh;
+      text-align: center;
+      font-weight: 700;
+      text-transform: uppercase
+    }
+
+    #homepage .content .left-box .inside .bolder {
+      font-weight: 700
+    }
+
+    #homepage .content .left-box .inside .title2 {
+      margin-top: 2vh
+    }
+
+    #homepage .content .left-box .inside a {
+      text-decoration: none;
+      color: #d3d3d3
+    }
+
+    #homepage .content .left-box .inside a:visited {
+      color: #d3d3d3
+    }
+
+    #homepage .content .left-box .inside a:hover {
+      color: #fff
+    }
+
+    #homepage .content .left-box .inside .separator {
+      margin: 16px 0 8px 0;
+      padding: 0 0 8px 0;
+      border-top: 1px solid #fff
+    }
+
+    #homepage .content .left-box .left-pub {
+      width: 300px;
+      height: 250px;
+      text-align: center
+    }
+
+    #homepage .content .left-box .left-pub .adblocked {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial;
+      font-size: 32px;
+      width: 100%
+    }
+
+    #homepage .content .middle-box .inside {
+      max-width: 300px;
+      width: 80%;
+      pointer-events: all
+    }
+
+    @media screen and (max-width:1024px) {
+      #homepage .content .middle-box .inside {
+        width: 90%
+      }
+    }
+
+    #homepage .content .middle-box #homepage-loading {
+      font-size: 32px
+    }
+
+    #homepage .content .middle-box #homepage-loading .spinner {
+      width: 28px;
+      height: 28px;
+      display: inline-block;
+      margin-right: 16px
+    }
+
+    #homepage .content .middle-box #homepage-loaded {
+      display: none;
+      padding: 16px 16px;
+      border-radius: 16px
+    }
+
+    #homepage .content .middle-box .info {
+      margin: 2vh auto;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 8px;
+      max-width: 300px
+    }
+
+    #homepage .content .middle-box .info .level {
+      font-size: 2vh;
+      font-variant: small-caps;
+      text-align: left
+    }
+
+    #homepage .content .middle-box .info .level #homepage-league {
+      font-size: 2.5vh;
+      font-weight: 700;
+      text-transform: uppercase
+    }
+
+    #homepage .content .middle-box .info .booty {
+      font-size: 2.5vh;
+      text-align: right;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700
+    }
+
+    #homepage .content .middle-box .info .booty img {
+      vertical-align: middle;
+      height: 4vh
+    }
+
+    #homepage .content .middle-box input {
+      text-align: left;
+      padding: 8px 16px;
+      border-radius: 16px;
+      box-shadow: none;
+      border: none;
+      font-size: 16px;
+      outline: 0;
+      border-radius: 4px
+    }
+
+    #homepage .content .middle-box #username {
+      width: 100%;
+      display: block;
+      border-radius: 4vh;
+      box-sizing: border-box;
+      margin-bottom: 32px;
+      max-width: 300px;
+      height: 48px;
+      font-size: 16px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 16px;
+      font-weight: 700;
+      color: #444;
+      border: 1px solid #bdbdbd
+    }
+
+    #homepage .content .middle-box .buttons {
+      max-width: 320px;
+      margin: auto auto;
+      white-space: nowrap
+    }
+
+    #homepage .content .middle-box .button {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 8px
+    }
+
+    #homepage .content .middle-box #play-button {
+      display: block;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      min-width: 200px;
+      width: 90%;
+      font-size: 32px;
+      display: inline-block
+    }
+
+    #homepage .content .middle-box #play-spinner {
+      display: none;
+      min-width: 200px;
+      width: 90%
+    }
+
+    #homepage .content .middle-box #play-spinner .spinner {
+      width: 20px;
+      height: 20px;
+      padding-bottom: 4px;
+      padding-right: 4px;
+      transform: translate(-50%, 0);
+      left: 50%
+    }
+
+    #homepage .content .middle-box #play-button.withreward {
+      width: 50%;
+      min-width: 120px;
+      vertical-align: middle;
+      margin-left: -40px
+    }
+
+    #homepage .content .middle-box #homepage-rewarded-button {
+      display: none;
+      vertical-align: middle;
+      font-size: 20px;
+      padding: 0 12px;
+      position: relative;
+      transform: translateY(-4px);
+      width: max-content;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      margin-left: 12px
+    }
+
+    #homepage .content .middle-box #homepage-rewarded-button .text {
+      padding: 15px 0;
+      display: inline-block;
+      vertical-align: middle
+    }
+
+    #homepage .content .middle-box #homepage-rewarded-button .video {
+      vertical-align: middle;
+      margin-right: .5em
+    }
+
+    #homepage .content .middle-box #homepage-rewarded-button .video img {
+      height: 40px
+    }
+
+    #homepage .content .middle-box #homepage-rewarded-button .notice {
+      position: absolute;
+      left: 15%;
+      top: 20%;
+      transform: translate(50%, -50%);
+      background-color: #613b3b;
+      border-radius: 1vh;
+      font-size: 10px;
+      padding: .25vh .5vh
+    }
+
+    #homepage .content .middle-box .skin {
+      display: table;
+      margin-left: auto;
+      margin-right: auto
+    }
+
+    #homepage .content .middle-box .skin>div {
+      display: table-cell
+    }
+
+    #homepage .content .middle-box .skin>div:last-child {
+      width: auto
+    }
+
+    #homepage .content .middle-box .skin #skin-homepage-canvas {
+      padding-right: 16px;
+      vertical-align: middle
+    }
+
+    #homepage .content .middle-box .skin #skin-homepage-canvas>div {
+      background-color: #fff;
+      border: 2px solid #d3d3d3;
+      vertical-align: middle;
+      border-radius: 16px;
+      border-radius: 50%
+    }
+
+    #homepage .content .middle-box .skin .button {
+      position: relative
+    }
+
+    #homepage .content .middle-box .skin .button .new {
+      display: none;
+      animation-iteration-count: infinite;
+      position: absolute;
+      right: -5%;
+      top: -5%;
+      background-color: red;
+      border-radius: 12px;
+      font-size: 18px;
+      padding: 4px 8px
+    }
+
+    #homepage .content .middle-box .skin .button .pulse-ring {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      animation: pulsate 1s ease-out;
+      animation-iteration-count: infinite
+    }
+
+    @media screen and (max-width:500px) {
+      #homepage .content .middle-box #username {
+        height: 12vw;
+        font-size: 4vw
+      }
+
+      #homepage .content .middle-box #play-button {
+        font-size: 6vw;
+        min-width: inherit
+      }
+
+      #homepage .content .middle-box #play-bigger-button {
+        font-size: 5vw;
+        min-width: inherit
+      }
+
+      #homepage .content .middle-box .button {
+        padding: 1.5vw 6vw;
+        font-size: 4vw
+      }
+    }
+
+    @media screen and (max-height:500px) {
+      #homepage .content .middle-box #username {
+        height: 12vh;
+        font-size: 4vh
+      }
+
+      #homepage .content .middle-box #play-button {
+        font-size: 6vh;
+        min-width: inherit
+      }
+
+      #homepage .content .middle-box #play-bigger-button {
+        font-size: 5vh;
+        min-width: inherit
+      }
+
+      #homepage .content .middle-box .buttons div {
+        vertical-align: middle
+      }
+
+      #homepage .content .middle-box .button {
+        padding: 1.5vh 6vh;
+        font-size: 4vh
+      }
+    }
+
+    #homepage .content .middle-box .ipad-help {
+      display: none
+    }
+
+    #homepage .content .right-box {
+      min-width: 300px;
+      left: 0
+    }
+
+    #homepage .content .right-box .inside {
+      max-width: 300px;
+      pointer-events: all
+    }
+
+    #homepage .content .right-box .right-pub {
+      text-align: center
+    }
+
+    #homepage .content .right-box .right-pub .adblocked {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial;
+      font-size: 32px;
+      width: 100%
+    }
+
+    #homepage .content .right-box .right-pub .dev-only .button {
+      font-size: 12px;
+      padding: 4px 8px
+    }
+
+    @media screen and (max-width:900px) {
+      #homepage .content .right-box {
+        display: none
+      }
+
+      #homepage .content .middle-box {
+        width: 66%;
+        max-width: 400px
+      }
+    }
+
+    @media screen and (max-height:300px),
+    screen and (max-width:700px) {
+      #homepage .content .left-box {
+        display: none
+      }
+
+      #homepage .content .middle-box {
+        left: 0;
+        width: 90%
+      }
+
+      #homepage .content .middle-box .inside {
+        max-width: 100%
+      }
+
+      #homepage .content .right-box {
+        display: none
+      }
+    }
+
+    #homepage .content .scoreboard {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: auto;
+      height: auto;
+      text-transform: capitalize;
+      border: 1px solid #bdbdbd;
+      border-radius: 8px;
+      background-color: #fff;
+      overflow: hidden;
+      font-size: 2.5vh
+    }
+
+    @media screen and (max-width:500px) {
+      #homepage .content .scoreboard {
+        font-size: 2.5vw
+      }
+    }
+
+    @media screen and (max-height:500px) {
+      #homepage .content .scoreboard {
+        font-size: 2.5vh;
+        bottom: 1vh
+      }
+    }
+
+    #homepage .content .scoreboard table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    #homepage .content .scoreboard table tr:first-of-type {
+      background-color: #dcdcdc;
+      padding: 0
+    }
+
+    #homepage .content .scoreboard table tr:first-of-type td {
+      padding: 0
+    }
+
+    #homepage .content .scoreboard table td {
+      padding: 0 2vw
+    }
+
+    #homepage .content .scoreboard .wins {
+      background-color: #dcdcdc;
+      font-weight: 700
+    }
+
+    #homepage .content #no-webgl-popup {
+      pointer-events: all;
+      color: #fff;
+      width: 100%;
+      height: auto;
+      display: block;
+      display: none;
+      padding: 16px 16px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: red;
+      z-index: 9999;
+      font-size: 16px;
+      box-sizing: border-box
+    }
+
+    #homepage .content #no-webgl-popup a {
+      color: #00f;
+      font-weight: 700
+    }
+
+    #homepage .content #no-webgl-popup .close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      color: #fff;
+      font-size: 36px;
+      cursor: pointer
+    }
+
+    #homepage .bottom-bar {
+      position: absolute;
+      left: 0;
+      bottom: 16px;
+      width: 100%;
+      vertical-align: middle;
+      line-height: 0;
+      display: table
+    }
+
+    #homepage .bottom-bar .io-games-bar {
+      width: 30%;
+      display: table-cell;
+      line-height: normal;
+      padding-left: 1vh;
+      padding-right: 1vh;
+      text-align: left;
+      vertical-align: bottom;
+      font-size: 2vh
+    }
+
+    #homepage .bottom-bar .io-games-bar .button {
+      margin: 0 0;
+      font-size: 2vh;
+      padding: 1vh 2vh
+    }
+
+    @media screen and (max-width:1000px) {
+      #homepage .bottom-bar .io-games-bar .button {
+        font-size: 1.5vh
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      #homepage .bottom-bar .io-games-bar .button {
+        padding: 1.5vw 6vw;
+        font-size: 4vw
+      }
+    }
+
+    @media screen and (max-height:500px) {
+      #homepage .bottom-bar .io-games-bar .button {
+        padding: 1.5vh 6vh;
+        font-size: 4vh
+      }
+    }
+
+    #homepage .bottom-links {
+      z-index: 1;
+      position: absolute;
+      left: 20%;
+      bottom: 8px;
+      width: 60%;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 12px;
+      color: #000
+    }
+
+    @media screen and (max-width:700px),
+    screen and (max-height:500px) {
+      #homepage .bottom-links {
+        display: none
+      }
+    }
+
+    #homepage .bottom-links a {
+      color: #000;
+      text-decoration: none
+    }
+
+    #homepage .bottom-links a:hover {
+      color: #fe9300
+    }
+
+    #homepage .show-spil {
+      display: none
+    }
+
+    #homepage .app-links {
+      position: absolute;
+      text-align: center;
+      left: 2vh;
+      top: 2vh;
+      z-index: 1
+    }
+
+    #homepage .app-links>a {
+      display: block
+    }
+
+    #homepage .app-links img {
+      height: 6vh;
+      margin-right: .5vw
+    }
+
+    #homepage.poki #portal-button,
+    #homepage.spil-games #portal-button {
+      display: none
+    }
+
+    #homepage.poki #cross-promo,
+    #homepage.poki .hide-spil,
+    #homepage.spil-games #cross-promo,
+    #homepage.spil-games .hide-spil {
+      display: none
+    }
+
+    #homepage.poki .show-spil,
+    #homepage.spil-games .show-spil {
+      display: inline-block
+    }
+
+    #homepage.poki .app-links,
+    #homepage.spil-games .app-links {
+      display: none
+    }
+
+    #homepage.ipad-promo .logo .subtitle2 {
+      font-size: 1.5vh
+    }
+
+    #homepage.ipad-promo #homepage-loaded>div.info {
+      margin-bottom: 1vh
+    }
+
+    #homepage.ipad-promo .app-links img {
+      height: 6vw;
+      margin-right: .5vw
+    }
+
+    #homepage.ipad-promo .scoreboard {
+      left: 3%;
+      bottom: 48px;
+      transform: translate(0, 0);
+      font-size: 2.25vw
+    }
+
+    #homepage.ipad-promo .bottom-bar {
+      display: none
+    }
+
+    #homepage.ipad-promo .left-box {
+      display: none
+    }
+
+    #homepage.ipad-promo .right-box {
+      display: inline-block;
+      margin-top: 230px;
+      max-width: 300px;
+      max-height: 650px
+    }
+
+    #homepage.ipad-promo .content .middle-box .info {
+      margin-top: 64px
+    }
+
+    #homepage.ipad-promo .content .middle-box .ipad-help {
+      margin-top: 48px;
+      display: block;
+      background-color: rgba(0, 0, 0, .5);
+      padding: 8px 8px;
+      border-radius: 16px;
+      color: #fff;
+      font-size: 2vh
+    }
+
+    #homepage.ipad-promo .content .middle-box .ipad-help .title {
+      font-weight: 700;
+      margin-bottom: 1vh;
+      font-size: 2.5vh
+    }
+
+    .blurred {
+      filter: blur(15px);
+      pointer-events: none
+    }
+
+    #skin-popup {
+      display: table-row;
+      text-align: center;
+      height: 100%;
+      width: 100%;
+      -webkit-user-select: none;
+      user-select: none;
+      display: none
+    }
+
+    #skin-popup .fade {
+      z-index: 20;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, .5)
+    }
+
+    #skin-popup .box {
+      z-index: 21;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 3vh;
+      height: 90%;
+      max-height: 90%;
+      width: 100%;
+      box-sizing: border-box
+    }
+
+    #skin-popup .box #skin-popup-canvas>div {
+      border-radius: 4px
+    }
+
+    #skin-popup .box .label {
+      display: block;
+      font-weight: 700;
+      font-size: 4vh
+    }
+
+    #skin-popup .box .label .booty {
+      float: left;
+      left: 3vh;
+      top: 3vh
+    }
+
+    #skin-popup .box .label .booty>span {
+      vertical-align: middle
+    }
+
+    #skin-popup .box .label .booty img {
+      vertical-align: middle;
+      height: 6vh
+    }
+
+    #skin-popup .box .label .button {
+      margin: auto;
+      font-size: 4vh;
+      padding: 0 1vw;
+      position: relative
+    }
+
+    #skin-popup .box .label .button .new {
+      display: none;
+      animation-iteration-count: infinite;
+      position: absolute;
+      right: -5%;
+      top: -5%;
+      background-color: red;
+      border-radius: 12px;
+      font-size: 18px;
+      padding: 4px 8px
+    }
+
+    #skin-popup .box .label .button .pulse-ring {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      animation: pulsate 1s ease-out;
+      animation-iteration-count: infinite
+    }
+
+    #skin-popup .box .skin-list::-webkit-scrollbar {
+      width: 1vw
+    }
+
+    #skin-popup .box .skin-list::-webkit-scrollbar-track {
+      background: #aaa;
+      border-radius: .5vw
+    }
+
+    #skin-popup .box .skin-list::-webkit-scrollbar-thumb {
+      background: #3d5dff;
+      border-radius: .5vw
+    }
+
+    #skin-popup .box #pet-block::-webkit-scrollbar-thumb:hover {
+      background: #374ebf
+    }
+
+    #skin-popup .box #pet-block::-webkit-scrollbar {
+      width: 1vw
+    }
+
+    #skin-popup .box #pet-block::-webkit-scrollbar-track {
+      background: #aaa;
+      border-radius: .5vw
+    }
+
+    #skin-popup .box #pet-block::-webkit-scrollbar-thumb {
+      background: #3d5dff;
+      border-radius: .5vw
+    }
+
+    #skin-popup .box #pet-block::-webkit-scrollbar-thumb:hover {
+      background: #374ebf
+    }
+
+    #skin-popup .box #arrow-up {
+      display: none;
+      margin-top: 5vh;
+      height: 5vh;
+      position: relative;
+      cursor: pointer
+    }
+
+    #skin-popup .box #arrow-up>div {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10vh solid transparent;
+      border-right: 10vh solid transparent;
+      border-bottom: 5vh solid #3d5dff
+    }
+
+    #skin-popup .box #arrow-down {
+      display: none;
+      margin-top: 3vh;
+      height: 5vh;
+      position: relative;
+      cursor: pointer
+    }
+
+    #skin-popup .box #arrow-down>div {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10vh solid transparent;
+      border-right: 10vh solid transparent;
+      border-top: 5vh solid #3d5dff
+    }
+
+    #skin-popup .box #arrow-down.disabled,
+    #skin-popup .box #arrow-up.disabled {
+      opacity: 0;
+      pointer-events: none
+    }
+
+    #skin-popup .box #arrow-down,
+    #skin-popup .box #arrow-up {
+      -webkit-tap-highlight-color: transparent;
+      -moz-tap-highlight-color: transparent
+    }
+
+    #skin-popup .box .pet-list,
+    #skin-popup .box .skin-list {
+      margin-top: 3vh;
+      border-radius: 8px;
+      height: 90%;
+      width: 100%;
+      overflow-y: scroll
+    }
+
+    #skin-popup .box .pet-list .card,
+    #skin-popup .box .skin-list .card {
+      position: relative;
+      background-color: #f2f7ff;
+      display: inline-block;
+      margin: 8px 8px;
+      padding-bottom: 8vh;
+      padding-right: 4vh;
+      cursor: pointer
+    }
+
+    #skin-popup .box .pet-list .card .button,
+    #skin-popup .box .skin-list .card .button {
+      cursor: pointer;
+      font-size: 2vh;
+      position: absolute;
+      left: 5%;
+      bottom: 2%;
+      width: 75%;
+      margin: 0;
+      margin-bottom: 1vh;
+      padding: .5vh .25vh;
+      box-sizing: border-box;
+      vertical-align: middle;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, .2), 0 4px 0 #374ebf
+    }
+
+    #skin-popup .box .pet-list .card .button img,
+    #skin-popup .box .skin-list .card .button img {
+      height: 2vh
+    }
+
+    #skin-popup .box .pet-list .card .button *,
+    #skin-popup .box .skin-list .card .button * {
+      vertical-align: middle
+    }
+
+    #skin-popup .box .pet-list .card .button.disabled,
+    #skin-popup .box .skin-list .card .button.disabled {
+      box-shadow: 0 1px 5px rgba(0, 0, 0, .2), 0 4px 0 #95a5a6
+    }
+
+    #skin-popup .box .pet-list .card .button.smalltext,
+    #skin-popup .box .skin-list .card .button.smalltext {
+      font-size: 1.25vh;
+      text-transform: capitalize
+    }
+
+    #skin-popup .box .pet-list .card .button.disabled,
+    #skin-popup .box .skin-list .card .button.disabled {
+      -webkit-filter: grayscale(100%);
+      filter: grayscale(100%)
+    }
+
+    #skin-popup .box .pet-list .card .button:hover,
+    #skin-popup .box .skin-list .card .button:hover {
+      background-color: #5b76ff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 8px 0 #5064c7
+    }
+
+    #skin-popup .box .pet-list .card .power-barframe,
+    #skin-popup .box .skin-list .card .power-barframe {
+      position: absolute;
+      top: 5%;
+      right: 2%;
+      border-radius: 1vh;
+      width: 2vh;
+      height: 90%;
+      background-color: #ccc;
+      box-sizing: border-box
+    }
+
+    #skin-popup .box .pet-list .card .power-barframe .power-bar,
+    #skin-popup .box .skin-list .card .power-barframe .power-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background-color: #ff1f1f;
+      height: 50%;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 1vh
+    }
+
+    #skin-popup .box .pet-list .card .power-barframe .power-bar-text,
+    #skin-popup .box .skin-list .card .power-barframe .power-bar-text {
+      color: #fff;
+      word-break: break-all;
+      font-weight: 700;
+      font-family: Arial;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.75vh;
+      line-height: 2vh
+    }
+
+    #skin-popup .box .pet-list .card .lock,
+    #skin-popup .box .skin-list .card .lock {
+      display: block;
+      position: absolute;
+      top: 2%;
+      left: 2%;
+      width: 30%;
+      height: 30%;
+      background: url(img/lock.svg) no-repeat;
+      background-position: center
+    }
+
+    #skin-popup .box .pet-list .card::after,
+    #skin-popup .box .skin-list .card::after {
+      content: " ";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #aaa;
+      border-radius: 1vh;
+      box-sizing: border-box
+    }
+
+    #skin-popup .box .pet-list .card.selected::after,
+    #skin-popup .box .skin-list .card.selected::after {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 4px 0 #3d5dff;
+      border: 2px solid #3d5dff
+    }
+
+    #skin-popup .box .pet-list .card.locked .power-bar,
+    #skin-popup .box .pet-list .card.locked>div:first-child,
+    #skin-popup .box .skin-list .card.locked .power-bar,
+    #skin-popup .box .skin-list .card.locked>div:first-child {
+      opacity: .6 !important;
+      -webkit-filter: grayscale(100%);
+      filter: grayscale(100%)
+    }
+
+    #skin-popup .box .pet-list card.locked-nogreyscale .power-bar,
+    #skin-popup .box .pet-list card.locked-nogreyscale>div:first-child,
+    #skin-popup .box .skin-list card.locked-nogreyscale .power-bar,
+    #skin-popup .box .skin-list card.locked-nogreyscale>div:first-child {
+      opacity: .6 !important
+    }
+
+    #skin-popup .box #pet-block {
+      display: none;
+      overflow-y: auto;
+      height: 90%;
+      width: 100%;
+      margin-top: 3vh
+    }
+
+    #skin-popup .box #pet-block .upgrade {
+      font-size: 3vh;
+      margin-top: 32px
+    }
+
+    #skin-popup .box #pet-block .upgrade #pet-level {
+      font-weight: 700;
+      margin-left: 2vh;
+      margin-right: 2vh
+    }
+
+    #skin-popup .box #pet-block .upgrade .button {
+      vertical-align: middle;
+      font-size: 2vh;
+      padding: .75vh 1vh;
+      margin: auto;
+      margin-top: -8px
+    }
+
+    #skin-popup .box #pet-block .upgrade .button span {
+      vertical-align: middle
+    }
+
+    #skin-popup .box #pet-block .upgrade .button img {
+      width: 2vh;
+      vertical-align: middle;
+      height: auto
+    }
+
+    #skin-popup .box #pet-block .upgrade .button.disabled {
+      pointer-events: none
+    }
+
+    #skin-popup .box #pet-block .pet-list {
+      margin-top: 3vh;
+      overflow: hidden;
+      height: auto
+    }
+
+    #skin-popup .box #pet-block .pet-list .card {
+      padding: 0;
+      padding-bottom: 1vh
+    }
+
+    #skin-popup .box #pet-block .pet-list .card .button {
+      width: 90%
+    }
+
+    #skin-popup .box #pet-block .pet-list .card.locked>img {
+      opacity: .6 !important;
+      -webkit-filter: grayscale(100%);
+      filter: grayscale(100%)
+    }
+
+    #skin-popup .close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      text-align: center;
+      column-span: all;
+      cursor: pointer
+    }
+
+    #skin-popup .close img {
+      width: 24px;
+      height: 24px
+    }
+
+    #skin-editor {
+      display: table-row;
+      text-align: center;
+      height: 100%;
+      width: 100%;
+      -webkit-user-select: none;
+      user-select: none
+    }
+
+    #skin-editor .fade {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, .5)
+    }
+
+    #skin-editor .box {
+      background-color: #fff;
+      z-index: 21;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 8px;
+      padding: 32px;
+      width: 80%;
+      max-width: 100%
+    }
+
+    @media screen and (max-width:800px) {
+      #skin-editor .box {
+        width: 90%
+      }
+    }
+
+    #skin-editor .title {
+      font-size: 24px;
+      margin-bottom: 24px
+    }
+
+    #skin-editor input[type=file] {
+      display: none
+    }
+
+    #skin-editor input[type=number] {
+      width: 64px
+    }
+
+    #skin-editor canvas {
+      width: 128px;
+      height: 128px;
+      border-radius: 4px
+    }
+
+    #skin-editor .button {
+      display: inline-block;
+      margin: 16px 8px
+    }
+
+    #skin-editor .game-sprites {
+      margin: 16px auto
+    }
+
+    #skin-editor .game-sprites>div {
+      margin: 8px auto
+    }
+
+    #skin-editor .game-sprites .button {
+      box-sizing: border-box;
+      font-size: 12px;
+      padding: 4px 4px;
+      margin: auto 32px
+    }
+
+    #ios-fs-popup {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      font-family: Arial;
+      text-align: center;
+      font-size: 2vh
+    }
+
+    #ios-fs-popup .fade {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, .7)
+    }
+
+    #ios-fs-popup .box {
+      background-color: #fff;
+      border-radius: 4vh;
+      padding: 4vh;
+      font-size: 4vh;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 75%;
+      max-width: 95%
+    }
+
+    #ios-fs-popup .box .close {
+      margin-top: -2vh;
+      margin-right: -2vh;
+      color: #a9a9a9;
+      font-size: 3vh;
+      cursor: pointer;
+      text-align: right
+    }
+
+    #end-popup {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      font-family: Arial;
+      text-align: center;
+      font-size: 2vh;
+      animation-duration: .5s
+    }
+
+    #end-popup .fade {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, .7)
+    }
+
+    #end-popup .box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%
+    }
+
+    @media screen and (max-width:1023px) {
+      #end-popup .box {
+        width: 90%
+      }
+    }
+
+    @media screen and (max-width:768px) {
+      #end-popup .box {
+        width: 95%
+      }
+    }
+
+    #end-popup .result {
+      font-weight: 700;
+      font-size: 5vh;
+      font-variant: small-caps
+    }
+
+    #end-popup .result .killer {
+      font-size: 7vh;
+      color: #f72121
+    }
+
+    #end-popup .result2 {
+      margin-top: 5vh;
+      font-weight: 700;
+      font-size: 3.5vh;
+      font-variant: small-caps
+    }
+
+    #end-popup .result2 .rank {
+      color: #ff5400
+    }
+
+    #end-popup .result3 {
+      margin-top: 2.5vh;
+      font-weight: 700;
+      font-size: 3.5vh;
+      font-variant: small-caps
+    }
+
+    #end-popup .result3 .kills {
+      color: #ff5400
+    }
+
+    #end-popup .result3 .earned-coins {
+      color: #ff5400
+    }
+
+    #end-popup .result3 img {
+      vertical-align: middle;
+      height: 4vh
+    }
+
+    #end-popup .result3 .button {
+      vertical-align: middle;
+      font-size: 3.5vh;
+      margin: auto;
+      padding: 0 2vh;
+      position: relative;
+      transform: translateY(-4px)
+    }
+
+    #end-popup .result3 .button .text {
+      padding: 2vh 0;
+      display: inline-block;
+      vertical-align: middle
+    }
+
+    #end-popup .result3 .button .text img {
+      height: 4vh;
+      margin: 0
+    }
+
+    #end-popup .result3 .button .video {
+      vertical-align: middle;
+      margin-right: .5em
+    }
+
+    #end-popup .result3 .button .video img {
+      height: 5vh
+    }
+
+    #end-popup .result3 .button .notice {
+      position: absolute;
+      left: 15%;
+      top: 20%;
+      transform: translate(50%, -50%);
+      background-color: #613b3b;
+      border-radius: 1vh;
+      font-size: 1.5vh;
+      padding: .25vh .5vh
+    }
+
+    #end-popup .result3 #end-rewarded-button {
+      display: none
+    }
+
+    #end-popup .booty {
+      margin-top: 2.5vh;
+      font-weight: 700;
+      font-size: 3.5vh;
+      font-variant: small-caps
+    }
+
+    #end-popup .booty img {
+      vertical-align: middle;
+      height: 5vh;
+      margin-right: 1vh
+    }
+
+    #end-popup .booty #end-booty-coins {
+      display: inline-block
+    }
+
+    #end-popup .xp-line {
+      margin-top: 5vh;
+      vertical-align: middle
+    }
+
+    @media screen and (min-height:650px) and (max-height:760px) {
+      #end-popup .xp-line {
+        margin-top: 3vh
+      }
+    }
+
+    #end-popup .xp-line .league {
+      font-size: 2.5vh;
+      padding-top: .25vh;
+      font-weight: 700;
+      font-variant: small-caps;
+      text-transform: uppercase;
+      vertical-align: middle;
+      margin: 0 2vh
+    }
+
+    #end-popup .xp-line .title {
+      font-size: 3vh;
+      font-variant: small-caps
+    }
+
+    #end-popup .xp-line .line {
+      display: flex;
+      justify-content: center
+    }
+
+    #end-popup #end-xp-bar {
+      flex: 1;
+      vertical-align: middle;
+      position: relative;
+      text-align: center;
+      height: 3vh;
+      border-radius: 1vh;
+      overflow: hidden;
+      display: inline-block;
+      box-sizing: border-box
+    }
+
+    #end-popup #end-xp-bar .bar {
+      background-color: #2c75ff;
+      background-color: #000;
+      width: 50%;
+      height: 3vh;
+      border-top-right-radius: 1vh;
+      border-bottom-right-radius: 1vh;
+      box-sizing: border-box
+    }
+
+    #end-popup #end-xp-bar .border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      border: 1px solid #000;
+      border-radius: 1vh
+    }
+
+    #end-popup .quote {
+      font-size: 2.5vh;
+      font-style: italic;
+      font-weight: 700
+    }
+
+    #end-popup .button {
+      margin-top: 8vh
+    }
+
+    @media screen and (min-height:600px) and (max-height:760px) {
+      #end-popup .button {
+        margin-top: 4vh
+      }
+    }
+
+    #end-popup #banner-on-end-popup {
+      margin-top: 16px
+    }
+
+    @media screen and (max-height:549px) {
+      #end-popup #banner-on-end-popup {
+        display: none
+      }
+    }
+
+    @media screen and (max-height:649px) {
+      #end-popup #banner-on-end-popup {
+        max-height: 100px
+      }
+    }
+
+    .login-popup {
+      display: none;
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      padding: 24px;
+      background-color: rgba(0, 0, 0, .8);
+      border-radius: 8px;
+      color: #fff;
+      z-index: 200;
+      animation-duration: .5s
+    }
+
+    .login-popup .title {
+      margin-bottom: 8px;
+      font-weight: 700
+    }
+
+    .login-popup .button {
+      font-size: 14px;
+      padding: 4px 8px
+    }
+
+    .login-popup .close {
+      position: absolute;
+      top: 0;
+      right: 16px;
+      font-size: 4vh;
+      font-weight: 400;
+      background-color: transparent;
+      box-shadow: none;
+      cursor: pointer
+    }
+
+    .login-popup td {
+      padding: 8px
+    }
+
+    .login-popup a {
+      color: #add8e6
+    }
+
+    .login-popup .g-signin2 {
+      display: none
+    }
+
+    .login-popup .fb-button-yohoho {
+      background-color: #4267b2;
+      color: #1d2129;
+      direction: ltr;
+      font-size: 11px;
+      margin: 0;
+      padding: 0;
+      unicode-bidi: embed;
+      font-family: Helvetica, Arial, sans-serif;
+      line-height: 1.28;
+      overflow: hidden;
+      width: 200px;
+      cursor: pointer
+    }
+
+    .login-popup .fb-button-yohoho .image {
+      float: left;
+      margin-right: 12px
+    }
+
+    .login-popup .fb-button-yohoho .image svg {
+      height: 24px;
+      margin: 8px;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: top
+    }
+
+    .login-popup .fb-button-yohoho .text {
+      padding: 4px;
+      color: #fff;
+      font-size: 13px;
+      line-height: 34px
+    }
+
+    .login-popup input[type=checkbox] {
+      transform: scale(1.5);
+      margin-right: 8px
+    }
+
+    .login-box {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 1000;
+      vertical-align: middle
+    }
+
+    .login-box .text {
+      margin-top: 10px;
+      color: #000;
+      font-size: 1.5vh;
+      line-height: 1.8vh;
+      -webkit-user-select: none;
+      user-select: none
+    }
+
+    .login-box .button {
+      margin: 0 auto;
+      font-size: 2vh;
+      padding: .75vh 1.5vh;
+      box-shadow: 0 1px 7px rgba(0, 0, 0, .2), 0 6px 0 #374ebf
+    }
+
+    .login-box .button:hover {
+      box-shadow: 0 1px 7px rgba(0, 0, 0, .2), 0 6px 0 #5064c7
+    }
+
+    .login-box #unconnected-block {
+      margin-right: 8px;
+      display: inline-block
+    }
+
+    .login-box #connected-block {
+      margin-right: 8px;
+      display: none;
+      background-color: #319a1c;
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: #fff
+    }
+
+    .login-box #connected-block .text {
+      color: #fff;
+      font-weight: 700;
+      font-size: 24px;
+      vertical-align: middle;
+      margin: 0 4px
+    }
+
+    .login-box #connected-block #profile-picture {
+      border-radius: 50%
+    }
+
+    .login-box #connected-block img {
+      width: 32px;
+      height: 32px;
+      vertical-align: middle
+    }
+
+    .login-box #connected-block img svg {
+      fill: #fff
+    }
+
+    .login-box #connected-block a img {
+      width: 24px;
+      height: 24px
+    }
+
+    .login-box #connected-block button {
+      padding: 6px 12px;
+      font-size: 14px
+    }
+
+    .login-box.spil-games {
+      display: none
+    }
+
+    #doorbell-button {
+      display: none
+    }
+
+    .alert-popup,
+    .confirm-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      color: #fff;
+      z-index: 10000;
+      font-family: Nunito;
+      font-weight: 500;
+      font-size: 2vmax;
+      -webkit-user-select: none;
+      user-select: none;
+      backdrop-filter: blur(8px)
+    }
+
+    .alert-popup .popup-outer,
+    .confirm-popup .popup-outer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%
+    }
+
+    .alert-popup .close-button,
+    .alert-popup .no-button,
+    .alert-popup .yes-button,
+    .confirm-popup .close-button,
+    .confirm-popup .no-button,
+    .confirm-popup .yes-button {
+      letter-spacing: 1px;
+      font-weight: 700;
+      display: inline-block;
+      cursor: pointer;
+      padding: .25vmax 4vmax;
+      padding-top: .4vmax;
+      box-sizing: border-box;
+      background-color: #3d5dff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 .3vmax 0 #374ebf;
+      border-radius: .5vmax;
+      margin-top: 5vh;
+      margin: 5vh 2vw 0 2vw
+    }
+
+    .alert-popup .yes-button,
+    .confirm-popup .yes-button {
+      background-color: #32cd32;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 .3vmax 0 #258d25
+    }
+
+    .alert-popup .no-button,
+    .confirm-popup .no-button {
+      background-color: orange;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .2), 0 .3vmax 0 #b77600
+    }
+
+    .alert-popup .wrapper,
+    .confirm-popup .wrapper {
+      border-radius: 2vh;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, .8);
+      padding: 4vh 12vmin;
+      text-align: center
+    }
+
+    @media screen and (max-width:1023px) {
+
+      .alert-popup .wrapper,
+      .confirm-popup .wrapper {
+        width: 95%;
+        box-sizing: border-box
+      }
+    }
+
+    #homepage.poki #homepage-content>div.left-box,
+    #homepage.poki #homepage-content>div.right-box {
+      width: 25%;
+      display: inline-block;
+      min-width: auto
+    }
+
+    #homepage.poki #homepage-content>div.middle-box {
+      width: 40%
+    }
+
+    #homepage.poki #homepage-content>div.scoreboard {
+      transform: translateY(50%);
+      bottom: 50%;
+      left: auto;
+      right: 8px;
+      max-width: 30%;
+      font-size: 2.5vh
+    }
+
+    #homepage.poki #homepage-content>div.scoreboard table tr:nth-child(2),
+    #homepage.poki #homepage-content>div.scoreboard table tr:nth-child(3) {
+      border-bottom: 1px solid #d3d3d3
+    }
+
+    #homepage.poki #homepage-content>div.scoreboard table td {
+      padding: 0 1.5vw
+    }
+
+    #homepage.poki #banner-on-homepage {
+      max-width: 768px;
+      max-height: 90px;
+      position: absolute;
+      z-index: 10;
+      bottom: 32px;
+      transform: translateX(-50%);
+      left: 50%;
+      width: auto;
+      height: auto
+    }
+
+    #homepage.poki .bottom-links {
+      display: block
+    }
+
+    #end-popup.poki #banner-on-end-popup {
+      display: block
+    }
+
+    #vibrate-button {
+      position: absolute;
+      top: 2vh;
+      right: 2vh;
+      width: 8vh;
+      height: auto;
+      z-index: 10;
+      cursor: pointer;
+      pointer-events: all;
+      -webkit-tap-highlight-color: transparent;
+      -moz-tap-highlight-color: transparent
+    }
+
+    body.cordova #homepage .background .fade .login-box {
+      display: none
+    }
+
+    body.cordova #homepage .app-links {
+      display: none
+    }
+
+    body.mobile #homepage .background .fade .logo .subtitle2 {
+      display: none
+    }
+
+    body.mobile #homepage .background .fade .bottom-links {
+      display: none
+    }
+
+    body.mobile #homepage #portal-button {
+      display: none
+    }
+
+    body.mobile #homepage .content>div {
+      height: 100%
+    }
+
+    body.mobile #homepage .content .scoreboard {
+      height: auto
+    }
+
+    body.mobile.landscape .button {
+      border-radius: 2vh
+    }
+
+    body.mobile.landscape #skin-popup .box .pet-list .card .button,
+    body.mobile.landscape #skin-popup .box .skin-list .card .button {
+      border-radius: 1vh;
+      font-size: 3vh
+    }
+
+    body.mobile.landscape #skin-popup .box .pet-list .card .button.smalltext,
+    body.mobile.landscape #skin-popup .box .skin-list .card .button.smalltext {
+      font-size: 2.5vh
+    }
+
+    body.mobile.landscape #skin-popup .box .pet-list .card .button img,
+    body.mobile.landscape #skin-popup .box .skin-list .card .button img {
+      height: 4vh
+    }
+
+    body.mobile.landscape #skin-popup .box #pet-block .upgrade {
+      margin-top: 3vh;
+      font-size: 5vh
+    }
+
+    body.mobile.landscape #skin-popup .box #pet-block .upgrade .button {
+      border-radius: 1vh;
+      font-size: 4vh;
+      margin: auto
+    }
+
+    body.mobile.landscape #skin-popup .box .label .button {
+      border-radius: 1vh
+    }
+
+    body.mobile.landscape #skin-popup .box .label .button.red {
+      box-shadow: 0 .4vh 2vh rgba(0, 0, 0, .2), 0 1.6vh 0 #c50000
+    }
+
+    body.mobile.landscape #skin-popup .box .label .buttonred:hover {
+      background-color: #ff1212;
+      box-shadow: 0 .4vh 2vh rgba(0, 0, 0, .2), 0 1.6vh 0 #e01212
+    }
+
+    body.mobile.landscape #skin-popup .box .label .button.black {
+      box-shadow: 0 .4vh 2vh rgba(0, 0, 0, .2), 0 1.6vh 0 #000
+    }
+
+    body.mobile.landscape #skin-popup .box .label .button.black:hover {
+      background-color: #4e4e4e;
+      box-shadow: 0 .4vh 2vh rgba(0, 0, 0, .2), 0 1.6vh 0 #333
+    }
+
+    body.mobile.landscape #homepage .background .fade .logo {
+      top: 6vh
+    }
+
+    body.mobile.landscape #homepage .background .fade .logo .title {
+      font-size: 12vh
+    }
+
+    body.mobile.landscape #homepage .background .fade .logo .subtitle {
+      font-size: 4vh
+    }
+
+    body.mobile.landscape #homepage .app-links img {
+      height: 6vw;
+      margin-right: .5vw
+    }
+
+    body.mobile.landscape #end-popup .quote {
+      font-size: 3vh
+    }
+
+    body.mobile.landscape #end-popup .result {
+      font-size: 5vh;
+      margin-top: 2vh
+    }
+
+    body.mobile.landscape #end-popup .result .killer {
+      font-size: 7vh
+    }
+
+    body.mobile.landscape #end-popup .booty,
+    body.mobile.landscape #end-popup .result2,
+    body.mobile.landscape #end-popup .result3 {
+      font-size: 5vh
+    }
+
+    body.mobile.landscape #end-popup .booty img,
+    body.mobile.landscape #end-popup .result2 img,
+    body.mobile.landscape #end-popup .result3 img {
+      height: 5vh
+    }
+
+    body.mobile.landscape #end-popup .result3 .button {
+      font-size: 5vh
+    }
+
+    body.mobile.landscape #end-popup .result3 .button .notice {
+      left: 12%;
+      font-size: 2vh
+    }
+
+    body.mobile.landscape #end-popup .xp-line {
+      width: 75%;
+      transform: translateX(12.5%)
+    }
+
+    body.mobile.landscape #ios-fs-popup .box {
+      min-width: 20%;
+      max-width: 30%
+    }
+
+    body.mobile.portrait .button {
+      border-radius: 4vw
+    }
+
+    body.mobile.portrait #skin-popup .box .pet-list .card .button,
+    body.mobile.portrait #skin-popup .box .skin-list .card .button {
+      border-radius: .5vh;
+      font-size: 3vw;
+      padding: 1vw .5vw
+    }
+
+    body.mobile.portrait #skin-popup .box .pet-list .card .button img,
+    body.mobile.portrait #skin-popup .box .skin-list .card .button img {
+      height: 3vw;
+      vertical-align: bottom
+    }
+
+    body.mobile.portrait #skin-popup .box .pet-list .card .button.smalltext,
+    body.mobile.portrait #skin-popup .box .skin-list .card .button.smalltext {
+      font-size: 2.5vw
+    }
+
+    body.mobile.portrait #skin-popup .box #arrow-down,
+    body.mobile.portrait #skin-popup .box #arrow-up,
+    body.mobile.portrait #skin-popup .box .skin-list {
+      margin-top: 2vh
+    }
+
+    body.mobile.portrait #skin-popup .box #pet-block .upgrade {
+      margin-top: 1vh
+    }
+
+    body.mobile.portrait #skin-popup .box #pet-block .upgrade #pet-level {
+      display: block
+    }
+
+    body.mobile.portrait #skin-popup .box #pet-block .upgrade .button {
+      border-radius: 1vh;
+      display: block;
+      margin: auto
+    }
+
+    body.mobile.portrait #skin-popup .box .label .pickyer {
+      display: none
+    }
+
+    body.mobile.portrait #skin-popup .box .label .button {
+      border-radius: .5vh;
+      margin-bottom: 1vh
+    }
+
+    body.mobile.portrait #skin-popup .box .label .button.red {
+      box-shadow: 0 .2vh 1vh rgba(0, 0, 0, .2), 0 .8vh 0 #c50000
+    }
+
+    body.mobile.portrait #skin-popup .box .label .buttonred:hover {
+      background-color: #ff1212;
+      box-shadow: 0 .2vh 1vh rgba(0, 0, 0, .2), 0 .8vh 0 #e01212
+    }
+
+    body.mobile.portrait #skin-popup .box .label .button.black {
+      box-shadow: 0 .2vh 1vh rgba(0, 0, 0, .2), 0 .8vh 0 #000
+    }
+
+    body.mobile.portrait #skin-popup .box .label .button.black:hover {
+      background-color: #4e4e4e;
+      box-shadow: 0 .2vh 1vh rgba(0, 0, 0, .2), 0 .8vh 0 #333
+    }
+
+    body.mobile.portrait #skin-popup .close img {
+      width: 8vw;
+      height: 8vw
+    }
+
+    body.mobile.portrait #skin-popup .label {
+      padding-right: 8vw
+    }
+
+    body.mobile.portrait #homepage .background .fade .logo {
+      top: 8vh
+    }
+
+    body.mobile.portrait #homepage .background .fade .logo .title {
+      font-size: 8vh
+    }
+
+    body.mobile.portrait #homepage .background .fade .logo .subtitle {
+      font-size: 3vh
+    }
+
+    body.mobile.portrait #homepage .scoreboard {
+      bottom: 3vh;
+      font-size: 2.5vh;
+      width: 80%;
+      left: 10%;
+      border-radius: 1vh;
+      transform: none
+    }
+
+    body.mobile.portrait #homepage .content .middle-box {
+      width: 100%;
+      max-width: 100%
+    }
+
+    body.mobile.portrait #homepage .content .middle-box .inside {
+      top: 45%;
+      max-width: 100%
+    }
+
+    body.mobile.portrait #homepage .content .middle-box .info .level {
+      font-size: 2.5vh
+    }
+
+    body.mobile.portrait #homepage .content .middle-box .info .level #homepage-league {
+      font-size: 3vh
+    }
+
+    body.mobile.portrait #homepage .content .middle-box .booty {
+      font-size: 4vh
+    }
+
+    body.mobile.portrait #homepage .content .middle-box .booty img {
+      height: 5vh
+    }
+
+    body.mobile.portrait #homepage .content .middle-box #username {
+      border-radius: 4vw;
+      height: 8vh;
+      font-size: 7vw;
+      text-align: center
+    }
+
+    body.mobile.portrait #homepage .content .middle-box #username::placeholder {
+      font-size: 5vw
+    }
+
+    body.mobile.portrait #homepage .content .middle-box #play-button,
+    body.mobile.portrait #homepage .content .middle-box #play-spinner {
+      height: 8vh;
+      font-size: 3vh;
+      width: 95%
+    }
+
+    body.mobile.portrait #homepage .content .middle-box #skin-button {
+      height: 8vh;
+      font-size: 3vh
+    }
+
+    body.mobile.portrait #homepage .content .middle-box #username,
+    body.mobile.portrait #homepage .content .middle-box .buttons,
+    body.mobile.portrait #homepage .content .middle-box .info {
+      max-width: 80%
+    }
+
+    body.mobile.portrait #homepage .content .left-box,
+    body.mobile.portrait #homepage .content .right-box {
+      display: none
+    }
+
+    body.mobile.portrait #end-popup .button {
+      border-radius: 2vw
+    }
+
+    body.mobile.portrait #end-popup .quote {
+      font-size: 5vw
+    }
+
+    body.mobile.portrait #end-popup .result {
+      font-size: 8vw;
+      margin-top: 2vh
+    }
+
+    body.mobile.portrait #end-popup .result .killer {
+      font-size: 12vw
+    }
+
+    body.mobile.portrait #end-popup .result2>span,
+    body.mobile.portrait #end-popup .result3>span {
+      display: block
+    }
+
+    body.mobile.portrait #end-popup .booty,
+    body.mobile.portrait #end-popup .result2,
+    body.mobile.portrait #end-popup .result3 {
+      font-size: 5.5vw;
+      margin-top: 2vh
+    }
+
+    body.mobile.portrait #end-popup .booty img,
+    body.mobile.portrait #end-popup .result2 img,
+    body.mobile.portrait #end-popup .result3 img {
+      height: 7vw
+    }
+
+    body.mobile.portrait #end-popup .result3 .button {
+      font-size: 5.5vw;
+      padding: .5vw 2vw
+    }
+
+    body.mobile.portrait #end-popup .result3 .button .text {
+      padding: 2vw 0
+    }
+
+    body.mobile.portrait #end-popup .result3 .button .notice {
+      font-size: 2.5vw
+    }
+
+    @media screen and (min-width:1024px) {
+
+      body.mobile.portrait #homepage .content .middle-box #play-button,
+      body.mobile.portrait #homepage .content .middle-box #play-spinner,
+      body.mobile.portrait #homepage .content .middle-box #skin-button,
+      body.mobile.portrait #homepage .content .middle-box #username {
+        border-radius: 2vh
+      }
+
+      body.mobile.portrait #login-button {
+        border-radius: 1vh
+      }
+
+      body.mobile.portrait #end-popup .button {
+        font-size: 5vh;
+        padding: 2vh 3vh
+      }
+    }
+  </style>
+  <script>
+    if (document.location.protocol === "http:") {
+      if (document.referrer && document.location.search.length == 0) {
+        var parts = document.referrer.split('/')[2].split(".");
+        var ref = (parts[parts.length - 2] == "co" || parts[parts.length - 2] == "com") ? parts.slice(-3).join(".") : parts.slice(-2).join(".");
+        document.location.href = document.location.href.replace("http:", "https:") + "?ref=" + encodeURIComponent(ref);
+      } else document.location.href = document.location.href.replace("http:", "https:");
+    }
+  </script>
+</head>
+
+<body>
+  <!-- FACEBOOK SDK -->
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId: '484049782371485',
+        autoLogAppEvents: true,
+        xfbml: true,
+        version: 'v2.11'
+      });
+      FB.AppEvents.logPageView();
+      onFacebookLogin();
+    };
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
+      }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <div id="homepage">
+    <div class="background">
+      <div class="fade">
+        <div id="app-links" class="app-links">
+          <a id="app-link-ios" class="apple" href="https://apps.apple.com/us/app/yohoho-io/id1515814351?mt=8&amp;utm_source=yohoho.io"><img alt="Download on the App Store" src="img/apple-store.svg"></a>
+          <a id="app-link-android" class="google" href="https://play.google.com/store/apps/details?id=com.exodragon.yohoho&amp;utm_source=yohoho.io&amp;pcampaignid="><img alt="Get it on Google Play" src="img/google-store.png"></a>
+        </div>
+        <div class="login-box">
+          <div id="unconnected-block">
+            <button id="login-button" type="button" class="button" onclick="yohoho.showLoginPopup();" lang="en">Login/Signup</button>
+            <div id="login-text" class="text" lang="en">Save your progress<br>across computers</div>
+          </div>
+          <div id="connected-block">
+            <img id="profile-picture" src="img/close.svg">
+            <span class="text">Logged-in</span>
+            <a href="#" onclick="yohoho.logout();" title="Logout"><img src="img/logout.svg"></a>
+          </div>
+        </div>
+        <div class="bottom-links">
+          <div>
+            <a href="../games.html"> Home </a> -
+            <a href="#" title="Message us" onclick="document.getElementById('doorbell-button').click();">Contact us</a>
+          </div>
+        </div>
+        <div class="bottom-bar">
+          <div class="io-games-bar" id="portal-button"><a class="button back" title="Play more IO Games" href="https://www.crazygames.com/c/io" target="_blank">More IO Games</a></div>
+        </div>
+        <div class="logo">
+          <h1 class="title">
+            <div>YoHoHo.io
+              <div id="flag"></div>
+            </div>
+          </h1>
+          <h2 class="subtitle">Pirate Battle Royale</h2>
+          <div class="subtitle2">Ahoy, matey! Ye have been marooned on a tropical island with other pirates...<br>Only one will survive and plunder the booty. Give no quarter!
+          </div>
+        </div>
+        <div id="homepage-content" class="content">
+          <div class="left-box">
+            <div class="inside">
+              <div class="box">
+                <div class="title">How to Play</div>
+                <div>Collect doubloons to get bigger</div>
+                <div>Kill other players to collect their booty</div>
+                <div class="title2">Controls</div>
+                <div id="desktop-controls">
+                  <div>Mouse: move with your cursor, click to attack</div>
+                  <div>Keyboard: move with WASD or arrow keys, SPACE to attack</div>
+                </div>
+                <div id="mobile-controls">Drag with one finger, tap with second finger to attack</div>
+                <div class="bolder">Keep attack pressed longer to focus and make a special dash attack</div>
+              </div>
+              <div id="cross-promo" class="cp hide-spil"><iframe id="cp-iframe" width="267" height="120" src="https://exodragon.com/cp/?from=yohoho"></iframe></div>
+            </div>
+          </div>
+          <div class="middle-box">
+            <div class="inside">
+              <div id="homepage-loading">
+                <div class="spinner black">
+                  <div></div>
+                </div> Loading...
+              </div>
+              <div id="homepage-loaded">
+                <div class="info">
+                  <div class="level">Island:<br><span id="homepage-league">Tortuga</span></div>
+                  <div class="booty"><span id="homepage-booty">0</span> <img src="img/coins_m.png"></div>
+                </div>
+
+                <input type="text" id="username" placeholder="Enter your pirate name..." maxlength="16">
+
+                <div class="buttons">
+                  <div>
+                    <button id="play-button" type="button" class="red button animated pulse" onclick="yohoho.clickPlay();">Play</button>
+                    <div id="homepage-rewarded-button" class="button green animated pulse"><span class="video"><img src="img/video.svg"></span><span class="text">Start with<br>x2 health</span><span class="notice">AD</span></div>
+                  </div>
+                  <div>
+                    <button id="play-spinner" type="button" class="red button" disabled="">
+                      <div class="spinner">
+                        <div></div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div id="skin-block" class="skin" onclick="yohoho.chooseSkin();">
+                  <div id="skin-homepage-canvas">
+                  </div>
+                  <div>
+                    <button id="skin-button" type="button" class="black button"> Characters<span id="new-skin-avail" class="new"><span class="pulse-ring"></span><span class="text">!</span></span></button>
+                  </div>
+                </div>
+
+                <div class="ipad-help">
+                  <div class="title">Controls</div>
+                  <div>Drag with one finger, tap with second finger to attack</div>
+                  <div class="bolder">Keep second finger pressed longer to focus and make a special dash attack</div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="right-box">
+            <div class="inside">
+              <div id="banner-on-homepage" class="right-pub">
+
+                <div id="yohoho-io_300x250"></div>
+              </div>
+            </div>
+          </div>
+          <div class="scoreboard">
+            <table>
+              <tbody>
+                <tr>
+                  <th>Records</th>
+                  <th>Last</th>
+                  <th>Best</th>
+                  <th>Total</th>
+                </tr>
+                <tr>
+                  <td>Kills</td>
+                  <td id="last-kills">0</td>
+                  <td id="best-kills">0</td>
+                  <td id="total-kills">0</td>
+                </tr>
+                <tr>
+                  <td>Loot</td>
+                  <td id="last-score">0</td>
+                  <td id="best-score">0</td>
+                  <td id="total-score">0</td>
+                </tr>
+                <tr>
+                  <td>Time survived</td>
+                  <td id="last-game-time">0s</td>
+                  <td id="best-game-time">0s</td>
+                  <td id="total-game-time">0s</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="wins">Total Wins: <span id="total-wins">0</span></div>
+          </div>
+          <div id="no-webgl-popup">Your browser does not support WebGL, the game will suffer display and performance issues. <a href="help.html">Please read the help for further advice</a>
+            <div class="close" onclick="document.getElementById('no-webgl-popup').style.display='none';">×</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div id="skin-popup">
+    <div class="fade"></div>
+    <div class="box">
+      <div id="skin-popup-label" class="label"><span class="booty"><span id="skin-popup-booty">12345</span> <img src="img/coins_m.png"></span><span class="pickyer">Pick yer </span><span id="skin-button-char" class="button red" onclick="yohoho.switchSkinCategory(0);">character</span> <span id="skin-button-pet" class="button black" onclick="yohoho.switchSkinCategory(1);">pet<span id="pet-avail" class="new"><span class="pulse-ring"></span><span class="text">!</span></span></span></div>
+      <div id="arrow-up" onclick="yohoho.skinPage(-1);">
+        <div></div>
+      </div>
+      <div id="skin-list" class="skin-list">
+      </div>
+      <div id="arrow-down" onclick="yohoho.skinPage(1);">
+        <div></div>
+      </div>
+      <div id="pet-block">
+        <div class="upgrade">
+          Your pet regenerates: <span id="pet-level">10 Health Points/s</span>
+          <div id="pet-upgrade-button" class="button" onclick="yohoho.upgradePet();"><span>Upgrade for 12345 </span><img src="img/coins_m.png"></div>
+        </div>
+        <div id="pet-list" class="pet-list">
+        </div>
+      </div>
+      <div class="close" onclick="yohoho.closeSkinSelector()"><img src="img/close.svg"></div>
+    </div>
+  </div>
+  <div id="end-popup" class="animated fadeIn">
+    <div class="fade"></div>
+    <div class="box">
+      <div id="end-quote" class="quote">"Dead men tell no tales..."</div>
+      <div id="end-result" class="result">Ye have been killed by <span class="killer">someone</span></div>
+      <div class="result2">
+        <span>Ye survived <span id="end-time" class="time">1 min 13s</span></span><span> and placed <span id="end-rank" class="rank">#32</span></span>
+      </div>
+      <div class="result3"><span>Ye killed <span id="end-kills" class="kills">x</span> scallywag(s)</span><span> and plundered <span id="end-coins" class="earned-coins">15</span><img src="img/coins_m.png"></span>
+        <div id="end-rewarded-button" class="button green"><span class="video"><img src="img/video.svg"></span><span class="text">Gain x2</span><span class="notice">AD</span></div>
+      </div>
+      <div class="booty"><img src="img/chest.png">Yer booty is now <span id="end-booty-coins">1234</span> <img src="img/coins_m.png"></div>
+      <div id="end-xp-line" class="xp-line">
+        <div class="title">Level</div>
+        <div class="line">
+          <span class="league" id="end-current-league">Silver</span>
+          <div id="end-xp-bar">
+            <div class="bar" id="end-xp-bar-value"></div>
+            <div class="border"></div>
+          </div>
+          <span class="league" id="end-next-league">Gold</span>
+        </div>
+      </div>
+
+      <div id="continue-button" class="red button" onclick="yohoho.backToHomepage();">Continue</div>
+      <div id="banner-on-end-popup">
+        <div id="yohoho-io_970x250">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="ios-fs-popup">
+    <div class="fade" onclick="javascript: document.getElementById('ios-fs-popup').style.display='none';"></div>
+    <div class="box">
+      <div class="close">
+        <div onclick="javascript: document.getElementById('ios-fs-popup').style.display='none';">Close</div>
+      </div>
+      <div>Play fullscreen on iOS:</div>
+      <div style="margin-top: 0.5vh">
+        <a class="apple" href="https://apps.apple.com/us/app/yohoho-io/id1515814351?mt=8&amp;utm_source=yohoho.io"><img alt="Download on the App Store" src="img/apple-store.svg"></a>
+        <div style="font-size: 2vh">or</div>
+      </div>
+      <div style="font-size: 3vh; margin-top: 1vh;">Add to home screen</div>
+      <div><img style="height: auto; width: 100%;" src="img/safari-share.png"></div>
+      <div><img style="width: 100%;" src="img/safari-add-homescreen.png"></div>
+    </div>
+  </div>
+  <div id="login-popup" class="login-popup animated fadeInDown">
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <div class="title">Google</div>
+            <div class="g-signin2" data-onsuccess="onGoogleSignIn" data-longtitle="true" data-theme="dark" data-scope="email"></div>
+
+            <div id="google-login-button" class="google-signin-button">
+              <div style="height:36px;width:200px;" class="abcRioButton abcRioButtonBlue" onclick="yohoho.clickGoogleLogin()">
+                <div class="abcRioButtonContentWrapper">
+                  <div class="abcRioButtonIcon" style="padding:8px">
+                    <div style="width:18px;height:18px;" class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18">
+                      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 48 48" class="abcRioButtonSvg">
+                        <g>
+                          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                          <path fill="none" d="M0 0h48v48H0z"></path>
+                        </g>
+                      </svg>
+                    </div>
+                  </div><span style="font-size:13px;line-height:34px;" class="abcRioButtonContents"><span id="not_signed_inn12nekdbo1o9">Sign in with Google</span><span id="connectedn12nekdbo1o9" style="display:none">Signed in with Google</span></span>
+                </div>
+              </div>
+            </div>
+
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="title">Facebook</div>
+            <div id="fb-login-button" class="fb-button-yohoho" onclick="yohoho.clickFacebookLogin()">
+              <div class="image">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 216" class="_5h0m" color="#FFFFFF">
+                  <path fill="#FFFFFF" d="
+          M204.1 0H11.9C5.3 0 0 5.3 0 11.9v192.2c0 6.6 5.3 11.9 11.9
+          11.9h103.5v-83.6H87.2V99.8h28.1v-24c0-27.9 17-43.1 41.9-43.1
+          11.9 0 22.2.9 25.2 1.3v29.2h-17.3c-13.5 0-16.2 6.4-16.2
+          15.9v20.8h32.3l-4.2 32.6h-28V216h55c6.6 0 11.9-5.3
+          11.9-11.9V11.9C216 5.3 210.7 0 204.1 0z"></path>
+                </svg>
+              </div>
+              <div class="text">Log in With Facebook</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input id="emailing-consent-checkbox" type="checkbox"><span id="emailing-consent-text">Send me emails about games updates</span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input id="privacy-policy-checkbox" type="checkbox">I have read and agree to the <a href="privacypolicy.html" target="_blank">privacy policy</a>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button" class="button close" onclick="document.getElementById('login-popup').style.display='none';" lang="en">×</button>
+  </div>
+  <img id="thumbnail" src="data:image/jpeg;base64,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" style="
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:9999;
+    ">
+  <script>
+    setTimeout(function() {
+      document.getElementById("thumbnail").remove();
+    }, 2000)
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "f" || e.key === "F") {
+        toggleFullscreen();
+      } else if (e.ctrlKey) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    window.doorbellOptions = {
+      id: '10008',
+      appKey: 'NKwnF6hM33l8aH27ldPD8awN75ylfr5Ufn3xTYfHu21cWumvYTB6hT2ABE6oTA6H'
+    };
+    (function(w, d, t) {
+      var hasLoaded = false;
+
+      function l() {
+        if (hasLoaded) {
+          return;
+        }
+        hasLoaded = true;
+        window.doorbellOptions.windowLoaded = true;
+        var g = d.createElement(t);
+        g.id = 'doorbellScript';
+        g.type = 'text/javascript';
+        g.async = true;
+        g.src = 'https://embed.doorbell.io/button/' + window.doorbellOptions['id'] + '?t=' + (new Date().getTime());
+        (d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(g);
+      }
+      if (w.attachEvent) {
+        w.attachEvent('onload', l);
+      } else if (w.addEventListener) {
+        w.addEventListener('load', l, false);
+      } else {
+        l();
+      }
+      if (d.readyState == 'complete') {
+        l();
+      }
+    }(window, document, 'script'));
+  </script>
+
+  <div id="preroll"></div>
+</body>
+
+</html>
