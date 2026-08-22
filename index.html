@@ -478,6 +478,7 @@
         .ux-parent {
             perspective: 1000px;
             height: 320px;
+            cursor: pointer;
         }
 
         .ux-card {
@@ -505,7 +506,6 @@
             box-shadow: 0 20px 40px rgba(0, 255, 214, 0.15), 0 10px 20px rgba(0,0,0,0.5);
         }
 
-        /* Concentric 3D Orbits behind Card Header */
         .card-orb-glow {
             position: absolute;
             top: -40px;
@@ -639,6 +639,111 @@
             border-right: 3px solid var(--neon-mint);
         }
 
+        /* --- In-Game Glassmorphic Arcade Modal --- */
+        .arcade-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 6, 12, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .arcade-modal-backdrop.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .arcade-modal-window {
+            width: 100%;
+            max-width: 1100px;
+            height: 85vh;
+            background: #090d16;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 255, 214, 0.15);
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .arcade-modal-backdrop.is-open .arcade-modal-window {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-bar {
+            padding: 14px 24px;
+            background: rgba(18, 24, 38, 0.95);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .modal-btn:hover {
+            background: var(--neon-mint);
+            color: #040807;
+        }
+
+        .modal-btn.close {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .modal-btn.close:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .arcade-iframe-container {
+            flex: 1;
+            position: relative;
+            background: #000;
+        }
+
+        #game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         /* --- Footer --- */
         footer {
             border-top: 1px solid var(--glass-border);
@@ -674,7 +779,6 @@
             transform: translateY(-2px);
         }
 
-        /* --- Loading State --- */
         #loading-indicator {
             text-align: center;
             padding: 50px;
@@ -689,12 +793,13 @@
             .stage-panel { grid-template-columns: 1fr; }
             .info-grid-section { grid-template-columns: 1fr; }
             .nav-links { display: none; }
+            .arcade-modal-window { height: 95vh; }
         }
     </style>
 </head>
 <body>
 
-    <!-- WebGL Background Canvas (Metaball Refraction Shader) -->
+    <!-- WebGL Canvas Underlay -->
     <canvas id="webgl-bg"></canvas>
 
     <!-- Glass Header Navigation -->
@@ -717,7 +822,7 @@
     </header>
 
     <main id="main">
-        <!-- Hero Region with Giant Typography & Floating Pills -->
+        <!-- Hero Region -->
         <section class="hero">
             <div class="hero-bg-text">IM AFK HUB</div>
             
@@ -754,7 +859,7 @@
             </div>
         </section>
 
-        <!-- Spotlight Stage / Carousel -->
+        <!-- Spotlight Stage -->
         <section class="spotlight-section" id="featured">
             <div class="section-header">
                 <div>
@@ -768,7 +873,7 @@
                     <div class="stage-track" id="stage-track">
                         <!-- Panel 1 -->
                         <div class="stage-panel">
-                            <div class="stage-panel-img" style="background: linear-gradient(135deg, #00ffd6, #3b82f6);">🎮</div>
+                            <div class="stage-panel-img">🎮</div>
                             <div>
                                 <span class="game-tag" data-i18n="panel1.tag">Featured Masterpiece</span>
                                 <h3 style="font-size: 1.6rem; margin: 8px 0;" data-i18n="panel1.title">Retro & Web Canvas Emulators</h3>
@@ -805,7 +910,7 @@
         <!-- Search Bar -->
         <div class="search-wrapper">
             <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="game-search" class="search-glass-input" placeholder="Search arcade database (e.g. 2048, Snake, Retro)..." oninput="filterGames()">
+            <input type="text" id="game-search" class="search-glass-input" placeholder="Search arcade database..." oninput="filterGames()">
         </div>
 
         <!-- 3D Card Game Library -->
@@ -822,7 +927,7 @@
             </div>
         </section>
 
-        <!-- Information & Guidelines Section -->
+        <!-- Information & Guidelines -->
         <section class="info-grid-section" id="rules">
             <div class="info-panel">
                 <h3 data-i18n="rules.title">⚖️ Network Rules</h3>
@@ -851,11 +956,32 @@
         </section>
     </main>
 
+    <!-- Glassmorphic In-Game Player Overlay (Modal) -->
+    <div class="arcade-modal-backdrop" id="game-modal">
+        <div class="arcade-modal-window">
+            <div class="modal-bar">
+                <div class="modal-title-group">
+                    <div class="brand-icon" style="width: 28px; height: 28px; font-size: 0.8rem;">▶</div>
+                    <span id="modal-game-title" style="font-weight: 700;">Loading Game...</span>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn" id="modal-reload-btn">↻ Restart</button>
+                    <button class="modal-btn" id="modal-tab-btn">↗ New Tab</button>
+                    <button class="modal-btn" id="modal-fullscreen-btn">⛶ Fullscreen</button>
+                    <button class="modal-btn close" id="modal-close-btn">✕ Exit</button>
+                </div>
+            </div>
+            <div class="arcade-iframe-container">
+                <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms" allow="fullscreen; autoplay; gamepad"></iframe>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2024–2026 I’m Afk &bull; Engineered with Semantic 3D Web & Three.js</p>
     </footer>
 
-    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <!-- ================= SCRIPT & GAME ENGINE ================= -->
     <script>
         /* -------------------------------------------------------------
            1. I18N & BILINGUAL ENGINE
@@ -987,7 +1113,6 @@
                 float asp = uRes.x / uRes.y;
                 vec2 p = (uv - 0.5) * vec2(asp, 1.0);
 
-                // Metaball calculation
                 float d = 0.0;
                 for (int i = 0; i < 4; i++) {
                     float fi = float(i);
@@ -995,7 +1120,6 @@
                     d += 0.015 / (length(p - c) + 0.001);
                 }
 
-                // Mouse interaction
                 d += 0.02 / (length(p - uMouse) + 0.001);
 
                 vec3 col = mix(vec3(0.02, 0.03, 0.06), vec3(0.0, 0.9, 0.7), smoothstep(0.7, 1.2, d) * 0.25);
@@ -1039,13 +1163,12 @@
         requestAnimationFrame(animateBg);
 
         /* -------------------------------------------------------------
-           3. GSAP ENTRANCE & FLOATING MOTIONS
+           3. GSAP MOTION & SPOTLIGHT CAROUSEL
         ------------------------------------------------------------- */
         document.addEventListener("DOMContentLoaded", () => {
             gsap.from(".hero-left", { y: 30, opacity: 0, duration: 1, ease: "power3.out" });
             gsap.from(".hero-right", { scale: 0.9, opacity: 0, duration: 1.2, delay: 0.2, ease: "back.out(1.5)" });
             
-            // Continuous Organic Float
             gsap.to(".float-elem", {
                 y: "-=12",
                 rotation: "1.5",
@@ -1056,9 +1179,6 @@
             });
         });
 
-        /* -------------------------------------------------------------
-           4. SPOTLIGHT DECK CAROUSEL LOGIC
-        ------------------------------------------------------------- */
         const track = document.getElementById('stage-track');
         const dots = document.querySelectorAll('.stage-dot');
         let currentSlide = 0;
@@ -1069,7 +1189,6 @@
             const isRTL = document.documentElement.dir === 'rtl';
             const movePercent = currentSlide * 100;
             track.style.transform = `translateX(${isRTL ? movePercent : -movePercent}%)`;
-
             dots.forEach((d, i) => d.classList.toggle('is-active', i === currentSlide));
         }
 
@@ -1078,7 +1197,71 @@
         dots.forEach((dot, i) => dot.addEventListener('click', () => updateCarousel(i)));
 
         /* -------------------------------------------------------------
-           5. GITHUB GAME LOADER & 3D CARD INJECTION
+           4. IN-GAME ARCADE MODAL & RUNNER SYSTEM
+        ------------------------------------------------------------- */
+        const modal = document.getElementById('game-modal');
+        const gameFrame = document.getElementById('game-frame');
+        const modalTitle = document.getElementById('modal-game-title');
+        let currentGameUrl = '';
+
+        function openGameModal(title, url, downloadUrl = null) {
+            modalTitle.textContent = title;
+            currentGameUrl = url;
+            modal.classList.add('is-open');
+
+            // If GitHub Pages is active, load directly.
+            // In addition, if fallback/blob is needed, load properly:
+            if (downloadUrl) {
+                fetch(downloadUrl)
+                    .then(res => res.text())
+                    .then(html => {
+                        const blob = new Blob([html], { type: 'text/html' });
+                        gameFrame.src = URL.createObjectURL(blob);
+                    })
+                    .catch(() => {
+                        gameFrame.src = url;
+                    });
+            } else {
+                gameFrame.src = url;
+            }
+        }
+
+        function closeGameModal() {
+            modal.classList.remove('is-open');
+            gameFrame.src = 'about:blank'; // stop audio/game loops
+        }
+
+        document.getElementById('modal-close-btn').addEventListener('click', closeGameModal);
+        document.getElementById('modal-reload-btn').addEventListener('click', () => {
+            const current = gameFrame.src;
+            gameFrame.src = 'about:blank';
+            setTimeout(() => { gameFrame.src = current; }, 50);
+        });
+
+        document.getElementById('modal-tab-btn').addEventListener('click', () => {
+            if (currentGameUrl) window.open(currentGameUrl, '_blank');
+        });
+
+        document.getElementById('modal-fullscreen-btn').addEventListener('click', () => {
+            if (gameFrame.requestFullscreen) {
+                gameFrame.requestFullscreen();
+            } else if (gameFrame.webkitRequestFullscreen) {
+                gameFrame.webkitRequestFullscreen();
+            }
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeGameModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+                closeGameModal();
+            }
+        });
+
+        /* -------------------------------------------------------------
+           5. GITHUB GAME LOADER & 3D CARD GENERATOR
         ------------------------------------------------------------- */
         const GITHUB_USER = 'imafksite'; 
         const GITHUB_REPO = 'imafk';     
@@ -1105,15 +1288,13 @@
                     gameList = files.filter(f => f.name.endsWith('.html'));
                 }
 
-                // Fallback mock games if repository folder is empty or offline
+                // Fallback demo games
                 if (!gameList.length) {
                     gameList = [
-                        { name: '2048-puzzle.html' },
-                        { name: 'snake-retro.html' },
-                        { name: 'space-invaders.html' },
-                        { name: 'flappy-bird.html' },
-                        { name: 'tetris-classic.html' },
-                        { name: 'pacman-arcade.html' }
+                        { name: '2048-puzzle.html', isMock: true },
+                        { name: 'snake-retro.html', isMock: true },
+                        { name: 'space-invaders.html', isMock: true },
+                        { name: 'tetris-classic.html', isMock: true }
                     ];
                 }
 
@@ -1128,24 +1309,28 @@
                         .replace(/([a-z])([A-Z])/g, '$1 $2')
                         .replace(/\b\w/g, l => l.toUpperCase());
 
-                    const url = file.download_url || `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${file.name}`;
-                    create3DCard(title, url, index, container);
+                    // Use the correct GitHub Pages Web URL:
+                    const pagesUrl = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${file.name}`;
+                    const downloadUrl = file.download_url || null;
+
+                    create3DCard(title, pagesUrl, downloadUrl, index, container);
                 });
 
             } catch (err) {
-                indicator.textContent = "Error loading from GitHub. Retrying in offline mode...";
-                setTimeout(loadGameLibrary, 2000);
+                indicator.textContent = "Unable to fetch from GitHub API. Loading local offline nodes...";
+                setTimeout(loadGameLibrary, 2500);
             }
         }
 
-        function create3DCard(title, url, index, container) {
+        function create3DCard(title, pagesUrl, downloadUrl, index, container) {
             const theme = cardThemes[index % cardThemes.length];
             const firstLetter = title.charAt(0);
 
             const cardWrap = document.createElement('div');
             cardWrap.className = 'ux-parent';
+            
             cardWrap.innerHTML = `
-                <a href="${url}" target="_blank" class="ux-card">
+                <div class="ux-card">
                     <div class="card-orb-glow" style="--accent-glow: ${theme.glow};"></div>
                     <div class="card-top">
                         <div class="game-avatar" style="--card-theme: ${theme.bg};">${firstLetter}</div>
@@ -1155,14 +1340,20 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        Engineered with Canvas WebGL. Touch controls enabled. Zero installation required.
+                        Executable browser HTML5 engine. Zero installation needed.
                     </div>
                     <div class="card-footer">
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">v1.0 stable</span>
-                        <span class="play-btn-pill">Play ↗</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Play Ready</span>
+                        <span class="play-btn-pill">Launch Game ▶</span>
                     </div>
-                </a>
+                </div>
             `;
+
+            // Open in in-app modal on click:
+            cardWrap.addEventListener('click', () => {
+                openGameModal(title, pagesUrl, downloadUrl);
+            });
+
             container.appendChild(cardWrap);
         }
 
