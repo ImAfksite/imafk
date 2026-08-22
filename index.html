@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
@@ -24,6 +25,7 @@
             --neon-purple: #a855f7;
             --neon-orange: #f97316;
             --neon-pink: #ec4899;
+            --danger: #ef4444;
             --text-main: #f3f4f6;
             --text-muted: #94a3b8;
             --glass-border: rgba(255, 255, 255, 0.12);
@@ -310,7 +312,7 @@
         /* --- Search & Filter Bar --- */
         .search-wrapper {
             max-width: 1200px;
-            margin: 0 auto 40px;
+            margin: 0 auto 30px;
             padding: 0 24px;
             position: relative;
         }
@@ -350,6 +352,70 @@
         html[dir="rtl"] .search-icon {
             left: auto;
             right: 45px;
+        }
+
+        /* --- Takedown Notice & Moderation Board --- */
+        .takedown-board {
+            max-width: 1200px;
+            margin: 0 auto 35px;
+            padding: 0 24px;
+        }
+
+        .takedown-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .takedown-badge {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            padding: 5px 16px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .takedown-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .takedown-item {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-left: 4px solid #ef4444;
+            border-radius: 14px;
+            padding: 14px 20px;
+            font-size: 0.85rem;
+            color: #fca5a5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        html[dir="rtl"] .takedown-item {
+            border-left: 1px solid rgba(239, 68, 68, 0.25);
+            border-right: 4px solid #ef4444;
+        }
+
+        .takedown-item strong {
+            color: #ffffff;
+        }
+
+        .takedown-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            margin-left: 14px;
         }
 
         /* --- Featured Spotlight Deck (Carousel) --- */
@@ -462,7 +528,7 @@
             color: black;
         }
 
-        /* --- 3D Interactive Game Grid (DepthFold Style) --- */
+        /* --- 3D Interactive Game Grid --- */
         .game-grid-section {
             max-width: 1200px;
             margin: 0 auto 80px;
@@ -912,6 +978,7 @@
             <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="game-search" class="search-glass-input" placeholder="Search arcade database..." oninput="filterGames()">
         </div>
+
         <!-- Public Takedown & Moderation Changelog -->
         <div class="takedown-board" id="takedown-board" style="display: none;">
             <div class="takedown-header">
@@ -920,17 +987,18 @@
             </div>
             <div class="takedown-feed" id="takedown-feed"></div>
         </div>
+
         <!-- 3D Card Game Library -->
         <section class="game-grid-section" id="library">
             <div class="section-header">
                 <div>
                     <h2 data-i18n="sec.libraryTitle">Arcade Library</h2>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="sec.librarySub">Dynamically populated from GitHub repository contents.</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="sec.librarySub">Dynamically populated from GitHub repository & Supabase live node.</p>
                 </div>
             </div>
 
             <div class="game-grid" id="game-container">
-                <div id="loading-indicator" data-i18n="lib.loading">Connecting to GitHub CDN...</div>
+                <div id="loading-indicator" data-i18n="lib.loading">Connecting to Global Nodes...</div>
             </div>
         </section>
 
@@ -1022,8 +1090,8 @@
                 "panel2.desc": "Easily submit pull requests to add your own games or fork the repository for your personal cloud.",
                 "panel2.btn": "Fork Repository",
                 "sec.libraryTitle": "Arcade Library",
-                "sec.librarySub": "Dynamically populated from GitHub repository contents.",
-                "lib.loading": "Connecting to GitHub CDN...",
+                "sec.librarySub": "Dynamically populated from GitHub repository & Supabase live node.",
+                "lib.loading": "Connecting to Global Nodes...",
                 "rules.title": "⚖️ Network Rules",
                 "rules.1": "Respect Creators: No hotlinking or re-uploading without explicit permission.",
                 "rules.2": "Personal Entertainment: All titles are provided freely for personal non-commercial study.",
@@ -1062,8 +1130,8 @@
                 "panel2.desc": "يمكنك المساهمة وإضافة ألعابك بسهولة عبر إرسال Pull Request أو استنساخ المستودع.",
                 "panel2.btn": "استعراض الكود",
                 "sec.libraryTitle": "مكتبة الألعاب",
-                "sec.librarySub": "تحديث فوري وتلقائي من محتويات المستودع البرمجي.",
-                "lib.loading": "جاري الاتصال بالسيرفر...",
+                "sec.librarySub": "تحديث فوري وتلقائي من محتويات المستودع وقاعدة البيانات.",
+                "lib.loading": "جاري الاتصال بالسيرفر العالمي...",
                 "rules.title": "⚖️ قواعد الاستخدام",
                 "rules.1": "احترام المطورين: يُمنع إعادة الرفع أو النقل دون إذن مباشر من صانع المحتوى.",
                 "rules.2": "استخدام شخصي: جميع الألعاب متاحة مجاناً للترفيه والدراسة غير التجارية.",
@@ -1216,8 +1284,6 @@
             currentGameUrl = url;
             modal.classList.add('is-open');
 
-            // If GitHub Pages is active, load directly.
-            // In addition, if fallback/blob is needed, load properly:
             if (downloadUrl) {
                 fetch(downloadUrl)
                     .then(res => res.text())
@@ -1235,7 +1301,7 @@
 
         function closeGameModal() {
             modal.classList.remove('is-open');
-            gameFrame.src = 'about:blank'; // stop audio/game loops
+            gameFrame.src = 'about:blank';
         }
 
         document.getElementById('modal-close-btn').addEventListener('click', closeGameModal);
@@ -1268,8 +1334,14 @@
         });
 
         /* -------------------------------------------------------------
-           5. GITHUB GAME LOADER & 3D CARD GENERATOR
+           5. SUPABASE & GITHUB DUAL LOADER
         ------------------------------------------------------------- */
+        const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
+        
+        // Use separate name to avoid variable conflicts
+        const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         const GITHUB_USER = 'imafksite'; 
         const GITHUB_REPO = 'imafk';     
 
@@ -1281,52 +1353,107 @@
             { bg: 'linear-gradient(135deg, #ec4899, #f43f5e)', glow: 'rgba(236, 72, 153, 0.4)' }
         ];
 
-        async function loadGameLibrary() {
+        async function loadAllGames() {
             const container = document.getElementById('game-container');
             const indicator = document.getElementById('loading-indicator');
             const statCount = document.getElementById('stat-count');
+            const takedownBoard = document.getElementById('takedown-board');
+            const takedownFeed = document.getElementById('takedown-feed');
 
+            let allGames = [];
+
+            // 1. Fetch from Supabase (Live Auto-Published Games + Takedown Log)
+            try {
+                const { data: supaGames, error } = await sbClient
+                    .from('games')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (!error && Array.isArray(supaGames)) {
+                    const liveSupa = supaGames.filter(g => g.status === 'live');
+                    const takedownSupa = supaGames.filter(g => g.status === 'takedown');
+
+                    // Populate Takedown Board
+                    if (takedownSupa.length > 0) {
+                        takedownBoard.style.display = 'block';
+                        takedownFeed.innerHTML = '';
+                        takedownSupa.forEach(item => {
+                            const date = new Date(item.takedown_date || item.created_at).toLocaleDateString();
+                            const notice = document.createElement('div');
+                            notice.className = 'takedown-item';
+                            notice.innerHTML = `
+                                <div>
+                                    <strong>[REMOVED] ${item.title}</strong> — 
+                                    <span>Reason: <em>"${item.takedown_reason || 'Breaking code or policy violation'}"</em></span>
+                                </div>
+                                <span class="takedown-date">${date}</span>
+                            `;
+                            takedownFeed.appendChild(notice);
+                        });
+                    }
+
+                    liveSupa.forEach(g => {
+                        allGames.push({
+                            title: g.title,
+                            author: g.author,
+                            html_code: g.html_code,
+                            type: 'supabase'
+                        });
+                    });
+                }
+            } catch (err) {
+                console.warn('Supabase offline or table pending:', err);
+            }
+
+            // 2. Fetch from GitHub Repository Folder
             try {
                 const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
                 const files = await res.json();
-
-                let gameList = [];
                 if (Array.isArray(files)) {
-                    gameList = files.filter(f => f.name.endsWith('.html'));
+                    files.filter(f => f.name.endsWith('.html')).forEach(file => {
+                        const title = file.name
+                            .replace('.html', '')
+                            .replace(/-/g, ' ')
+                            .replace(/([a-z])([A-Z])/g, '$1 $2')
+                            .replace(/\b\w/g, l => l.toUpperCase());
+
+                        allGames.push({
+                            title: title,
+                            url: `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${file.name}`,
+                            downloadUrl: file.download_url,
+                            type: 'github'
+                        });
+                    });
                 }
-
-                // Fallback demo games
-                if (!gameList.length) {
-                    gameList = [
-                        { name: '2048-puzzle.html', isMock: true },
-                        { name: 'snake-retro.html', isMock: true },
-                        { name: 'space-invaders.html', isMock: true },
-                        { name: 'tetris-classic.html', isMock: true }
-                    ];
-                }
-
-                indicator.style.display = 'none';
-                container.innerHTML = '';
-                statCount.textContent = gameList.length;
-
-                gameList.forEach((file, index) => {
-                    const title = file.name
-                        .replace('.html', '')
-                        .replace(/-/g, ' ')
-                        .replace(/([a-z])([A-Z])/g, '$1 $2')
-                        .replace(/\b\w/g, l => l.toUpperCase());
-
-                    // Use the correct GitHub Pages Web URL:
-                    const pagesUrl = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${file.name}`;
-                    const downloadUrl = file.download_url || null;
-
-                    create3DCard(title, pagesUrl, downloadUrl, index, container);
-                });
-
             } catch (err) {
-                indicator.textContent = "Unable to fetch from GitHub API. Loading local offline nodes...";
-                setTimeout(loadGameLibrary, 2500);
+                console.warn('GitHub API rate limit or offline mode.');
             }
+
+            // 3. Fallback Demo Games if everything is fresh
+            if (!allGames.length) {
+                allGames = [
+                    { title: '2048 Puzzle', url: 'https://imafksite.github.io/imafk/games/2048-puzzle.html', type: 'github' },
+                    { title: 'Retro Snake', url: 'https://imafksite.github.io/imafk/games/snake-retro.html', type: 'github' },
+                    { title: 'Space Invaders', url: 'https://imafksite.github.io/imafk/games/space-invaders.html', type: 'github' }
+                ];
+            }
+
+            // Render Cards
+            if (indicator) indicator.style.display = 'none';
+            container.innerHTML = '';
+            statCount.textContent = allGames.length;
+
+            allGames.forEach((game, index) => {
+                let targetUrl = game.url;
+                let downUrl = game.downloadUrl || null;
+
+                if (game.type === 'supabase') {
+                    const blob = new Blob([game.html_code], { type: 'text/html' });
+                    targetUrl = URL.createObjectURL(blob);
+                }
+
+                create3DCard(game.title, targetUrl, downUrl, index, container);
+            });
         }
 
         function create3DCard(title, pagesUrl, downloadUrl, index, container) {
@@ -1350,13 +1477,12 @@
                         Executable browser HTML5 engine. Zero installation needed.
                     </div>
                     <div class="card-footer">
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Play Ready</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Verified Play</span>
                         <span class="play-btn-pill">Launch Game ▶</span>
                     </div>
                 </div>
             `;
 
-            // Open in in-app modal on click:
             cardWrap.addEventListener('click', () => {
                 openGameModal(title, pagesUrl, downloadUrl);
             });
@@ -1373,7 +1499,7 @@
             });
         }
 
-        loadGameLibrary();
+        loadAllGames();
     </script>
 </body>
 </html>
