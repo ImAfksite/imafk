@@ -3,254 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I’m Afk | Free Play Games</title>
+    <title>I’m Afk | Free Play Game Hub</title>
     <style>
         :root {
             --primary: #1a73e8;
+            --primary-dark: #1557b0;
             --bg: #f0f2f5;
             --card-bg: #ffffff;
             --text: #333333;
-            --text-dim: #5f6368;
+            --text-light: #5f6368;
+            --accent: #e8f0fe;
         }
 
         body {
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-            line-height: 1.7;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
             color: var(--text);
-            background-color: var(--bg); 
+            background-color: var(--bg);
             margin: 0;
             padding: 40px 20px;
-            animation: fadeInBody 1s ease-in;
+            animation: fadeInBody 0.8s ease-in;
         }
 
         .container {
             max-width: 850px;
             margin: 0 auto;
-            background: var(--card-bg); 
+            background: var(--card-bg);
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             border: 1px solid #e1e4e8;
         }
 
         header { text-align: center; margin-bottom: 30px; }
-        h1 { color: var(--primary); font-size: 2.5em; margin-bottom: 10px; }
-        h2 { color: #202124; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; margin-top: 35px; }
+        h1 { color: var(--primary); font-size: 2.6em; margin: 0; }
+        header p { color: var(--text-light); font-size: 1.1em; margin-top: 5px; }
 
-        /* FEATURED PROJECT SECTION */
+        /* FEATURED PROJECT CARD */
         .featured-card {
             background: linear-gradient(135deg, #1a73e8, #0d47a1);
             color: white;
-            padding: 25px;
-            border-radius: 12px;
+            padding: 30px;
+            border-radius: 14px;
             margin-bottom: 40px;
             text-align: center;
-            box-shadow: 0 6px 15px rgba(26, 115, 232, 0.3);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.3);
+            animation: slideUp 0.6s ease-out;
         }
+        .featured-card h3 { margin: 0 0 10px 0; font-size: 1.5em; }
         .featured-btn {
             display: inline-block;
             background: white;
             color: var(--primary);
-            padding: 10px 25px;
+            padding: 12px 30px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 15px;
             transition: 0.3s;
         }
+        .featured-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(255,255,255,0.4); }
 
-        /* SEARCH & GRID */
+        /* SEARCH BAR */
         #game-search {
             width: 100%;
-            padding: 12px 20px;
-            margin: 20px 0;
+            padding: 15px 25px;
+            margin-bottom: 25px;
             border: 2px solid #ddd;
-            border-radius: 30px;
+            border-radius: 50px;
             font-size: 1rem;
             outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
         }
+        #game-search:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(26,115,232,0.1); }
 
+        /* AUTOMATED GAME GRID */
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 15px;
-            margin: 25px 0;
+            margin-bottom: 40px;
         }
 
         .game-card {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 16px;
             background: #fff;
             border: 1px solid #e1e4e8;
             border-radius: 12px;
             text-decoration: none;
             color: var(--text);
-            transition: 0.3s;
+            transition: all 0.2s ease;
+            animation: fadeIn 0.5s ease backwards;
         }
+
         .game-card:hover {
             transform: translateY(-3px);
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+            background-color: #fcfdfe;
         }
 
         .game-icon {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             background: var(--primary);
             color: white;
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 1.2em;
             margin-right: 15px;
             flex-shrink: 0;
+            text-transform: uppercase;
         }
 
-        /* ORIGINAL CONTENT SECTIONS */
-        .rules-list { list-style-type: none; padding: 0; }
+        .game-title { font-weight: 600; font-size: 1rem; }
+
+        /* CONTENT SECTIONS */
+        h2 { border-bottom: 2px solid var(--bg); padding-bottom: 8px; margin-top: 40px; color: #202124; }
+        .info-text { color: var(--text-light); font-size: 0.95rem; }
+        
+        .rules-list { list-style: none; padding: 0; }
         .rules-list li {
             background: #f8f9fa;
-            margin-bottom: 12px;
-            padding: 15px 20px;
-            border-left: 5px solid var(--primary);
-            border-radius: 6px;
+            margin-bottom: 10px;
+            padding: 12px 18px;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
         }
 
-        .btn-container { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .btn-container { display: flex; gap: 12px; justify-content: center; margin-top: 30px; }
         .action-btn {
             text-decoration: none;
-            background-color: var(--primary);
+            background: var(--primary);
             color: white !important;
             padding: 12px 24px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: bold;
             transition: 0.3s;
         }
-        .action-btn.secondary { background-color: #5f6368; }
+        .action-btn.secondary { background: #5f6368; }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        .availability-note {
-            background: #e8f0fe; 
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid #c2d7fa;
-            margin-top: 30px;
-        }
+        #loading-status { text-align: center; padding: 40px; font-weight: bold; color: var(--primary); animation: pulse 1.5s infinite; }
 
-        #loading-status { text-align: center; padding: 20px; color: var(--primary); font-weight: bold; }
-
+        /* ANIMATIONS */
         @keyframes fadeInBody { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            .game-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>Welcome to I’m Afk</h1>
+        <h1>I’m Afk</h1>
+        <p>Premium Free Play Hub</p>
     </header>
 
     <!-- FEATURED PROJECT -->
     <div class="featured-card">
-        <h3>🚀 Official Featured Project</h3>
-        <p>Check out our main repository for the latest updates and site mirrors.</p>
-        <a href="https://imafksite.github.io/imafk/index.html" class="featured-btn">Visit Featured Project</a>
+        <h3>🚀 GitHub Repository</h3>
+        <p>Access our high-speed mirrors and open-source project files.</p>
+        <a href="index.html" class="featured-btn">Refresh Hub</a>
     </div>
 
     <main>
-        <section id="auto-games">
-            <h2>Free Play Library</h2>
+        <section id="library">
+            <h2>Game Library</h2>
             <input type="text" id="game-search" placeholder="Search games..." onkeyup="filterGames()">
-            <div id="loading-status">Scanning GitHub for games...</div>
+            
+            <div id="loading-status">Connecting to GitHub...</div>
             <div class="game-grid" id="game-container"></div>
         </section>
 
-        <section>
+        <section id="disclaimer">
             <h2>Important Disclaimer</h2>
-            <p>Please be aware that the games hosted on this site are not created or owned by the developer of "I’m Afk." This site acts as a portal to bring these experiences together in one place for your convenience.</p>
+            <p class="info-text">The games hosted on this hub are <strong>not</strong> owned by "I’m Afk." We provide an interface to access high-quality web games. All rights belong to the original creators.</p>
         </section>
 
-        <section>
-            <h2>Site Rules & Conduct</h2>
+        <section id="rules">
+            <h2>Site Rules</h2>
             <ul class="rules-list">
-                <li><strong>Respect the Creators:</strong> Do not claim these games as your own work.</li>
-                <li><strong>Give Credit:</strong> Remember that these games are the result of others' hard work.</li>
-                <li><strong>Fair Use:</strong> Use this site for personal entertainment and quick sessions.</li>
+                <li><strong>Respect Creators:</strong> No re-uploading without permission.</li>
+                <li><strong>Safe Play:</strong> Use this site for personal entertainment only.</li>
+                <li><strong>Contribute:</strong> Found a bug? Use the contact link below.</li>
             </ul>
         </section>
 
-        <section style="text-align: center; border-top: 2px solid #f0f2f5; padding-top: 30px; margin-top: 30px;">
-            <h2>Support & Contributions</h2>
+        <!-- FOOTER BUTTONS - All pointing to GitHub .html files -->
+        <section id="support" style="text-align: center;">
             <div class="btn-container">
-                <a href="https://sites.google.com/view/imafksite/contact/contactcopyright" class="action-btn" target="_blank">Contact / Report</a>
-                <a href="https://sites.google.com/view/imafksite/contact/addition-form" class="action-btn secondary" target="_blank">Submit Project</a>
+                <a href="contact.html" class="action-btn">Report / Contact</a>
+                <a href="submit.html" class="action-btn secondary">Submit Game</a>
+                <a href="tos.html" class="action-btn secondary">Terms of Use</a>
             </div>
-        </section>
-
-        <section class="availability-note">
-            <h2>A Note on Site Availability</h2>
-            <p>In the event that this page is taken down or blocked, stay tuned for updates or look for alternative mirrors. Every effort will be made to keep things accessible.</p>
         </section>
     </main>
 
-    <footer style="margin-top: 40px; text-align: center; color: #9aa0a6; font-size: 0.8em;">
-        Last updated: 15 August 2026
+    <footer style="margin-top: 50px; text-align: center; color: #9aa0a6; font-size: 0.85em;">
+        &copy; 2024-2026 I’m Afk &bull; Hosted on GitHub Pages
     </footer>
 </div>
 
 <script>
-    // --- SETTINGS ---
+    // --- GITHUB CONFIGURATION ---
     const GITHUB_USER = 'imafksite'; 
-    const GITHUB_REPO = 'imafk'; 
+    const GITHUB_REPO = 'imafk';     
 
-    async function loadGames() {
+    async function autoLoadLibrary() {
         const container = document.getElementById('game-container');
         const status = document.getElementById('loading-status');
         
         try {
-            // This reads the 'games' folder in your GitHub repository
+            // Scans the /games folder in your GitHub repo
             const repoUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`;
             const response = await fetch(repoUrl);
             const files = await response.json();
 
             if (Array.isArray(files)) {
                 container.innerHTML = ''; 
+                
                 files.forEach((file, index) => {
                     if (file.name.endsWith('.html')) {
-                        // Clean title: "Orbit-Switch.html" -> "Orbit Switch"
+                        // Title formatting: snake-game.html -> Snake Game
                         const title = file.name
                             .replace('.html', '')
                             .replace(/-/g, ' ')
-                            .replace(/([a-z])([A-Z])/g, '$1 $2') 
+                            .replace(/([a-z])([A-Z])/g, '$1 $2')
                             .replace(/\b\w/g, l => l.toUpperCase());
                         
-                        // Correct link to your GitHub Pages game
                         const url = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${file.name}`;
-                        
-                        addCard(title, url, index);
+                        addGameCard(title, url, index);
                     }
                 });
-                status.style.display = 'none';
+                
+                if (container.children.length === 0) {
+                    status.innerHTML = "No games found in folder.";
+                } else {
+                    status.style.display = 'none';
+                }
             }
-        } catch (e) {
-            status.innerHTML = "Error loading library. Ensure your 'games' folder exists on GitHub.";
+        } catch (error) {
+            status.innerHTML = "API Error. Check your internet or folder name.";
         }
     }
 
-    function addCard(title, url, index) {
+    function addGameCard(title, url, index) {
         const container = document.getElementById('game-container');
         const firstLetter = title.charAt(0);
+        
         const card = document.createElement('a');
         card.className = 'game-card';
         card.href = url;
         card.target = "_blank";
         
-        const colors = ['#1a73e8', '#d93025', '#188038', '#f9ab00', '#9334e6'];
-        const color = colors[index % colors.length];
+        const iconColors = ['#1a73e8', '#d93025', '#188038', '#f9ab00', '#9334e6', '#00796b'];
+        const chosenColor = iconColors[index % iconColors.length];
 
         card.innerHTML = `
-            <div class="game-icon" style="background-color: ${color}">${firstLetter}</div>
-            <div class="game-title"><strong>${title}</strong></div>
+            <div class="game-icon" style="background-color: ${chosenColor}">${firstLetter}</div>
+            <div class="game-title">${title}</div>
         `;
         container.appendChild(card);
     }
@@ -264,7 +288,7 @@
         });
     }
 
-    loadGames();
+    autoLoadLibrary();
 </script>
 
 </body>
