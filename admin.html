@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Moderation Node — I’m Afk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --bg: #06080e;
+            --card-bg: rgba(18, 24, 38, 0.85);
+            --neon-mint: #00ffd6;
+            --danger: #ef4444;
+            --text-main: #f3f4f6;
+            --text-muted: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 30px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            color: var(--neon-mint);
+        }
+
+        .login-box {
+            max-width: 400px;
+            margin: 100px auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: #090d16;
+            color: #fff;
+            margin: 15px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-mint { background: var(--neon-mint); color: #000; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; }
+
+        .game-row {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .status-live { background: rgba(0, 255, 214, 0.15); color: var(--neon-mint); }
+        .status-removed { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        /* Preview Modal */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .preview-box {
+            width: 100%;
+            max-width: 900px;
+            height: 80vh;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--glass-border);
+        }
+        #preview-frame { flex: 1; border: none; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="auth-section">
+    <div class="login-box">
+        <h2>Developer Key Required</h2>
+        <input type="password" id="dev-passcode" placeholder="Enter Developer Passcode">
+        <button class="btn-mint" onclick="authenticate()">Unlock Node</button>
+    </div>
+</div>
+
+<div class="container" id="admin-panel" style="display: none;">
+    <header>
+        <div>
+            <h1>Moderation & Dev Node</h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Review live user submissions and manage takedown notices.</p>
+        </div>
+        <a href="index.html" class="btn-secondary" style="text-decoration: none; padding: 10px 20px;">Exit to Hub</a>
+    </header>
+
+    <div id="games-list">Loading submissions...</div>
+</div>
+
+<!-- Quick Test Modal -->
+<div class="preview-modal" id="preview-modal">
+    <div class="preview-box">
+        <div style="padding: 10px 20px; display: flex; justify-content: space-between; background: #111;">
+            <span id="preview-title" style="font-weight: 700;">Game Test</span>
+            <button class="btn-secondary" onclick="closePreview()">✕ Close</button>
+        </div>
+        <iframe id="preview-frame" sandbox="allow-scripts allow-forms allow-pointer-lock"></iframe>
+    </div>
+</div>
+
+<script>
+    // --- SUPABASE CONFIGURATION ---
+    const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const DEV_PASSCODE = 'admin123'; // Change to your password
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let allGames = [];
+
+    function authenticate() {
+        const input = document.getElementById('dev-passcode').value;
+        if (input === DEV_PASSCODE) {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            fetchModerationList();
+        } else {
+            alert('Invalid Passcode.');
+        }
+    }
+
+    async function fetchModerationList() {
+        const list = document.getElementById('games-list');
+        const { data, error } = await supabase
+            .from('games')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            list.innerHTML = "Error fetching data.";
+            return;
+        }
+
+        allGames = data;
+        list.innerHTML = '';
+
+        data.forEach(game => {
+            const row = document.createElement('div');
+            row.className = 'game-row';
+            row.innerHTML = `
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h3 style="margin: 0;">${game.title}</h3>
+                        <span class="status-pill ${game.status === 'live' ? 'status-live' : 'status-removed'}">
+                            ${game.status.toUpperCase()}
+                        </span>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 4px 0;">
+                        By <strong>${game.author}</strong> &bull; Contact: ${game.email} &bull; Date: ${new Date(game.created_at).toLocaleDateString()}
+                    </p>
+                    ${game.takedown_reason ? `<p style="color: var(--danger); font-size: 0.8rem; margin: 0;">Notice: "${game.takedown_reason}"</p>` : ''}
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-secondary" onclick="testGame('${game.id}')">⚡ Test Code</button>
+                    ${game.status === 'live' 
+                        ? `<button class="btn-danger" onclick="triggerTakedown('${game.id}', '${game.title}')">🚨 Take Down</button>`
+                        : `<button class="btn-mint" onclick="restoreGame('${game.id}')">✓ Restore</button>`
+                    }
+                </div>
+            `;
+            list.appendChild(row);
+        });
+    }
+
+    function testGame(id) {
+        const game = allGames.find(g => g.id === id);
+        if (!game) return;
+        const blob = new Blob([game.html_code], { type: 'text/html' });
+        document.getElementById('preview-title').textContent = `Testing: ${game.title}`;
+        document.getElementById('preview-frame').src = URL.createObjectURL(blob);
+        document.getElementById('preview-modal').style.display = 'flex';
+    }
+
+    function closePreview() {
+        document.getElementById('preview-modal').style.display = 'none';
+        document.getElementById('preview-frame').src = 'about:blank';
+    }
+
+    async function triggerTakedown(id, title) {
+        const reason = prompt(`Specify the reason for taking down "${title}":\n(e.g., "Contains broken infinite loop", "Malicious code", "DMCA request")`);
+        if (!reason) return;
+
+        const { error } = await supabase
+            .from('games')
+            .update({
+                status: 'takedown',
+                takedown_reason: reason,
+                takedown_date: new Date().toISOString()
+            })
+            .eq('id', id);
+
+        if (error) {
+            alert('Failed to execute takedown.');
+        } else {
+            alert(`"${title}" has been taken down and posted to the public Takedown Notice board.`);
+            fetchModerationList();
+        }
+    }
+
+    async function restoreGame(id) {
+        await supabase
+            .from('games')
+            .update({ status: 'live', takedown_reason: null })
+            .eq('id', id);
+        fetchModerationList();
+    }
+</script>
+</body>
+</html>
