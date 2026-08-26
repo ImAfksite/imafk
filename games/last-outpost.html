@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last Outpost — Tactical Base Defense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050811;
+            --panel-bg: rgba(11, 17, 32, 0.85);
+            --neon-cyan: #00f0ff;
+            --neon-amber: #ffaa00;
+            --neon-red: #ff3366;
+            --neon-purple: #bd00ff;
+            --text-main: #f0f4f8;
+            --text-muted: #62728d;
+            --border: rgba(0, 240, 255, 0.18);
+            --font-ui: 'Plus Jakarta Sans', sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Top Resource & Status Bar --- */
+        #header-bar {
+            height: 60px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            backdrop-filter: blur(15px);
+            z-index: 10;
+        }
+
+        .brand-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resource-cluster {
+            display: flex;
+            gap: 24px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .res-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .res-energy { color: var(--neon-cyan); }
+        .res-scrap { color: var(--neon-amber); }
+        .res-core { color: var(--neon-red); }
+
+        /* --- Game Viewport & Canvas --- */
+        #game-container {
+            flex: 1;
+            position: relative;
+            background: #020408;
+        }
+
+        #game-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- Tactical Control Sidebar / Build Bar --- */
+        #build-dock {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 10px 16px;
+            display: flex;
+            gap: 12px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+        }
+
+        .build-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            min-width: 110px;
+        }
+
+        .build-btn:hover:not(:disabled) {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: var(--neon-cyan);
+            transform: translateY(-2px);
+        }
+
+        .build-btn.active {
+            background: var(--neon-cyan);
+            color: #040807;
+            font-weight: 800;
+            border-color: #fff;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .build-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .btn-cost {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--neon-amber);
+        }
+
+        .start-wave-btn {
+            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+            color: #040807;
+            font-family: var(--font-display);
+            font-weight: 800;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .start-wave-btn:hover { transform: scale(1.04); }
+
+        /* Banner Notification */
+        #alert-banner {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 24px;
+            border-radius: 50px;
+            background: rgba(255, 51, 102, 0.2);
+            border: 1px solid var(--neon-red);
+            color: #ff99b3;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation & Status -->
+    <header id="header-bar">
+        <div class="brand-title">
+            <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--neon-cyan); box-shadow:0 0 8px var(--neon-cyan);"></span>
+            LAST OUTPOST // NODE-09
+        </div>
+
+        <div class="resource-cluster">
+            <div class="res-item res-energy">⚡ <span id="val-energy">150</span> EN</div>
+            <div class="res-item res-scrap">🔩 <span id="val-scrap">75</span> SCRAP</div>
+            <div class="res-item res-core">🛡️ <span id="val-core">100%</span> INTEGRITY</div>
+            <div class="res-item" style="color: var(--neon-purple);">🌊 WAVE <span id="val-wave">1</span></div>
+        </div>
+    </header>
+
+    <!-- Canvas Viewport -->
+    <div id="game-container">
+        <div id="alert-banner">ALERT</div>
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Tactical Dock -->
+        <div id="build-dock">
+            <button class="build-btn" data-type="PULSE" id="btn-pulse">
+                <span>⚡ Pulse Turret</span>
+                <span class="btn-cost">40 EN / 20 SC</span>
+            </button>
+            <button class="build-btn" data-type="BEAM" id="btn-beam">
+                <span>🔬 Rail Disrupter</span>
+                <span class="btn-cost">75 EN / 50 SC</span>
+            </button>
+            <button class="build-btn" data-type="SIPHON" id="btn-siphon">
+                <span>🔋 Solar Siphon</span>
+                <span class="btn-cost">30 EN / 15 SC</span>
+            </button>
+            <button class="start-wave-btn" id="btn-wave">
+                <span>Engage Wave ▶</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= GAME ENGINE & EXTENSIBLE API ================= -->
+    <script>
+        /* -------------------------------------------------------------
+           1. WEB AUDIO SYNTHESIZER (PROCEDURAL SOUNDS)
+        ------------------------------------------------------------- */
+        const AudioFX = {
+            ctx: null,
+            init() {
+                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            },
+            laser() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.12);
+                g.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+                osc.connect(g); g.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.12);
+            },
+            explosion() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(20, this.ctx.currentTime + 0.25);
+                g.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+                osc.connect(g); g.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.25);
+            },
+            alarm() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+                osc.frequency.setValueAtTime(880, this.ctx.currentTime + 0.1);
+                g.gain.setValueAtTime(0.05, this.ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+                osc.connect(g); g.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.25);
+            }
+        };
+
+        /* -------------------------------------------------------------
+           2. PUBLIC LAST OUTPOST API (HOOKS & OBSERVER PROTOCOL)
+        ------------------------------------------------------------- */
+        class GameAPIEngine extends EventTarget {
+            constructor() {
+                super();
+                this.observerActive = false;
+                this.customRenderLayers = [];
+                this.spectralEntities = [];
+            }
+
+            // Dispatches custom event safely
+            emit(name, detail = {}) {
+                this.dispatchEvent(new CustomEvent(name, { detail }));
+            }
+
+            // Secure Observer Registration Handshake
+            registerObserver(handshakeKey, hooks = {}) {
+                if (handshakeKey === "AUTH_OBSERVER_V1") {
+                    this.observerActive = true;
+                    if (hooks.onRenderOverlay) this.customRenderLayers.push(hooks.onRenderOverlay);
+                    this.emit("observerConnected", { timestamp: Date.now() });
+                    return {
+                        success: true,
+                        spawnSpectralAnomaly: (x, y, data) => this.injectAnomaly(x, y, data),
+                        queryCoreState: () => Game.state,
+                        triggerGlitch: (intensity) => Game.triggerScreenGlitch(intensity)
+                    };
+                }
+                return { success: false, error: "Invalid Security Key" };
+            }
+
+            injectAnomaly(x, y, data = {}) {
+                const anomaly = {
+                    x, y,
+                    radius: data.radius || 24,
+                    hue: data.hue || 280,
+                    alpha: 1,
+                    data
+                };
+                this.spectralEntities.push(anomaly);
+                this.emit("anomalyManifested", { anomaly });
+                return anomaly;
+            }
+        }
+
+        window.LastOutpostAPI = new GameAPIEngine();
+
+        /* -------------------------------------------------------------
+           3. CORE GAME SIMULATION
+        ------------------------------------------------------------- */
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const Game = {
+            state: {
+                energy: 150,
+                scrap: 80,
+                coreHealth: 100,
+                maxCoreHealth: 100,
+                wave: 1,
+                waveActive: false,
+                gameOver: false
+            },
+            selectedBuildType: null,
+            towers: [],
+            enemies: [],
+            projectiles: [],
+            particles: [],
+            glitchIntensity: 0,
+
+            // Core Outpost Base Position (Center-Left)
+            base: { x: 120, y: 0, radius: 45 },
+
+            costs: {
+                PULSE: { energy: 40, scrap: 20 },
+                BEAM: { energy: 75, scrap: 50 },
+                SIPHON: { energy: 30, scrap: 15 }
+            },
+
+            init() {
+                this.base.y = canvas.height / 2;
+                this.setupInputs();
+                this.updateUI();
+                
+                // Initial Solar Siphons
+                this.towers.push(new Tower(this.base.x, this.base.y - 80, 'SIPHON'));
+                this.towers.push(new Tower(this.base.x, this.base.y + 80, 'SIPHON'));
+
+                window.LastOutpostAPI.emit("gameReady", { state: this.state });
+                requestAnimationFrame((t) => this.loop(t));
+            },
+
+            setupInputs() {
+                document.querySelectorAll('.build-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        AudioFX.init();
+                        const type = btn.dataset.type;
+                        if (this.selectedBuildType === type) {
+                            this.selectedBuildType = null;
+                            btn.classList.remove('active');
+                        } else {
+                            document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('active'));
+                            this.selectedBuildType = type;
+                            btn.classList.add('active');
+                        }
+                    });
+                });
+
+                document.getElementById('btn-wave').addEventListener('click', () => {
+                    AudioFX.init();
+                    this.startWave();
+                });
+
+                canvas.addEventListener('click', (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    if (this.selectedBuildType) {
+                        this.placeTower(x, y, this.selectedBuildType);
+                    }
+                });
+            },
+
+            showAlert(msg, color = 'var(--neon-red)') {
+                const el = document.getElementById('alert-banner');
+                el.textContent = msg;
+                el.style.borderColor = color;
+                el.style.opacity = '1';
+                setTimeout(() => el.style.opacity = '0', 2500);
+            },
+
+            updateUI() {
+                document.getElementById('val-energy').textContent = Math.floor(this.state.energy);
+                document.getElementById('val-scrap').textContent = Math.floor(this.state.scrap);
+                document.getElementById('val-core').textContent = `${Math.max(0, Math.floor(this.state.coreHealth))}%`;
+                document.getElementById('val-wave').textContent = this.state.wave;
+
+                // Sync button states
+                for (const [type, cost] of Object.entries(this.costs)) {
+                    const btn = document.getElementById(`btn-${type.toLowerCase()}`);
+                    if (btn) btn.disabled = this.state.energy < cost.energy || this.state.scrap < cost.scrap;
+                }
+            },
+
+            placeTower(x, y, type) {
+                const cost = this.costs[type];
+                if (this.state.energy < cost.energy || this.state.scrap < cost.scrap) {
+                    this.showAlert("INSUFFICIENT RESOURCES FOR FABRICATION");
+                    return;
+                }
+
+                // Check distance from base and other towers
+                const distToBase = Math.hypot(x - this.base.x, y - this.base.y);
+                if (distToBase < 60) return;
+
+                const tower = new Tower(x, y, type);
+                this.towers.push(tower);
+                this.state.energy -= cost.energy;
+                this.state.scrap -= cost.scrap;
+
+                this.selectedBuildType = null;
+                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('active'));
+                this.updateUI();
+
+                AudioFX.laser();
+                window.LastOutpostAPI.emit("buildingPlaced", { tower, state: this.state });
+            },
+
+            startWave() {
+                if (this.state.waveActive) return;
+                this.state.waveActive = true;
+                document.getElementById('btn-wave').disabled = true;
+                AudioFX.alarm();
+
+                const count = 5 + this.state.wave * 3;
+                const isBossWave = this.state.wave % 5 === 0;
+
+                this.showAlert(`WAVE ${this.state.wave} INCOMING: ${count} HOSTILES`, 'var(--neon-cyan)');
+                window.LastOutpostAPI.emit("waveStarted", { wave: this.state.wave, count, isBossWave });
+
+                let spawned = 0;
+                const interval = setInterval(() => {
+                    if (spawned >= count) {
+                        clearInterval(interval);
+                        if (isBossWave) {
+                            this.enemies.push(new Enemy(canvas.width + 40, canvas.height / 2, true));
+                            window.LastOutpostAPI.emit("bossSpawned", { wave: this.state.wave });
+                        }
+                        return;
+                    }
+                    const y = Math.random() * (canvas.height - 120) + 60;
+                    this.enemies.push(new Enemy(canvas.width + 20, y));
+                    window.LastOutpostAPI.emit("enemySpawned", { wave: this.state.wave, index: spawned });
+                    spawned++;
+                }, 800);
+            },
+
+            triggerScreenGlitch(intensity = 15) {
+                this.glitchIntensity = intensity;
+            },
+
+            loop() {
+                this.base.y = canvas.height / 2;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw background tactical grid
+                ctx.strokeStyle = 'rgba(0, 240, 255, 0.04)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < canvas.width; x += 40) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+                }
+                for (let y = 0; y < canvas.height; y += 40) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+                }
+
+                // Render Base Reactor Core
+                ctx.save();
+                ctx.shadowColor = 'var(--neon-cyan)';
+                ctx.shadowBlur = 20;
+                ctx.strokeStyle = '#00f0ff';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(this.base.x, this.base.y, this.base.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(0, 240, 255, 0.1)';
+                ctx.fill();
+                ctx.restore();
+
+                // Update & Render Towers
+                this.towers.forEach(t => t.update(this.enemies, this.projectiles));
+                this.towers.forEach(t => t.draw(ctx));
+
+                // Update & Render Projectiles
+                for (let i = this.projectiles.length - 1; i >= 0; i--) {
+                    const p = this.projectiles[i];
+                    p.update();
+                    p.draw(ctx);
+                    if (p.dead) this.projectiles.splice(i, 1);
+                }
+
+                // Update & Render Enemies
+                for (let i = this.enemies.length - 1; i >= 0; i--) {
+                    const e = this.enemies[i];
+                    e.update(this.base);
+                    e.draw(ctx);
+
+                    if (e.reachedBase) {
+                        this.state.coreHealth -= e.damage;
+                        AudioFX.explosion();
+                        this.triggerScreenGlitch(8);
+                        this.enemies.splice(i, 1);
+                        this.updateUI();
+
+                        if (this.state.coreHealth <= 0 && !this.state.gameOver) {
+                            this.state.gameOver = true;
+                            this.showAlert("CRITICAL OUTPOST DESTRUCTION // GAME OVER");
+                            window.LastOutpostAPI.emit("gameOver", { wave: this.state.wave });
+                        }
+                    } else if (e.dead) {
+                        this.state.scrap += e.isBoss ? 50 : 8;
+                        this.state.energy += e.isBoss ? 40 : 5;
+                        AudioFX.explosion();
+                        window.LastOutpostAPI.emit("enemyDefeated", { enemy: e });
+                        this.enemies.splice(i, 1);
+                        this.updateUI();
+                    }
+                }
+
+                // Check Wave Completion
+                if (this.state.waveActive && this.enemies.length === 0) {
+                    this.state.waveActive = false;
+                    this.state.wave++;
+                    document.getElementById('btn-wave').disabled = false;
+                    this.updateUI();
+                }
+
+                // Render Observer/Spectral Injected Layer
+                window.LastOutpostAPI.customRenderLayers.forEach(renderFn => renderFn(ctx, canvas));
+
+                // Render Particles
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const pt = this.particles[i];
+                    pt.update();
+                    pt.draw(ctx);
+                    if (pt.alpha <= 0) this.particles.splice(i, 1);
+                }
+
+                // Screen Glitch Shader Filter
+                if (this.glitchIntensity > 0) {
+                    ctx.fillStyle = `rgba(189, 0, 255, ${this.glitchIntensity * 0.02})`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    this.glitchIntensity *= 0.9;
+                }
+
+                requestAnimationFrame(() => this.loop());
+            }
+        };
+
+        /* -------------------------------------------------------------
+           4. TOWERS & ENTITIES
+        ------------------------------------------------------------- */
+        class Tower {
+            constructor(x, y, type) {
+                this.x = x; this.y = y; this.type = type;
+                this.range = type === 'BEAM' ? 240 : 160;
+                this.cooldown = 0;
+                this.level = 1;
+            }
+
+            update(enemies, projectiles) {
+                if (this.type === 'SIPHON') {
+                    Game.state.energy += 0.035;
+                    Game.updateUI();
+                    return;
+                }
+
+                if (this.cooldown > 0) this.cooldown--;
+                if (this.cooldown <= 0) {
+                    const target = enemies.find(e => Math.hypot(e.x - this.x, e.y - this.y) < this.range);
+                    if (target) {
+                        projectiles.push(new Projectile(this.x, this.y, target, this.type));
+                        this.cooldown = this.type === 'BEAM' ? 55 : 20;
+                        AudioFX.laser();
+                    }
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.fillStyle = this.type === 'BEAM' ? '#bd00ff' : (this.type === 'SIPHON' ? '#ffaa00' : '#00f0ff');
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 14, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        class Enemy {
+            constructor(x, y, isBoss = false) {
+                this.x = x; this.y = y; this.isBoss = isBoss;
+                this.maxHealth = isBoss ? 280 : 35 + Game.state.wave * 12;
+                this.health = this.maxHealth;
+                this.speed = isBoss ? 0.6 : 1.4 + Math.random() * 0.4;
+                this.damage = isBoss ? 40 : 12;
+                this.dead = false;
+                this.reachedBase = false;
+            }
+
+            update(base) {
+                this.x -= this.speed;
+                if (Math.hypot(this.x - base.x, this.y - base.y) < base.radius) {
+                    this.reachedBase = true;
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.fillStyle = this.isBoss ? '#ff0055' : '#ff3366';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.isBoss ? 22 : 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Health Bar
+                ctx.fillStyle = '#111';
+                ctx.fillRect(this.x - 14, this.y - 18, 28, 4);
+                ctx.fillStyle = '#00ffd6';
+                ctx.fillRect(this.x - 14, this.y - 18, (this.health / this.maxHealth) * 28, 4);
+                ctx.restore();
+            }
+        }
+
+        class Projectile {
+            constructor(x, y, target, type) {
+                this.x = x; this.y = y; this.target = target; this.type = type;
+                this.speed = 10;
+                this.dead = false;
+                this.power = type === 'BEAM' ? 45 : 18;
+            }
+
+            update() {
+                const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+                this.x += Math.cos(angle) * this.speed;
+                this.y += Math.sin(angle) * this.speed;
+
+                if (Math.hypot(this.target.x - this.x, this.target.y - this.y) < 15) {
+                    this.target.health -= this.power;
+                    if (this.target.health <= 0) this.target.dead = true;
+                    this.dead = true;
+                }
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = this.type === 'BEAM' ? '#bd00ff' : '#00f0ff';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        window.onload = () => Game.init();
+    </script>
+</body>
+</html>
