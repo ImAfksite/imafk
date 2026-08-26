@@ -2,690 +2,1252 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Last Outpost — Tactical Base Defense</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
+    <title>LAST OUTPOST // Tactical Base Defense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-deep: #050811;
-            --panel-bg: rgba(11, 17, 32, 0.85);
+            --bg-void: #050811;
+            --hull-dark: #0d1322;
+            --hull-border: #1e293b;
             --neon-cyan: #00f0ff;
-            --neon-amber: #ffaa00;
-            --neon-red: #ff3366;
+            --neon-amber: #ffb703;
+            --neon-crimson: #ff0055;
+            --neon-emerald: #10b981;
             --neon-purple: #bd00ff;
-            --text-main: #f0f4f8;
-            --text-muted: #62728d;
-            --border: rgba(0, 240, 255, 0.18);
-            --font-ui: 'Plus Jakarta Sans', sans-serif;
-            --font-display: 'Space Grotesk', sans-serif;
+            --observer-red: #ff0033;
+            --font-tactical: 'Chakra Petch', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
 
         body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: var(--font-ui);
+            background-color: var(--bg-void);
+            color: #e2e8f0;
+            font-family: var(--font-tactical);
             overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* --- Top Resource & Status Bar --- */
-        #header-bar {
-            height: 60px;
-            background: var(--panel-bg);
-            border-bottom: 1px solid var(--border);
+        /* --- Scanlines CRT Overlay --- */
+        body::after {
+            content: " ";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 6px 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.6;
+        }
+
+        /* --- Top Command HUD --- */
+        #top-hud {
+            height: 64px;
+            background: linear-gradient(180deg, rgba(13, 19, 34, 0.95), rgba(7, 11, 20, 0.9));
+            border-bottom: 2px solid var(--hull-border);
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
             padding: 0 24px;
-            backdrop-filter: blur(15px);
-            z-index: 10;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
         }
 
-        .brand-title {
-            font-family: var(--font-display);
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--neon-cyan);
+        .hud-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 20px;
         }
 
-        .resource-cluster {
-            display: flex;
-            gap: 24px;
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .res-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 6px 14px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .res-energy { color: var(--neon-cyan); }
-        .res-scrap { color: var(--neon-amber); }
-        .res-core { color: var(--neon-red); }
-
-        /* --- Game Viewport & Canvas --- */
-        #game-container {
-            flex: 1;
-            position: relative;
-            background: #020408;
-        }
-
-        #game-canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* --- Tactical Control Sidebar / Build Bar --- */
-        #build-dock {
-            position: absolute;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--panel-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 10px 16px;
-            display: flex;
-            gap: 12px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-            z-index: 10;
-        }
-
-        .build-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 10px 16px;
-            border-radius: 12px;
-            cursor: pointer;
+        .hud-stat {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.2s;
-            min-width: 110px;
         }
 
-        .build-btn:hover:not(:disabled) {
-            background: rgba(0, 240, 255, 0.15);
-            border-color: var(--neon-cyan);
-            transform: translateY(-2px);
-        }
-
-        .build-btn.active {
-            background: var(--neon-cyan);
-            color: #040807;
-            font-weight: 800;
-            border-color: #fff;
-            box-shadow: 0 0 15px var(--neon-cyan);
-        }
-
-        .build-btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
-
-        .btn-cost {
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
             font-family: var(--font-mono);
-            font-size: 0.72rem;
+        }
+
+        .stat-val {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .stat-val.credits { color: var(--neon-amber); text-shadow: 0 0 10px rgba(255, 183, 3, 0.4); }
+        .stat-val.energy { color: var(--neon-cyan); text-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
+        .stat-val.wave { color: var(--neon-emerald); }
+
+        .hp-bar-wrap {
+            width: 180px;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--hull-border);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 4px;
+        }
+
+        .hp-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #ef4444, #10b981);
+            transition: width 0.2s ease-out;
+        }
+
+        /* --- Main Arena Viewport --- */
+        #game-stage {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at center, #0c1222 0%, #050811 100%);
+            display: flex;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+
+        /* --- Bottom Tactical Deck --- */
+        #bottom-deck {
+            height: 90px;
+            background: rgba(10, 15, 26, 0.95);
+            border-top: 2px solid var(--hull-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 100;
+        }
+
+        .build-menu {
+            display: flex;
+            gap: 12px;
+        }
+
+        .build-card {
+            background: rgba(20, 29, 47, 0.8);
+            border: 1px solid var(--hull-border);
+            border-radius: 8px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            min-width: 150px;
+        }
+
+        .build-card:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 240, 255, 0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .build-card.active {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .build-card.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            filter: grayscale(0.8);
+        }
+
+        .build-icon {
+            font-size: 1.4rem;
+        }
+
+        .build-meta h4 {
+            font-size: 0.85rem;
+            margin-bottom: 2px;
+        }
+
+        .build-cost {
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
             color: var(--neon-amber);
         }
 
-        .start-wave-btn {
-            background: linear-gradient(135deg, var(--neon-cyan), #0088ff);
+        .btn-wave {
+            background: linear-gradient(135deg, #10b981, #059669);
             color: #040807;
-            font-family: var(--font-display);
-            font-weight: 800;
+            font-family: var(--font-tactical);
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 14px 32px;
+            border-radius: 8px;
             border: none;
-            padding: 10px 24px;
-            border-radius: 12px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-            transition: transform 0.2s;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+            transition: all 0.2s;
         }
 
-        .start-wave-btn:hover { transform: scale(1.04); }
+        .btn-wave:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
+        }
 
-        /* Banner Notification */
-        #alert-banner {
+        .btn-wave:disabled {
+            background: #334155;
+            color: #64748b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- Tampermonkey / Secret Observer Overlay Interface --- */
+        #observer-hud {
+            display: none;
             position: absolute;
             top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 24px;
-            border-radius: 50px;
-            background: rgba(255, 51, 102, 0.2);
-            border: 1px solid var(--neon-red);
-            color: #ff99b3;
-            font-family: var(--font-display);
-            font-size: 0.95rem;
+            right: 20px;
+            width: 320px;
+            background: rgba(13, 10, 25, 0.85);
+            border: 1px solid var(--neon-purple);
+            border-radius: 12px;
+            padding: 16px;
+            backdrop-filter: blur(15px);
+            z-index: 500;
+            box-shadow: 0 0 30px rgba(189, 0, 255, 0.25);
+            font-family: var(--font-mono);
+            animation: observerPulse 4s infinite alternate;
+        }
+
+        @keyframes observerPulse {
+            0% { border-color: var(--neon-purple); box-shadow: 0 0 15px rgba(189, 0, 255, 0.2); }
+            100% { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.3); }
+        }
+
+        #observer-hud.corrupted {
+            border-color: var(--observer-red) !important;
+            background: rgba(25, 5, 10, 0.9) !important;
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.5) !important;
+            animation: corruptedShake 0.2s infinite alternate !important;
+        }
+
+        @keyframes corruptedShake {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(2px, -1px); }
+        }
+
+        .obs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(255,255,255,0.2);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .obs-title {
+            font-size: 0.8rem;
+            color: var(--neon-purple);
             font-weight: 700;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 20;
+            letter-spacing: 1px;
+        }
+
+        .obs-badge {
+            background: rgba(189, 0, 255, 0.2);
+            color: var(--neon-purple);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+        }
+
+        .obs-feed {
+            height: 120px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 0.72rem;
+            color: #a78bfa;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            scrollbar-width: none;
+            margin-bottom: 12px;
+        }
+
+        .obs-feed::-webkit-scrollbar { display: none; }
+
+        .obs-tools {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .obs-btn {
+            background: rgba(189, 0, 255, 0.15);
+            border: 1px solid var(--neon-purple);
+            color: #e9d5ff;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .obs-btn:hover {
+            background: var(--neon-purple);
+            color: #000;
+        }
+
+        /* --- Full Screen Game Over / Victory Modal --- */
+        .modal-screen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 8, 17, 0.95);
+            z-index: 900;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-box {
+            text-align: center;
+            max-width: 480px;
+            padding: 40px;
+            background: var(--hull-dark);
+            border: 2px solid var(--hull-border);
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        .modal-box h2 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .btn-restart {
+            margin-top: 24px;
+            background: var(--neon-cyan);
+            color: #040807;
+            font-family: var(--font-tactical);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 12px 36px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Tampermonkey Script Embed Modal */
+        #script-guide-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .guide-box {
+            max-width: 750px;
+            width: 100%;
+            background: #090e1a;
+            border: 1px solid var(--neon-cyan);
+            border-radius: 16px;
+            padding: 24px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .code-snippet {
+            background: #000;
+            border: 1px solid #1e293b;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #38bdf8;
+            max-height: 250px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin: 12px 0;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation & Status -->
-    <header id="header-bar">
-        <div class="brand-title">
-            <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--neon-cyan); box-shadow:0 0 8px var(--neon-cyan);"></span>
-            LAST OUTPOST // NODE-09
+    <!-- TOP TELEMETRY HUD -->
+    <header id="top-hud">
+        <div class="hud-group">
+            <div class="hud-stat">
+                <span class="stat-label">Outpost Hull Integrity</span>
+                <div class="hp-bar-wrap">
+                    <div class="hp-fill" id="core-hp-bar"></div>
+                </div>
+            </div>
+            <div class="hud-stat">
+                <span class="stat-label">Hull Power</span>
+                <span class="stat-val" id="core-hp-text">1000 / 1000</span>
+            </div>
         </div>
 
-        <div class="resource-cluster">
-            <div class="res-item res-energy">⚡ <span id="val-energy">150</span> EN</div>
-            <div class="res-item res-scrap">🔩 <span id="val-scrap">75</span> SCRAP</div>
-            <div class="res-item res-core">🛡️ <span id="val-core">100%</span> INTEGRITY</div>
-            <div class="res-item" style="color: var(--neon-purple);">🌊 WAVE <span id="val-wave">1</span></div>
+        <div class="hud-group">
+            <div class="hud-stat">
+                <span class="stat-label">Energy Reserves</span>
+                <span class="stat-val energy" id="stat-energy">50 EP</span>
+            </div>
+            <div class="hud-stat">
+                <span class="stat-label">Refined Biomass</span>
+                <span class="stat-val credits" id="stat-credits">250 CR</span>
+            </div>
+            <div class="hud-stat">
+                <span class="stat-label">Incursion Level</span>
+                <span class="stat-val wave" id="stat-wave">Wave 1</span>
+            </div>
+        </div>
+
+        <div class="hud-group">
+            <button class="obs-btn" onclick="toggleScriptGuide()" style="border-color: var(--neon-cyan); color: var(--neon-cyan);">API & Tampermonkey Hook ⚡</button>
         </div>
     </header>
 
-    <!-- Canvas Viewport -->
-    <div id="game-container">
-        <div id="alert-banner">ALERT</div>
-        <canvas id="game-canvas"></canvas>
+    <!-- MAIN CANVASES & ARENA -->
+    <main id="game-stage">
+        <canvas id="gameCanvas"></canvas>
 
-        <!-- Tactical Dock -->
-        <div id="build-dock">
-            <button class="build-btn" data-type="PULSE" id="btn-pulse">
-                <span>⚡ Pulse Turret</span>
-                <span class="btn-cost">40 EN / 20 SC</span>
-            </button>
-            <button class="build-btn" data-type="BEAM" id="btn-beam">
-                <span>🔬 Rail Disrupter</span>
-                <span class="btn-cost">75 EN / 50 SC</span>
-            </button>
-            <button class="build-btn" data-type="SIPHON" id="btn-siphon">
-                <span>🔋 Solar Siphon</span>
-                <span class="btn-cost">30 EN / 15 SC</span>
-            </button>
-            <button class="start-wave-btn" id="btn-wave">
-                <span>Engage Wave ▶</span>
-            </button>
+        <!-- INJECTABLE OBSERVER SECRET INTERFACE -->
+        <aside id="observer-hud">
+            <div class="obs-header">
+                <span class="obs-title" id="obs-status-tag">OBSERVER // DEBUG INTERFACE</span>
+                <span class="obs-badge" id="obs-frags">0 Frags</span>
+            </div>
+            <div class="obs-feed" id="obs-log">
+                <div>[SYSTEM] Handshake established with Outpost API.</div>
+                <div>[SYSTEM] Telemetry hook operational.</div>
+            </div>
+            <div class="obs-tools">
+                <button class="obs-btn" onclick="ObserverLayer.scanSublayer()">Pulse Scanner</button>
+                <button class="obs-btn" onclick="ObserverLayer.overclockCore()">Empower Outpost</button>
+                <button class="obs-btn" onclick="ObserverLayer.disruptRift()" style="grid-column: 1 / -1;">Disrupt Reality Anomaly</button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- BOTTOM DEPLOYMENT CONTROLS -->
+    <footer id="bottom-deck">
+        <div class="build-menu">
+            <div class="build-card active" data-type="PULSE_TURRET">
+                <span class="build-icon">⚡</span>
+                <div class="build-meta">
+                    <h4>Pulse Blaster</h4>
+                    <span class="build-cost">100 CR</span>
+                </div>
+            </div>
+
+            <div class="build-card" data-type="RAILGUN">
+                <span class="build-icon">💥</span>
+                <div class="build-meta">
+                    <h4>Heavy Railgun</h4>
+                    <span class="build-cost">220 CR</span>
+                </div>
+            </div>
+
+            <div class="build-card" data-type="TESLA">
+                <span class="build-icon">🌐</span>
+                <div class="build-meta">
+                    <h4>Tesla Arrester</h4>
+                    <span class="build-cost">180 CR</span>
+                </div>
+            </div>
+
+            <div class="build-card" data-type="SOLAR_SIPHON">
+                <span class="build-icon">☀️</span>
+                <div class="build-meta">
+                    <h4>Solar Siphon</h4>
+                    <span class="build-cost">140 CR</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-wave" id="start-wave-btn" onclick="GameEngine.startNextWave()">DEPLOY NEXT WAVE ▶</button>
+    </footer>
+
+    <!-- GAME OVER / VICTORY OVERLAY -->
+    <div class="modal-screen" id="endgame-modal">
+        <div class="modal-box">
+            <h2 id="endgame-title" style="color: var(--neon-crimson);">OUTPOST OVERRUN</h2>
+            <p id="endgame-desc" style="color: var(--text-muted); margin-bottom: 20px;">The swarm breached perimeter defenses.</p>
+            <div style="font-family: var(--font-mono); font-size: 1.2rem; color: var(--neon-amber); margin-bottom: 20px;" id="final-stats"></div>
+            <button class="btn-restart" onclick="GameEngine.reset()">INITIALIZE NEW NODE</button>
         </div>
     </div>
 
-    <!-- ================= GAME ENGINE & EXTENSIBLE API ================= -->
+    <!-- SCRIPT GUIDE MODAL -->
+    <div id="script-guide-modal">
+        <div class="guide-box">
+            <h3 style="color: var(--neon-cyan); margin-bottom: 8px;">Tampermonkey Observer Hook & API</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;">This game exposes a public event-driven API: <code style="color:var(--neon-mint)">window.LastOutpostAPI</code>. You can copy the code below and paste it directly into Tampermonkey to run the secret Observer narrative layer!</p>
+            
+            <div class="code-snippet" id="tm-script-code">
+// ==UserScript==
+// @name         Last Outpost - Secret Observer Layer
+// @namespace    https://imafk.github.io/
+// @version      1.0
+// @description  Connects to Last Outpost event bus to inject the Observer ARG & Anomaly Detection system.
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    function boot() {
+        if (!window.LastOutpostAPI) {
+            setTimeout(boot, 500);
+            return;
+        }
+        console.log("%c[OBSERVER] Hooked into Last Outpost Game Engine", "color:#bd00ff;font-weight:bold;");
+        window.LastOutpostAPI.injectObserver("AUTH_DEV_9824_KEY");
+    }
+    boot();
+})();</div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+                <button class="obs-btn" onclick="copyTampermonkeyScript()">📋 Copy Script to Clipboard</button>
+                <button class="obs-btn" style="background:var(--neon-purple); color:#fff;" onclick="ObserverLayer.activateDirectly()">⚡ Inject Observer Directly (No Extension Needed)</button>
+                <button class="obs-btn" onclick="toggleScriptGuide()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT GAME ENGINE ================= -->
     <script>
         /* -------------------------------------------------------------
-           1. WEB AUDIO SYNTHESIZER (PROCEDURAL SOUNDS)
+           1. PROCEDURAL SOUND SYNTHESIZER (WEB AUDIO API)
         ------------------------------------------------------------- */
-        const AudioFX = {
+        const SoundFX = {
             ctx: null,
             init() {
-                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
             },
-            laser() {
+            playLaser() {
                 if (!this.ctx) return;
-                const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(800, this.ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.12);
-                g.gain.setValueAtTime(0.1, this.ctx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
-                osc.connect(g); g.connect(this.ctx.destination);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.12);
             },
-            explosion() {
+            playRailgun() {
                 if (!this.ctx) return;
-                const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(140, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(20, this.ctx.currentTime + 0.25);
-                g.gain.setValueAtTime(0.2, this.ctx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-                osc.connect(g); g.connect(this.ctx.destination);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.25);
+                osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.4);
             },
-            alarm() {
+            playExplosion() {
                 if (!this.ctx) return;
-                const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
                 osc.type = 'square';
-                osc.frequency.setValueAtTime(440, this.ctx.currentTime);
-                osc.frequency.setValueAtTime(880, this.ctx.currentTime + 0.1);
-                g.gain.setValueAtTime(0.05, this.ctx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-                osc.connect(g); g.connect(this.ctx.destination);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.25);
+                osc.frequency.setValueAtTime(90, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(20, this.ctx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.3);
+            },
+            playEerieGlitch() {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(280, this.ctx.currentTime + 0.6);
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.6);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.6);
             }
         };
 
         /* -------------------------------------------------------------
-           2. PUBLIC LAST OUTPOST API (HOOKS & OBSERVER PROTOCOL)
+           2. PUBLIC DOCUMENTED GAME API (EVENT BUS FOR EXTENSIONS)
         ------------------------------------------------------------- */
-        class GameAPIEngine extends EventTarget {
-            constructor() {
-                super();
-                this.observerActive = false;
-                this.customRenderLayers = [];
-                this.spectralEntities = [];
-            }
-
-            // Dispatches custom event safely
-            emit(name, detail = {}) {
-                this.dispatchEvent(new CustomEvent(name, { detail }));
-            }
-
-            // Secure Observer Registration Handshake
-            registerObserver(handshakeKey, hooks = {}) {
-                if (handshakeKey === "AUTH_OBSERVER_V1") {
-                    this.observerActive = true;
-                    if (hooks.onRenderOverlay) this.customRenderLayers.push(hooks.onRenderOverlay);
-                    this.emit("observerConnected", { timestamp: Date.now() });
-                    return {
-                        success: true,
-                        spawnSpectralAnomaly: (x, y, data) => this.injectAnomaly(x, y, data),
-                        queryCoreState: () => Game.state,
-                        triggerGlitch: (intensity) => Game.triggerScreenGlitch(intensity)
-                    };
+        window.LastOutpostAPI = {
+            events: {},
+            on(event, callback) {
+                if (!this.events[event]) this.events[event] = [];
+                this.events[event].push(callback);
+            },
+            emit(event, data) {
+                if (this.events[event]) {
+                    this.events[event].forEach(cb => {
+                        try { cb(data); } catch (e) { console.error("Observer Hook Error:", e); }
+                    });
                 }
-                return { success: false, error: "Invalid Security Key" };
-            }
-
-            injectAnomaly(x, y, data = {}) {
-                const anomaly = {
-                    x, y,
-                    radius: data.radius || 24,
-                    hue: data.hue || 280,
-                    alpha: 1,
-                    data
+            },
+            // Secret Hook callable by Tampermonkey
+            injectObserver(authKey) {
+                ObserverLayer.init();
+            },
+            getGameState() {
+                return {
+                    credits: GameEngine.credits,
+                    energy: GameEngine.energy,
+                    wave: GameEngine.wave,
+                    coreHp: GameEngine.coreHp,
+                    structures: GameEngine.structures.length,
+                    enemiesAlive: GameEngine.enemies.length
                 };
-                this.spectralEntities.push(anomaly);
-                this.emit("anomalyManifested", { anomaly });
-                return anomaly;
             }
-        }
-
-        window.LastOutpostAPI = new GameAPIEngine();
+        };
 
         /* -------------------------------------------------------------
-           3. CORE GAME SIMULATION
+           3. BUILDING DEFINITIONS & CATALOG
         ------------------------------------------------------------- */
-        const canvas = document.getElementById('game-canvas');
+        const STRUCTURE_TYPES = {
+            PULSE_TURRET: {
+                name: "Pulse Blaster",
+                cost: 100,
+                range: 160,
+                damage: 22,
+                cooldown: 28,
+                color: "#00f0ff",
+                icon: "⚡"
+            },
+            RAILGUN: {
+                name: "Heavy Railgun",
+                cost: 220,
+                range: 260,
+                damage: 130,
+                cooldown: 90,
+                color: "#ff0055",
+                icon: "💥"
+            },
+            TESLA: {
+                name: "Tesla Arrester",
+                cost: 180,
+                range: 130,
+                damage: 35,
+                cooldown: 45,
+                color: "#bd00ff",
+                icon: "🌐"
+            },
+            SOLAR_SIPHON: {
+                name: "Solar Siphon",
+                cost: 140,
+                range: 0,
+                damage: 0,
+                cooldown: 0,
+                color: "#ffb703",
+                icon: "☀️",
+                isProducer: true
+            }
+        };
+
+        /* -------------------------------------------------------------
+           4. CORE GAME ENGINE
+        ------------------------------------------------------------- */
+        const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        const Game = {
-            state: {
-                energy: 150,
-                scrap: 80,
-                coreHealth: 100,
-                maxCoreHealth: 100,
-                wave: 1,
-                waveActive: false,
-                gameOver: false
-            },
-            selectedBuildType: null,
-            towers: [],
+        const GameEngine = {
+            credits: 250,
+            energy: 50,
+            coreHp: 1000,
+            maxHp: 1000,
+            wave: 0,
+            waveActive: false,
+            enemiesToSpawn: 0,
+            spawnTimer: 0,
+            structures: [],
             enemies: [],
             projectiles: [],
             particles: [],
-            glitchIntensity: 0,
-
-            // Core Outpost Base Position (Center-Left)
-            base: { x: 120, y: 0, radius: 45 },
-
-            costs: {
-                PULSE: { energy: 40, scrap: 20 },
-                BEAM: { energy: 75, scrap: 50 },
-                SIPHON: { energy: 30, scrap: 15 }
-            },
+            selectedType: "PULSE_TURRET",
+            mouse: { x: 0, y: 0 },
 
             init() {
-                this.base.y = canvas.height / 2;
-                this.setupInputs();
-                this.updateUI();
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
                 
-                // Initial Solar Siphons
-                this.towers.push(new Tower(this.base.x, this.base.y - 80, 'SIPHON'));
-                this.towers.push(new Tower(this.base.x, this.base.y + 80, 'SIPHON'));
-
-                window.LastOutpostAPI.emit("gameReady", { state: this.state });
-                requestAnimationFrame((t) => this.loop(t));
-            },
-
-            setupInputs() {
-                document.querySelectorAll('.build-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        AudioFX.init();
-                        const type = btn.dataset.type;
-                        if (this.selectedBuildType === type) {
-                            this.selectedBuildType = null;
-                            btn.classList.remove('active');
-                        } else {
-                            document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('active'));
-                            this.selectedBuildType = type;
-                            btn.classList.add('active');
-                        }
-                    });
-                });
-
-                document.getElementById('btn-wave').addEventListener('click', () => {
-                    AudioFX.init();
-                    this.startWave();
+                // Canvas user interactions
+                canvas.addEventListener('mousemove', (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    this.mouse.x = e.clientX - rect.left;
+                    this.mouse.y = e.clientY - rect.top;
                 });
 
                 canvas.addEventListener('click', (e) => {
-                    const rect = canvas.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
+                    SoundFX.init();
+                    this.handleBuildPlacement();
+                });
 
-                    if (this.selectedBuildType) {
-                        this.placeTower(x, y, this.selectedBuildType);
+                // Build Card Selector
+                document.querySelectorAll('.build-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        document.querySelectorAll('.build-card').forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                        this.selectedType = card.getAttribute('data-type');
+                    });
+                });
+
+                this.updateHUD();
+                window.LastOutpostAPI.emit('gameReady', { timestamp: Date.now() });
+
+                // Start Main Animation Loop
+                requestAnimationFrame(() => this.loop());
+            },
+
+            resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            },
+
+            getOutpostCore() {
+                return { x: canvas.width / 2, y: canvas.height / 2, radius: 45 };
+            },
+
+            handleBuildPlacement() {
+                const core = this.getOutpostCore();
+                const distToCore = Math.hypot(this.mouse.x - core.x, this.mouse.y - core.y);
+                
+                // Can't place directly on the main bunker
+                if (distToCore < core.radius + 15) return;
+
+                // Check overlap with existing structures
+                const overlapping = this.structures.some(s => Math.hypot(this.mouse.x - s.x, this.mouse.y - s.y) < 36);
+                if (overlapping) return;
+
+                const spec = STRUCTURE_TYPES[this.selectedType];
+                if (this.credits >= spec.cost) {
+                    this.credits -= spec.cost;
+                    const structure = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        type: this.selectedType,
+                        x: this.mouse.x,
+                        y: this.mouse.y,
+                        angle: 0,
+                        timer: 0,
+                        level: 1,
+                        spec: spec
+                    };
+                    this.structures.push(structure);
+                    this.updateHUD();
+                    this.createSpawnParticles(structure.x, structure.y, spec.color);
+
+                    window.LastOutpostAPI.emit('buildingPlaced', { structure, creditsLeft: this.credits });
+                }
+            },
+
+            startNextWave() {
+                if (this.waveActive) return;
+                SoundFX.init();
+                this.wave++;
+                this.waveActive = true;
+                this.enemiesToSpawn = 6 + (this.wave * 4);
+                this.spawnTimer = 0;
+                document.getElementById('start-wave-btn').disabled = true;
+
+                this.updateHUD();
+                window.LastOutpostAPI.emit('waveStarted', { wave: this.wave, enemyCount: this.enemiesToSpawn });
+            },
+
+            spawnEnemy() {
+                const core = this.getOutpostCore();
+                // Spawn randomly around map boundaries
+                const angle = Math.random() * Math.PI * 2;
+                const spawnDistance = Math.hypot(canvas.width, canvas.height) / 1.7;
+                const x = core.x + Math.cos(angle) * spawnDistance;
+                const y = core.y + Math.sin(angle) * spawnDistance;
+
+                const isBoss = (this.wave % 5 === 0 && this.enemiesToSpawn === 1);
+                const isArmored = (this.wave >= 3 && Math.random() > 0.65);
+
+                const enemy = {
+                    id: Math.random().toString(36).substr(2, 9),
+                    x, y,
+                    hp: isBoss ? (600 + this.wave * 200) : (isArmored ? 120 : 45 + this.wave * 10),
+                    maxHp: isBoss ? (600 + this.wave * 200) : (isArmored ? 120 : 45 + this.wave * 10),
+                    speed: isBoss ? 0.6 : (isArmored ? 0.9 : 1.6),
+                    reward: isBoss ? 150 : (isArmored ? 35 : 15),
+                    isBoss,
+                    isArmored,
+                    isGhost: false // Modified by Observer layer
+                };
+
+                this.enemies.push(enemy);
+                if (isBoss) window.LastOutpostAPI.emit('bossSpawned', enemy);
+                window.LastOutpostAPI.emit('enemySpawned', enemy);
+            },
+
+            updateHUD() {
+                document.getElementById('stat-credits').textContent = `${this.credits} CR`;
+                document.getElementById('stat-energy').textContent = `${this.energy} EP`;
+                document.getElementById('stat-wave').textContent = `Wave ${this.wave}`;
+                document.getElementById('core-hp-text').textContent = `${Math.max(0, Math.floor(this.coreHp))} / ${this.maxHp}`;
+                
+                const pct = Math.max(0, (this.coreHp / this.maxHp) * 100);
+                document.getElementById('core-hp-bar').style.width = `${pct}%`;
+
+                // Update build affordability
+                document.querySelectorAll('.build-card').forEach(c => {
+                    const type = c.getAttribute('data-type');
+                    if (STRUCTURE_TYPES[type].cost > this.credits) {
+                        c.classList.add('disabled');
+                    } else {
+                        c.classList.remove('disabled');
                     }
                 });
             },
 
-            showAlert(msg, color = 'var(--neon-red)') {
-                const el = document.getElementById('alert-banner');
-                el.textContent = msg;
-                el.style.borderColor = color;
-                el.style.opacity = '1';
-                setTimeout(() => el.style.opacity = '0', 2500);
-            },
-
-            updateUI() {
-                document.getElementById('val-energy').textContent = Math.floor(this.state.energy);
-                document.getElementById('val-scrap').textContent = Math.floor(this.state.scrap);
-                document.getElementById('val-core').textContent = `${Math.max(0, Math.floor(this.state.coreHealth))}%`;
-                document.getElementById('val-wave').textContent = this.state.wave;
-
-                // Sync button states
-                for (const [type, cost] of Object.entries(this.costs)) {
-                    const btn = document.getElementById(`btn-${type.toLowerCase()}`);
-                    if (btn) btn.disabled = this.state.energy < cost.energy || this.state.scrap < cost.scrap;
+            createSpawnParticles(x, y, color) {
+                for (let i = 0; i < 16; i++) {
+                    this.particles.push({
+                        x, y,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: (Math.random() - 0.5) * 4,
+                        life: 1,
+                        color
+                    });
                 }
-            },
-
-            placeTower(x, y, type) {
-                const cost = this.costs[type];
-                if (this.state.energy < cost.energy || this.state.scrap < cost.scrap) {
-                    this.showAlert("INSUFFICIENT RESOURCES FOR FABRICATION");
-                    return;
-                }
-
-                // Check distance from base and other towers
-                const distToBase = Math.hypot(x - this.base.x, y - this.base.y);
-                if (distToBase < 60) return;
-
-                const tower = new Tower(x, y, type);
-                this.towers.push(tower);
-                this.state.energy -= cost.energy;
-                this.state.scrap -= cost.scrap;
-
-                this.selectedBuildType = null;
-                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('active'));
-                this.updateUI();
-
-                AudioFX.laser();
-                window.LastOutpostAPI.emit("buildingPlaced", { tower, state: this.state });
-            },
-
-            startWave() {
-                if (this.state.waveActive) return;
-                this.state.waveActive = true;
-                document.getElementById('btn-wave').disabled = true;
-                AudioFX.alarm();
-
-                const count = 5 + this.state.wave * 3;
-                const isBossWave = this.state.wave % 5 === 0;
-
-                this.showAlert(`WAVE ${this.state.wave} INCOMING: ${count} HOSTILES`, 'var(--neon-cyan)');
-                window.LastOutpostAPI.emit("waveStarted", { wave: this.state.wave, count, isBossWave });
-
-                let spawned = 0;
-                const interval = setInterval(() => {
-                    if (spawned >= count) {
-                        clearInterval(interval);
-                        if (isBossWave) {
-                            this.enemies.push(new Enemy(canvas.width + 40, canvas.height / 2, true));
-                            window.LastOutpostAPI.emit("bossSpawned", { wave: this.state.wave });
-                        }
-                        return;
-                    }
-                    const y = Math.random() * (canvas.height - 120) + 60;
-                    this.enemies.push(new Enemy(canvas.width + 20, y));
-                    window.LastOutpostAPI.emit("enemySpawned", { wave: this.state.wave, index: spawned });
-                    spawned++;
-                }, 800);
-            },
-
-            triggerScreenGlitch(intensity = 15) {
-                this.glitchIntensity = intensity;
             },
 
             loop() {
-                this.base.y = canvas.height / 2;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const core = this.getOutpostCore();
 
-                // Draw background tactical grid
-                ctx.strokeStyle = 'rgba(0, 240, 255, 0.04)';
+                // 1. Draw Grid Lines
+                ctx.strokeStyle = "rgba(30, 41, 59, 0.4)";
                 ctx.lineWidth = 1;
-                for (let x = 0; x < canvas.width; x += 40) {
+                const gridSpacing = 40;
+                for (let x = 0; x < canvas.width; x += gridSpacing) {
                     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
                 }
-                for (let y = 0; y < canvas.height; y += 40) {
+                for (let y = 0; y < canvas.height; y += gridSpacing) {
                     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
                 }
 
-                // Render Base Reactor Core
-                ctx.save();
-                ctx.shadowColor = 'var(--neon-cyan)';
-                ctx.shadowBlur = 20;
-                ctx.strokeStyle = '#00f0ff';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.arc(this.base.x, this.base.y, this.base.radius, 0, Math.PI * 2);
-                ctx.stroke();
-                ctx.fillStyle = 'rgba(0, 240, 255, 0.1)';
-                ctx.fill();
-                ctx.restore();
+                // 2. Wave Spawner Logic
+                if (this.waveActive) {
+                    this.spawnTimer++;
+                    if (this.spawnTimer > 45 && this.enemiesToSpawn > 0) {
+                        this.spawnTimer = 0;
+                        this.enemiesToSpawn--;
+                        this.spawnEnemy();
+                    }
 
-                // Update & Render Towers
-                this.towers.forEach(t => t.update(this.enemies, this.projectiles));
-                this.towers.forEach(t => t.draw(ctx));
-
-                // Update & Render Projectiles
-                for (let i = this.projectiles.length - 1; i >= 0; i--) {
-                    const p = this.projectiles[i];
-                    p.update();
-                    p.draw(ctx);
-                    if (p.dead) this.projectiles.splice(i, 1);
-                }
-
-                // Update & Render Enemies
-                for (let i = this.enemies.length - 1; i >= 0; i--) {
-                    const e = this.enemies[i];
-                    e.update(this.base);
-                    e.draw(ctx);
-
-                    if (e.reachedBase) {
-                        this.state.coreHealth -= e.damage;
-                        AudioFX.explosion();
-                        this.triggerScreenGlitch(8);
-                        this.enemies.splice(i, 1);
-                        this.updateUI();
-
-                        if (this.state.coreHealth <= 0 && !this.state.gameOver) {
-                            this.state.gameOver = true;
-                            this.showAlert("CRITICAL OUTPOST DESTRUCTION // GAME OVER");
-                            window.LastOutpostAPI.emit("gameOver", { wave: this.state.wave });
-                        }
-                    } else if (e.dead) {
-                        this.state.scrap += e.isBoss ? 50 : 8;
-                        this.state.energy += e.isBoss ? 40 : 5;
-                        AudioFX.explosion();
-                        window.LastOutpostAPI.emit("enemyDefeated", { enemy: e });
-                        this.enemies.splice(i, 1);
-                        this.updateUI();
+                    if (this.enemiesToSpawn === 0 && this.enemies.length === 0) {
+                        this.waveActive = false;
+                        document.getElementById('start-wave-btn').disabled = false;
+                        // Wave complete passive bonus
+                        this.credits += 50 + this.wave * 10;
+                        this.updateHUD();
+                        window.LastOutpostAPI.emit('waveCompleted', { wave: this.wave });
                     }
                 }
 
-                // Check Wave Completion
-                if (this.state.waveActive && this.enemies.length === 0) {
-                    this.state.waveActive = false;
-                    this.state.wave++;
-                    document.getElementById('btn-wave').disabled = false;
-                    this.updateUI();
+                // 3. Update & Draw Central Outpost Core
+                ctx.fillStyle = "rgba(13, 19, 34, 0.9)";
+                ctx.strokeStyle = "var(--neon-cyan)";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(core.x, core.y, core.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Core Rotating Reactor Ring
+                const t = Date.now() * 0.002;
+                ctx.strokeStyle = "rgba(0, 240, 255, 0.6)";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(core.x, core.y, core.radius - 12, t, t + Math.PI * 1.3);
+                ctx.stroke();
+
+                // 4. Update & Draw Defensive Structures
+                this.structures.forEach(s => {
+                    // Producer Logic (Solar Siphon)
+                    if (s.spec.isProducer) {
+                        s.timer++;
+                        if (s.timer % 120 === 0) {
+                            this.credits += 6;
+                            this.updateHUD();
+                        }
+                    }
+
+                    // Turret Targeting Logic
+                    if (s.spec.range > 0) {
+                        s.timer++;
+                        // Target closest enemy in range
+                        let nearest = null;
+                        let minDist = s.spec.range;
+
+                        this.enemies.forEach(e => {
+                            const d = Math.hypot(e.x - s.x, e.y - s.y);
+                            if (d < minDist) {
+                                minDist = d;
+                                nearest = e;
+                            }
+                        });
+
+                        if (nearest) {
+                            s.angle = Math.atan2(nearest.y - s.y, nearest.x - s.x);
+                            if (s.timer >= s.spec.cooldown) {
+                                s.timer = 0;
+                                // Fire Projectile
+                                this.projectiles.push({
+                                    x: s.x,
+                                    y: s.y,
+                                    targetX: nearest.x,
+                                    targetY: nearest.y,
+                                    vx: Math.cos(s.angle) * 9,
+                                    vy: Math.sin(s.angle) * 9,
+                                    damage: s.spec.damage,
+                                    color: s.spec.color,
+                                    type: s.type
+                                });
+
+                                if (s.type === 'PULSE_TURRET') SoundFX.playLaser();
+                                if (s.type === 'RAILGUN') SoundFX.playRailgun();
+                            }
+                        }
+                    }
+
+                    // Draw Structure
+                    ctx.save();
+                    ctx.translate(s.x, s.y);
+                    ctx.fillStyle = "#1e293b";
+                    ctx.strokeStyle = s.spec.color;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 16, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Turret Barrel Angle
+                    ctx.rotate(s.angle);
+                    ctx.fillStyle = s.spec.color;
+                    ctx.fillRect(4, -3, 16, 6);
+                    ctx.restore();
+                });
+
+                // 5. Update & Draw Projectiles
+                for (let i = this.projectiles.length - 1; i >= 0; i--) {
+                    const p = this.projectiles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 8;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    // Collision Check with Enemies
+                    for (let j = this.enemies.length - 1; j >= 0; j--) {
+                        const e = this.enemies[j];
+                        if (Math.hypot(p.x - e.x, p.y - e.y) < 18) {
+                            e.hp -= p.damage;
+                            this.createSpawnParticles(p.x, p.y, p.color);
+                            this.projectiles.splice(i, 1);
+
+                            if (e.hp <= 0) {
+                                SoundFX.playExplosion();
+                                this.credits += e.reward;
+                                this.updateHUD();
+                                window.LastOutpostAPI.emit('enemyDefeated', { enemyId: e.id, reward: e.reward });
+                                this.enemies.splice(j, 1);
+                            }
+                            break;
+                        }
+                    }
+
+                    // Screen boundaries check
+                    if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
+                        this.projectiles.splice(i, 1);
+                    }
                 }
 
-                // Render Observer/Spectral Injected Layer
-                window.LastOutpostAPI.customRenderLayers.forEach(renderFn => renderFn(ctx, canvas));
+                // 6. Update & Draw Enemies
+                for (let i = this.enemies.length - 1; i >= 0; i--) {
+                    const e = this.enemies[i];
+                    const angleToCore = Math.atan2(core.y - e.y, core.x - e.x);
+                    e.x += Math.cos(angleToCore) * e.speed;
+                    e.y += Math.sin(angleToCore) * e.speed;
 
-                // Render Particles
+                    // Draw Enemy Body
+                    ctx.save();
+                    ctx.translate(e.x, e.y);
+                    ctx.rotate(angleToCore);
+                    
+                    ctx.fillStyle = e.isBoss ? "#ff0055" : (e.isArmored ? "#ffb703" : "#ef4444");
+                    if (e.isGhost) ctx.fillStyle = "rgba(189, 0, 255, 0.5)"; // Observer entity visual
+
+                    ctx.beginPath();
+                    if (e.isBoss) {
+                        ctx.rect(-18, -18, 36, 36);
+                    } else {
+                        ctx.moveTo(12, 0); ctx.lineTo(-8, -8); ctx.lineTo(-8, 8); ctx.closePath();
+                    }
+                    ctx.fill();
+
+                    // Mini Health Bar above enemy
+                    ctx.restore();
+                    const hpPct = e.hp / e.maxHp;
+                    ctx.fillStyle = "rgba(0,0,0,0.6)";
+                    ctx.fillRect(e.x - 14, e.y - 18, 28, 4);
+                    ctx.fillStyle = e.isBoss ? "var(--neon-crimson)" : "var(--neon-emerald)";
+                    ctx.fillRect(e.x - 14, e.y - 18, 28 * hpPct, 4);
+
+                    // Reached Outpost Core Check
+                    if (Math.hypot(core.x - e.x, core.y - e.y) < core.radius) {
+                        this.coreHp -= e.isBoss ? 200 : 35;
+                        this.createSpawnParticles(e.x, e.y, "#ef4444");
+                        SoundFX.playExplosion();
+                        this.enemies.splice(i, 1);
+                        this.updateHUD();
+
+                        if (this.coreHp <= 0) {
+                            this.gameOver();
+                        }
+                    }
+                }
+
+                // 7. Particle Effects System
                 for (let i = this.particles.length - 1; i >= 0; i--) {
                     const pt = this.particles[i];
-                    pt.update();
-                    pt.draw(ctx);
-                    if (pt.alpha <= 0) this.particles.splice(i, 1);
+                    pt.x += pt.vx;
+                    pt.y += pt.vy;
+                    pt.life -= 0.04;
+
+                    ctx.fillStyle = pt.color;
+                    ctx.globalAlpha = Math.max(0, pt.life);
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+
+                    if (pt.life <= 0) this.particles.splice(i, 1);
                 }
 
-                // Screen Glitch Shader Filter
-                if (this.glitchIntensity > 0) {
-                    ctx.fillStyle = `rgba(189, 0, 255, ${this.glitchIntensity * 0.02})`;
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    this.glitchIntensity *= 0.9;
+                // 8. Hover Range Ring for selected structure
+                if (this.selectedType) {
+                    const spec = STRUCTURE_TYPES[this.selectedType];
+                    if (spec.range > 0) {
+                        ctx.strokeStyle = "rgba(0, 240, 255, 0.25)";
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.arc(this.mouse.x, this.mouse.y, spec.range, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
                 }
 
                 requestAnimationFrame(() => this.loop());
+            },
+
+            gameOver() {
+                document.getElementById('endgame-modal').style.display = 'flex';
+                document.getElementById('final-stats').textContent = `SURVIVED UNTIL WAVE ${this.wave}`;
+                window.LastOutpostAPI.emit('gameOver', { wave: this.wave });
+            },
+
+            reset() {
+                this.coreHp = this.maxHp;
+                this.credits = 250;
+                this.wave = 0;
+                this.structures = [];
+                this.enemies = [];
+                this.projectiles = [];
+                this.waveActive = false;
+                document.getElementById('endgame-modal').style.display = 'none';
+                document.getElementById('start-wave-btn').disabled = false;
+                this.updateHUD();
             }
         };
 
         /* -------------------------------------------------------------
-           4. TOWERS & ENTITIES
+           5. THE OBSERVER (TAMPERMONKEY SECRET GAMEPLAY LAYER)
         ------------------------------------------------------------- */
-        class Tower {
-            constructor(x, y, type) {
-                this.x = x; this.y = y; this.type = type;
-                this.range = type === 'BEAM' ? 240 : 160;
-                this.cooldown = 0;
-                this.level = 1;
-            }
+        const ObserverLayer = {
+            isActive: false,
+            fragments: 0,
+            phase: 1, // 1: Debug Tool -> 2: Anomalies -> 3: Corrupted Reality -> 4: The Entity Sees You
 
-            update(enemies, projectiles) {
-                if (this.type === 'SIPHON') {
-                    Game.state.energy += 0.035;
-                    Game.updateUI();
-                    return;
-                }
+            init() {
+                if (this.isActive) return;
+                this.isActive = true;
+                document.getElementById('observer-hud').style.display = 'block';
+                this.log("[AUTH] Observer Hook Activated.");
+                this.log("[TELEMETRY] Sub-spatial scanner connected.");
 
-                if (this.cooldown > 0) this.cooldown--;
-                if (this.cooldown <= 0) {
-                    const target = enemies.find(e => Math.hypot(e.x - this.x, e.y - this.y) < this.range);
-                    if (target) {
-                        projectiles.push(new Projectile(this.x, this.y, target, this.type));
-                        this.cooldown = this.type === 'BEAM' ? 55 : 20;
-                        AudioFX.laser();
+                // Listen to Game Engine Events
+                window.LastOutpostAPI.on('waveCompleted', (data) => {
+                    this.fragments += 3;
+                    this.updateUI();
+                    this.checkNarrativeProgression(data.wave);
+                });
+
+                window.LastOutpostAPI.on('bossSpawned', () => {
+                    if (this.phase >= 2) {
+                        this.log("[WARNING] Dimensional rift detected during boss breach!");
                     }
+                });
+            },
+
+            activateDirectly() {
+                this.init();
+                toggleScriptGuide();
+            },
+
+            log(msg) {
+                const log = document.getElementById('obs-log');
+                const line = document.createElement('div');
+                line.textContent = msg;
+                log.appendChild(line);
+                log.scrollTop = log.scrollHeight;
+            },
+
+            updateUI() {
+                document.getElementById('obs-frags').textContent = `${this.fragments} Frags`;
+            },
+
+            checkNarrativeProgression(wave) {
+                if (wave === 3 && this.phase === 1) {
+                    this.phase = 2;
+                    this.log("[ANOMALY] Unregistered ghost echoes found in sector 0-9.");
+                    SoundFX.playEerieGlitch();
+                } else if (wave === 5 && this.phase === 2) {
+                    this.phase = 3;
+                    this.log("[CORRUPTION] Memory bounds overflowing. Telemetry desynced.");
+                    SoundFX.playEerieGlitch();
+                } else if (wave === 7 && this.phase === 3) {
+                    this.phase = 4;
+                    // TRANSFORMATION INTO THE ENTITY
+                    document.getElementById('observer-hud').classList.add('corrupted');
+                    document.getElementById('obs-status-tag').textContent = "UNKNOWN ENTITY DETECTED";
+                    this.log("⚠ THE GAME CAN SEE YOU NOW ⚠");
+                    SoundFX.playEerieGlitch();
+
+                    // Spawn Ghost Spectral Enemies that bypass standard physics
+                    setInterval(() => {
+                        if (GameEngine.waveActive) {
+                            const e = {
+                                id: 'ghost_' + Math.random(),
+                                x: Math.random() * canvas.width,
+                                y: 0,
+                                hp: 160,
+                                maxHp: 160,
+                                speed: 1.2,
+                                reward: 50,
+                                isGhost: true
+                            };
+                            GameEngine.enemies.push(e);
+                        }
+                    }, 5000);
+                }
+            },
+
+            scanSublayer() {
+                if (!this.isActive) return;
+                SoundFX.playLaser();
+                this.log("[SCAN] Scanning for phase-shifted biomass...");
+                GameEngine.credits += 40;
+                GameEngine.updateHUD();
+            },
+
+            overclockCore() {
+                if (this.fragments >= 5) {
+                    this.fragments -= 5;
+                    GameEngine.coreHp = Math.min(GameEngine.maxHp, GameEngine.coreHp + 250);
+                    GameEngine.updateHUD();
+                    this.updateUI();
+                    this.log("[CORE] Overclock injected. +250 HP restored.");
+                } else {
+                    this.log("[ERROR] Need 5 fragments to overclock.");
+                }
+            },
+
+            disruptRift() {
+                if (this.fragments >= 8) {
+                    this.fragments -= 8;
+                    this.updateUI();
+                    // Clear 50% of current enemies
+                    const killCount = Math.ceil(GameEngine.enemies.length / 2);
+                    GameEngine.enemies.splice(0, killCount);
+                    SoundFX.playExplosion();
+                    this.log(`[REALITY] Anomaly collapsed. ${killCount} threats neutralized.`);
+                } else {
+                    this.log("[ERROR] Need 8 fragments to collapse rift.");
                 }
             }
+        };
 
-            draw(ctx) {
-                ctx.save();
-                ctx.fillStyle = this.type === 'BEAM' ? '#bd00ff' : (this.type === 'SIPHON' ? '#ffaa00' : '#00f0ff');
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 14, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#fff';
-                ctx.stroke();
-                ctx.restore();
-            }
+        /* -------------------------------------------------------------
+           6. SCRIPT MODAL & UTILITY FUNCTIONS
+        ------------------------------------------------------------- */
+        function toggleScriptGuide() {
+            const m = document.getElementById('script-guide-modal');
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        class Enemy {
-            constructor(x, y, isBoss = false) {
-                this.x = x; this.y = y; this.isBoss = isBoss;
-                this.maxHealth = isBoss ? 280 : 35 + Game.state.wave * 12;
-                this.health = this.maxHealth;
-                this.speed = isBoss ? 0.6 : 1.4 + Math.random() * 0.4;
-                this.damage = isBoss ? 40 : 12;
-                this.dead = false;
-                this.reachedBase = false;
-            }
-
-            update(base) {
-                this.x -= this.speed;
-                if (Math.hypot(this.x - base.x, this.y - base.y) < base.radius) {
-                    this.reachedBase = true;
-                }
-            }
-
-            draw(ctx) {
-                ctx.save();
-                ctx.fillStyle = this.isBoss ? '#ff0055' : '#ff3366';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.isBoss ? 22 : 10, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Health Bar
-                ctx.fillStyle = '#111';
-                ctx.fillRect(this.x - 14, this.y - 18, 28, 4);
-                ctx.fillStyle = '#00ffd6';
-                ctx.fillRect(this.x - 14, this.y - 18, (this.health / this.maxHealth) * 28, 4);
-                ctx.restore();
-            }
+        function copyTampermonkeyScript() {
+            const text = document.getElementById('tm-script-code').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Tampermonkey script copied to clipboard!");
+            });
         }
 
-        class Projectile {
-            constructor(x, y, target, type) {
-                this.x = x; this.y = y; this.target = target; this.type = type;
-                this.speed = 10;
-                this.dead = false;
-                this.power = type === 'BEAM' ? 45 : 18;
-            }
-
-            update() {
-                const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-                this.x += Math.cos(angle) * this.speed;
-                this.y += Math.sin(angle) * this.speed;
-
-                if (Math.hypot(this.target.x - this.x, this.target.y - this.y) < 15) {
-                    this.target.health -= this.power;
-                    if (this.target.health <= 0) this.target.dead = true;
-                    this.dead = true;
-                }
-            }
-
-            draw(ctx) {
-                ctx.fillStyle = this.type === 'BEAM' ? '#bd00ff' : '#00f0ff';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        window.onload = () => Game.init();
+        // Initialize Game Engine on DOM load
+        window.addEventListener('DOMContentLoaded', () => {
+            GameEngine.init();
+        });
     </script>
 </body>
 </html>
