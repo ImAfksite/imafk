@@ -56,7 +56,6 @@
             z-index: 1;
         }
 
-        /* --- Security Gate Lockbox --- */
         .auth-card {
             max-width: 440px;
             margin: 100px auto 0;
@@ -146,7 +145,6 @@
             font-weight: 600;
         }
 
-        /* --- Dashboard Panel --- */
         #admin-panel {
             display: none;
         }
@@ -182,7 +180,7 @@
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--glass-border);
             color: #fff;
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 50px;
             font-size: 0.85rem;
             font-weight: 600;
@@ -231,8 +229,15 @@
 
         .btn-test { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--glass-border); }
         .btn-test:hover { background: var(--neon-mint); color: #000; }
-        .btn-takedown { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+        
+        .btn-takedown { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
         .btn-takedown:hover { background: var(--danger); color: #fff; }
+
+        .btn-restore { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .btn-restore:hover { background: #10b981; color: #fff; }
+
+        .btn-delete { background: rgba(120, 53, 15, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .btn-delete:hover { background: #d97706; color: #fff; }
 
         .preview-modal {
             display: none;
@@ -283,7 +288,7 @@
             <div>
                 <span class="dev-badge">✓ Authenticated Root Session</span>
                 <h1 style="font-size: 1.8rem; margin: 4px 0;">Arcade Moderation Node</h1>
-                <p style="color: var(--text-muted); font-size: 0.85rem;">Review submissions, run real-time tests, and publish takedown notices.</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Review submissions, run real-time tests, and moderate entries.</p>
             </div>
             <div class="panel-actions">
                 <a href="index.html" class="btn-action">Return to Hub</a>
@@ -306,9 +311,7 @@
     </div>
 
     <script>
-        // Encoded key token (not readable in plain text)
         const _k = [95, 118, 124, 121, 114, 133, 130, 128, 63, 61, 62, 61];
-
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
 
@@ -319,15 +322,12 @@
 
         let allGames = [];
 
-        // Check if session is already stored
         if (sessionStorage.getItem('afk_authenticated') === 'true') {
             grantAccess();
         }
 
         function verifyPasscode() {
             const input = document.getElementById('pass-input').value.trim();
-            
-            // Check transformed byte codes
             const match = input.length === _k.length && 
                           [...input].every((c, i) => c.charCodeAt(0) + 13 === _k[i]);
 
@@ -385,26 +385,89 @@
             allGames.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
-                const isLive = game.status === 'live';
+                const isLive = (game.status || 'live') === 'live';
 
                 card.innerHTML = `
-                    <div>
+                    <div style="flex: 1;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <h3 style="margin: 0; font-size: 1.2rem;">${escapeHtml(game.title)}</h3>
                             <span class="status-pill ${isLive ? 'status-live' : 'status-removed'}">
-                                ${escapeHtml((game.status || '').toUpperCase())}
+                                ${isLive ? 'LIVE' : 'TAKEN DOWN'}
                             </span>
                         </div>
                         <p style="color: var(--text-muted); font-size: 0.85rem; margin: 6px 0;">
                             Author: <strong>${escapeHtml(game.author)}</strong> &bull; Contact: ${escapeHtml(game.email)}
                         </p>
+                        ${game.takedown_reason ? `<p style="color: var(--danger); font-size: 0.82rem; margin: 0;"><strong>Reason:</strong> ${escapeHtml(game.takedown_reason)}</p>` : ''}
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn-action btn-test" onclick="testGame('${escapeHtml(game.id)}')">⚡ Test Code</button>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn-action btn-test" onclick="testGame('${escapeHtml(game.id)}')">⚡ Test</button>
+                        ${isLive 
+                            ? `<button class="btn-action btn-takedown" onclick="takeDownGame('${escapeHtml(game.id)}')">🚨 Takedown</button>`
+                            : `<button class="btn-action btn-restore" onclick="restoreGame('${escapeHtml(game.id)}')">✓ Restore</button>`
+                        }
+                        <button class="btn-action btn-delete" onclick="deleteGame('${escapeHtml(game.id)}')">🗑️ Delete</button>
                     </div>
                 `;
                 feed.appendChild(card);
             });
+        }
+
+        // Action: Take down a game
+        async function takeDownGame(id) {
+            const game = allGames.find(g => String(g.id) === String(id));
+            const reason = prompt(`Reason for taking down "${game ? game.title : 'this game'}":`, "Violates community guidelines / malicious code");
+            if (!reason) return;
+
+            const { error } = await sbClient
+                .from('games')
+                .update({ 
+                    status: 'takedown', 
+                    takedown_reason: reason 
+                })
+                .eq('id', id);
+
+            if (error) {
+                alert("Error taking down game: " + error.message);
+            } else {
+                fetchModerationList();
+            }
+        }
+
+        // Action: Restore a taken-down game back to live
+        async function restoreGame(id) {
+            const { error } = await sbClient
+                .from('games')
+                .update({ 
+                    status: 'live', 
+                    takedown_reason: null 
+                })
+                .eq('id', id);
+
+            if (error) {
+                alert("Error restoring game: " + error.message);
+            } else {
+                fetchModerationList();
+            }
+        }
+
+        // Action: Permanently delete a game from database
+        async function deleteGame(id) {
+            const game = allGames.find(g => String(g.id) === String(id));
+            if (!confirm(`Are you sure you want to PERMANENTLY delete "${game ? game.title : 'this game'}"? This cannot be undone.`)) {
+                return;
+            }
+
+            const { error } = await sbClient
+                .from('games')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert("Error deleting game: " + error.message);
+            } else {
+                fetchModerationList();
+            }
         }
 
         function testGame(id) {
