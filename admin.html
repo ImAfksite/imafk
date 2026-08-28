@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encrypted Dev Node — I’m Afk</title>
+    <!-- Inline favicon prevents the 404 error in console -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
         :root {
@@ -134,12 +139,6 @@
             box-shadow: 0 15px 25px rgba(0, 255, 214, 0.4);
         }
 
-        .btn-unlock:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         .attempts-counter {
             font-size: 0.78rem;
             color: var(--danger);
@@ -233,8 +232,6 @@
         .btn-test:hover { background: var(--neon-mint); color: #000; }
         .btn-takedown { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
         .btn-takedown:hover { background: var(--danger); color: #fff; }
-        .btn-restore { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
-        .btn-restore:hover { background: #10b981; color: #fff; }
 
         .preview-modal {
             display: none;
@@ -266,7 +263,7 @@
         <div class="auth-card">
             <div class="shield-icon">🛡️</div>
             <h2>Dev Authentication</h2>
-            <p>Cryptographic SHA-256 handshake required.</p>
+            <p>Enter your authorization key to proceed.</p>
             
             <form id="auth-form" onsubmit="event.preventDefault(); verifyPasscode();">
                 <div class="input-group">
@@ -311,18 +308,20 @@
         const ENCRYPTED_AUTH_HASH = "0fa5776d655f5f40350d3023e12c1404c08e5c8e310037a505b82e219760773d";
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
-        
-        const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-        let allGames = [];
-        let failedAttempts = 0;
 
-        // Restore session if active
+        let sbClient = null;
+        if (window.supabase && typeof window.supabase.createClient === 'function') {
+            sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        let allGames = [];
+
         if (sessionStorage.getItem('afk_authenticated') === 'true') {
             grantAccess();
         }
 
-        // Pure JavaScript SHA-256 fallback (guaranteed to work in all environments)
-        function sha256Pure(ascii) {
+        // SHA-256 algorithm
+        function sha256(ascii) {
             function rightRotate(value, amount) {
                 return (value >>> amount) | (value << (32 - amount));
             }
@@ -397,17 +396,16 @@
             return result;
         }
 
-        async function verifyPasscode() {
+        function verifyPasscode() {
             const input = document.getElementById('pass-input').value.trim();
-            const inputHash = sha256Pure(input);
+            const inputHash = sha256(input);
 
             if (inputHash === ENCRYPTED_AUTH_HASH) {
                 sessionStorage.setItem('afk_authenticated', 'true');
                 grantAccess();
             } else {
-                failedAttempts++;
                 document.getElementById('pass-input').value = '';
-                document.getElementById('warning-text').textContent = 'Invalid credentials. Please try again.';
+                document.getElementById('warning-text').textContent = 'Invalid credentials. Try again.';
             }
         }
 
@@ -432,7 +430,7 @@
         async function fetchModerationList() {
             const feed = document.getElementById('games-feed');
             if (!sbClient) {
-                feed.innerHTML = "<p style='color: var(--danger);'>Supabase SDK failed to load.</p>";
+                feed.innerHTML = "<p style='color: var(--danger);'>Database client connection not available.</p>";
                 return;
             }
 
@@ -442,13 +440,13 @@
                 .order('created_at', { ascending: false });
 
             if (error) {
-                feed.innerHTML = `<p style="color: var(--danger);">Database Error: ${escapeHtml(error.message)}</p>`;
+                feed.innerHTML = `<p style="color: var(--danger);">Database error: ${escapeHtml(error.message)}</p>`;
                 return;
             }
 
             allGames = data || [];
             if (!allGames.length) {
-                feed.innerHTML = "<p style='color: var(--text-muted);'>No game submissions found.</p>";
+                feed.innerHTML = "<p style='color: var(--text-muted);'>No game submissions recorded.</p>";
                 return;
             }
 
@@ -472,7 +470,6 @@
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn-action btn-test" onclick="testGame('${escapeHtml(game.id)}')">⚡ Test Code</button>
-                        <button class="btn-action btn-takedown" onclick="triggerTakedown('${escapeHtml(game.id)}')">🚨 Take Down</button>
                     </div>
                 `;
                 feed.appendChild(card);
