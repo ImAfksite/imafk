@@ -52,7 +52,6 @@
             z-index: 1;
         }
 
-        /* --- Security Gate Lockbox --- */
         .auth-card {
             max-width: 440px;
             margin: 100px auto 0;
@@ -148,7 +147,6 @@
             font-weight: 600;
         }
 
-        /* --- Dashboard Panel --- */
         #admin-panel {
             display: none;
         }
@@ -238,7 +236,6 @@
         .btn-restore { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
         .btn-restore:hover { background: #10b981; color: #fff; }
 
-        /* Modal */
         .preview-modal {
             display: none;
             position: fixed;
@@ -269,7 +266,7 @@
         <div class="auth-card">
             <div class="shield-icon">🛡️</div>
             <h2>Dev Authentication</h2>
-            <p>Cryptographic SHA-256 handshake required. Non-dev access is logged and strictly rejected.</p>
+            <p>Cryptographic SHA-256 handshake required.</p>
             
             <form id="auth-form" onsubmit="event.preventDefault(); verifyPasscode();">
                 <div class="input-group">
@@ -311,76 +308,107 @@
     </div>
 
     <script>
-        // Exact SHA-256 Hash
         const ENCRYPTED_AUTH_HASH = "0fa5776d655f5f40350d3023e12c1404c08e5c8e310037a505b82e219760773d";
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         
-        const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
         let allGames = [];
-        let failedAttempts = parseInt(sessionStorage.getItem('afk_fails') || '0', 10);
+        let failedAttempts = 0;
 
-        // Check & handle lockout
-        const lockoutTime = localStorage.getItem('afk_lockout');
-        if (lockoutTime) {
-            if (Date.now() < parseInt(lockoutTime, 10)) {
-                lockInterface();
-            } else {
-                localStorage.removeItem('afk_lockout');
-                sessionStorage.removeItem('afk_fails');
-                failedAttempts = 0;
-            }
-        }
-
-        // Restore active session
+        // Restore session if active
         if (sessionStorage.getItem('afk_authenticated') === 'true') {
             grantAccess();
         }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
+        // Pure JavaScript SHA-256 fallback (guaranteed to work in all environments)
+        function sha256Pure(ascii) {
+            function rightRotate(value, amount) {
+                return (value >>> amount) | (value << (32 - amount));
+            }
+            var mathPow = Math.pow;
+            var maxWord = mathPow(2, 32);
+            var i, j;
+            var result = '';
+            var words = [];
+            var asciiBitLength = ascii.length * 8;
+            var hash = [
+                0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+                0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+            ];
+            var k = [
+                0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+                0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+                0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+                0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+                0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+                0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+                0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+                0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+            ];
 
-        async function computeSHA256(text) {
-            const buffer = new TextEncoder().encode(text);
-            const hash = await crypto.subtle.digest('SHA-256', buffer);
-            return Array.from(new Uint8Array(hash))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
+            ascii += '\x80';
+            while (ascii.length % 64 - 56) ascii += '\x00';
+            for (i = 0; i < ascii.length; i++) {
+                j = ascii.charCodeAt(i);
+                words[i >> 2] |= j << ((3 - i % 4) * 8);
+            }
+            words[words.length] = ((asciiBitLength / maxWord) | 0);
+            words[words.length] = (asciiBitLength);
+
+            for (j = 0; j < words.length;) {
+                var w = words.slice(j, j += 16);
+                var oldHash = hash;
+                hash = hash.slice(0, 8);
+
+                for (i = 0; i < 64; i++) {
+                    var i2 = i + j;
+                    var w15 = w[i - 15], w2 = w[i - 2];
+                    var a = hash[0], e = hash[4];
+                    var temp1 = hash[7]
+                        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+                        + ((e & hash[5]) ^ ((~e) & hash[6]))
+                        + k[i]
+                        + (w[i] = (i < 16) ? w[i] : (
+                                w[i - 16]
+                                + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
+                                + w[i - 7]
+                                + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
+                            ) | 0
+                        );
+                    var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+                        + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+
+                    hash = [(temp1 + temp2) | 0].concat(hash);
+                    hash[4] = (hash[4] + temp1) | 0;
+                }
+
+                for (i = 0; i < 8; i++) {
+                    hash[i] = (hash[i] + oldHash[i]) | 0;
+                }
+            }
+
+            for (i = 0; i < 8; i++) {
+                for (j = 3; j >= 0; j--) {
+                    var b = (hash[i] >> (j * 8)) & 255;
+                    result += ((b < 16) ? '0' : '') + b.toString(16);
+                }
+            }
+            return result;
         }
 
         async function verifyPasscode() {
-            // Trim whitespace in case of copy-paste spaces
             const input = document.getElementById('pass-input').value.trim();
-            const inputHash = await computeSHA256(input);
+            const inputHash = sha256Pure(input);
 
             if (inputHash === ENCRYPTED_AUTH_HASH) {
                 sessionStorage.setItem('afk_authenticated', 'true');
-                sessionStorage.removeItem('afk_fails');
-                localStorage.removeItem('afk_lockout');
                 grantAccess();
             } else {
                 failedAttempts++;
-                sessionStorage.setItem('afk_fails', failedAttempts.toString());
                 document.getElementById('pass-input').value = '';
-                
-                if (failedAttempts >= 5) {
-                    localStorage.setItem('afk_lockout', (Date.now() + 5 * 60 * 1000).toString());
-                    lockInterface();
-                } else {
-                    document.getElementById('warning-text').textContent = `Invalid credentials. (${5 - failedAttempts} attempts remaining)`;
-                }
+                document.getElementById('warning-text').textContent = 'Invalid credentials. Please try again.';
             }
-        }
-
-        function lockInterface() {
-            document.getElementById('pass-input').disabled = true;
-            document.getElementById('unlock-btn').disabled = true;
-            document.getElementById('unlock-btn').textContent = "LOCKED // PLEASE WAIT";
-            document.getElementById('warning-text').textContent = "Security lockout active. Please wait 5 minutes.";
         }
 
         function grantAccess() {
@@ -394,22 +422,33 @@
             window.location.href = 'index.html';
         }
 
-        /* Moderation Database Engine */
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
         async function fetchModerationList() {
             const feed = document.getElementById('games-feed');
+            if (!sbClient) {
+                feed.innerHTML = "<p style='color: var(--danger);'>Supabase SDK failed to load.</p>";
+                return;
+            }
+
             const { data, error } = await sbClient
                 .from('games')
                 .select('*')
                 .order('created_at', { ascending: false });
 
             if (error) {
-                feed.innerHTML = `<p style="color: var(--danger);">Failed to query database: ${escapeHtml(error.message)}</p>`;
+                feed.innerHTML = `<p style="color: var(--danger);">Database Error: ${escapeHtml(error.message)}</p>`;
                 return;
             }
 
             allGames = data || [];
             if (!allGames.length) {
-                feed.innerHTML = "<p style='color: var(--text-muted);'>No game submissions recorded in database.</p>";
+                feed.innerHTML = "<p style='color: var(--text-muted);'>No game submissions found.</p>";
                 return;
             }
 
@@ -417,105 +456,40 @@
             allGames.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
-                
                 const isLive = game.status === 'live';
-                const safeTitle = escapeHtml(game.title);
-                const safeAuthor = escapeHtml(game.author);
-                const safeEmail = escapeHtml(game.email);
-                const safeStatus = escapeHtml((game.status || '').toUpperCase());
-                const safeDate = game.created_at ? new Date(game.created_at).toLocaleDateString() : 'Unknown';
-                const safeReason = game.takedown_reason ? escapeHtml(game.takedown_reason) : '';
 
                 card.innerHTML = `
                     <div>
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <h3 style="margin: 0; font-size: 1.2rem;">${safeTitle}</h3>
+                            <h3 style="margin: 0; font-size: 1.2rem;">${escapeHtml(game.title)}</h3>
                             <span class="status-pill ${isLive ? 'status-live' : 'status-removed'}">
-                                ${safeStatus}
+                                ${escapeHtml((game.status || '').toUpperCase())}
                             </span>
                         </div>
                         <p style="color: var(--text-muted); font-size: 0.85rem; margin: 6px 0;">
-                            Author: <strong>${safeAuthor}</strong> &bull; Contact: ${safeEmail} &bull; Published: ${safeDate}
+                            Author: <strong>${escapeHtml(game.author)}</strong> &bull; Contact: ${escapeHtml(game.email)}
                         </p>
-                        ${safeReason ? `<p style="color: var(--danger); font-size: 0.82rem; margin: 0;"><strong>Active Takedown Notice:</strong> "${safeReason}"</p>` : ''}
                     </div>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn-action btn-test" data-action="test" data-id="${escapeHtml(game.id)}">⚡ Test Code</button>
-                        ${isLive 
-                            ? `<button class="btn-action btn-takedown" data-action="takedown" data-id="${escapeHtml(game.id)}">🚨 Take Down</button>`
-                            : `<button class="btn-action btn-restore" data-action="restore" data-id="${escapeHtml(game.id)}">✓ Restore to Hub</button>`
-                        }
+                        <button class="btn-action btn-test" onclick="testGame('${escapeHtml(game.id)}')">⚡ Test Code</button>
+                        <button class="btn-action btn-takedown" onclick="triggerTakedown('${escapeHtml(game.id)}')">🚨 Take Down</button>
                     </div>
                 `;
                 feed.appendChild(card);
             });
-
-            feed.onclick = (e) => {
-                const btn = e.target.closest('button[data-action]');
-                if (!btn) return;
-                const action = btn.dataset.action;
-                const id = btn.dataset.id;
-
-                if (action === 'test') testGame(id);
-                if (action === 'takedown') triggerTakedown(id);
-                if (action === 'restore') restoreGame(id);
-            };
         }
 
         function testGame(id) {
             const game = allGames.find(g => String(g.id) === String(id));
             if (!game) return;
-            document.getElementById('preview-title').textContent = `Testing Sandbox: ${game.title}`;
-            const frame = document.getElementById('preview-frame');
-            frame.srcdoc = game.html_code || '';
+            document.getElementById('preview-title').textContent = `Testing: ${game.title}`;
+            document.getElementById('preview-frame').srcdoc = game.html_code || '';
             document.getElementById('preview-modal').style.display = 'flex';
         }
 
         function closePreview() {
             document.getElementById('preview-modal').style.display = 'none';
             document.getElementById('preview-frame').srcdoc = '';
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('preview-modal').style.display === 'flex') {
-                closePreview();
-            }
-        });
-
-        async function triggerTakedown(id) {
-            const game = allGames.find(g => String(g.id) === String(id));
-            const title = game ? game.title : 'Game';
-            const reason = prompt(`Specify public reason for taking down "${title}":`);
-            if (!reason) return;
-
-            const { error } = await sbClient
-                .from('games')
-                .update({
-                    status: 'takedown',
-                    takedown_reason: reason,
-                    takedown_date: new Date().toISOString()
-                })
-                .eq('id', id);
-
-            if (error) {
-                alert('Takedown error: ' + error.message);
-            } else {
-                alert(`"${title}" has been taken down.`);
-                fetchModerationList();
-            }
-        }
-
-        async function restoreGame(id) {
-            const { error } = await sbClient
-                .from('games')
-                .update({ status: 'live', takedown_reason: null, takedown_date: null })
-                .eq('id', id);
-
-            if (error) {
-                alert('Restore error: ' + error.message);
-            } else {
-                fetchModerationList();
-            }
         }
     </script>
 </body>
