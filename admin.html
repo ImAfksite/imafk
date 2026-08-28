@@ -311,6 +311,7 @@
     </div>
 
     <script>
+        // Exact SHA-256 Hash
         const ENCRYPTED_AUTH_HASH = "0fa5776d655f5f40350d3023e12c1404c08e5c8e310037a505b82e219760773d";
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
@@ -336,7 +337,6 @@
             grantAccess();
         }
 
-        // Escape helper for secure text insertion
         function escapeHtml(str) {
             if (!str) return '';
             const div = document.createElement('div');
@@ -353,23 +353,25 @@
         }
 
         async function verifyPasscode() {
-            const input = document.getElementById('pass-input').value;
+            // Trim whitespace in case of copy-paste spaces
+            const input = document.getElementById('pass-input').value.trim();
             const inputHash = await computeSHA256(input);
 
             if (inputHash === ENCRYPTED_AUTH_HASH) {
                 sessionStorage.setItem('afk_authenticated', 'true');
                 sessionStorage.removeItem('afk_fails');
+                localStorage.removeItem('afk_lockout');
                 grantAccess();
             } else {
                 failedAttempts++;
                 sessionStorage.setItem('afk_fails', failedAttempts.toString());
                 document.getElementById('pass-input').value = '';
                 
-                if (failedAttempts >= 3) {
-                    localStorage.setItem('afk_lockout', (Date.now() + 15 * 60 * 1000).toString());
+                if (failedAttempts >= 5) {
+                    localStorage.setItem('afk_lockout', (Date.now() + 5 * 60 * 1000).toString());
                     lockInterface();
                 } else {
-                    document.getElementById('warning-text').textContent = `Invalid credentials. (${3 - failedAttempts} attempts remaining before security lockout)`;
+                    document.getElementById('warning-text').textContent = `Invalid credentials. (${5 - failedAttempts} attempts remaining)`;
                 }
             }
         }
@@ -377,8 +379,8 @@
         function lockInterface() {
             document.getElementById('pass-input').disabled = true;
             document.getElementById('unlock-btn').disabled = true;
-            document.getElementById('unlock-btn').textContent = "LOCKED // CONTACT SYS ADMIN";
-            document.getElementById('warning-text').textContent = "Security lockout active. Please wait 15 minutes.";
+            document.getElementById('unlock-btn').textContent = "LOCKED // PLEASE WAIT";
+            document.getElementById('warning-text').textContent = "Security lockout active. Please wait 5 minutes.";
         }
 
         function grantAccess() {
@@ -448,7 +450,6 @@
                 feed.appendChild(card);
             });
 
-            // Delegate event listeners securely
             feed.onclick = (e) => {
                 const btn = e.target.closest('button[data-action]');
                 if (!btn) return;
@@ -475,7 +476,6 @@
             document.getElementById('preview-frame').srcdoc = '';
         }
 
-        // Close preview on Escape key
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && document.getElementById('preview-modal').style.display === 'flex') {
                 closePreview();
@@ -485,7 +485,7 @@
         async function triggerTakedown(id) {
             const game = allGames.find(g => String(g.id) === String(id));
             const title = game ? game.title : 'Game';
-            const reason = prompt(`Specify public reason for taking down "${title}":\n(e.g., "Contains infinite loop / breaking code", "DMCA request", "Malicious script")`);
+            const reason = prompt(`Specify public reason for taking down "${title}":`);
             if (!reason) return;
 
             const { error } = await sbClient
@@ -500,7 +500,7 @@
             if (error) {
                 alert('Takedown error: ' + error.message);
             } else {
-                alert(`"${title}" has been taken down and posted to the public Takedown Notice board.`);
+                alert(`"${title}" has been taken down.`);
                 fetchModerationList();
             }
         }
