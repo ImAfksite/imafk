@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">I’m Afk — Dimensional Game Hub & Web Arcade</title>
+    <title data-i18n="meta.title">I’m Afk — Free Online Games for Everyone!</title>
     
     <!-- Google Fonts & CDN Libraries -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,7 +53,6 @@
             overflow-x: hidden;
             min-height: 100vh;
             line-height: 1.6;
-            /* Perspective removed from body so modals are 100% upfront */
         }
 
         #webgl-bg {
@@ -203,9 +202,9 @@
         .hero-left h1 {
             font-family: var(--font-display);
             font-size: clamp(2.4rem, 5vw, 4rem);
-            line-height: 1.1;
+            line-height: 1.15;
             font-weight: 700;
-            letter-spacing: -1.5px;
+            letter-spacing: -1px;
             margin-bottom: 20px;
         }
 
@@ -675,7 +674,6 @@
             border-right: 3px solid var(--neon-mint);
         }
 
-        /* --- Crisp, Upfront Game Modal (Perspective-Isolated) --- */
         .arcade-modal-backdrop {
             position: fixed;
             inset: 0;
@@ -843,16 +841,16 @@
     <canvas id="webgl-bg"></canvas>
 
     <header class="glass-nav">
-        <a href="#main" class="brand-block" id="main-brand-logo" title="Triple click for Admin Node">
+        <a href="#main" class="brand-block" id="main-brand-logo" title="Secret Admin Room">
             <div class="brand-icon">AFK</div>
             <span class="brand-title">I’M AFK</span>
         </a>
 
         <ul class="nav-links">
-            <li><a href="#featured" class="active" data-i18n="nav.featured">Featured</a></li>
-            <li><a href="#library" data-i18n="nav.library">Library</a></li>
+            <li><a href="#featured" class="active" data-i18n="nav.featured">Best Games</a></li>
+            <li><a href="#library" data-i18n="nav.library">All Games</a></li>
             <li><a href="#rules" data-i18n="nav.rules">Rules</a></li>
-            <li><a href="#support" data-i18n="nav.contact">Support</a></li>
+            <li><a href="#support" data-i18n="nav.contact">Help</a></li>
         </ul>
 
         <div class="nav-actions">
@@ -862,35 +860,35 @@
 
     <main id="main">
         <section class="hero">
-            <div class="hero-bg-text">IM AFK HUB</div>
+            <div class="hero-bg-text">PLAY GAMES</div>
             
             <div class="hero-left">
-                <span class="badge-live" style="width: fit-content; margin-bottom: 15px;" data-i18n="hero.badge">v3.5 Live Production</span>
-                <h1 data-i18n="hero.title">Tactile <span>Web Arcade</span> & Free Play Node.</h1>
-                <p class="hero-lead" data-i18n="hero.sub">High-speed web mirrors, hardware-accelerated games, and responsive dimensional interface cards. Completely open source and ad-free.</p>
+                <span class="badge-live" style="width: fit-content; margin-bottom: 15px;" data-i18n="hero.badge">✨ 100% Free & Fun!</span>
+                <h1 data-i18n="hero.title">Play Awesome <span>Free Games</span> Online!</h1>
+                <p class="hero-lead" data-i18n="hero.sub">No downloads, no annoying ads, and no waiting. Just pick any game you like and start playing right away on your computer, tablet, or phone!</p>
                 
                 <div class="hero-pills">
-                    <a href="#library" class="clay-pill clay-pill-mint" data-i18n="hero.ctaPlay">Explore Games ➔</a>
-                    <a href="https://github.com/imafksite/imafk" target="_blank" class="clay-pill clay-pill-purple" data-i18n="hero.ctaGithub">GitHub Repo</a>
-                    <a href="#rules" class="clay-pill clay-pill-dark" data-i18n="hero.ctaAbout">Network Rules</a>
+                    <a href="#library" class="clay-pill clay-pill-mint" data-i18n="hero.ctaPlay">Find Games 🎮</a>
+                    <a href="https://github.com/imafksite/imafk" target="_blank" class="clay-pill clay-pill-purple" data-i18n="hero.ctaGithub">Game Code 💻</a>
+                    <a href="#rules" class="clay-pill clay-pill-dark" data-i18n="hero.ctaAbout">Rules & Tips 📜</a>
                 </div>
             </div>
 
             <div class="hero-right">
                 <div class="hero-widget-card float-elem">
                     <div class="widget-header">
-                        <span style="font-weight: 700; font-size: 0.9rem;" data-i18n="widget.statusTitle">Edge Node Status</span>
-                        <span class="badge-live" data-i18n="widget.online">Operational</span>
+                        <span style="font-weight: 700; font-size: 0.9rem;" data-i18n="widget.statusTitle">Game Status</span>
+                        <span class="badge-live" data-i18n="widget.online">Ready to Play! 🟢</span>
                     </div>
-                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;" data-i18n="widget.statusDesc">Connected to global CDN mirror branches. Real-time assets streamed directly from repository contents.</p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;" data-i18n="widget.statusDesc">Everything is running super fast. Pick a game and jump straight into the fun!</p>
                     <div style="display: flex; gap: 20px; font-family: var(--font-display);">
                         <div>
                             <div style="font-size: 1.4rem; font-weight: 700; color: var(--neon-mint);" id="stat-count">--</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="widget.activeGames">Indexed Games</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="widget.activeGames">Total Games</div>
                         </div>
                         <div>
-                            <div style="font-size: 1.4rem; font-weight: 700; color: var(--neon-purple);">99.9%</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="widget.uptime">Node Uptime</div>
+                            <div style="font-size: 1.4rem; font-weight: 700; color: var(--neon-purple);">100%</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="widget.uptime">Always Online</div>
                         </div>
                     </div>
                 </div>
@@ -901,8 +899,8 @@
         <section class="spotlight-section" id="featured">
             <div class="section-header">
                 <div>
-                    <h2 data-i18n="sec.spotlight">Spotlight Releases</h2>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="sec.spotlightSub">Handpicked top performance game experiences.</p>
+                    <h2 data-i18n="sec.spotlight">⭐ Featured Games</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="sec.spotlightSub">Our favorite games we think you will love!</p>
                 </div>
             </div>
 
@@ -912,19 +910,19 @@
                         <div class="stage-panel">
                             <div class="stage-panel-img">🎮</div>
                             <div>
-                                <span class="game-tag" data-i18n="panel1.tag">Featured Masterpiece</span>
-                                <h3 style="font-size: 1.6rem; margin: 8px 0;" data-i18n="panel1.title">Retro & Web Canvas Emulators</h3>
-                                <p style="color: var(--text-muted); margin-bottom: 20px;" data-i18n="panel1.desc">Direct browser playback with low latency frames and responsive touch support for mobile displays.</p>
-                                <a href="#library" class="clay-pill clay-pill-mint" data-i18n="panel1.btn">Play Instant</a>
+                                <span class="game-tag" data-i18n="panel1.tag">Top Pick</span>
+                                <h3 style="font-size: 1.6rem; margin: 8px 0;" data-i18n="panel1.title">Arcade Classics & Fun Mini-Games</h3>
+                                <p style="color: var(--text-muted); margin-bottom: 20px;" data-i18n="panel1.desc">Super smooth games that work perfectly on your screen. Tap or use your keyboard to play!</p>
+                                <a href="#library" class="clay-pill clay-pill-mint" data-i18n="panel1.btn">Play Now ➔</a>
                             </div>
                         </div>
                         <div class="stage-panel">
                             <div class="stage-panel-img" style="background: linear-gradient(135deg, #a855f7, #ec4899);">⚡</div>
                             <div>
-                                <span class="game-tag" data-i18n="panel2.tag">Community Hub</span>
-                                <h3 style="font-size: 1.6rem; margin: 8px 0;" data-i18n="panel2.title">GitHub Hosted Engine</h3>
-                                <p style="color: var(--text-muted); margin-bottom: 20px;" data-i18n="panel2.desc">Easily submit pull requests to add your own games or fork the repository for your personal cloud.</p>
-                                <a href="https://github.com/imafksite/imafk" target="_blank" class="clay-pill clay-pill-purple" data-i18n="panel2.btn">Fork Repository</a>
+                                <span class="game-tag" data-i18n="panel2.tag">Community</span>
+                                <h3 style="font-size: 1.6rem; margin: 8px 0;" data-i18n="panel2.title">Make & Share Your Own Games</h3>
+                                <p style="color: var(--text-muted); margin-bottom: 20px;" data-i18n="panel2.desc">Are you learning to code? You can add your very own mini-game to this website for everyone to play!</p>
+                                <a href="https://github.com/imafksite/imafk" target="_blank" class="clay-pill clay-pill-purple" data-i18n="panel2.btn">Check GitHub 🛠️</a>
                             </div>
                         </div>
                     </div>
@@ -946,14 +944,14 @@
         <!-- Search Bar -->
         <div class="search-wrapper">
             <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="game-search" class="search-glass-input" placeholder="Search arcade database..." oninput="filterGames()">
+            <input type="text" id="game-search" class="search-glass-input" placeholder="Type here to find a game (Snake, Pong, etc.)..." oninput="filterGames()">
         </div>
 
-        <!-- Public Takedown & Moderation Changelog -->
+        <!-- Public Takedown & Safety Log -->
         <div class="takedown-board" id="takedown-board" style="display: none;">
             <div class="takedown-header">
-                <span class="takedown-badge">🛡️ Moderation Log</span>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time Node Takedown Notices</span>
+                <span class="takedown-badge">🛡️ Safety Notice</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Removed or Broken Games</span>
             </div>
             <div class="takedown-feed" id="takedown-feed"></div>
         </div>
@@ -962,57 +960,57 @@
         <section class="game-grid-section" id="library">
             <div class="section-header">
                 <div>
-                    <h2 data-i18n="sec.libraryTitle">Arcade Library</h2>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="sec.librarySub">Dynamically populated from GitHub repository & Supabase live node.</p>
+                    <h2 data-i18n="sec.libraryTitle">🎮 All Games</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="sec.librarySub">Click on any game card to start playing immediately!</p>
                 </div>
             </div>
 
             <div class="game-grid" id="game-container">
-                <div id="loading-indicator" data-i18n="lib.loading">Connecting to Global Nodes...</div>
+                <div id="loading-indicator" data-i18n="lib.loading">Loading awesome games for you... ⏳</div>
             </div>
         </section>
 
         <!-- Information & Guidelines -->
         <section class="info-grid-section" id="rules">
             <div class="info-panel">
-                <h3 data-i18n="rules.title">⚖️ Network Rules</h3>
+                <h3 data-i18n="rules.title">📜 House Rules</h3>
                 <ul class="rules-stack">
-                    <li data-i18n="rules.1"><strong>Respect Creators:</strong> No hotlinking or re-uploading without explicit permission.</li>
-                    <li data-i18n="rules.2"><strong>Personal Entertainment:</strong> All titles are provided freely for personal non-commercial study.</li>
-                    <li data-i18n="rules.3"><strong>Open Source:</strong> Found a bug or performance bottleneck? Open an issue on GitHub.</li>
+                    <li data-i18n="rules.1"><strong>Be Fair:</strong> Give credit to the game makers and do not copy without asking.</li>
+                    <li data-i18n="rules.2"><strong>Have Fun:</strong> All games here are 100% free for everyone to enjoy and learn from.</li>
+                    <li data-i18n="rules.3"><strong>Found a Bug?:</strong> If a game isn't working properly, let us know on GitHub so we can fix it!</li>
                 </ul>
             </div>
 
             <div class="info-panel" id="disclaimer">
-                <h3 data-i18n="disclaimer.title">🛡️ Disclaimer & Fair Use</h3>
+                <h3 data-i18n="disclaimer.title">🛡️ Note for Parents & Players</h3>
                 <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 10px;" data-i18n="disclaimer.body">
-                    The games indexed here are properties of their respective creators and copyright holders. <strong>I’m Afk</strong> operates as an open-source gateway and does not claim ownership over third-party assets.
+                    All games belong to the creative creators who built them. <strong>I’m Afk</strong> is just a friendly, free hub to help you discover and play them easily in one place!
                 </p>
             </div>
         </section>
 
         <section id="support" style="text-align: center; margin-bottom: 50px;">
             <div class="footer-links">
-                <a href="contact.html" class="footer-btn" data-i18n="foot.report">Report / Contact</a>
-                <a href="submit.html" class="footer-btn" data-i18n="foot.submit">Submit Game</a>
-                <a href="tos.html" class="footer-btn" data-i18n="foot.tos">Terms of Service</a>
+                <a href="contact.html" class="footer-btn" data-i18n="foot.report">Need Help? / Report</a>
+                <a href="submit.html" class="footer-btn" data-i18n="foot.submit">Add Your Game</a>
+                <a href="tos.html" class="footer-btn" data-i18n="foot.tos">Rules & Safety</a>
             </div>
         </section>
     </main>
 
-    <!-- Upfront In-Game Player Overlay -->
+    <!-- In-Game Player Overlay -->
     <div class="arcade-modal-backdrop" id="game-modal">
         <div class="arcade-modal-window">
             <div class="modal-bar">
                 <div class="modal-title-group">
                     <div class="brand-icon" style="width: 28px; height: 28px; font-size: 0.8rem;">▶</div>
-                    <span id="modal-game-title" style="font-weight: 700;">Loading Game...</span>
+                    <span id="modal-game-title" style="font-weight: 700;">Starting Game... 🎮</span>
                 </div>
                 <div class="modal-actions">
-                    <button class="modal-btn" id="modal-reload-btn">↻ Restart</button>
-                    <button class="modal-btn" id="modal-tab-btn">↗ New Tab</button>
+                    <button class="modal-btn" id="modal-reload-btn">↻ Play Again</button>
+                    <button class="modal-btn" id="modal-tab-btn">↗ Big Screen</button>
                     <button class="modal-btn" id="modal-fullscreen-btn">⛶ Fullscreen</button>
-                    <button class="modal-btn close" id="modal-close-btn">✕ Exit</button>
+                    <button class="modal-btn close" id="modal-close-btn">✕ Close</button>
                 </div>
             </div>
             <div class="arcade-iframe-container">
@@ -1022,94 +1020,94 @@
     </div>
 
     <footer>
-        <p>&copy; 2024–2026 I’m Afk &bull; Engineered with Semantic 3D Web & Three.js</p>
+        <p>&copy; 2024–2026 I’m Afk &bull; Made with ❤️ for gamers everywhere</p>
     </footer>
 
     <!-- ================= SCRIPT & GAME ENGINE ================= -->
     <script>
         /* -------------------------------------------------------------
-           1. I18N & BILINGUAL ENGINE
+           1. I18N & BILINGUAL ENGINE (KID-FRIENDLY)
         ------------------------------------------------------------- */
         const I18N = {
             en: {
-                "meta.title": "I’m Afk — Dimensional Game Hub & Web Arcade",
-                "nav.featured": "Featured",
-                "nav.library": "Library",
+                "meta.title": "I’m Afk — Free Online Games for Everyone!",
+                "nav.featured": "Best Games",
+                "nav.library": "All Games",
                 "nav.rules": "Rules",
-                "nav.contact": "Support",
-                "hero.badge": "v3.5 Live Production",
-                "hero.title": "Tactile <span>Web Arcade</span> & Free Play Node.",
-                "hero.sub": "High-speed web mirrors, hardware-accelerated games, and responsive dimensional interface cards. Completely open source and ad-free.",
-                "hero.ctaPlay": "Explore Games ➔",
-                "hero.ctaGithub": "GitHub Repo",
-                "hero.ctaAbout": "Network Rules",
-                "widget.statusTitle": "Edge Node Status",
-                "widget.online": "Operational",
-                "widget.statusDesc": "Connected to global CDN mirror branches. Real-time assets streamed directly from repository contents.",
-                "widget.activeGames": "Indexed Games",
-                "widget.uptime": "Node Uptime",
-                "sec.spotlight": "Spotlight Releases",
-                "sec.spotlightSub": "Handpicked top performance game experiences.",
-                "panel1.tag": "Featured Masterpiece",
-                "panel1.title": "Retro & Web Canvas Emulators",
-                "panel1.desc": "Direct browser playback with low latency frames and responsive touch support for mobile displays.",
-                "panel1.btn": "Play Instant",
-                "panel2.tag": "Community Hub",
-                "panel2.title": "GitHub Hosted Engine",
-                "panel2.desc": "Easily submit pull requests to add your own games or fork the repository for your personal cloud.",
-                "panel2.btn": "Fork Repository",
-                "sec.libraryTitle": "Arcade Library",
-                "sec.librarySub": "Dynamically populated from GitHub repository & Supabase live node.",
-                "lib.loading": "Connecting to Global Nodes...",
-                "rules.title": "⚖️ Network Rules",
-                "rules.1": "Respect Creators: No hotlinking or re-uploading without explicit permission.",
-                "rules.2": "Personal Entertainment: All titles are provided freely for personal non-commercial study.",
-                "rules.3": "Open Source: Found a bug or performance bottleneck? Open an issue on GitHub.",
-                "disclaimer.title": "🛡️ Disclaimer & Fair Use",
-                "disclaimer.body": "The games indexed here are properties of their respective creators and copyright holders. I’m Afk operates as an open-source gateway and does not claim ownership over third-party assets.",
-                "foot.report": "Report / Contact",
-                "foot.submit": "Submit Game",
-                "foot.tos": "Terms of Service"
+                "nav.contact": "Help",
+                "hero.badge": "✨ 100% Free & Fun!",
+                "hero.title": "Play Awesome <span>Free Games</span> Online!",
+                "hero.sub": "No downloads, no annoying ads, and no waiting. Just pick any game you like and start playing right away on your computer, tablet, or phone!",
+                "hero.ctaPlay": "Find Games 🎮",
+                "hero.ctaGithub": "Game Code 💻",
+                "hero.ctaAbout": "Rules & Tips 📜",
+                "widget.statusTitle": "Game Status",
+                "widget.online": "Ready to Play! 🟢",
+                "widget.statusDesc": "Everything is running super fast. Pick a game and jump straight into the fun!",
+                "widget.activeGames": "Total Games",
+                "widget.uptime": "Always Online",
+                "sec.spotlight": "⭐ Featured Games",
+                "sec.spotlightSub": "Our favorite games we think you will love!",
+                "panel1.tag": "Top Pick",
+                "panel1.title": "Arcade Classics & Fun Mini-Games",
+                "panel1.desc": "Super smooth games that work perfectly on your screen. Tap or use your keyboard to play!",
+                "panel1.btn": "Play Now ➔",
+                "panel2.tag": "Community",
+                "panel2.title": "Make & Share Your Own Games",
+                "panel2.desc": "Are you learning to code? You can add your very own mini-game to this website for everyone to play!",
+                "panel2.btn": "Check GitHub 🛠️",
+                "sec.libraryTitle": "🎮 All Games",
+                "sec.librarySub": "Click on any game card to start playing immediately!",
+                "lib.loading": "Loading awesome games for you... ⏳",
+                "rules.title": "📜 House Rules",
+                "rules.1": "<strong>Be Fair:</strong> Give credit to the game makers and do not copy without asking.",
+                "rules.2": "<strong>Have Fun:</strong> All games here are 100% free for everyone to enjoy and learn from.",
+                "rules.3": "<strong>Found a Bug?:</strong> If a game isn't working properly, let us know on GitHub so we can fix it!",
+                "disclaimer.title": "🛡️ Note for Parents & Players",
+                "disclaimer.body": "All games belong to the creative creators who built them. <strong>I’m Afk</strong> is just a friendly, free hub to help you discover and play them easily in one place!",
+                "foot.report": "Need Help? / Report",
+                "foot.submit": "Add Your Game",
+                "foot.tos": "Rules & Safety"
             },
             ar: {
-                "meta.title": "I’m Afk — منصة الألعاب التفاعلية ثلاثية الأبعاد",
-                "nav.featured": "المميز",
-                "nav.library": "المكتبة",
+                "meta.title": "I’m Afk — ألعاب مجانية وممتعة للجميع!",
+                "nav.featured": "أفضل الألعاب",
+                "nav.library": "كل الألعاب",
                 "nav.rules": "القواعد",
-                "nav.contact": "الدعم",
-                "hero.badge": "إصدار الإنتاج 3.5",
-                "hero.title": "ألعاب الويب <span>ثلاثية الأبعاد</span> والواجهات البصرية.",
-                "hero.sub": "سرعة استجابة عالية، ألعاب مدعومة بالعتاد البرمجي، وبطاقات واجهة تفاعلية ذات أبعاد حقيقية. مفتوح المصدر بالكامل وبدون إعلانات.",
-                "hero.ctaPlay": "استكشف الألعاب ➔",
-                "hero.ctaGithub": "مستودع GitHub",
-                "hero.ctaAbout": "قواعد الاستخدام",
-                "widget.statusTitle": "حالة الخادم",
-                "widget.online": "يعمل بكفاءة",
-                "widget.statusDesc": "متصل بشبكة التوزيع السحابي العالمية. يتم تحميل الملفات مباشرة من مستودع المنصة.",
-                "widget.activeGames": "الألعاب المتاحة",
-                "widget.uptime": "جاهزية الخادم",
-                "sec.spotlight": "الإصدارات المميزة",
-                "sec.spotlightSub": "ألعاب تم اختيارها بعناية لتقديم أعلى أداء وسلاسة.",
-                "panel1.tag": "تجربة فريدة",
-                "panel1.title": "ألعاب الويب الكلاسيكية",
-                "panel1.desc": "تشغيل فوري عبر المتصفح بزمن وصول منخفض للغاية ودعم كامل للشاشات التي تعمل باللمس.",
-                "panel1.btn": "العب الآن",
-                "panel2.tag": "مجتمع المطورين",
-                "panel2.title": "محرك مستضاف عبر GitHub",
-                "panel2.desc": "يمكنك المساهمة وإضافة ألعابك بسهولة عبر إرسال Pull Request أو استنساخ المستودع.",
-                "panel2.btn": "استعراض الكود",
-                "sec.libraryTitle": "مكتبة الألعاب",
-                "sec.librarySub": "تحديث فوري وتلقائي من محتويات المستودع وقاعدة البيانات.",
-                "lib.loading": "جاري الاتصال بالسيرفر العالمي...",
-                "rules.title": "⚖️ قواعد الاستخدام",
-                "rules.1": "احترام المطورين: يُمنع إعادة الرفع أو النقل دون إذن مباشر من صانع المحتوى.",
-                "rules.2": "استخدام شخصي: جميع الألعاب متاحة مجاناً للترفيه والدراسة غير التجارية.",
-                "rules.3": "مفتوح المصدر: إذا واجهت مشكلة أو بطء، يرجى فتح تذكرة عبر GitHub.",
-                "disclaimer.title": "🛡️ إخلاء المسؤولية",
-                "disclaimer.body": "جميع الألعاب المعروضة هي ملك لأصحابها وحقوق النشر محفوظة لهم. تعمل المنصة كبوابة تصفح مجانية ولا تدعي ملكية الأصول.",
-                "foot.report": "الإبلاغ / التواصل",
-                "foot.submit": "إرسال لعبة",
-                "foot.tos": "شروط الخدمة"
+                "nav.contact": "مساعدة",
+                "hero.badge": "✨ مجاني وممتع 100%!",
+                "hero.title": "العب أروع <span>الألعاب المجانية</span> مباشرة على الإنترنت!",
+                "hero.sub": "بدون تحميل، بدون إعلانات مزعجة، وبدون انتظار! اختر لعبتك المفضلة وابدأ اللعب فوراً على الكمبيوتر أو التابلت أو الهاتف!",
+                "hero.ctaPlay": "استكشف الألعاب 🎮",
+                "hero.ctaGithub": "كود الألعاب 💻",
+                "hero.ctaAbout": "القواعد والنصائح 📜",
+                "widget.statusTitle": "حالة الألعاب",
+                "widget.online": "جاهز للعب! 🟢",
+                "widget.statusDesc": "كل شيء يعمل بسرعة وسلاسة. اختر لعبة وانضم للمتعة الآن!",
+                "widget.activeGames": "عدد الألعاب",
+                "widget.uptime": "دائماً متصل",
+                "sec.spotlight": "⭐ ألعاب مميزة",
+                "sec.spotlightSub": "ألعاب ممتعة ومختارة خصيصاً لك!",
+                "panel1.tag": "اختيار اليوم",
+                "panel1.title": "ألعاب أركيد وتحديات كلاسيكية",
+                "panel1.desc": "ألعاب سريعة وسهلة التحكم. استخدم لوحة المفاتيح أو اللمس على الشاشة للعب!",
+                "panel1.btn": "العب الآن ➔",
+                "panel2.tag": "المبرمجون الصغار",
+                "panel2.title": "اصنع وشارك ألعابك الخاصة",
+                "panel2.desc": "هل تتعلم البرمجة؟ يمكنك بسهولة إضافة لعبتك الخاصة هنا ليلعبها أصدقاؤك!",
+                "panel2.btn": "شاهد الكود 🛠️",
+                "sec.libraryTitle": "🎮 كل الألعاب",
+                "sec.librarySub": "اضغط على أي لعبة لتبدأ اللعب فوراً!",
+                "lib.loading": "جاري تجهيز أروع الألعاب لك... ⏳",
+                "rules.title": "📜 قواعد اللعب اللطيف",
+                "rules.1": "<strong>كن محترماً:</strong> نحترم صانعي الألعاب ولا نسرق أعمالهم.",
+                "rules.2": "<strong>استمتع بوقتك:</strong> جميع الألعاب مجانية تماماً للعب والمرح والتعلم.",
+                "rules.3": "<strong>وجدت مشكلة؟:</strong> إذا لم تعمل إحدى الألعاب، أخبرنا لنقوم بإصلاحها فوراً!",
+                "disclaimer.title": "🛡️ ملاحظة للأبطال وأولياء الأمور",
+                "disclaimer.body": "جميع الألعاب هي ملك لصانعيها المبدعين. موقع <strong>I’m Afk</strong> هو مجرد منصة مجانية وممتعة تجمع الألعاب في مكان واحد لتسهيل الوصول إليها.",
+                "foot.report": "طلب مساعدة / إبلاغ",
+                "foot.submit": "أضف لعبتك",
+                "foot.tos": "القواعد والأمان"
             }
         };
 
@@ -1244,7 +1242,7 @@
         dots.forEach((dot, i) => dot.addEventListener('click', () => updateCarousel(i)));
 
         /* -------------------------------------------------------------
-           4. UPFRONT IN-GAME ARCADE MODAL & RUNNER SYSTEM
+           4. GAME MODAL & RUNNER SYSTEM
         ------------------------------------------------------------- */
         const modal = document.getElementById('game-modal');
         const gameFrame = document.getElementById('game-frame');
@@ -1255,11 +1253,9 @@
             modalTitle.textContent = title;
             activeGameRecord = { title, url, code: rawCode };
             
-            // Lock body scroll so viewport stays in place
             document.body.style.overflow = 'hidden';
             modal.classList.add('is-open');
 
-            // Clean mount
             gameFrame.src = 'about:blank';
             setTimeout(() => {
                 if (rawCode) {
@@ -1297,7 +1293,6 @@
             }, 80);
         });
 
-        // Safe new tab launcher
         document.getElementById('modal-tab-btn').addEventListener('click', () => {
             if (activeGameRecord.code) {
                 const newWin = window.open('', '_blank');
@@ -1306,7 +1301,7 @@
                     newWin.document.write(activeGameRecord.code);
                     newWin.document.close();
                 } else {
-                    alert('Please allow popups to open the game in a dedicated tab.');
+                    alert('Please allow popups to open this game in a new tab!');
                 }
             } else if (activeGameRecord.url) {
                 window.open(activeGameRecord.url, '_blank');
@@ -1332,7 +1327,7 @@
         });
 
         /* -------------------------------------------------------------
-           5. SECRET ADMIN SHORTCUT (Ctrl+Shift+A or Triple Click Logo)
+           5. SECRET SHORTCUT (Ctrl+Shift+A or Triple Click Logo)
         ------------------------------------------------------------- */
         let logoClicks = 0;
         document.getElementById('main-brand-logo').addEventListener('click', (e) => {
@@ -1350,7 +1345,7 @@
         });
 
         /* -------------------------------------------------------------
-           6. RESILIENT DUAL GAME ENGINE (SUPABASE + GITHUB + BUILTINS)
+           6. DUAL GAME ENGINE (SUPABASE + GITHUB + BUILTINS)
         ------------------------------------------------------------- */
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
@@ -1369,14 +1364,14 @@
 
         const BUILTIN_GAMES = [
             {
-                title: 'Retro Snake 2026',
+                title: 'Retro Snake',
                 type: 'supabase',
                 html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#06080e;color:#00ffd6;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{border:2px solid #00ffd6;background:#090d16;box-shadow:0 0 20px rgba(0,255,214,0.3);}</style></head><body><h2>🐍 RETRO SNAKE</h2><canvas id="c" width="400" height="400"></canvas><p style="color:#aaa;font-size:14px;">Use Arrow Keys to Move</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let s=[{x:10,y:10}],d={x:1,y:0},f={x:15,y:15},score=0;setInterval(()=>{let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.some(p=>p.x===h.x&&p.y===h.y)){s=[{x:10,y:10}];d={x:1,y:0};score=0;return;}s.unshift(h);if(h.x===f.x&&h.y===f.y){score+=10;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else s.pop();x.fillStyle="#090d16";x.fillRect(0,0,400,400);x.fillStyle="#ff3b82";x.fillRect(f.x*20,f.y*20,18,18);x.fillStyle="#00ffd6";s.forEach(p=>x.fillRect(p.x*20,p.y*20,18,18));x.fillStyle="#fff";x.fillText("Score: "+score,10,20);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&d.y===0)d={x:0,y:-1};if(e.key==="ArrowDown"&&d.y===0)d={x:0,y:1};if(e.key==="ArrowLeft"&&d.x===0)d={x:-1,y:0};if(e.key==="ArrowRight"&&d.x===0)d={x:1,y:0};};<\/script></body></html>`
             },
             {
-                title: 'Neon Pong Arena',
+                title: 'Neon Pong',
                 type: 'supabase',
-                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#a855f7;font-family:sans-serif;}canvas{border:2px solid #a855f7;box-shadow:0 0 25px rgba(168,85,247,0.3);}</style></head><body><h2>⚡ NEON PONG</h2><canvas id="c" width="500" height="350"></canvas><p style="color:#aaa;font-size:14px;">Move mouse on canvas to defend</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#090d16";x.fillRect(0,0,500,350);x.fillStyle="#a855f7";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.fillStyle="#00ffd6";x.beginPath();x.arc(bx,by,7,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
+                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#a855f7;font-family:sans-serif;}canvas{border:2px solid #a855f7;box-shadow:0 0 25px rgba(168,85,247,0.3);}</style></head><body><h2>⚡ NEON PONG</h2><canvas id="c" width="500" height="350"></canvas><p style="color:#aaa;font-size:14px;">Move your mouse to defend</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#090d16";x.fillRect(0,0,500,350);x.fillStyle="#a855f7";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.fillStyle="#00ffd6";x.beginPath();x.arc(bx,by,7,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
             }
         ];
 
@@ -1411,7 +1406,7 @@
                                 notice.innerHTML = `
                                     <div>
                                         <strong>[REMOVED] ${item.title}</strong> — 
-                                        <span>Reason: <em>"${item.takedown_reason || 'Breaking code or policy violation'}"</em></span>
+                                        <span>Reason: <em>"${item.takedown_reason || 'Game did not meet safety rules'}"</em></span>
                                     </div>
                                     <span class="takedown-date">${date}</span>
                                 `;
@@ -1483,16 +1478,16 @@
                     <div class="card-top">
                         <div class="game-avatar" style="--card-theme: ${theme.bg};">${firstLetter}</div>
                         <div class="game-info">
-                            <span class="game-tag">${game.type === 'supabase' ? 'Community Node' : 'Core Arcade'}</span>
+                            <span class="game-tag">${game.type === 'supabase' ? 'Community Game' : 'Arcade Game'}</span>
                             <h3 class="game-card-title">${game.title}</h3>
                         </div>
                     </div>
                     <div class="card-body">
-                        Executable browser HTML5 engine. Zero installation needed.
+                        Click to jump in! No download or install needed.
                     </div>
                     <div class="card-footer">
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Verified Play</span>
-                        <span class="play-btn-pill">Launch Game ▶</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Ready to Play</span>
+                        <span class="play-btn-pill">Play Now ▶</span>
                     </div>
                 </div>
             `;
