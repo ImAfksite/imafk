@@ -1,59 +1,62 @@
-# ✦ I’M AFK — Curated Web Games Platform
+✦ I’M AFK — Liquid Glass Web Arcade
 
-> A bright, tranquil, and frictionless web arcade and experiment sandbox. Play, test, and host standalone HTML5 games without installs, paywalls, or intrusive trackers.
-
----
-
-## 🎨 Visual Identity & Design Philosophy
-
-I'm Afk is built around the **Aurora & Ethereal Liquid Glass** aesthetic:
-- **Warm & Calm Palette**: Rich champagne backgrounds (`#f8f4ee` to `#f2dfcc`), soft warm peach hazes, and deep espresso typography (`#211914`).
-- **Sculpted Interfaces**: Frosted milky glass cards (`backdrop-filter: blur(25px)`), subtle 1px inner sheen strokes, and organic morphing SVG blobs with dynamic parallax.
-- **Editorial Typography**: Pairing of `Space Grotesk` (headings), `Plus Jakarta Sans` (interface), and `Tajawal` (full Arabic RTL typography).
+> An ethereal, interactive WebGL physics playground and standalone web game arcade. Play, test, and host client-side HTML5 simulations directly in the browser.
 
 ---
 
-## 🚀 Key Features
+## 🌊 Liquid Glass Refraction Engine
 
-1. **Pure Web Play (Dual Engine)**
-   - **Supabase Integration**: Automatically fetches community-submitted games in real time.
-   - **GitHub Repository Indexer**: Automatically scans and indexes games placed in the `/games` folder of `imafksite/imafk`.
-   - **Fallback Built-ins**: Includes curated games (Snake Protocol & Pong Dynamics) even without internet connectivity.
+The visual layer is built upon a custom WebGL shader pipeline paired with a discrete 2D physics simulation:
 
-2. **Dedicated Fullscreen Focus Player**
-   - Seamlessly transitions from the game grid into an uninterrupted fullscreen sandbox frame.
-   - Includes instant restart, open in new tab, and native browser fullscreen triggers.
+- **Refraction & Surface Tension**: Real-time metaball field computation (`field += r * r / dSq`) with normal-gradient mapping (`nGrad = (grad / gradLen) * nScale`), Schlick Fresnel reflection, and depth attenuation.
+- **Chromatic Aberration**: Multi-sampled color dispersion (`bgCA.r`, `bgCA.g`, `bgCA.b`) across the refracted UV coordinates.
+- **Physics Simulation**: Fixed-timestep (`8ms`) Verlet integration supporting:
+  - Cursor repulsion forces
+  - Pairwise surface tension pull
+  - Area-conserving droplet merging
+  - Momentum-driven droplet splitting at high velocities
+  - Soft-body trailing teardrop deformation
+  - Drag-and-spawn particle generation
+
+---
+
+## 🚀 Platform Capabilities
+
+1. **Pure Client-Side Focus Mode**
+   - Instantly loads games into an isolated sandbox iframe with zero downloads or trackers.
+   - Includes live restart, dedicated new-tab launcher, and native fullscreen triggers.
+
+2. **Dual-Source Game Synchronization**
+   - **Supabase Integration**: Live catalog updates for newly published community submissions.
+   - **GitHub Repository Indexer**: Automatically parses `.html` builds stored in the `/games` directory.
+   - **Fallback Built-ins**: Built-in games (`Retro Snake`, `Neon Pong`) ready offline.
 
 3. **Creator Submission Studio (`submit.html`)**
-   - Drag-and-drop `.html` game files with real-time character, line, and file size counters.
-   - Built-in live sandbox preview modal to test games before submitting.
-   - Direct publication into the database.
+   - Drag-and-drop `.html` game files with instant code metrics (character, line count, and byte estimates).
+   - In-page isolated sandbox preview modal.
 
 4. **Bilingual Localization (EN / AR)**
-   - Native toggle between English and Arabic with bidirectional layout adaptation (`dir="ltr"` / `dir="rtl"`).
+   - Complete toggle for English and Arabic with bidirectional RTL layout transformation.
 
-5. **Legal & Security Suite**
-   - **Terms of Service (`tos.html`)**: Interactive certified protocol agreement with reading progress bar and local storage seal.
-   - **Support Desk (`contact.html`)**: Integrated Formspree ticketing system with honeypot spam protection for bugs and 24-hour DMCA requests.
-   - **Moderation Node (`admin.html`)**: Encrypted access room with instant sandbox testing, live status toggling, takedowns, and record deletion.
+5. **Moderation Suite (`admin.html`)**
+   - Secure authorization gate, live submission inspection, sandbox testing, takedown toggles, and record deletion.
 
 ---
 
-## 📂 Repository Structure
+## 📂 File Architecture
 
 ```text
-├── index.html       # Main Hub & Dedicated Focus Game Player
-├── submit.html      # Creator Studio & Sandbox Test Runner
+├── index.html       # WebGL Liquid Refraction Engine & Arcade Hub
+├── submit.html      # Creator Studio & Live Sandbox Runner
 ├── contact.html     # Support Relay & DMCA Dispatch Portal
 ├── tos.html         # Interactive Protocol & License Agreement
-├── admin.html       # Encrypted Moderation & DB Management Node
-├── games/           # Standalone HTML5 game files (auto-indexed)
-└── README.md        # Documentation & Developer Guide
+├── admin.html       # Encrypted Moderation & Database Controller
+├── games/           # Standalone HTML5 builds (auto-indexed)
+└── README.md        # Technical Documentation
 
-🛠️ Database Schema (Supabase)
+🛠️ Supabase Setup
 
-To support community submissions, create a table named games in Supabase with
-the following schema:
+Run this SQL snippet in your Supabase SQL Editor:
 
 create table public.games (
   id uuid primary key default gen_random_uuid(),
@@ -67,7 +70,6 @@ create table public.games (
   takedown_reason text
 );
 
--- Enable public read access for live games
 alter table public.games enable row level security;
 
 create policy "Allow public read access"
@@ -78,20 +80,7 @@ create policy "Allow public game submission"
 on public.games for insert
 with check (true);
 
-💻 Running Locally
-
-No build tools, Node.js, or package managers required. Simply serve the
-directory with any static server:
-
-# Using Python 3
-python -m http.server 8000
-
-# Using Node.js npx serve
-npx serve .
-
-Open http://localhost:8000 in any modern web browser.
-
 📜 License
 
-Distributed under the MIT License. Created with ❤️ for gamers and developers
-everywhere.
+Distributed under the MIT License. Built with ❤️ for web physics & arcade
+lovers.
