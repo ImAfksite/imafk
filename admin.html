@@ -1,1175 +1,315 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">I’m Afk — Curated Web Games</title>
+    <title>Platform Moderation Node — I’m Afk</title>
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
-    <!-- GSAP & Supabase -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
         :root {
             --bg-base: #f8f4ee;
             --bg-gradient: linear-gradient(120deg, #fbf8f3 0%, #f6ede3 45%, #f2dfcc 100%);
-            --card-bg: rgba(255, 255, 255, 0.72);
-            --card-border: rgba(255, 255, 255, 0.85);
-            --card-border-subtle: rgba(90, 65, 45, 0.08);
-            --card-shadow: 0 20px 45px -15px rgba(60, 42, 28, 0.08), 0 1px 3px rgba(60, 42, 28, 0.03);
-            --card-shadow-hover: 0 28px 55px -12px rgba(60, 42, 28, 0.14), 0 2px 6px rgba(60, 42, 28, 0.05);
-            
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 255, 255, 0.95);
             --text-main: #211914;
             --text-muted: #736357;
-            --text-light: #9e8d80;
-            
+            --danger: #d32f2f;
             --btn-dark-bg: linear-gradient(135deg, #211813 0%, #302019 55%, #3a281e 100%);
-            --btn-dark-color: #fffaf4;
-            --warm-accent: #e29b64;
-            --warm-glow: rgba(255, 219, 165, 0.45);
-            --amber-soft: #fff4de;
-            
-            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
-            --font-display: 'Space Grotesk', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        html[lang="ar"] {
-            --font-main: 'Tajawal', system-ui, sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg-base);
             background-image: var(--bg-gradient);
             color: var(--text-main);
-            font-family: var(--font-main);
-            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1050px;
             position: relative;
+            z-index: 1;
         }
 
-        /* Ambient Lighting Backdrops */
-        .ambient-haze {
-            position: fixed;
-            top: -10%;
-            right: -5%;
-            width: 60vw;
-            height: 60vw;
-            min-width: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 236, 204, 0.6) 0%, rgba(255, 210, 165, 0.25) 45%, transparent 75%);
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .ambient-haze-left {
-            position: fixed;
-            bottom: 5%;
-            left: -10%;
-            width: 50vw;
-            height: 50vw;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 245, 230, 0.5) 0%, rgba(240, 205, 175, 0.18) 50%, transparent 75%);
-            filter: blur(90px);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Header / Nav */
-        .glass-nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px clamp(24px, 4vw, 50px);
-            background: rgba(251, 248, 243, 0.75);
+        .auth-card {
+            max-width: 420px;
+            margin: 100px auto 0;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 40px;
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(106, 72, 49, 0.08);
+            box-shadow: 0 25px 60px -15px rgba(60, 42, 28, 0.12);
+            text-align: center;
         }
 
-        .brand-block {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text-main);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
+        .shield-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
         }
 
-        .brand-symbol {
-            font-size: 14px;
-            color: #211914;
+        .auth-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
         }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: clamp(24px, 3.5vw, 48px);
-            align-items: center;
-        }
-
-        .nav-links a {
+        .auth-card p {
             color: var(--text-muted);
-            text-decoration: none;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            transition: color 0.25s ease, opacity 0.25s ease;
+            font-size: 0.88rem;
+            margin-bottom: 24px;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text-main);
-            opacity: 1;
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(106, 72, 49, 0.18);
+            background: #ffffff;
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            text-align: center;
+            letter-spacing: 3px;
+            outline: none;
+            margin-bottom: 16px;
         }
 
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .lang-toggle {
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(106, 72, 49, 0.12);
-            color: var(--text-main);
-            padding: 7px 16px;
+        .btn-unlock {
+            width: 100%;
+            background: var(--btn-dark-bg);
+            color: #fff;
+            padding: 14px;
+            border: none;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 10px;
-            letter-spacing: 0.08em;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-        }
-
-        .lang-toggle:hover {
-            background: #ffffff;
-            border-color: rgba(106, 72, 49, 0.25);
-            transform: translateY(-1px);
-        }
-
-        /* Hero Layout */
-        .hero {
-            position: relative;
-            padding: clamp(30px, 4.5vh, 60px) clamp(24px, 4vw, 50px) 40px;
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-            min-height: calc(88vh - 80px);
-            z-index: 1;
-        }
-
-        .hero-left {
-            max-width: 580px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-
-        .eyebrow span {
-            width: 24px;
-            height: 1px;
-            background: rgba(45, 31, 23, 0.6);
-        }
-
-        .hero-left h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.8rem, 5.2vw, 4.5rem);
-            line-height: 0.95;
-            font-weight: 600;
-            letter-spacing: -0.04em;
-            margin-bottom: 24px;
-            color: var(--text-main);
-        }
-
-        .hero-left h1 span {
-            font-style: italic;
-            font-weight: 400;
-            color: #5c4537;
-        }
-
-        .hero-lead {
-            font-size: clamp(1rem, 1.15vw, 1.15rem);
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 36px;
-            max-width: 460px;
-        }
-
-        .hero-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 50px;
-        }
-
-        .btn-aurora {
-            display: inline-flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            padding: 15px 28px;
-            border-radius: 999px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid transparent;
-        }
-
-        .btn-primary-dark {
-            background: var(--btn-dark-bg);
-            color: var(--btn-dark-color);
-            box-shadow: 0 10px 25px rgba(48, 32, 25, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-        }
-
-        .btn-primary-dark:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(48, 32, 25, 0.25);
-        }
-
-        .btn-ghost {
-            color: var(--text-main);
-            border-bottom: 1px solid rgba(46, 32, 24, 0.35);
-            padding: 12px 4px;
-            border-radius: 0;
-        }
-
-        .btn-ghost:hover {
-            border-bottom-color: var(--text-main);
-            opacity: 0.75;
-        }
-
-        /* Hero Meta Strip */
-        .meta-strip {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            padding-top: 24px;
-            border-top: 1px solid rgba(106, 72, 49, 0.12);
-            max-width: 500px;
-        }
-
-        .meta-item small {
-            display: block;
-            font-size: 8px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-light);
-            margin-bottom: 4px;
-        }
-
-        .meta-item strong {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: 0.02em;
-        }
-
-        /* Hero Visual (Organic SVG Liquid Scene) */
-        .hero-right {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 480px;
-        }
-
-        .liquid-container {
-            width: 100%;
-            max-width: 580px;
-            aspect-ratio: 1.15;
-            position: relative;
-        }
-
-        .liquid-svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-            filter: drop-shadow(0 20px 35px rgba(130, 90, 60, 0.12));
-        }
-
-        /* Search Section */
-        .search-container {
-            max-width: 1200px;
-            margin: 20px auto 40px;
-            padding: 0 clamp(24px, 4vw, 50px);
-            position: relative;
-            z-index: 1;
-        }
-
-        .search-pill-wrapper {
-            position: relative;
-            max-width: 640px;
-            margin: 0 auto;
-        }
-
-        .search-glass-input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(106, 72, 49, 0.12);
-            backdrop-filter: blur(20px);
-            padding: 16px 24px 16px 52px;
-            border-radius: 999px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-            box-shadow: 0 10px 30px rgba(60, 42, 28, 0.04);
-            transition: all 0.3s ease;
-        }
-
-        .search-glass-input:focus {
-            background: #ffffff;
-            border-color: rgba(106, 72, 49, 0.3);
-            box-shadow: 0 14px 40px rgba(60, 42, 28, 0.08);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 22px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-            pointer-events: none;
-        }
-
-        html[dir="rtl"] .search-glass-input {
-            padding: 16px 52px 16px 24px;
-        }
-        html[dir="rtl"] .search-icon {
-            left: auto;
-            right: 22px;
-        }
-
-        /* Section Headings */
-        .section-header {
-            max-width: 1200px;
-            margin: 60px auto 28px;
-            padding: 0 clamp(24px, 4vw, 50px);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-title {
-            font-family: var(--font-display);
-            font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-            font-weight: 600;
-            letter-spacing: -0.03em;
-        }
-
-        .section-subtitle {
             font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* Game Grid */
-        .game-grid-section {
-            max-width: 1200px;
-            margin: 0 auto 80px;
-            padding: 0 clamp(24px, 4vw, 50px);
-            position: relative;
-            z-index: 1;
-        }
-
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 28px;
-        }
-
-        /* 3D Glass Game Card */
-        .game-card-wrapper {
-            perspective: 1000px;
             cursor: pointer;
+        }
+
+        #admin-panel { display: none; }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(106, 72, 49, 0.12);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .game-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 28px;
-            padding: 26px;
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            box-shadow: var(--card-shadow);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 260px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .game-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
-        }
-
-        .game-card-wrapper:hover .game-card {
-            transform: translateY(-6px);
-            box-shadow: var(--card-shadow-hover);
-            border-color: rgba(255, 255, 255, 1);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            border-radius: 20px;
+            padding: 24px;
             margin-bottom: 16px;
-        }
-
-        .card-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #f7efe6 0%, #ecd9c7 100%);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-main);
-            box-shadow: 0 6px 16px rgba(90, 65, 45, 0.06);
-        }
-
-        .card-tag {
-            font-size: 8.5px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-light);
-            margin-bottom: 2px;
-            display: block;
-        }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: -0.01em;
-        }
-
-        .card-desc {
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 14px;
-            border-top: 1px solid rgba(106, 72, 49, 0.06);
+            gap: 20px;
+            box-shadow: 0 10px 30px -10px rgba(60, 42, 28, 0.05);
         }
 
-        .play-pill {
-            background: var(--btn-dark-bg);
-            color: var(--btn-dark-color);
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            transition: opacity 0.2s ease;
-        }
-
-        .game-card-wrapper:hover .play-pill {
-            opacity: 0.85;
-        }
-
-        /* Guidelines & Info */
-        .info-grid {
-            max-width: 1200px;
-            margin: 0 auto 80px;
-            padding: 0 clamp(24px, 4vw, 50px);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .info-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 28px;
-            padding: 36px;
-            box-shadow: var(--card-shadow);
-            backdrop-filter: blur(20px);
-        }
-
-        .info-box h3 {
-            font-family: var(--font-display);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 14px;
-        }
-
-        .info-box p, .info-box li {
-            color: var(--text-muted);
-            font-size: 0.92rem;
-            line-height: 1.6;
-        }
-
-        .info-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .info-list li {
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .info-list li::before {
-            content: "✦";
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-size: 10px;
-            color: var(--warm-accent);
-        }
-
-        html[dir="rtl"] .info-list li {
-            padding-left: 0;
-            padding-right: 20px;
-        }
-        html[dir="rtl"] .info-list li::before {
-            left: auto;
-            right: 0;
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid rgba(106, 72, 49, 0.1);
-            padding: 45px 24px;
-            text-align: center;
-            background: rgba(248, 244, 238, 0.8);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .footer-pill {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(106, 72, 49, 0.1);
+        .btn-action {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(106, 72, 49, 0.15);
             color: var(--text-main);
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 50px;
-            font-size: 10px;
+            font-size: 0.82rem;
             font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+            cursor: pointer;
             text-decoration: none;
-            transition: all 0.2s ease;
         }
 
-        .footer-pill:hover {
-            background: #ffffff;
-            border-color: rgba(106, 72, 49, 0.25);
-            transform: translateY(-2px);
-        }
+        .btn-action:hover { background: #ffffff; }
 
-        /* Dedicated Fullscreen Game Player */
-        #player-view {
+        .btn-danger {
+            background: rgba(211, 47, 47, 0.1);
+            color: var(--danger);
+            border-color: rgba(211, 47, 47, 0.2);
+        }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+
+        /* Preview Modal */
+        .preview-modal {
             display: none;
             position: fixed;
             inset: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #17120e;
-            z-index: 999999;
-            flex-direction: column;
-        }
-
-        .player-top-bar {
-            height: 64px;
-            background: #211914;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
+            background: rgba(23, 18, 14, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 9999;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            flex-shrink: 0;
+            justify-content: center;
+            padding: 24px;
         }
 
-        .player-back-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 11px;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .player-back-btn:hover {
-            background: #ffffff;
-            color: #211914;
-        }
-
-        .player-game-title {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .player-actions {
+        .preview-box {
+            width: min(95vw, 1000px);
+            height: 82vh;
+            background: #1e1915;
+            border-radius: 24px;
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .player-action-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .player-action-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .player-frame-wrapper {
-            flex: 1;
-            width: 100%;
-            height: calc(100vh - 64px);
-            background: #000;
-        }
-
-        #game-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #000;
-            display: block;
-        }
-
-        @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; }
-            .hero-right { display: none; }
-            .info-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-        }
+        #preview-frame { flex: 1; border: none; background: #000; }
     </style>
 </head>
 <body>
 
-    <div class="ambient-haze"></div>
-    <div class="ambient-haze-left"></div>
+    <!-- Auth Gate -->
+    <div class="container" id="auth-gate">
+        <div class="auth-card">
+            <div class="shield-icon">🛡️</div>
+            <h2>Moderation Portal</h2>
+            <p>Enter the security key to manage platform entries.</p>
+            <form onsubmit="event.preventDefault(); verifyPasscode();">
+                <div class="input-group">
+                    <input type="password" id="pass-input" placeholder="••••••••••••••" autocomplete="off" required>
+                </div>
+                <button type="submit" class="btn-unlock">Unlock Portal →</button>
+            </form>
+            <div id="warning-text" style="color: var(--danger); font-size: 0.82rem; margin-top: 12px; font-weight: 600;"></div>
+        </div>
+    </div>
 
-    <!-- MAIN HUB VIEW -->
-    <div id="hub-view">
-        <header class="glass-nav">
-            <a href="index.html" class="brand-block" id="main-brand-logo">
-                <span class="brand-symbol">✦</span>
-                <span>I’M AFK</span>
-            </a>
-
-            <ul class="nav-links">
-                <li><a href="#featured" class="active" data-i18n="nav.featured">Featured</a></li>
-                <li><a href="#library" data-i18n="nav.library">Library</a></li>
-                <li><a href="#guidelines" data-i18n="nav.rules">Guidelines</a></li>
-                <li><a href="contact.html" data-i18n="nav.contact">Support</a></li>
-            </ul>
-
-            <div class="nav-actions">
-                <button type="button" class="lang-toggle" id="lang-btn">العربية</button>
+    <!-- Admin Panel -->
+    <div class="container" id="admin-panel">
+        <header>
+            <div>
+                <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem;">Moderation Dashboard</h1>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Review submissions and manage published catalog items.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="index.html" class="btn-action">Return to Hub</a>
+                <button class="btn-action btn-danger" onclick="terminateSession()">Lock</button>
             </div>
         </header>
 
-        <main id="main">
-            <!-- Hero -->
-            <section class="hero">
-                <div class="hero-left">
-                    <div class="eyebrow">
-                        <span></span>
-                        <span data-i18n="hero.eyebrow">Pure Web Play, Elevated</span>
-                    </div>
-                    <h1 data-i18n="hero.title">Curated Web Experiences & <span>Games.</span></h1>
-                    <p class="hero-lead" data-i18n="hero.lead">No installations, no tracking, and zero friction. Lightweight standalone HTML5 creations hosted smoothly for everyone.</p>
-                    
-                    <div class="hero-actions">
-                        <a href="#library" class="btn-aurora btn-primary-dark" data-i18n="hero.ctaPlay">
-                            Explore Library <span>→</span>
-                        </a>
-                        <a href="submit.html" class="btn-aurora btn-ghost" data-i18n="hero.ctaSubmit">
-                            Submit Project <span>↗</span>
-                        </a>
-                    </div>
-
-                    <div class="meta-strip">
-                        <div class="meta-item">
-                            <small data-i18n="meta.statusLabel">Platform</small>
-                            <strong data-i18n="meta.statusVal">Live & Free</strong>
-                        </div>
-                        <div class="meta-item">
-                            <small data-i18n="meta.engineLabel">Engine</small>
-                            <strong data-i18n="meta.engineVal">HTML5 / WebGL</strong>
-                        </div>
-                        <div class="meta-item">
-                            <small data-i18n="meta.countLabel">Catalog</small>
-                            <strong id="stat-count">-- Games</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hero-right" id="visual">
-                    <div class="liquid-container">
-                        <svg class="liquid-svg" viewBox="0 0 1100 850" preserveAspectRatio="xMidYMid meet">
-                            <defs>
-                                <path id="mainBubblePath" d="M 305 154 C 430 88 638 77 781 126 C 906 169 978 281 961 405 C 945 524 858 620 735 651 C 631 678 558 647 494 620 C 434 595 380 592 322 552 C 247 501 204 426 218 345 C 231 267 258 196 305 154 Z">
-                                    <animate attributeName="d" dur="14s" repeatCount="indefinite" calcMode="spline" keyTimes="0; .34; .68; 1" keySplines=".42 0 .58 1; .42 0 .58 1; .42 0 .58 1" values="M 305 154 C 430 88 638 77 781 126 C 906 169 978 281 961 405 C 945 524 858 620 735 651 C 631 678 558 647 494 620 C 434 595 380 592 322 552 C 247 501 204 426 218 345 C 231 267 258 196 305 154 Z; M 286 171 C 411 91 626 68 792 135 C 922 187 966 296 949 420 C 929 552 829 622 722 649 C 614 677 541 627 478 617 C 405 605 345 612 297 553 C 242 486 192 415 218 324 C 241 244 244 207 286 171 Z; M 321 142 C 468 78 651 91 801 145 C 916 186 988 301 955 430 C 923 551 844 634 712 656 C 600 674 540 650 468 611 C 403 575 345 592 293 533 C 230 462 216 380 234 309 C 251 240 279 170 321 142 Z; M 305 154 C 430 88 638 77 781 126 C 906 169 978 281 961 405 C 945 524 858 620 735 651 C 631 678 558 647 494 620 C 434 595 380 592 322 552 C 247 501 204 426 218 345 C 231 267 258 196 305 154 Z" />
-                                </path>
-                                <clipPath id="mainBubbleClip"><use href="#mainBubblePath" /></clipPath>
-                                <radialGradient id="bubbleSheen" cx="50%" cy="30%" r="70%">
-                                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8" />
-                                    <stop offset="50%" stop-color="#ffebd4" stop-opacity="0.35" />
-                                    <stop offset="100%" stop-color="#f6caa4" stop-opacity="0.1" />
-                                </radialGradient>
-                                <linearGradient id="bubbleStroke" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
-                                    <stop offset="50%" stop-color="#eddcd0" stop-opacity="0.4" />
-                                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0.8" />
-                                </linearGradient>
-                            </defs>
-                            <g id="mainParallax">
-                                <g clip-path="url(#mainBubbleClip)">
-                                    <rect x="0" y="0" width="1100" height="850" fill="url(#bubbleSheen)" />
-                                </g>
-                                <use href="#mainBubblePath" fill="none" stroke="url(#bubbleStroke)" stroke-width="4" />
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Search -->
-            <div class="search-container">
-                <div class="search-pill-wrapper">
-                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" id="game-search" class="search-glass-input" placeholder="Search curated library..." oninput="filterGames()">
-                </div>
-            </div>
-
-            <!-- Library Grid -->
-            <section class="game-grid-section" id="library">
-                <div class="section-header" style="padding: 0; margin-bottom: 30px;">
-                    <div>
-                        <h2 class="section-title" data-i18n="sec.libraryTitle">Curated Works</h2>
-                        <p class="section-subtitle" data-i18n="sec.librarySub">Select any card to launch immediately in full focus mode.</p>
-                    </div>
-                </div>
-
-                <div class="game-grid" id="game-container">
-                    <div style="text-align: center; grid-column: 1/-1; padding: 40px; color: var(--text-muted);" data-i18n="lib.loading">Loading platform games...</div>
-                </div>
-            </section>
-
-            <!-- Platform Guidelines -->
-            <section class="info-grid" id="guidelines">
-                <div class="info-box">
-                    <h3 data-i18n="info.title1">Community Standards</h3>
-                    <p data-i18n="info.desc1">All games on I'm Afk are independently crafted experiments, arcade recreations, and digital art pieces.</p>
-                    <ul class="info-list">
-                        <li data-i18n="info.item1">Zero paywalls, trackers, or intrusive scripts.</li>
-                        <li data-i18n="info.item2">Respect for original author licenses & open source attribution.</li>
-                        <li data-i18n="info.item3">Immediate 24-hour review for copyright removal requests.</li>
-                    </ul>
-                </div>
-
-                <div class="info-box">
-                    <h3 data-i18n="info.title2">For Creators</h3>
-                    <p data-i18n="info.desc2">Anyone can submit a standalone HTML5 or WebGL game. Submissions are verified and added directly to the network index.</p>
-                    <div style="margin-top: 24px;">
-                        <a href="submit.html" class="btn-aurora btn-primary-dark" data-i18n="info.ctaSubmit">
-                            Submit a Build <span>↗</span>
-                        </a>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <div class="footer-links">
-                <a href="submit.html" class="footer-pill" data-i18n="foot.submit">Submit Game</a>
-                <a href="contact.html" class="footer-pill" data-i18n="foot.contact">Support / DMCA</a>
-                <a href="tos.html" class="footer-pill" data-i18n="foot.tos">Terms & License</a>
-            </div>
-            <p>&copy; 2024–2026 I’m Afk Network &bull; Curated Web Arcade</p>
-        </footer>
+        <div id="games-feed">Loading games feed...</div>
     </div>
 
-    <!-- FULLSCREEN GAME PLAYER -->
-    <div id="player-view">
-        <div class="player-top-bar">
-            <button class="player-back-btn" id="player-back-btn" data-i18n="player.back">← Return to Hub</button>
-            <div class="player-game-title" id="player-game-title">Game Title</div>
-            <div class="player-actions">
-                <button class="player-action-btn" id="player-reload-btn">Restart</button>
-                <button class="player-action-btn" id="player-tab-btn">New Tab ↗</button>
-                <button class="player-action-btn" id="player-fullscreen-btn">Fullscreen ⛶</button>
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="preview-modal" onclick="if(event.target === this) closePreview();">
+        <div class="preview-box">
+            <div style="padding: 14px 20px; background: #28211c; color: #fff; display: flex; justify-content: space-between; align-items: center;">
+                <span id="preview-title">Sandbox Preview</span>
+                <button class="btn-action" onclick="closePreview()">✕ Close</button>
             </div>
-        </div>
-        <div class="player-frame-wrapper">
-            <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-modals allow-popups" allow="fullscreen; autoplay; gamepad"></iframe>
+            <iframe id="preview-frame" sandbox="allow-scripts allow-forms allow-pointer-lock" allow="fullscreen; autoplay; gamepad"></iframe>
         </div>
     </div>
 
     <script>
-        const I18N = {
-            en: {
-                "meta.title": "I’m Afk — Curated Web Games",
-                "nav.featured": "Featured",
-                "nav.library": "Library",
-                "nav.rules": "Guidelines",
-                "nav.contact": "Support",
-                "hero.eyebrow": "Pure Web Play, Elevated",
-                "hero.title": "Curated Web Experiences & <span>Games.</span>",
-                "hero.lead": "No installations, no tracking, and zero friction. Lightweight standalone HTML5 creations hosted smoothly for everyone.",
-                "hero.ctaPlay": "Explore Library →",
-                "hero.ctaSubmit": "Submit Project ↗",
-                "meta.statusLabel": "Platform",
-                "meta.statusVal": "Live & Free",
-                "meta.engineLabel": "Engine",
-                "meta.engineVal": "HTML5 / WebGL",
-                "meta.countLabel": "Catalog",
-                "sec.libraryTitle": "Curated Works",
-                "sec.librarySub": "Select any card to launch immediately in full focus mode.",
-                "lib.loading": "Loading platform games...",
-                "info.title1": "Community Standards",
-                "info.desc1": "All games on I'm Afk are independently crafted experiments, arcade recreations, and digital art pieces.",
-                "info.item1": "Zero paywalls, trackers, or intrusive scripts.",
-                "info.item2": "Respect for original author licenses & open source attribution.",
-                "info.item3": "Immediate 24-hour review for copyright removal requests.",
-                "info.title2": "For Creators",
-                "info.desc2": "Anyone can submit a standalone HTML5 or WebGL game. Submissions are verified and added directly to the network index.",
-                "info.ctaSubmit": "Submit a Build ↗",
-                "foot.submit": "Submit Game",
-                "foot.contact": "Support / DMCA",
-                "foot.tos": "Terms & License",
-                "player.back": "← Return to Hub"
-            },
-            ar: {
-                "meta.title": "I’m Afk — ألعاب وتجارب ويب مختارة",
-                "nav.featured": "المميزة",
-                "nav.library": "المكتبة",
-                "nav.rules": "الإرشادات",
-                "nav.contact": "الدعم",
-                "hero.eyebrow": "ألعاب ويب نقية وسلسة",
-                "hero.title": "تجارب وألعاب ويب <span>مختارة بعناية.</span>",
-                "hero.lead": "بدون تحميل، بدون تعقب وبدون إعلانات مزعجة. العب مباشرة بضغطة زر واحدة.",
-                "hero.ctaPlay": "استكشف المكتبة ←",
-                "hero.ctaSubmit": "أرسل لعبتك ↗",
-                "meta.statusLabel": "المنصة",
-                "meta.statusVal": "متاحة ومجانية",
-                "meta.engineLabel": "المحرك",
-                "meta.engineVal": "HTML5 / WebGL",
-                "meta.countLabel": "المكتبة",
-                "sec.libraryTitle": "الألعاب المتاحة",
-                "sec.librarySub": "اضغط على أي لعبة للعب فوراً بملء الشاشة.",
-                "lib.loading": "جاري تحميل الألعاب...",
-                "info.title1": "معايير المنصة",
-                "info.desc1": "جميع الألعاب في المنصة هي تجارب مستقلة وألعاب أركيد ممتعة وخفيفة.",
-                "info.item1": "خالية تماماً من الاشتراكات أو الإعلانات المزعجة.",
-                "info.item2": "احترام حقوق المطورين والبرمجيات مفتوحة المصدر.",
-                "info.item3": "مراجعة فورية خلال 24 ساعة لأي طلبات إزالة حقوق نشر.",
-                "info.title2": "للمطورين وصناع الألعاب",
-                "info.desc2": "يمكن لأي مطور إضافة لعبته المبنية بـ HTML5 ليتم عرضها في المنصة عالمياً.",
-                "info.ctaSubmit": "أضف لعبتك الآن ↗",
-                "foot.submit": "أضف لعبة",
-                "foot.contact": "الدعم وحقوق النشر",
-                "foot.tos": "الشروط والترخيص",
-                "player.back": "← العودة للمنصة"
-            }
-        };
-
-        let currentLang = 'en';
-        const langBtn = document.getElementById('lang-btn');
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
-            
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
-            });
-        }
-
-        langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
-
-        // Parallax Interaction for Liquid Blob
-        const bubble = document.getElementById('mainParallax');
-        if (bubble) {
-            let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
-            window.addEventListener('pointermove', (e) => {
-                const normX = (e.clientX / window.innerWidth) - 0.5;
-                const normY = (e.clientY / window.innerHeight) - 0.5;
-                targetX = normX * 45;
-                targetY = normY * 35;
-            });
-            function animateParallax() {
-                currentX += (targetX - currentX) * 0.05;
-                currentY += (targetY - currentY) * 0.05;
-                bubble.style.transform = `translate(${currentX}px, ${currentY}px)`;
-                requestAnimationFrame(animateParallax);
-            }
-            animateParallax();
-        }
-
-        // Dedicated Game Player
-        const hubView = document.getElementById('hub-view');
-        const playerView = document.getElementById('player-view');
-        const gameFrame = document.getElementById('game-frame');
-        const playerGameTitle = document.getElementById('player-game-title');
-        let activeRecord = { title: '', code: '', url: '' };
-
-        function openGame(title, url, rawCode = null) {
-            activeRecord = { title, url, code: rawCode };
-            playerGameTitle.textContent = title;
-            hubView.style.display = 'none';
-            playerView.style.display = 'flex';
-            window.scrollTo(0, 0);
-
-            gameFrame.src = 'about:blank';
-            setTimeout(() => {
-                if (rawCode) {
-                    gameFrame.removeAttribute('src');
-                    gameFrame.srcdoc = rawCode;
-                } else if (url) {
-                    gameFrame.removeAttribute('srcdoc');
-                    gameFrame.src = url;
-                }
-                setTimeout(() => gameFrame.focus(), 150);
-            }, 60);
-        }
-
-        function closeGame() {
-            playerView.style.display = 'none';
-            hubView.style.display = 'block';
-            gameFrame.srcdoc = '';
-            gameFrame.src = 'about:blank';
-        }
-
-        document.getElementById('player-back-btn').addEventListener('click', closeGame);
-        document.getElementById('player-reload-btn').addEventListener('click', () => {
-            const { code, url } = activeRecord;
-            gameFrame.srcdoc = '';
-            gameFrame.src = 'about:blank';
-            setTimeout(() => {
-                if (code) gameFrame.srcdoc = code;
-                else if (url) gameFrame.src = url;
-            }, 80);
-        });
-
-        document.getElementById('player-tab-btn').addEventListener('click', () => {
-            if (activeRecord.code) {
-                const w = window.open('', '_blank');
-                if (w) { w.document.write(activeRecord.code); w.document.close(); }
-            } else if (activeRecord.url) {
-                window.open(activeRecord.url, '_blank');
-            }
-        });
-
-        document.getElementById('player-fullscreen-btn').addEventListener('click', () => {
-            if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
-            else if (gameFrame.webkitRequestFullscreen) gameFrame.webkitRequestFullscreen();
-        });
-
-        // Triple Click Logo -> Admin Room
-        let logoClicks = 0;
-        document.getElementById('main-brand-logo').addEventListener('click', () => {
-            logoClicks++;
-            if (logoClicks === 3) window.location.href = 'admin.html';
-            setTimeout(() => logoClicks = 0, 1000);
-        });
-        window.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
-                window.location.href = 'admin.html';
-            }
-        });
-
-        // Supabase & GitHub Game Loader
+        const _k = [95, 118, 124, 121, 114, 133, 130, 128, 63, 61, 62, 61];
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-        const GITHUB_USER = 'imafksite'; 
-        const GITHUB_REPO = 'imafk';
 
-        const BUILTINS = [
-            {
-                title: 'Retro Snake',
-                author: 'Classic Arcade',
-                type: 'supabase',
-                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#17120e;color:#e29b64;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{border:2px solid #5a412d;background:#211914;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.5);}</style></head><body><h2 style="font-weight:400;letter-spacing:2px;">SNAKE PROTOCOL</h2><canvas id="c" width="400" height="400"></canvas><p style="color:#8a7768;font-size:13px;margin-top:12px;">Use Arrow Keys to Navigate</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let s=[{x:10,y:10}],d={x:1,y:0},f={x:15,y:15},score=0;setInterval(()=>{let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.some(p=>p.x===h.x&&p.y===h.y)){s=[{x:10,y:10}];d={x:1,y:0};score=0;return;}s.unshift(h);if(h.x===f.x&&h.y===f.y){score+=10;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else s.pop();x.fillStyle="#211914";x.fillRect(0,0,400,400);x.fillStyle="#e29b64";x.fillRect(f.x*20,f.y*20,18,18);x.fillStyle="#fff4de";s.forEach(p=>x.fillRect(p.x*20,p.y*20,18,18));x.fillStyle="#8a7768";x.fillText("Score: "+score,12,24);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&d.y===0)d={x:0,y:-1};if(e.key==="ArrowDown"&&d.y===0)d={x:0,y:1};if(e.key==="ArrowLeft"&&d.x===0)d={x:-1,y:0};if(e.key==="ArrowRight"&&d.x===0)d={x:1,y:0};};<\/script></body></html>`
-            },
-            {
-                title: 'Neon Pong',
-                author: 'Cyber Arcade',
-                type: 'supabase',
-                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#17120e;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#fff4de;font-family:sans-serif;}canvas{border:2px solid #5a412d;background:#211914;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.5);}</style></head><body><h2 style="font-weight:400;letter-spacing:2px;">PONG DYNAMICS</h2><canvas id="c" width="500" height="350"></canvas><p style="color:#8a7768;font-size:13px;margin-top:12px;">Move mouse vertically to defend</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#211914";x.fillRect(0,0,500,350);x.fillStyle="#e29b64";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.fillStyle="#fff4de";x.beginPath();x.arc(bx,by,6,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
+        let allGames = [];
+
+        if (sessionStorage.getItem('afk_authenticated') === 'true') grantAccess();
+
+        function verifyPasscode() {
+            const input = document.getElementById('pass-input').value.trim();
+            const match = input.length === _k.length && [...input].every((c, i) => c.charCodeAt(0) + 13 === _k[i]);
+            if (match) {
+                sessionStorage.setItem('afk_authenticated', 'true');
+                grantAccess();
+            } else {
+                document.getElementById('pass-input').value = '';
+                document.getElementById('warning-text').textContent = 'Invalid authorization key.';
             }
-        ];
+        }
 
-        async function loadGames() {
-            const container = document.getElementById('game-container');
-            const statCount = document.getElementById('stat-count');
-            let games = [];
+        function grantAccess() {
+            document.getElementById('auth-gate').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            fetchList();
+        }
 
-            if (sbClient) {
-                try {
-                    const { data, error } = await sbClient
-                        .from('games')
-                        .select('*')
-                        .order('created_at', { ascending: false });
-                    if (!error && Array.isArray(data)) {
-                        data.filter(g => g.status === 'live').forEach(g => {
-                            games.push({
-                                title: g.title,
-                                author: g.author || 'Community',
-                                html_code: g.html_code,
-                                type: 'supabase'
-                            });
-                        });
-                    }
-                } catch(e) { console.warn('Supabase fetch bypassed'); }
-            }
+        function terminateSession() {
+            sessionStorage.removeItem('afk_authenticated');
+            window.location.reload();
+        }
 
-            try {
-                const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
-                const files = await res.json();
-                if (Array.isArray(files)) {
-                    files.filter(f => f.name.endsWith('.html')).forEach(f => {
-                        const title = f.name.replace('.html', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                        games.push({
-                            title,
-                            author: 'GitHub Repo',
-                            url: `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${f.name}`,
-                            type: 'github'
-                        });
-                    });
-                }
-            } catch(e) { console.warn('GitHub scan bypassed'); }
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
 
-            if (!games.length) games = [...BUILTINS];
+        async function fetchList() {
+            const feed = document.getElementById('games-feed');
+            if (!sbClient) return feed.innerHTML = "<p>Supabase client not connected.</p>";
+            const { data, error } = await sbClient.from('games').select('*').order('created_at', { ascending: false });
+            if (error) return feed.innerHTML = `<p>Error: ${escapeHtml(error.message)}</p>`;
+            allGames = data || [];
+            if (!allGames.length) return feed.innerHTML = "<p>No submissions found.</p>";
 
-            container.innerHTML = '';
-            statCount.textContent = `${games.length} Works`;
-
-            games.forEach((game) => {
-                const wrap = document.createElement('div');
-                wrap.className = 'game-card-wrapper';
-                wrap.innerHTML = `
-                    <div class="game-card">
-                        <div>
-                            <div class="card-header">
-                                <div class="card-avatar">${game.title.charAt(0)}</div>
-                                <div>
-                                    <span class="card-tag">${game.type === 'supabase' ? 'Community Build' : 'Arcade'}</span>
-                                    <h3 class="card-title">${game.title}</h3>
-                                </div>
-                            </div>
-                            <p class="card-desc">Created by ${game.author}. Click to launch in fullscreen focus mode.</p>
-                        </div>
-                        <div class="card-footer">
-                            <span style="font-size: 10px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 0.08em;">Ready to Play</span>
-                            <span class="play-pill">Play →</span>
-                        </div>
+            feed.innerHTML = '';
+            allGames.forEach(game => {
+                const isLive = (game.status || 'live') === 'live';
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `
+                    <div>
+                        <h3 style="margin-bottom: 4px;">${escapeHtml(game.title)} <span style="font-size: 0.75rem; color: ${isLive ? '#2e7d32' : 'var(--danger)'};">(${isLive ? 'LIVE' : 'TAKEN DOWN'})</span></h3>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Author: ${escapeHtml(game.author)} &bull; Email: ${escapeHtml(game.email)}</p>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-action" onclick="testGame('${escapeHtml(game.id)}')">⚡ Test</button>
+                        ${isLive 
+                            ? `<button class="btn-action btn-danger" onclick="toggleStatus('${escapeHtml(game.id)}', 'takedown')">Takedown</button>`
+                            : `<button class="btn-action" onclick="toggleStatus('${escapeHtml(game.id)}', 'live')">Restore</button>`
+                        }
+                        <button class="btn-action btn-danger" onclick="deleteGame('${escapeHtml(game.id)}')">Delete</button>
                     </div>
                 `;
-                wrap.addEventListener('click', () => {
-                    if (game.type === 'supabase') openGame(game.title, null, game.html_code);
-                    else openGame(game.title, game.url, null);
-                });
-                container.appendChild(wrap);
+                feed.appendChild(card);
             });
         }
 
-        function filterGames() {
-            const q = document.getElementById('game-search').value.toLowerCase();
-            document.querySelectorAll('.game-card-wrapper').forEach(card => {
-                const title = card.querySelector('.card-title').innerText.toLowerCase();
-                card.style.display = title.includes(q) ? 'block' : 'none';
-            });
+        async function toggleStatus(id, status) {
+            await sbClient.from('games').update({ status }).eq('id', id);
+            fetchList();
         }
 
-        loadGames();
+        async function deleteGame(id) {
+            if (confirm("Permanently delete this entry?")) {
+                await sbClient.from('games').delete().eq('id', id);
+                fetchList();
+            }
+        }
+
+        function testGame(id) {
+            const game = allGames.find(g => String(g.id) === String(id));
+            if (!game) return;
+            document.getElementById('preview-title').textContent = `Testing: ${game.title}`;
+            document.getElementById('preview-frame').srcdoc = game.html_code || '';
+            document.getElementById('preview-modal').style.display = 'flex';
+        }
+
+        function closePreview() {
+            document.getElementById('preview-modal').style.display = 'none';
+            document.getElementById('preview-frame').srcdoc = '';
+        }
     </script>
 </body>
 </html>
