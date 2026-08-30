@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">Submit Your Project — I’m Afk</title>
+    <title data-i18n="meta.title">Submit Project — I’m Afk</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,17 +12,14 @@
 
     <style>
         :root {
-            --bg-base: #f8f4ee;
-            --bg-gradient: linear-gradient(120deg, #fbf8f3 0%, #f6ede3 45%, #f2dfcc 100%);
-            --card-bg: rgba(255, 255, 255, 0.78);
-            --card-border: rgba(255, 255, 255, 0.9);
-            --card-shadow: 0 25px 60px -15px rgba(60, 42, 28, 0.08);
-            --text-main: #211914;
-            --text-muted: #736357;
-            --warm-accent: #e29b64;
-            --btn-dark-bg: linear-gradient(135deg, #211813 0%, #302019 55%, #3a281e 100%);
-            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --bg-deep: #0a0a12;
+            --glass-card: rgba(16, 22, 36, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-ice: #67e8f9;
             --font-display: 'Space Grotesk', sans-serif;
+            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
             --font-code: 'JetBrains Mono', monospace;
         }
 
@@ -30,25 +27,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-base);
-            background-image: var(--bg-gradient);
+            background-color: var(--bg-deep);
+            background-image: radial-gradient(circle at 50% 20%, rgba(45, 111, 212, 0.18) 0%, transparent 60%),
+                              radial-gradient(circle at 80% 80%, rgba(91, 140, 219, 0.12) 0%, transparent 50%);
             color: var(--text-main);
             font-family: var(--font-main);
             min-height: 100vh;
             line-height: 1.6;
-        }
-
-        .ambient-haze {
-            position: fixed;
-            top: -10%;
-            right: -5%;
-            width: 55vw;
-            height: 55vw;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 236, 204, 0.5) 0%, rgba(255, 210, 165, 0.2) 50%, transparent 75%);
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
         }
 
         .glass-nav {
@@ -58,10 +43,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px clamp(24px, 4vw, 50px);
-            background: rgba(251, 248, 243, 0.75);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(106, 72, 49, 0.08);
+            padding: 18px clamp(24px, 4vw, 48px);
+            background: rgba(10, 10, 18, 0.6);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .brand-block {
@@ -70,37 +55,36 @@
             gap: 12px;
             text-decoration: none;
             color: var(--text-main);
-            font-size: 11px;
+            font-family: var(--font-display);
             font-weight: 700;
-            letter-spacing: 0.22em;
+            font-size: 1.15rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
         .nav-back-btn, .lang-toggle {
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(106, 72, 49, 0.12);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
             color: var(--text-main);
             padding: 7px 18px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 10px;
+            font-size: 0.8rem;
             text-decoration: none;
             cursor: pointer;
             transition: all 0.25s ease;
         }
 
         .nav-back-btn:hover, .lang-toggle:hover {
-            background: #ffffff;
-            border-color: rgba(106, 72, 49, 0.25);
-            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.16);
+            border-color: var(--accent-ice);
+            color: #fff;
         }
 
         .submit-container {
             max-width: 860px;
             margin: 50px auto 80px;
             padding: 0 24px;
-            position: relative;
-            z-index: 1;
         }
 
         .submit-header {
@@ -110,26 +94,26 @@
 
         .submit-header h1 {
             font-family: var(--font-display);
-            font-size: clamp(2.2rem, 4vw, 3rem);
-            font-weight: 600;
-            letter-spacing: -0.03em;
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
             margin-bottom: 8px;
         }
 
         .submit-header p {
             color: var(--text-muted);
             font-size: 1rem;
-            max-width: 520px;
+            max-width: 540px;
             margin: 0 auto;
         }
 
         .glass-form-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 32px;
-            padding: 44px;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px;
             backdrop-filter: blur(25px);
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
         .form-grid {
@@ -149,54 +133,54 @@
         .input-group label {
             font-size: 0.85rem;
             font-weight: 700;
-            color: var(--text-main);
+            color: #d1d5db;
         }
 
         .input-group input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(106, 72, 49, 0.15);
+            background: rgba(9, 13, 22, 0.8);
+            border: 1px solid var(--glass-border);
             padding: 14px 18px;
             border-radius: 14px;
-            color: var(--text-main);
+            color: #ffffff;
             font-size: 0.95rem;
             outline: none;
             transition: all 0.3s;
         }
 
         .input-group input:focus {
-            background: #ffffff;
-            border-color: rgba(106, 72, 49, 0.4);
-            box-shadow: 0 8px 25px rgba(60, 42, 28, 0.06);
+            border-color: var(--accent-ice);
+            box-shadow: 0 0 20px rgba(103, 232, 249, 0.2);
+            background: rgba(12, 18, 30, 0.95);
         }
 
         .drop-zone {
-            border: 2px dashed rgba(106, 72, 49, 0.25);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
             border-radius: 16px;
-            padding: 20px;
+            padding: 22px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.02);
             cursor: pointer;
             transition: 0.3s;
             margin-bottom: 12px;
         }
 
         .drop-zone:hover {
-            border-color: var(--warm-accent);
-            background: rgba(255, 255, 255, 0.7);
+            border-color: var(--accent-ice);
+            background: rgba(103, 232, 249, 0.05);
         }
 
         .drop-zone p { color: var(--text-muted); font-size: 0.88rem; }
-        .drop-zone span { color: var(--text-main); font-weight: 700; }
+        .drop-zone span { color: var(--accent-ice); font-weight: 700; }
 
         .code-area {
             width: 100%;
             height: 200px;
-            background: #1e1915;
-            border: 1px solid rgba(106, 72, 49, 0.2);
+            background: #080c14;
+            border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 16px;
-            color: #ffe6cf;
+            color: var(--accent-ice);
             font-family: var(--font-code);
             font-size: 0.85rem;
             line-height: 1.5;
@@ -214,9 +198,9 @@
         }
 
         .test-btn {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(106, 72, 49, 0.15);
-            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: #fff;
             padding: 6px 16px;
             border-radius: 50px;
             font-weight: 700;
@@ -224,37 +208,41 @@
             cursor: pointer;
             transition: 0.2s;
         }
-
-        .test-btn:hover { background: #ffffff; transform: translateY(-1px); }
+        .test-btn:hover {
+            background: var(--accent-ice);
+            color: #0a0a12;
+        }
 
         .submit-btn-main {
             width: 100%;
-            background: var(--btn-dark-bg);
-            color: #fffaf4;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
             padding: 16px;
-            border: none;
             border-radius: 50px;
-            font-size: 11px;
+            font-family: var(--font-display);
+            font-size: 1rem;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(48, 32, 25, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             transition: all 0.25s ease;
             margin-top: 10px;
         }
 
         .submit-btn-main:hover {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0a0a12;
             transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(48, 32, 25, 0.25);
         }
 
-        /* Sandbox Modal */
+        /* Modal */
         .sandbox-modal {
             position: fixed;
             inset: 0;
-            background: rgba(23, 18, 14, 0.8);
-            backdrop-filter: blur(15px);
+            background: rgba(10, 10, 18, 0.85);
+            backdrop-filter: blur(20px);
             z-index: 9999;
             display: none;
             align-items: center;
@@ -264,9 +252,10 @@
 
         .sandbox-window {
             width: 100%;
-            max-width: 960px;
-            height: 80vh;
-            background: #1e1915;
+            max-width: 980px;
+            height: 82vh;
+            background: #090d16;
+            border: 1px solid var(--glass-border);
             border-radius: 24px;
             display: flex;
             flex-direction: column;
@@ -275,8 +264,8 @@
 
         .sandbox-header {
             padding: 14px 20px;
-            background: #28211c;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(16, 22, 36, 0.9);
+            border-bottom: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -286,7 +275,7 @@
 
         .sandbox-close-btn {
             background: rgba(255, 255, 255, 0.1);
-            border: none;
+            border: 1px solid var(--glass-border);
             color: #fff;
             padding: 6px 14px;
             border-radius: 50px;
@@ -297,18 +286,16 @@
         #sandbox-frame { flex: 1; border: none; background: #000; }
 
         footer {
-            border-top: 1px solid rgba(106, 72, 49, 0.1);
+            border-top: 1px solid var(--glass-border);
             padding: 40px 24px;
             text-align: center;
-            background: rgba(248, 244, 238, 0.8);
+            background: rgba(10, 10, 18, 0.85);
             color: var(--text-muted);
             font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
-
-    <div class="ambient-haze"></div>
 
     <header class="glass-nav">
         <a href="index.html" class="brand-block" id="brand-logo">
@@ -364,8 +351,8 @@
                     </div>
                 </div>
 
-                <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                    <input type="checkbox" id="agree" required style="accent-color: var(--warm-accent);">
+                <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="agree" required style="accent-color: var(--accent-ice); width: 18px; height: 18px;">
                     <label for="agree" style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="form.agree">
                         I confirm this code is authored by me or licensed under permissive open-source terms.
                     </label>
@@ -396,7 +383,7 @@
     <script>
         const I18N = {
             en: {
-                "meta.title": "Submit Your Project — I’m Afk",
+                "meta.title": "Submit Project — I’m Afk",
                 "nav.back": "← Return to Hub",
                 "sub.title": "Submit Your <span>Game</span>",
                 "sub.lead": "Add your standalone HTML5 creation to the curated network index.",
