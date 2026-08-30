@@ -3,26 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">Terms of Service & License — I’m Afk</title>
+    <title data-i18n="meta.title">Terms of Service — I’m Afk</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
         :root {
-            --bg-base: #f8f4ee;
-            --bg-gradient: linear-gradient(120deg, #fbf8f3 0%, #f6ede3 45%, #f2dfcc 100%);
-            --card-bg: rgba(255, 255, 255, 0.78);
-            --card-border: rgba(255, 255, 255, 0.9);
-            --card-shadow: 0 25px 60px -15px rgba(60, 42, 28, 0.08);
-            --text-main: #211914;
-            --text-muted: #736357;
-            --warm-accent: #e29b64;
-            --btn-dark-bg: linear-gradient(135deg, #211813 0%, #302019 55%, #3a281e 100%);
-            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --bg-deep: #0a0a12;
+            --glass-card: rgba(16, 22, 36, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-ice: #67e8f9;
             --font-display: 'Space Grotesk', sans-serif;
+            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
@@ -30,25 +26,31 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-base);
-            background-image: var(--bg-gradient);
+            background-color: var(--bg-deep);
+            background-image: radial-gradient(circle at 50% 20%, rgba(45, 111, 212, 0.18) 0%, transparent 60%),
+                              radial-gradient(circle at 80% 80%, rgba(91, 140, 219, 0.12) 0%, transparent 50%);
             color: var(--text-main);
             font-family: var(--font-main);
             min-height: 100vh;
             line-height: 1.6;
         }
 
-        .ambient-haze {
+        .progress-track {
             position: fixed;
-            top: -10%;
-            right: -5%;
-            width: 55vw;
-            height: 55vw;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 236, 204, 0.5) 0%, rgba(255, 210, 165, 0.2) 50%, transparent 75%);
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
+            top: 65px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 101;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-ice);
+            box-shadow: 0 0 10px var(--accent-ice);
+            transition: width 0.1s ease-out;
         }
 
         .glass-nav {
@@ -58,10 +60,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px clamp(24px, 4vw, 50px);
-            background: rgba(251, 248, 243, 0.75);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(106, 72, 49, 0.08);
+            padding: 18px clamp(24px, 4vw, 48px);
+            background: rgba(10, 10, 18, 0.6);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .brand-block {
@@ -70,64 +72,45 @@
             gap: 12px;
             text-decoration: none;
             color: var(--text-main);
-            font-size: 11px;
+            font-family: var(--font-display);
             font-weight: 700;
-            letter-spacing: 0.22em;
+            font-size: 1.15rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
         .nav-back-btn, .lang-toggle {
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(106, 72, 49, 0.12);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
             color: var(--text-main);
             padding: 7px 18px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 10px;
+            font-size: 0.8rem;
             text-decoration: none;
             cursor: pointer;
             transition: all 0.25s ease;
         }
 
         .nav-back-btn:hover, .lang-toggle:hover {
-            background: #ffffff;
-            border-color: rgba(106, 72, 49, 0.25);
-            transform: translateY(-1px);
-        }
-
-        /* Reading Progress */
-        .progress-track {
-            position: fixed;
-            top: 65px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: rgba(106, 72, 49, 0.06);
-            z-index: 101;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: var(--warm-accent);
-            transition: width 0.1s ease-out;
+            background: rgba(255, 255, 255, 0.16);
+            border-color: var(--accent-ice);
+            color: #fff;
         }
 
         .agreement-wrapper {
             max-width: 960px;
             margin: 50px auto 80px;
             padding: 0 24px;
-            position: relative;
-            z-index: 1;
         }
 
         .glass-legal-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 32px;
-            padding: 50px;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 44px;
             backdrop-filter: blur(25px);
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             position: relative;
         }
 
@@ -137,74 +120,43 @@
             top: 40px;
             right: 40px;
             padding: 10px 20px;
-            border: 2px solid #2e7d32;
-            color: #2e7d32;
+            border: 2px solid var(--accent-ice);
+            color: var(--accent-ice);
             font-family: var(--font-display);
             font-size: 1rem;
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             border-radius: 10px;
-            background: rgba(46, 125, 50, 0.08);
+            background: rgba(103, 232, 249, 0.08);
             transform: rotate(-6deg);
         }
 
-        html[dir="rtl"] #success-stamp {
-            right: auto;
-            left: 40px;
-            transform: rotate(6deg);
-        }
+        html[dir="rtl"] #success-stamp { right: auto; left: 40px; transform: rotate(6deg); }
 
         .header-section {
             text-align: center;
-            border-bottom: 1px solid rgba(106, 72, 49, 0.1);
-            padding-bottom: 30px;
-            margin-bottom: 30px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 26px;
+            margin-bottom: 26px;
         }
 
         .header-section h1 {
             font-family: var(--font-display);
-            font-size: clamp(2rem, 3.5vw, 2.6rem);
-            font-weight: 600;
-            letter-spacing: -0.03em;
-            margin-bottom: 8px;
-        }
-
-        .effective-date {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            letter-spacing: 0.06em;
-        }
-
-        .callout-box {
-            background: rgba(226, 155, 100, 0.12);
-            border: 1px solid rgba(226, 155, 100, 0.35);
-            border-radius: 18px;
-            padding: 20px 24px;
-            margin-bottom: 30px;
-        }
-
-        .callout-box h3 {
-            font-size: 0.95rem;
-            color: #8c4715;
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
             margin-bottom: 6px;
         }
 
-        .callout-box p {
-            font-size: 0.9rem;
-            color: #5c3b24;
-            line-height: 1.5;
-        }
-
         .scroll-box {
-            height: 480px;
+            height: 460px;
             overflow-y: auto;
             padding: 24px;
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(106, 72, 49, 0.1);
-            border-radius: 20px;
-            color: var(--text-main);
+            background: rgba(9, 13, 22, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            color: #d1d5db;
             font-size: 0.93rem;
             line-height: 1.65;
             scrollbar-width: thin;
@@ -212,10 +164,10 @@
 
         .scroll-box h2 {
             font-family: var(--font-display);
-            font-size: 1.15rem;
-            margin: 32px 0 12px;
-            color: var(--text-main);
-            border-bottom: 1px solid rgba(106, 72, 49, 0.1);
+            font-size: 1.2rem;
+            margin: 30px 0 12px;
+            color: var(--accent-ice);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             padding-bottom: 6px;
         }
         .scroll-box h2:first-child { margin-top: 0; }
@@ -223,14 +175,14 @@
         ol { padding-left: 20px; margin-bottom: 16px; }
         html[dir="rtl"] ol { padding-left: 0; padding-right: 20px; }
         li { margin-bottom: 10px; color: var(--text-muted); }
-        li strong { color: var(--text-main); }
+        li strong { color: #fff; }
 
         .action-panel {
-            margin-top: 30px;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(106, 72, 49, 0.1);
-            border-radius: 24px;
-            padding: 28px;
+            margin-top: 28px;
+            background: rgba(9, 13, 22, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
             text-align: center;
         }
 
@@ -241,47 +193,43 @@
             font-weight: 700;
             font-size: 0.9rem;
             cursor: pointer;
-            margin-bottom: 20px;
-            color: var(--text-main);
-        }
-
-        .agree-label input {
-            accent-color: var(--warm-accent);
-            width: 18px;
-            height: 18px;
+            margin-bottom: 18px;
+            color: #fff;
         }
 
         .accept-btn {
-            background: var(--btn-dark-bg);
-            color: #fffaf4;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
             padding: 14px 36px;
-            border: none;
             border-radius: 50px;
-            font-size: 10px;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 10px 25px rgba(48, 32, 25, 0.15);
         }
 
         .accept-btn:hover:not(:disabled) {
+            background: #ffffff;
+            color: #0a0a12;
             transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(48, 32, 25, 0.22);
         }
 
         .accept-btn:disabled {
-            background: rgba(106, 72, 49, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
             cursor: not-allowed;
-            box-shadow: none;
+            border-color: transparent;
         }
 
         footer {
-            border-top: 1px solid rgba(106, 72, 49, 0.1);
+            border-top: 1px solid var(--glass-border);
             padding: 40px 24px;
             text-align: center;
-            background: rgba(248, 244, 238, 0.8);
+            background: rgba(10, 10, 18, 0.85);
             color: var(--text-muted);
             font-size: 0.85rem;
         }
@@ -289,7 +237,6 @@
 </head>
 <body>
 
-    <div class="ambient-haze"></div>
     <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
 
     <header class="glass-nav">
@@ -309,12 +256,7 @@
 
             <div class="header-section">
                 <h1 data-i18n="tos.title">Terms of Service & <span>License</span></h1>
-                <p class="effective-date" data-i18n="tos.audit">AUDIT CODE: 9.9.2-AFK-ETH &bull; 2024–2026</p>
-            </div>
-
-            <div class="callout-box">
-                <h3 data-i18n="callout.title">✦ Important Platform Notice</h3>
-                <p data-i18n="callout.body">By interacting with this platform, you agree to access content solely for non-commercial personal recreation. If you do not agree, please disconnect from this service.</p>
+                <p style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-ice);" data-i18n="tos.audit">AUDIT CODE: 9.9.2-AFK-LIQUID &bull; 2024–2026</p>
             </div>
 
             <div class="scroll-box" id="scroll-box">
@@ -350,7 +292,7 @@
 
             <div class="action-panel">
                 <label class="agree-label">
-                    <input type="checkbox" id="agree">
+                    <input type="checkbox" id="agree" style="accent-color: var(--accent-ice); width: 18px; height: 18px;">
                     <span data-i18n="action.checkboxText">I have read, understood, and agree to the Terms of Service.</span>
                 </label>
                 <div>
@@ -362,19 +304,17 @@
     </main>
 
     <footer>
-        <p>&copy; 2024–2026 I’m Afk &bull; Printed on 100% Recycled Pixels</p>
+        <p>&copy; 2024–2026 I’m Afk &bull; Liquid Glass Protocol</p>
     </footer>
 
     <script>
         const I18N = {
             en: {
-                "meta.title": "Terms of Service & License — I’m Afk",
+                "meta.title": "Terms of Service — I’m Afk",
                 "nav.back": "← Return to Hub",
                 "stamp.text": "✓ CERTIFIED & RECORDED",
                 "tos.title": "Terms of Service & <span>License</span>",
-                "tos.audit": "AUDIT CODE: 9.9.2-AFK-ETH • 2024–2026",
-                "callout.title": "✦ Important Platform Notice",
-                "callout.body": "By interacting with this platform, you agree to access content solely for non-commercial personal recreation. If you do not agree, please disconnect from this service.",
+                "tos.audit": "AUDIT CODE: 9.9.2-AFK-LIQUID • 2024–2026",
                 "action.checkboxText": "I have read, understood, and agree to the Terms of Service.",
                 "action.signBtn": "Accept & Verify Protocol →"
             },
@@ -383,9 +323,7 @@
                 "nav.back": "← العودة إلى الرئيسية",
                 "stamp.text": "✓ تم التوثيق والاعتماد",
                 "tos.title": "شروط الخدمة <span>واتفاقية الاستخدام</span>",
-                "tos.audit": "رمز التوثيق: 9.9.2-AFK-ETH • 2024–2026",
-                "callout.title": "✦ تنبيه هام لمستخدمي المنصة",
-                "callout.body": "باستخدامك لهذه المنصة، فإنك توافق على الالتزام بكافة الشروط المذكورة هنا والاستمتاع بالألعاب بشكل شخصي وغير تجاري.",
+                "tos.audit": "رمز التوثيق: 9.9.2-AFK-LIQUID • 2024–2026",
                 "action.checkboxText": "قرأت وفهمت وأوافق تماماً على شروط الخدمة.",
                 "action.signBtn": "الموافقة والتوثيق ←"
             }
