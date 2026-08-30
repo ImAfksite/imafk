@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platform Moderation Node — I’m Afk</title>
+    <title>Moderation Node — I’m Afk</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,22 +12,22 @@
     
     <style>
         :root {
-            --bg-base: #f8f4ee;
-            --bg-gradient: linear-gradient(120deg, #fbf8f3 0%, #f6ede3 45%, #f2dfcc 100%);
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --card-border: rgba(255, 255, 255, 0.95);
-            --text-main: #211914;
-            --text-muted: #736357;
-            --danger: #d32f2f;
-            --btn-dark-bg: linear-gradient(135deg, #211813 0%, #302019 55%, #3a281e 100%);
+            --bg-deep: #0a0a12;
+            --glass-card: rgba(16, 22, 36, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-ice: #67e8f9;
+            --danger: #ef4444;
+            --font-display: 'Space Grotesk', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: var(--bg-base);
-            background-image: var(--bg-gradient);
+            background-color: var(--bg-deep);
+            background-image: radial-gradient(circle at 50% 20%, rgba(45, 111, 212, 0.18) 0%, transparent 60%);
             color: var(--text-main);
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
@@ -40,45 +40,27 @@
         .container {
             width: 100%;
             max-width: 1050px;
-            position: relative;
-            z-index: 1;
         }
 
         .auth-card {
             max-width: 420px;
             margin: 100px auto 0;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
             border-radius: 28px;
             padding: 40px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 25px 60px -15px rgba(60, 42, 28, 0.12);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
             text-align: center;
-        }
-
-        .shield-icon {
-            font-size: 2rem;
-            margin-bottom: 16px;
-        }
-
-        .auth-card h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.4rem;
-            margin-bottom: 6px;
-        }
-
-        .auth-card p {
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            margin-bottom: 24px;
         }
 
         .input-group input {
             width: 100%;
             padding: 14px;
             border-radius: 14px;
-            border: 1px solid rgba(106, 72, 49, 0.18);
-            background: #ffffff;
+            border: 1px solid var(--glass-border);
+            background: #090d16;
+            color: #fff;
             font-family: var(--font-mono);
             font-size: 1.1rem;
             text-align: center;
@@ -89,14 +71,18 @@
 
         .btn-unlock {
             width: 100%;
-            background: var(--btn-dark-bg);
-            color: #fff;
+            background: #ffffff;
+            color: #0a0a12;
             padding: 14px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
             font-size: 0.9rem;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-unlock:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         #admin-panel { display: none; }
@@ -105,14 +91,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(106, 72, 49, 0.12);
+            border-bottom: 1px solid var(--glass-border);
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
 
         .game-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 16px;
@@ -120,13 +106,12 @@
             justify-content: space-between;
             align-items: center;
             gap: 20px;
-            box-shadow: 0 10px 30px -10px rgba(60, 42, 28, 0.05);
         }
 
         .btn-action {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(106, 72, 49, 0.15);
-            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: #fff;
             padding: 8px 16px;
             border-radius: 50px;
             font-size: 0.82rem;
@@ -134,13 +119,12 @@
             cursor: pointer;
             text-decoration: none;
         }
-
-        .btn-action:hover { background: #ffffff; }
+        .btn-action:hover { background: #ffffff; color: #0a0a12; }
 
         .btn-danger {
-            background: rgba(211, 47, 47, 0.1);
+            background: rgba(239, 68, 68, 0.15);
             color: var(--danger);
-            border-color: rgba(211, 47, 47, 0.2);
+            border-color: rgba(239, 68, 68, 0.3);
         }
         .btn-danger:hover { background: var(--danger); color: #fff; }
 
@@ -149,8 +133,8 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(23, 18, 14, 0.85);
-            backdrop-filter: blur(15px);
+            background: rgba(10, 10, 18, 0.85);
+            backdrop-filter: blur(20px);
             z-index: 9999;
             align-items: center;
             justify-content: center;
@@ -160,7 +144,8 @@
         .preview-box {
             width: min(95vw, 1000px);
             height: 82vh;
-            background: #1e1915;
+            background: #090d16;
+            border: 1px solid var(--glass-border);
             border-radius: 24px;
             display: flex;
             flex-direction: column;
@@ -172,12 +157,11 @@
 </head>
 <body>
 
-    <!-- Auth Gate -->
     <div class="container" id="auth-gate">
         <div class="auth-card">
-            <div class="shield-icon">🛡️</div>
-            <h2>Moderation Portal</h2>
-            <p>Enter the security key to manage platform entries.</p>
+            <div style="font-size: 2rem; margin-bottom: 16px;">🛡️</div>
+            <h2 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 6px;">Moderation Portal</h2>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 24px;">Enter the security key to manage platform entries.</p>
             <form onsubmit="event.preventDefault(); verifyPasscode();">
                 <div class="input-group">
                     <input type="password" id="pass-input" placeholder="••••••••••••••" autocomplete="off" required>
@@ -188,11 +172,10 @@
         </div>
     </div>
 
-    <!-- Admin Panel -->
     <div class="container" id="admin-panel">
         <header>
             <div>
-                <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem;">Moderation Dashboard</h1>
+                <h1 style="font-family: var(--font-display); font-size: 1.6rem;">Moderation Dashboard</h1>
                 <p style="color: var(--text-muted); font-size: 0.85rem;">Review submissions and manage published catalog items.</p>
             </div>
             <div style="display: flex; gap: 10px;">
@@ -204,11 +187,10 @@
         <div id="games-feed">Loading games feed...</div>
     </div>
 
-    <!-- Preview Modal -->
     <div class="preview-modal" id="preview-modal" onclick="if(event.target === this) closePreview();">
         <div class="preview-box">
-            <div style="padding: 14px 20px; background: #28211c; color: #fff; display: flex; justify-content: space-between; align-items: center;">
-                <span id="preview-title">Sandbox Preview</span>
+            <div style="padding: 14px 20px; background: rgba(16, 22, 36, 0.9); color: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border);">
+                <span id="preview-title" style="font-weight: 700; color: var(--accent-ice);">Sandbox Preview</span>
                 <button class="btn-action" onclick="closePreview()">✕ Close</button>
             </div>
             <iframe id="preview-frame" sandbox="allow-scripts allow-forms allow-pointer-lock" allow="fullscreen; autoplay; gamepad"></iframe>
@@ -270,7 +252,7 @@
                 card.className = 'game-card';
                 card.innerHTML = `
                     <div>
-                        <h3 style="margin-bottom: 4px;">${escapeHtml(game.title)} <span style="font-size: 0.75rem; color: ${isLive ? '#2e7d32' : 'var(--danger)'};">(${isLive ? 'LIVE' : 'TAKEN DOWN'})</span></h3>
+                        <h3 style="margin-bottom: 4px;">${escapeHtml(game.title)} <span style="font-size: 0.75rem; color: ${isLive ? '#4ade80' : 'var(--danger)'};">(${isLive ? 'LIVE' : 'TAKEN DOWN'})</span></h3>
                         <p style="color: var(--text-muted); font-size: 0.85rem;">Author: ${escapeHtml(game.author)} &bull; Email: ${escapeHtml(game.email)}</p>
                     </div>
                     <div style="display: flex; gap: 8px;">
