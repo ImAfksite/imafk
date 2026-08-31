@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">Arcade Library & Live Games — I’M AFK</title>
+    <title data-i18n="meta.title">Arcade Library & Live Telemetry — I’M AFK</title>
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     
+    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -109,7 +111,7 @@
             transition: all 0.3s;
         }
 
-        /* Live Telemetry / Player Stats Bar */
+        /* Real Live Telemetry Bar */
         .telemetry-strip {
             max-width: 1240px;
             margin: 30px auto 10px;
@@ -128,7 +130,7 @@
             background: rgba(16, 185, 129, 0.12);
             border: 1px solid rgba(16, 185, 129, 0.3);
             color: #34d399;
-            padding: 6px 16px;
+            padding: 6px 18px;
             border-radius: 50px;
             font-size: 0.82rem;
             font-weight: 700;
@@ -140,13 +142,13 @@
             height: 8px;
             border-radius: 50%;
             background: var(--accent-emerald);
-            box-shadow: 0 0 8px var(--accent-emerald);
+            box-shadow: 0 0 10px var(--accent-emerald);
             animation: pulse 1.8s infinite;
         }
 
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 0.3; transform: scale(0.75); }
         }
 
         .telemetry-metrics {
@@ -229,7 +231,7 @@
             font-size: 1.6rem;
             color: var(--accent-ice);
             margin-right: 18px;
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
         /* Filter & Search Bar */
@@ -550,15 +552,15 @@
             </div>
         </header>
 
-        <!-- Live Player Telemetry Banner -->
+        <!-- Live Player Telemetry Banner (Real Supabase Presence & Aggregated DB Counter) -->
         <div class="telemetry-strip">
             <div class="live-indicator">
                 <div class="pulse-dot"></div>
-                <span><strong id="live-players-count">1,842</strong> PLAYERS ACTIVE NOW</span>
+                <span><strong id="live-players-count">1</strong> PLAYERS ACTIVE NOW</span>
             </div>
             <div class="telemetry-metrics">
-                <span>Total Plays: <strong id="total-plays-count">482,910</strong></span>
-                <span>Catalog Health: <strong style="color: var(--accent-ice);">100% Online</strong></span>
+                <span>Total Network Plays: <strong id="total-plays-count">0</strong></span>
+                <span>Catalog Health: <strong style="color: var(--accent-ice);" id="catalog-health">Connecting...</strong></span>
             </div>
         </div>
 
@@ -568,14 +570,14 @@
                 <p data-i18n="lib.lead">Select any standalone HTML5 creation to launch immediately in full focus mode.</p>
             </div>
 
-            <!-- 🔥 Trending & Most Popular Showcase -->
+            <!-- 🔥 Real Trending & Most Popular Showcase -->
             <section class="trending-section">
                 <div class="trending-header">
                     <span>🔥</span>
                     <h2 data-i18n="trend.title">Trending & Most Played</h2>
                 </div>
                 <div class="trending-grid" id="trending-container">
-                    <!-- Populated dynamically via JS -->
+                    <div style="color: var(--text-muted); font-size: 0.88rem; padding: 20px;">Fetching trending records...</div>
                 </div>
             </section>
 
@@ -587,7 +589,7 @@
                         <input type="text" id="game-search" class="search-input" placeholder="Search by game name, author, or keyword..." oninput="filterAndSortGames()">
                     </div>
                     <select id="sort-select" class="sort-select" onchange="filterAndSortGames()">
-                        <option value="popular">Sort: Most Popular</option>
+                        <option value="popular">Sort: Most Played</option>
                         <option value="newest">Sort: Newest First</option>
                         <option value="alpha">Sort: Title (A-Z)</option>
                     </select>
@@ -595,7 +597,7 @@
 
                 <div class="tags-row">
                     <button class="tag-pill active" onclick="setCategoryFilter('all', this)">All Games</button>
-                    <button class="tag-pill" onclick="setCategoryFilter('popular', this)">🔥 Popular</button>
+                    <button class="tag-pill" onclick="setCategoryFilter('popular', this)">🔥 Most Played</button>
                     <button class="tag-pill" onclick="setCategoryFilter('arcade', this)">🕹️ Arcade</button>
                     <button class="tag-pill" onclick="setCategoryFilter('classic', this)">⚡ Classic</button>
                     <button class="tag-pill" onclick="setCategoryFilter('community', this)">🌐 Community</button>
@@ -632,7 +634,7 @@
     <script>
         const I18N = {
             en: {
-                "meta.title": "Arcade Library & Live Games — I’M AFK",
+                "meta.title": "Arcade Library & Live Telemetry — I’M AFK",
                 "lib.title": "Arcade <span>Library</span>",
                 "lib.lead": "Select any standalone HTML5 creation to launch immediately in full focus mode.",
                 "trend.title": "Trending & Most Played"
@@ -659,14 +661,9 @@
         }
         langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
 
-        // Live Telemetry Simulation
-        let liveCount = 1842;
-        setInterval(() => {
-            liveCount += Math.floor((Math.random() - 0.48) * 8);
-            document.getElementById('live-players-count').textContent = liveCount.toLocaleString();
-        }, 3500);
-
-        // Supabase & Dual-Engine Catalog Loader
+        /* -------------------------------------------------------------
+           1. SUPABASE CLIENT & REAL PRESENCE ENGINE
+        ------------------------------------------------------------- */
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -676,43 +673,93 @@
         let catalog = [];
         let activeCategory = 'all';
 
+        // Real Supabase Presence Channel for Concurrent Online Users
+        function initPresenceTracker() {
+            if (!sbClient) return;
+            const presenceChannel = sbClient.channel('imafk-live-presence', {
+                config: { presence: { key: 'user_' + Math.random().toString(36).substring(2, 9) } }
+            });
+
+            presenceChannel.on('presence', { event: 'sync' }, () => {
+                const state = presenceChannel.presenceState();
+                const totalOnline = Object.keys(state).reduce((acc, key) => acc + state[key].length, 0);
+                document.getElementById('live-players-count').textContent = Math.max(1, totalOnline).toLocaleString();
+            });
+
+            presenceChannel.subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') {
+                    await presenceChannel.track({ online_at: new Date().toISOString() });
+                }
+            });
+        }
+
+        /* -------------------------------------------------------------
+           2. REAL PLAY COUNT RECORDING & DB SYNC
+        ------------------------------------------------------------- */
+        async function recordRealPlay(game) {
+            game.play_count = (game.play_count || 0) + 1;
+            
+            // Persist locally for instant responsiveness
+            localStorage.setItem('playcount_' + (game.id || game.title), game.play_count);
+
+            updateGlobalPlaysCounter();
+            renderTrending();
+            filterAndSortGames();
+
+            // Persist real count to Supabase
+            if (sbClient && game.id && game.type === 'supabase') {
+                try {
+                    await sbClient.from('games').update({ play_count: game.play_count }).eq('id', game.id);
+                } catch (e) {
+                    console.warn("Could not sync play count:", e);
+                }
+            }
+        }
+
+        function updateGlobalPlaysCounter() {
+            const total = catalog.reduce((acc, g) => acc + (g.play_count || 0), 0);
+            document.getElementById('total-plays-count').textContent = total.toLocaleString();
+        }
+
+        /* -------------------------------------------------------------
+           3. DUAL-SOURCE CATALOG FETCH & INIT
+        ------------------------------------------------------------- */
         const BUILTINS = [
             {
                 title: 'Retro Snake',
                 author: 'Classic Arcade',
                 category: 'classic',
-                popular: true,
-                plays: 184200,
-                rating: '4.9',
-                type: 'supabase',
+                play_count: 0,
+                type: 'builtin',
                 html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;color:#67e8f9;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{border:2px solid rgba(255,255,255,0.15);background:#0f172a;border-radius:14px;box-shadow:0 0 30px rgba(0,0,0,0.8);}</style></head><body><h2 style="font-weight:600;letter-spacing:1px;">RETRO SNAKE</h2><canvas id="c" width="400" height="400"></canvas><p style="color:#94a3b8;font-size:13px;margin-top:12px;">Use Arrow Keys to Navigate</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let s=[{x:10,y:10}],d={x:1,y:0},f={x:15,y:15},score=0;setInterval(()=>{let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.some(p=>p.x===h.x&&p.y===h.y)){s=[{x:10,y:10}];d={x:1,y:0};score=0;return;}s.unshift(h);if(h.x===f.x&&h.y===f.y){score+=10;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else s.pop();x.fillStyle="#0f172a";x.fillRect(0,0,400,400);x.fillStyle="#f43f5e";x.fillRect(f.x*20,f.y*20,18,18);x.fillStyle="#38bdf8";s.forEach(p=>x.fillRect(p.x*20,p.y*20,18,18));x.fillStyle="#fff";x.fillText("Score: "+score,14,24);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&d.y===0)d={x:0,y:-1};if(e.key==="ArrowDown"&&d.y===0)d={x:0,y:1};if(e.key==="ArrowLeft"&&d.x===0)d={x:-1,y:0};if(e.key==="ArrowRight"&&d.x===0)d={x:1,y:0};};<\/script></body></html>`
             },
             {
                 title: 'Neon Pong',
                 author: 'Cyber Arcade',
                 category: 'arcade',
-                popular: true,
-                plays: 142100,
-                rating: '4.8',
-                type: 'supabase',
+                play_count: 0,
+                type: 'builtin',
                 html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#fff;font-family:sans-serif;}canvas{border:2px solid rgba(255,255,255,0.15);background:#0f172a;border-radius:14px;box-shadow:0 0 30px rgba(0,0,0,0.8);}</style></head><body><h2 style="font-weight:600;letter-spacing:1px;">NEON PONG</h2><canvas id="c" width="500" height="350"></canvas><p style="color:#94a3b8;font-size:13px;margin-top:12px;">Move mouse vertically to defend</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#0f172a";x.fillRect(0,0,500,350);x.fillStyle="#38bdf8";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.fillStyle="#f43f5e";x.beginPath();x.arc(bx,by,6,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
             }
         ];
 
         async function initLibrary() {
             catalog = [];
+            let connected = false;
+
             if (sbClient) {
                 try {
-                    const { data } = await sbClient.from('games').select('*').order('created_at', { ascending: false });
-                    if (data) {
-                        data.filter(g => g.status === 'live').forEach((g, idx) => {
+                    const { data, error } = await sbClient.from('games').select('*').order('created_at', { ascending: false });
+                    if (!error && Array.isArray(data)) {
+                        connected = true;
+                        data.filter(g => g.status === 'live').forEach((g) => {
+                            const localPlays = parseInt(localStorage.getItem('playcount_' + g.id)) || 0;
                             catalog.push({
+                                id: g.id,
                                 title: g.title,
                                 author: g.author || 'Community',
                                 category: 'community',
-                                popular: idx < 2,
-                                plays: 45000 + (idx * 12300),
-                                rating: '4.' + (7 + (idx % 3)),
+                                play_count: Math.max(g.play_count || 0, localPlays),
                                 html_code: g.html_code,
                                 type: 'supabase'
                             });
@@ -725,14 +772,15 @@
                 const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
                 const files = await res.json();
                 if (Array.isArray(files)) {
-                    files.filter(f => f.name.endsWith('.html')).forEach((f, idx) => {
+                    connected = true;
+                    files.filter(f => f.name.endsWith('.html')).forEach((f) => {
+                        const localPlays = parseInt(localStorage.getItem('playcount_' + f.name)) || 0;
                         catalog.push({
+                            id: f.name,
                             title: f.name.replace('.html', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
                             author: 'GitHub Repo',
                             category: 'arcade',
-                            popular: idx === 0,
-                            plays: 68000 + (idx * 8400),
-                            rating: '4.8',
+                            play_count: localPlays,
                             url: `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${f.name}`,
                             type: 'github'
                         });
@@ -740,24 +788,35 @@
                 }
             } catch(e) { console.warn(e); }
 
-            if (!catalog.length) catalog = [...BUILTINS];
+            if (!catalog.length) {
+                BUILTINS.forEach(b => {
+                    const localPlays = parseInt(localStorage.getItem('playcount_' + b.title)) || 0;
+                    catalog.push({ ...b, play_count: localPlays });
+                });
+            }
 
+            document.getElementById('catalog-health').textContent = connected ? 'Connected (Live)' : 'Standalone (Offline)';
+            
+            updateGlobalPlaysCounter();
             renderTrending();
             filterAndSortGames();
+            initPresenceTracker();
 
             // Direct URL Query Parameter Launcher (e.g. ?play=Retro%20Snake)
             const urlParams = new URLSearchParams(window.location.search);
             const playTarget = urlParams.get('play');
             if (playTarget) {
                 const targetGame = catalog.find(g => g.title.toLowerCase() === playTarget.toLowerCase());
-                if (targetGame) openGame(targetGame.title, targetGame.url, targetGame.html_code);
+                if (targetGame) launchGameFlow(targetGame);
             }
         }
 
-        // Render Trending Spotlight
+        /* -------------------------------------------------------------
+           4. RENDER TRENDING (RANKED BY ACTUAL PLAYS)
+        ------------------------------------------------------------- */
         function renderTrending() {
             const trendingContainer = document.getElementById('trending-container');
-            const trendingList = [...catalog].sort((a, b) => (b.plays || 0) - (a.plays || 0)).slice(0, 3);
+            const trendingList = [...catalog].sort((a, b) => (b.play_count || 0) - (a.play_count || 0)).slice(0, 3);
 
             trendingContainer.innerHTML = '';
             trendingList.forEach((game, idx) => {
@@ -767,21 +826,21 @@
                     <div style="display: flex; align-items: center;">
                         <span class="rank-badge">#${idx + 1}</span>
                         <div>
-                            <span style="font-size: 0.72rem; font-weight: 700; color: var(--accent-ice); text-transform: uppercase;">⭐ ${(game.plays || 50000).toLocaleString()} Plays</span>
+                            <span style="font-size: 0.72rem; font-weight: 700; color: var(--accent-ice); text-transform: uppercase;">🔥 ${(game.play_count || 0).toLocaleString()} Verified Plays</span>
                             <h3 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin-top: 2px;">${game.title}</h3>
                             <span style="font-size: 0.8rem; color: var(--text-muted);">By ${game.author}</span>
                         </div>
                     </div>
                     <span class="play-pill">Play ▶</span>
                 `;
-                card.addEventListener('click', () => {
-                    if (game.type === 'supabase') openGame(game.title, null, game.html_code);
-                    else openGame(game.title, game.url, null);
-                });
+                card.addEventListener('click', () => launchGameFlow(game));
                 trendingContainer.appendChild(card);
             });
         }
 
+        /* -------------------------------------------------------------
+           5. FILTERING & SORTING
+        ------------------------------------------------------------- */
         function setCategoryFilter(cat, btn) {
             activeCategory = cat;
             document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
@@ -797,7 +856,7 @@
             let list = [...catalog];
 
             if (activeCategory === 'popular') {
-                list = list.filter(g => g.popular || g.plays > 60000);
+                list.sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
             } else if (activeCategory !== 'all') {
                 list = list.filter(g => g.category === activeCategory);
             }
@@ -807,7 +866,7 @@
             }
 
             if (sort === 'popular') {
-                list.sort((a, b) => (b.plays || 0) - (a.plays || 0));
+                list.sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
             } else if (sort === 'alpha') {
                 list.sort((a, b) => a.title.localeCompare(b.title));
             }
@@ -829,33 +888,37 @@
                                 <div style="flex: 1;">
                                     <div class="card-tag-row">
                                         <span class="card-tag">${game.category || 'Arcade'}</span>
-                                        <span class="card-plays">🔥 ${(game.plays || 25000).toLocaleString()}</span>
+                                        <span class="card-plays">🎮 ${(game.play_count || 0).toLocaleString()} plays</span>
                                     </div>
                                     <h3 class="card-title">${game.title}</h3>
                                 </div>
                             </div>
-                            <p class="card-body">By ${game.author}. Play instantly in full focus mode without downloads.</p>
+                            <p class="card-body">By ${game.author}. Click to launch in dedicated fullscreen mode.</p>
                         </div>
                         <div class="card-footer">
-                            <span style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; font-weight: 700;">★ ${game.rating || '4.8'}</span>
+                            <span style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; font-weight: 700;">Zero Friction</span>
                             <span class="play-pill">Play Now ▶</span>
                         </div>
                     </div>
                 `;
-                wrap.addEventListener('click', () => {
-                    if (game.type === 'supabase') openGame(game.title, null, game.html_code);
-                    else openGame(game.title, game.url, null);
-                });
+                wrap.addEventListener('click', () => launchGameFlow(game));
                 container.appendChild(wrap);
             });
         }
 
-        // Fullscreen Game Runner
+        /* -------------------------------------------------------------
+           6. FULLSCREEN GAME RUNNER CONTROLLER
+        ------------------------------------------------------------- */
         const catalogView = document.getElementById('catalog-view');
         const playerView = document.getElementById('player-view');
         const gameFrame = document.getElementById('game-frame');
         const playerGameTitle = document.getElementById('player-game-title');
         let activeRecord = { title: '', code: '', url: '' };
+
+        function launchGameFlow(game) {
+            recordRealPlay(game);
+            openGame(game.title, game.url, game.html_code);
+        }
 
         function openGame(title, url, rawCode = null) {
             activeRecord = { title, url, code: rawCode };
