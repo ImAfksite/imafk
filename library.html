@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="meta.title">Arcade Library — I’m Afk</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --bg-deep: #0a0a12;
+            --glass-card: rgba(16, 22, 36, 0.75);
+            --glass-card-hover: rgba(24, 34, 54, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-border-hover: rgba(103, 232, 249, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-light: #64748b;
+            --accent-ice: #67e8f9;
+            --accent-blue: #3b82f6;
+            --btn-pill: rgba(255, 255, 255, 0.08);
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        html[lang="ar"] { --font-main: 'Tajawal', system-ui, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 50% 10%, rgba(59, 130, 246, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 85% 70%, rgba(103, 232, 249, 0.1) 0%, transparent 45%);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .glass-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px clamp(24px, 4vw, 48px);
+            background: rgba(10, 10, 18, 0.7);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .brand-block {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: clamp(20px, 3vw, 36px);
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.25s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: #fff; }
+
+        .lang-toggle {
+            background: var(--btn-pill);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .library-hero {
+            text-align: center;
+            padding: 50px 24px 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .library-hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .library-hero p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Filter & Search Bar */
+        .catalog-controls {
+            max-width: 1240px;
+            margin: 20px auto 40px;
+            padding: 0 clamp(20px, 4vw, 48px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .search-glass-box {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(14, 20, 32, 0.7);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            padding: 14px 20px 14px 48px;
+            border-radius: 100px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-ice);
+            background: rgba(18, 26, 42, 0.9);
+            box-shadow: 0 0 25px rgba(103, 232, 249, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        html[dir="rtl"] .search-input { padding: 14px 48px 14px 20px; }
+        html[dir="rtl"] .search-icon { left: auto; right: 18px; }
+
+        .sort-select {
+            background: #0d131f;
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 13px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .tags-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag-pill:hover, .tag-pill.active {
+            background: rgba(103, 232, 249, 0.15);
+            border-color: rgba(103, 232, 249, 0.4);
+            color: var(--accent-ice);
+        }
+
+        /* Game Grid */
+        .game-grid-section {
+            max-width: 1240px;
+            margin: 0 auto 90px;
+            padding: 0 clamp(20px, 4vw, 48px);
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 28px;
+        }
+
+        .game-card-wrapper {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .game-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 26px;
+            padding: 26px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, background 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 270px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+        }
+
+        .game-card-wrapper:hover .game-card {
+            transform: translateY(-6px);
+            background: var(--glass-card-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .card-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-ice);
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card-body {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.55;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .play-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            transition: all 0.2s;
+        }
+
+        .game-card-wrapper:hover .play-pill {
+            background: #ffffff;
+            color: #0a0a12;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Fullscreen Game Player Overlay */
+        #player-view {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 999999;
+            flex-direction: column;
+        }
+
+        .player-top-bar {
+            height: 60px;
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            flex-shrink: 0;
+        }
+
+        .player-back-btn {
+            background: var(--btn-pill);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .player-back-btn:hover { background: #fff; color: #000; }
+
+        .player-game-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .player-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .player-action-btn {
+            background: var(--btn-pill);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .player-action-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+        #game-frame {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: #000;
+        }
+
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 45px 24px;
+            text-align: center;
+            background: rgba(10, 10, 18, 0.85);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="catalog-view">
+        <header class="glass-nav">
+            <a href="index.html" class="brand-block">
+                <span>✦</span>
+                <span>I’M AFK</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="library.html" class="active">Library</a></li>
+                <li><a href="submit.html">Submit</a></li>
+                <li><a href="contact.html">Support</a></li>
+            </ul>
+
+            <div>
+                <button type="button" class="lang-toggle" id="lang-btn">العربية</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="library-hero">
+                <h1 data-i18n="lib.title">Arcade <span>Library</span></h1>
+                <p data-i18n="lib.lead">Select any standalone HTML5 creation to launch immediately in full focus mode.</p>
+            </div>
+
+            <!-- Controls -->
+            <div class="catalog-controls">
+                <div class="search-row">
+                    <div class="search-glass-box">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="game-search" class="search-input" placeholder="Search by game name or author..." oninput="filterAndSortGames()">
+                    </div>
+                    <select id="sort-select" class="sort-select" onchange="filterAndSortGames()">
+                        <option value="newest">Sort: Newest</option>
+                        <option value="alpha">Sort: Title (A-Z)</option>
+                    </select>
+                </div>
+
+                <div class="tags-row">
+                    <button class="tag-pill active" onclick="setCategoryFilter('all', this)">All Games</button>
+                    <button class="tag-pill" onclick="setCategoryFilter('arcade', this)">Arcade</button>
+                    <button class="tag-pill" onclick="setCategoryFilter('community', this)">Community</button>
+                    <button class="tag-pill" onclick="setCategoryFilter('classic', this)">Classic</button>
+                </div>
+            </div>
+
+            <!-- Library Grid -->
+            <section class="game-grid-section">
+                <div class="game-grid" id="game-container">
+                    <div style="text-align: center; grid-column: 1/-1; padding: 50px; color: var(--text-muted);">Syncing arcade catalog...</div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024–2026 I’m Afk &bull; Curated Web Arcade</p>
+        </footer>
+    </div>
+
+    <!-- FULLSCREEN GAME RUNNER -->
+    <div id="player-view">
+        <div class="player-top-bar">
+            <button class="player-back-btn" id="player-back-btn">← Back to Library</button>
+            <div class="player-game-title" id="player-game-title">Game Title</div>
+            <div class="player-actions">
+                <button class="player-action-btn" id="player-reload-btn">Restart</button>
+                <button class="player-action-btn" id="player-tab-btn">New Tab ↗</button>
+                <button class="player-action-btn" id="player-fullscreen-btn">Fullscreen ⛶</button>
+            </div>
+        </div>
+        <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-modals allow-popups" allow="fullscreen; autoplay; gamepad"></iframe>
+    </div>
+
+    <script>
+        const I18N = {
+            en: {
+                "meta.title": "Arcade Library — I’m Afk",
+                "lib.title": "Arcade <span>Library</span>",
+                "lib.lead": "Select any standalone HTML5 creation to launch immediately in full focus mode."
+            },
+            ar: {
+                "meta.title": "مكتبة الألعاب — I’m Afk",
+                "lib.title": "مكتبة <span>الألعاب</span>",
+                "lib.lead": "اختر أي لعبة لتشغيلها مباشرة بشاشة كاملة وبدون إعلانات."
+            }
+        };
+
+        let currentLang = 'en';
+        const langBtn = document.getElementById('lang-btn');
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
+            });
+        }
+        langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
+
+        // Dual Engine Catalog Fetching
+        const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
+        const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        const GITHUB_USER = 'imafksite'; 
+        const GITHUB_REPO = 'imafk';
+
+        let catalog = [];
+        let activeCategory = 'all';
+
+        const BUILTINS = [
+            {
+                title: 'Retro Snake',
+                author: 'Classic Arcade',
+                category: 'classic',
+                type: 'supabase',
+                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;color:#67e8f9;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{border:2px solid rgba(255,255,255,0.15);background:#0f172a;border-radius:14px;box-shadow:0 0 30px rgba(0,0,0,0.8);}</style></head><body><h2 style="font-weight:600;letter-spacing:1px;">RETRO SNAKE</h2><canvas id="c" width="400" height="400"></canvas><p style="color:#94a3b8;font-size:13px;margin-top:12px;">Use Arrow Keys to Navigate</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let s=[{x:10,y:10}],d={x:1,y:0},f={x:15,y:15},score=0;setInterval(()=>{let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.some(p=>p.x===h.x&&p.y===h.y)){s=[{x:10,y:10}];d={x:1,y:0};score=0;return;}s.unshift(h);if(h.x===f.x&&h.y===f.y){score+=10;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else s.pop();x.fillStyle="#0f172a";x.fillRect(0,0,400,400);x.fillStyle="#f43f5e";x.fillRect(f.x*20,f.y*20,18,18);x.fillStyle="#38bdf8";s.forEach(p=>x.fillRect(p.x*20,p.y*20,18,18));x.fillStyle="#fff";x.fillText("Score: "+score,14,24);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&d.y===0)d={x:0,y:-1};if(e.key==="ArrowDown"&&d.y===0)d={x:0,y:1};if(e.key==="ArrowLeft"&&d.x===0)d={x:-1,y:0};if(e.key==="ArrowRight"&&d.x===0)d={x:1,y:0};};<\/script></body></html>`
+            },
+            {
+                title: 'Neon Pong',
+                author: 'Cyber Arcade',
+                category: 'arcade',
+                type: 'supabase',
+                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#fff;font-family:sans-serif;}canvas{border:2px solid rgba(255,255,255,0.15);background:#0f172a;border-radius:14px;box-shadow:0 0 30px rgba(0,0,0,0.8);}</style></head><body><h2 style="font-weight:600;letter-spacing:1px;">NEON PONG</h2><canvas id="c" width="500" height="350"></canvas><p style="color:#94a3b8;font-size:13px;margin-top:12px;">Move mouse vertically to defend</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#0f172a";x.fillRect(0,0,500,350);x.fillStyle="#38bdf8";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.fillStyle="#f43f5e";x.beginPath();x.arc(bx,by,6,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
+            }
+        ];
+
+        async function initLibrary() {
+            catalog = [];
+            if (sbClient) {
+                try {
+                    const { data } = await sbClient.from('games').select('*').order('created_at', { ascending: false });
+                    if (data) {
+                        data.filter(g => g.status === 'live').forEach(g => {
+                            catalog.push({
+                                title: g.title,
+                                author: g.author || 'Community',
+                                category: 'community',
+                                html_code: g.html_code,
+                                type: 'supabase'
+                            });
+                        });
+                    }
+                } catch (e) { console.warn(e); }
+            }
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
+                const files = await res.json();
+                if (Array.isArray(files)) {
+                    files.filter(f => f.name.endsWith('.html')).forEach(f => {
+                        catalog.push({
+                            title: f.name.replace('.html', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                            author: 'GitHub Repo',
+                            category: 'arcade',
+                            url: `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${f.name}`,
+                            type: 'github'
+                        });
+                    });
+                }
+            } catch(e) { console.warn(e); }
+
+            if (!catalog.length) catalog = [...BUILTINS];
+            filterAndSortGames();
+
+            // Direct URL Query Parameter Launcher (e.g. ?play=Retro%20Snake)
+            const urlParams = new URLSearchParams(window.location.search);
+            const playTarget = urlParams.get('play');
+            if (playTarget) {
+                const targetGame = catalog.find(g => g.title.toLowerCase() === playTarget.toLowerCase());
+                if (targetGame) openGame(targetGame.title, targetGame.url, targetGame.html_code);
+            }
+        }
+
+        function setCategoryFilter(cat, btn) {
+            activeCategory = cat;
+            document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            filterAndSortGames();
+        }
+
+        function filterAndSortGames() {
+            const container = document.getElementById('game-container');
+            const search = document.getElementById('game-search').value.toLowerCase();
+            const sort = document.getElementById('sort-select').value;
+
+            let list = [...catalog];
+
+            if (activeCategory !== 'all') {
+                list = list.filter(g => g.category === activeCategory);
+            }
+
+            if (search) {
+                list = list.filter(g => g.title.toLowerCase().includes(search) || g.author.toLowerCase().includes(search));
+            }
+
+            if (sort === 'alpha') {
+                list.sort((a, b) => a.title.localeCompare(b.title));
+            }
+
+            if (!list.length) {
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No games found matching your search.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            list.forEach(game => {
+                const wrap = document.createElement('div');
+                wrap.className = 'game-card-wrapper';
+                wrap.innerHTML = `
+                    <div class="game-card">
+                        <div>
+                            <div class="card-top">
+                                <div class="card-avatar">${game.title.charAt(0)}</div>
+                                <div>
+                                    <span class="card-tag">${game.category || 'Arcade'}</span>
+                                    <h3 class="card-title">${game.title}</h3>
+                                </div>
+                            </div>
+                            <p class="card-body">By ${game.author}. Play in dedicated full screen without downloads.</p>
+                        </div>
+                        <div class="card-footer">
+                            <span style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; font-weight: 700;">Stand-alone</span>
+                            <span class="play-pill">Play Now ▶</span>
+                        </div>
+                    </div>
+                `;
+                wrap.addEventListener('click', () => {
+                    if (game.type === 'supabase') openGame(game.title, null, game.html_code);
+                    else openGame(game.title, game.url, null);
+                });
+                container.appendChild(wrap);
+            });
+        }
+
+        // Fullscreen Game Runner Controller
+        const catalogView = document.getElementById('catalog-view');
+        const playerView = document.getElementById('player-view');
+        const gameFrame = document.getElementById('game-frame');
+        const playerGameTitle = document.getElementById('player-game-title');
+        let activeRecord = { title: '', code: '', url: '' };
+
+        function openGame(title, url, rawCode = null) {
+            activeRecord = { title, url, code: rawCode };
+            playerGameTitle.textContent = title;
+            catalogView.style.display = 'none';
+            playerView.style.display = 'flex';
+            window.scrollTo(0, 0);
+
+            gameFrame.src = 'about:blank';
+            setTimeout(() => {
+                if (rawCode) {
+                    gameFrame.removeAttribute('src');
+                    gameFrame.srcdoc = rawCode;
+                } else if (url) {
+                    gameFrame.removeAttribute('srcdoc');
+                    gameFrame.src = url;
+                }
+                setTimeout(() => gameFrame.focus(), 150);
+            }, 60);
+        }
+
+        function closeGame() {
+            playerView.style.display = 'none';
+            catalogView.style.display = 'block';
+            gameFrame.srcdoc = '';
+            gameFrame.src = 'about:blank';
+        }
+
+        document.getElementById('player-back-btn').addEventListener('click', closeGame);
+        document.getElementById('player-reload-btn').addEventListener('click', () => {
+            const { code, url } = activeRecord;
+            gameFrame.srcdoc = '';
+            gameFrame.src = 'about:blank';
+            setTimeout(() => {
+                if (code) gameFrame.srcdoc = code;
+                else if (url) gameFrame.src = url;
+            }, 80);
+        });
+
+        document.getElementById('player-tab-btn').addEventListener('click', () => {
+            if (activeRecord.code) {
+                const w = window.open('', '_blank');
+                if (w) { w.document.write(activeRecord.code); w.document.close(); }
+            } else if (activeRecord.url) {
+                window.open(activeRecord.url, '_blank');
+            }
+        });
+
+        document.getElementById('player-fullscreen-btn').addEventListener('click', () => {
+            if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
+            else if (gameFrame.webkitRequestFullscreen) gameFrame.webkitRequestFullscreen();
+        });
+
+        initLibrary();
+    </script>
+</body>
+</html>
