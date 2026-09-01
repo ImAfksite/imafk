@@ -3,30 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">Game Creation Studio & IDE — I’M AFK</title>
+    <title data-i18n="meta.title">Submit Project — I’M AFK</title>
     
-    <!-- Google Fonts & CDN Libraries -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
             --bg-deep: #07090e;
-            --bg-surface: #0c111d;
-            --studio-panel: rgba(14, 20, 34, 0.85);
+            --glass-card: rgba(16, 22, 36, 0.72);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-border-focus: rgba(103, 232, 249, 0.45);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --text-dim: #64748b;
             --accent-ice: #67e8f9;
             --accent-blue: #3b82f6;
-            --accent-emerald: #10b981;
-            --accent-amber: #f59e0b;
-            --accent-rose: #ef4444;
+            --accent-purple: #a855f7;
             --btn-pill: rgba(255, 255, 255, 0.08);
             --font-display: 'Space Grotesk', sans-serif;
             --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -39,896 +34,539 @@
         body {
             background-color: var(--bg-deep);
             background-image: 
-                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 90% 90%, rgba(103, 232, 249, 0.08) 0%, transparent 45%);
+                radial-gradient(circle at 50% 15%, rgba(59, 130, 246, 0.15) 0%, transparent 55%),
+                radial-gradient(circle at 80% 80%, rgba(103, 232, 249, 0.08) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
             color: var(--text-main);
             font-family: var(--font-main);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
         }
 
-        /* Top Studio Command Bar */
-        .studio-nav {
-            height: 64px;
-            background: rgba(10, 14, 24, 0.95);
-            border-bottom: 1px solid var(--glass-border);
+        /* Glass Header */
+        .glass-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 clamp(16px, 2.5vw, 32px);
-            z-index: 50;
-            flex-shrink: 0;
+            align-items: center;
+            padding: 18px clamp(24px, 4vw, 48px);
+            background: rgba(7, 9, 14, 0.7);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        .brand-cluster {
-            display: flex;
+        .brand-block {
+            display: inline-flex;
             align-items: center;
             gap: 12px;
             text-decoration: none;
             color: var(--text-main);
-        }
-
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            color: var(--accent-ice);
-        }
-
-        .studio-title-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid transparent;
-            color: #fff;
             font-family: var(--font-display);
-            font-size: 1.05rem;
             font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 8px;
-            outline: none;
-            width: 240px;
-            transition: all 0.2s;
-        }
-        .studio-title-input:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--accent-ice);
-        }
-
-        .studio-tools {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-studio {
-            background: var(--btn-pill);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 7px 16px;
-            border-radius: 50px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .btn-studio:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--accent-ice);
-            color: #fff;
-        }
-
-        .btn-run {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #040807;
-            font-weight: 800;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-        }
-        .btn-run:hover {
-            background: #34d399;
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
-            transform: translateY(-1px);
-        }
-
-        .btn-publish {
-            background: linear-gradient(135deg, var(--accent-ice), var(--accent-blue));
-            color: #040810;
-            font-weight: 800;
-            border: none;
-            box-shadow: 0 0 15px rgba(103, 232, 249, 0.3);
-        }
-        .btn-publish:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 25px rgba(103, 232, 249, 0.5);
-        }
-
-        /* Main Split Workspace */
-        .workspace {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            overflow: hidden;
-        }
-
-        /* Left Editor Pane */
-        .editor-pane {
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--glass-border);
-            background: #090d16;
-            overflow: hidden;
-        }
-
-        .pane-toolbar {
-            height: 44px;
-            background: rgba(16, 22, 36, 0.9);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        .snippet-strip {
-            display: flex;
-            gap: 6px;
-        }
-
-        .snippet-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            font-family: var(--font-code);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .snippet-btn:hover {
-            background: rgba(103, 232, 249, 0.15);
-            color: var(--accent-ice);
-            border-color: var(--accent-ice);
-        }
-
-        .editor-container {
-            flex: 1;
-            position: relative;
-            display: flex;
-            overflow: hidden;
-        }
-
-        .line-numbers {
-            width: 44px;
-            padding: 16px 8px;
-            background: #06080e;
-            color: var(--text-dim);
-            font-family: var(--font-code);
-            font-size: 0.82rem;
-            line-height: 1.5;
-            text-align: right;
-            user-select: none;
-            border-right: 1px solid var(--glass-border);
-            overflow: hidden;
-        }
-
-        .code-textarea {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            padding: 16px;
-            color: #7dd3fc;
-            font-family: var(--font-code);
-            font-size: 0.85rem;
-            line-height: 1.5;
-            resize: none;
-            white-space: pre;
-            tab-size: 2;
-            overflow: auto;
-        }
-
-        /* Right Preview & Sandbox Pane */
-        .preview-pane {
-            display: flex;
-            flex-direction: column;
-            background: #04060a;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .viewport-controller {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .viewport-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            cursor: pointer;
-        }
-        .viewport-btn.active {
-            background: var(--accent-ice);
-            color: #000;
-            font-weight: 700;
-        }
-
-        .sandbox-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            background: #000;
-            overflow: hidden;
-        }
-
-        .device-frame {
-            width: 100%;
-            height: 100%;
-            transition: width 0.3s ease;
-            background: #000;
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-        }
-
-        #sandbox-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-
-        /* Integrated Debugger / Console Drawer */
-        .console-drawer {
-            height: 130px;
-            background: #080b12;
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            font-family: var(--font-code);
-            font-size: 0.78rem;
-        }
-
-        .console-header {
-            padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-muted);
-            font-size: 0.72rem;
+            font-size: 1.15rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
-        .console-logs {
-            flex: 1;
-            padding: 8px 14px;
-            overflow-y: auto;
+        .nav-links {
             display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .log-info { color: #94a3b8; }
-        .log-error { color: #f87171; }
-        .log-warn { color: #fde047; }
-
-        /* ------------------ MODALS ------------------ */
-        .studio-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(7, 9, 14, 0.85);
-            backdrop-filter: blur(20px);
-            z-index: 99999;
+            list-style: none;
+            gap: clamp(20px, 3vw, 36px);
             align-items: center;
-            justify-content: center;
-            padding: 20px;
         }
 
-        .modal-card {
-            width: 100%;
-            max-width: 540px;
-            background: var(--studio-panel);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 36px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(103, 232, 249, 0.15);
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.25s;
         }
+        .nav-links a:hover, .nav-links a.active { color: #fff; }
+
+        .lang-toggle {
+            background: var(--btn-pill);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .submit-container {
+            max-width: 900px;
+            margin: 40px auto 80px;
+            padding: 0 24px;
+        }
+
+        .submit-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .submit-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        /* Banner to Studio */
+        .studio-promo-banner {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            padding: 20px 26px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-studio-cta {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+        .btn-studio-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+        }
+
+        .glass-form-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .full-width { grid-column: 1 / -1; }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            margin-bottom: 16px;
+            gap: 8px;
         }
 
         .input-group label {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 700;
-            color: var(--text-muted);
+            color: #d1d5db;
         }
 
-        .modal-input {
+        .input-group input {
             width: 100%;
             background: rgba(9, 13, 22, 0.85);
             border: 1px solid var(--glass-border);
-            padding: 12px 16px;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 0.9rem;
+            padding: 14px 18px;
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 0.95rem;
             outline: none;
-            transition: 0.2s;
-        }
-        .modal-input:focus {
-            border-color: var(--accent-ice);
-            box-shadow: 0 0 15px rgba(103, 232, 249, 0.2);
+            transition: all 0.3s;
         }
 
-        @media (max-width: 900px) {
-            .workspace { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
-            .editor-pane { border-right: none; border-bottom: 1px solid var(--glass-border); }
+        .input-group input:focus {
+            border-color: var(--accent-ice);
+            box-shadow: 0 0 20px rgba(103, 232, 249, 0.2);
+            background: rgba(12, 18, 30, 0.95);
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 22px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 12px;
+        }
+
+        .drop-zone:hover {
+            border-color: var(--accent-ice);
+            background: rgba(103, 232, 249, 0.05);
+        }
+
+        .code-area {
+            width: 100%;
+            height: 220px;
+            background: #080c14;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
+            color: var(--accent-ice);
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+        }
+
+        .code-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .test-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .test-btn:hover {
+            background: var(--accent-ice);
+            color: #0a0a12;
+        }
+
+        .submit-btn-main {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 16px;
+            border-radius: 50px;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.25s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn-main:hover {
+            background: #ffffff;
+            color: #0a0a12;
+            transform: translateY(-2px);
+        }
+
+        /* Sandbox Modal */
+        .sandbox-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 18, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .sandbox-window {
+            width: 100%;
+            max-width: 980px;
+            height: 82vh;
+            background: #090d16;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sandbox-header {
+            padding: 14px 20px;
+            background: rgba(16, 22, 36, 0.9);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .sandbox-close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        #sandbox-frame { flex: 1; border: none; background: #000; }
+
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 40px 24px;
+            text-align: center;
+            background: rgba(10, 10, 18, 0.85);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Studio Command Navbar -->
-    <header class="studio-nav">
-        <div style="display: flex; align-items: center; gap: 16px;">
-            <a href="index.html" class="brand-cluster" title="Return to Arcade">
-                <div class="brand-icon">✦</div>
-                <span style="font-family: var(--font-display); font-weight: 700;">I’M AFK</span>
-            </a>
-            <input type="text" id="project-title" class="studio-title-input" value="Untitled Game Prototype" placeholder="Project Name">
-        </div>
+    <header class="glass-nav">
+        <a href="index.html" class="brand-block">
+            <span>✦</span>
+            <span>I’M AFK</span>
+        </a>
 
-        <!-- Toolbar Actions -->
-        <div class="studio-tools">
-            <select id="template-select" class="btn-studio" style="padding: 6px 12px; outline:none;" onchange="loadTemplate(this.value)">
-                <option value="">⚡ Load Starter Template...</option>
-                <option value="canvas2d">🎮 2D Canvas Game Loop</option>
-                <option value="pong">⚡ Retro Pong Match</option>
-                <option value="particles">✨ Interactive Physics Toy</option>
-                <option value="threejs">🌐 3D WebGL (Three.js)</option>
-            </select>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="library.html">Library</a></li>
+            <li><a href="studio.html" style="color: var(--accent-ice);">Studio IDE ⚡</a></li>
+            <li><a href="contact.html">Support</a></li>
+        </ul>
 
-            <button class="btn-studio" onclick="downloadCodeFile()" title="Download .html file">💾 Export HTML</button>
-            <input type="file" id="file-importer" accept=".html,.htm" style="display:none;" onchange="importLocalCode(event)">
-            <button class="btn-studio" onclick="document.getElementById('file-importer').click()">📂 Open</button>
-            
-            <button class="btn-studio btn-run" onclick="runCode()">▶ Run (Ctrl+Enter)</button>
-            <button class="btn-studio btn-publish" onclick="openPublishModal()">🚀 Publish to Arcade</button>
-
-            <button type="button" class="btn-studio" id="lang-btn" style="border-radius: 50px; font-weight: 700;">العربية</button>
+        <div>
+            <button type="button" class="lang-toggle" id="lang-btn">العربية</button>
         </div>
     </header>
 
-    <!-- Main Workspace (Editor + Live Runner) -->
-    <main class="workspace">
-        <!-- Editor Pane -->
-        <section class="editor-pane">
-            <div class="pane-toolbar">
-                <div class="snippet-strip">
-                    <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-dim); margin-right: 4px;">Snippets:</span>
-                    <button class="snippet-btn" onclick="insertSnippet('gameloop')">+ Game Loop</button>
-                    <button class="snippet-btn" onclick="insertSnippet('keyboard')">+ Keys Listener</button>
-                    <button class="snippet-btn" onclick="insertSnippet('audio')">+ Sound Synth</button>
-                    <button class="snippet-btn" onclick="insertSnippet('canvas')">+ Auto Canvas</button>
-                </div>
-                <span id="editor-metrics">0 lines | 0 KB</span>
-            </div>
+    <main class="submit-container">
+        <div class="submit-header">
+            <h1 data-i18n="sub.title">Submit Your <span>Game</span></h1>
+            <p style="color: var(--text-muted);" data-i18n="sub.lead">Publish your standalone HTML5 creation directly to our network catalog.</p>
+        </div>
 
-            <div class="editor-container">
-                <div class="line-numbers" id="line-numbers">1</div>
-                <textarea id="code-editor" class="code-textarea" spellcheck="false" placeholder="Write or paste your HTML5 / JavaScript game here..."></textarea>
+        <!-- Studio IDE Gateway Banner -->
+        <div class="studio-promo-banner">
+            <div>
+                <div style="font-weight: 700; color: #fff; font-size: 1.05rem;">Want to code & test in real-time?</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;">Open our integrated Game Creation Studio with templates, snippets, and live preview.</div>
             </div>
-        </section>
+            <a href="studio.html" class="btn-studio-cta">⚡ Open AFK Studio IDE ➔</a>
+        </div>
 
-        <!-- Live Sandbox & Preview Pane -->
-        <section class="preview-pane">
-            <div class="pane-toolbar">
-                <div class="viewport-controller">
-                    <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-dim); margin-right: 4px;">Screen:</span>
-                    <button class="viewport-btn active" onclick="setDeviceViewport('100%', this)">🖥️ Full</button>
-                    <button class="viewport-btn" onclick="setDeviceViewport('768px', this)">📱 Tablet</button>
-                    <button class="viewport-btn" onclick="setDeviceViewport('390px', this)">📱 Mobile</button>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn-studio" style="padding: 2px 10px; font-size: 0.75rem;" onclick="runCode()">↻ Reload</button>
-                    <button class="btn-studio" style="padding: 2px 10px; font-size: 0.75rem;" onclick="toggleFullscreenFrame()">⛶ Fullscreen</button>
-                </div>
-            </div>
+        <!-- Submission Form Card -->
+        <div class="glass-form-card">
+            <form id="submissionForm">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="game-name" data-i18n="form.name">Project Title *</label>
+                        <input type="text" id="game-name" placeholder="e.g. Celestial Orbit" required>
+                    </div>
 
-            <div class="sandbox-container">
-                <div class="device-frame" id="device-frame">
-                    <iframe id="sandbox-iframe" sandbox="allow-scripts allow-forms allow-pointer-lock allow-modals" allow="fullscreen; autoplay; gamepad"></iframe>
-                </div>
-            </div>
+                    <div class="input-group">
+                        <label for="author" data-i18n="form.author">Author / Studio Credits *</label>
+                        <input type="text" id="author" placeholder="e.g. Elena Vance / @handle" required>
+                    </div>
 
-            <!-- Integrated Debugger Output -->
-            <div class="console-drawer">
-                <div class="console-header">
-                    <span>Studio Console & Diagnostics</span>
-                    <button style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:0.75rem;" onclick="clearConsole()">Clear</button>
+                    <div class="input-group full-width">
+                        <label for="source" data-i18n="form.source">Repository / Source URL (Optional)</label>
+                        <input type="url" id="source" placeholder="https://github.com/user/project">
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label data-i18n="form.code">Standalone HTML5 Code *</label>
+                        <div class="drop-zone" id="dropZone">
+                            <p><span style="color: var(--accent-ice); font-weight: 700;" data-i18n="form.dropPrompt">Drop .html file here</span> or paste source below</p>
+                            <input type="file" id="fileInput" accept=".html,.htm" style="display:none;">
+                        </div>
+                        <textarea id="html-code" class="code-area" placeholder="<!DOCTYPE html>&#10;<html>...</html>" required></textarea>
+                        <div class="code-toolbar">
+                            <span id="code-stats">0 characters | 0 lines</span>
+                            <button type="button" class="test-btn" id="run-sandbox-btn" data-i18n="form.test">⚡ Run Sandbox Preview</button>
+                        </div>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label for="email" data-i18n="form.email">Contact Email *</label>
+                        <input type="email" id="email" placeholder="dev@domain.com" required>
+                    </div>
                 </div>
-                <div class="console-logs" id="console-logs">
-                    <div class="log-info">[STUDIO READY] Write code or load a template, then click "Run" to test.</div>
+
+                <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="agree" required style="accent-color: var(--accent-ice); width: 18px; height: 18px;">
+                    <label for="agree" style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="form.agree">
+                        I confirm this code is authored by me or licensed under permissive open-source terms.
+                    </label>
                 </div>
-            </div>
-        </section>
+
+                <button type="submit" class="submit-btn-main" id="submitBtn">
+                    <span data-i18n="form.submit">Publish Project to Index →</span>
+                </button>
+            </form>
+        </div>
     </main>
 
-    <!-- 🚀 Publish Modal -->
-    <div class="studio-modal" id="publish-modal">
-        <div class="modal-card">
-            <h2 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 6px;">🚀 Publish to Global Arcade</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Deploy your creation to the public network index for everyone to play.</p>
-
-            <form onsubmit="event.preventDefault(); publishGameToNetwork();">
-                <div class="input-group">
-                    <label>Project Title *</label>
-                    <input type="text" id="pub-title" class="modal-input" required>
-                </div>
-                <div class="input-group">
-                    <label>Author / Studio Name *</label>
-                    <input type="text" id="pub-author" class="modal-input" placeholder="e.g. PixelForge / @handle" required>
-                </div>
-                <div class="input-group">
-                    <label>Contact Email (for takedowns/updates) *</label>
-                    <input type="email" id="pub-email" class="modal-input" placeholder="dev@domain.com" required>
-                </div>
-                <div class="input-group">
-                    <label>Repository / Source URL (Optional)</label>
-                    <input type="url" id="pub-source" class="modal-input" placeholder="https://github.com/user/project">
-                </div>
-
-                <div style="margin: 16px 0; font-size: 0.8rem; color: var(--text-muted);">
-                    By publishing, you confirm your game runs in the browser and complies with open-source community standards.
-                </div>
-
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" class="btn-studio" onclick="closePublishModal()">Cancel</button>
-                    <button type="submit" class="btn-studio btn-publish" id="pub-btn">Confirm & Launch ➔</button>
-                </div>
-            </form>
+    <!-- Sandbox Modal -->
+    <div class="sandbox-modal" id="sandbox-modal">
+        <div class="sandbox-window">
+            <div class="sandbox-header">
+                <span>▶ Live Sandbox Environment</span>
+                <button type="button" class="sandbox-close-btn" id="close-sandbox-btn">✕ Close</button>
+            </div>
+            <iframe id="sandbox-frame" sandbox="allow-scripts allow-forms allow-pointer-lock" allow="fullscreen; autoplay; gamepad"></iframe>
         </div>
     </div>
 
-    <!-- ================= SCRIPT & STUDIO ENGINE ================= -->
+    <footer>
+        <p>&copy; 2024–2026 I’M AFK &bull; Submission Portal</p>
+    </footer>
+
     <script>
+        const I18N = {
+            en: {
+                "meta.title": "Submit Project — I’M AFK",
+                "sub.title": "Submit Your <span>Game</span>",
+                "sub.lead": "Publish your standalone HTML5 creation directly to our network catalog.",
+                "form.name": "Project Title *",
+                "form.author": "Author / Studio Credits *",
+                "form.source": "Repository / Source URL (Optional)",
+                "form.code": "Standalone HTML5 Code *",
+                "form.dropPrompt": "Drop .html file here",
+                "form.test": "⚡ Run Sandbox Preview",
+                "form.email": "Contact Email *",
+                "form.agree": "I confirm this code is authored by me or licensed under permissive open-source terms.",
+                "form.submit": "Publish Project to Index →"
+            },
+            ar: {
+                "meta.title": "أضف لعبتك — I’M AFK",
+                "sub.title": "أضف <span>مشروعك ولعبتك</span>",
+                "sub.lead": "انشر لعبتك المبنية بـ HTML5 مباشرة في مكتبة الألعاب العالمية.",
+                "form.name": "اسم اللعبة أو المشروع *",
+                "form.author": "اسم المطور أو الأستوديو *",
+                "form.source": "رابط الكود أو المستودع (اختياري)",
+                "form.code": "كود الـ HTML5 الكامل *",
+                "form.dropPrompt": "اسحب ملف .html هنا",
+                "form.test": "⚡ تجربة في الصندوق التجريبي",
+                "form.email": "البريد الإلكتروني للتواصل *",
+                "form.agree": "أقر بأن هذا الكود من برمجتي أو مرخص برخصة برمجية مفتوحة المصدر.",
+                "form.submit": "نشر اللعبة في المكتبة ←"
+            }
+        };
+
+        let currentLang = 'en';
+        const langBtn = document.getElementById('lang-btn');
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
+            });
+        }
+        langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
+
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-        const editor = document.getElementById('code-editor');
-        const lineNumbers = document.getElementById('line-numbers');
-        const metricsDisplay = document.getElementById('editor-metrics');
-        const consoleLogs = document.getElementById('console-logs');
-        const iframe = document.getElementById('sandbox-iframe');
-        const projectTitle = document.getElementById('project-title');
+        document.getElementById('submissionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Publishing to Network... ⚡";
 
-        /* -------------------------------------------------------------
-           1. STARTER TEMPLATES
-        ------------------------------------------------------------- */
-        const TEMPLATES = {
-            canvas2d: `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:#0a0a12; color:#67e8f9; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; overflow:hidden; }
-    canvas { background:#0f172a; border:2px solid rgba(255,255,255,0.15); border-radius:14px; box-shadow:0 0 30px rgba(0,0,0,0.8); }
-  </style>
-</head>
-<body>
-  <h2 style="margin-bottom:12px;">🌟 2D ORBIT DODGER</h2>
-  <canvas id="c" width="480" height="360"></canvas>
-  <p style="color:#94a3b8; font-size:13px; margin-top:10px;">Use [Arrow Keys] or [A/D] to Move</p>
-
-  <script>
-    const canvas = document.getElementById("c");
-    const ctx = canvas.getContext("2d");
-
-    let player = { x: 240, y: 320, size: 20, speed: 6 };
-    let stars = [];
-    let score = 0, gameOver = false;
-    let keys = {};
-
-    window.onkeydown = e => keys[e.key] = true;
-    window.onkeyup = e => keys[e.key] = false;
-
-    function spawnStar() {
-      stars.push({ x: Math.random() * 460 + 10, y: -10, speed: 2 + Math.random() * 3, size: 8 });
-    }
-
-    function loop() {
-      if (!gameOver) {
-        if ((keys["ArrowLeft"] || keys["a"]) && player.x > 15) player.x -= player.speed;
-        if ((keys["ArrowRight"] || keys["d"]) && player.x < 465) player.x += player.speed;
-
-        if (Math.random() < 0.04) spawnStar();
-
-        for (let i = stars.length - 1; i >= 0; i--) {
-          let s = stars[i];
-          s.y += s.speed;
-
-          // Collision check
-          if (Math.hypot(player.x - s.x, player.y - s.y) < player.size) {
-            gameOver = true;
-            console.log("Game Over! Final Score: " + score);
-          }
-
-          if (s.y > 380) { stars.splice(i, 1); score += 10; }
-        }
-      }
-
-      // Draw
-      ctx.fillStyle = "#0f172a";
-      ctx.fillRect(0, 0, 480, 360);
-
-      // Player
-      ctx.fillStyle = "#67e8f9";
-      ctx.beginPath();
-      ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Falling stars
-      ctx.fillStyle = "#f43f5e";
-      stars.forEach(s => {
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // Score
-      ctx.fillStyle = "#fff";
-      ctx.font = "16px sans-serif";
-      ctx.fillText("Score: " + score, 15, 25);
-
-      if (gameOver) {
-        ctx.fillStyle = "#f43f5e";
-        ctx.font = "24px sans-serif";
-        ctx.fillText("GAME OVER - Press R to Restart", 70, 180);
-        if (keys["r"] || keys["R"]) {
-          gameOver = false; score = 0; stars = []; player.x = 240;
-        }
-      }
-
-      requestAnimationFrame(loop);
-    }
-    loop();
-  <\\/script>
-</body>
-</html>`,
-
-            pong: `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { margin:0; background:#07090e; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:#fff; font-family:sans-serif; }
-    canvas { border:2px solid rgba(255,255,255,0.15); background:#0f172a; border-radius:12px; }
-  </style>
-</head>
-<body>
-  <h2>⚡ NEON PONG DYNAMICS</h2>
-  <canvas id="c" width="500" height="350"></canvas>
-  <p style="color:#888; font-size:13px; margin-top:8px;">Move mouse vertically to defend</p>
-  <script>
-    const c = document.getElementById("c"), x = c.getContext("2d");
-    let p1 = 130, p2 = 130, bx = 250, by = 175, vx = 4, vy = 3;
-    c.onmousemove = e => { p1 = e.clientY - c.getBoundingClientRect().top - 40; };
-    setInterval(() => {
-      bx += vx; by += vy;
-      if (by < 0 || by > 340) vy *= -1;
-      if (bx < 20 && by > p1 && by < p1 + 80) vx = Math.abs(vx);
-      if (bx > 470) vx = -Math.abs(vx);
-      p2 += (by - (p2 + 40)) * 0.08;
-      if (bx < 0 || bx > 500) { bx = 250; by = 175; vx *= -1; }
-      x.fillStyle = "#0f172a"; x.fillRect(0, 0, 500, 350);
-      x.fillStyle = "#38bdf8"; x.fillRect(10, p1, 10, 80);
-      x.fillRect(480, p2, 10, 80);
-      x.fillStyle = "#f43f5e"; x.beginPath(); x.arc(bx, by, 7, 0, Math.PI * 2); x.fill();
-    }, 1000 / 60);
-  <\\/script>
-</body>
-</html>`,
-
-            particles: `<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { margin:0; overflow:hidden; background:#05070d; }
-    canvas { display:block; }
-  </style>
-</head>
-<body>
-  <canvas id="canvas"></canvas>
-  <script>
-    const c = document.getElementById('canvas');
-    const ctx = c.getContext('2d');
-    c.width = window.innerWidth; c.height = window.innerHeight;
-    let particles = [];
-    let mouse = { x: c.width/2, y: c.height/2 };
-
-    for(let i=0; i<100; i++) {
-      particles.push({
-        x: Math.random() * c.width, y: Math.random() * c.height,
-        vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
-        r: Math.random() * 3 + 1
-      });
-    }
-
-    window.onmousemove = e => { mouse.x = e.clientX; mouse.y = e.clientY; };
-
-    function render() {
-      ctx.fillStyle = "rgba(5, 7, 13, 0.2)";
-      ctx.fillRect(0, 0, c.width, c.height);
-
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if(p.x < 0 || p.x > c.width) p.vx *= -1;
-        if(p.y < 0 || p.y > c.height) p.vy *= -1;
-
-        ctx.fillStyle = "#67e8f9";
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-
-        let dx = mouse.x - p.x, dy = mouse.y - p.y;
-        let dist = Math.hypot(dx, dy);
-        if(dist < 120) {
-          ctx.strokeStyle = "rgba(103, 232, 249, " + (1 - dist/120) + ")";
-          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
-        }
-      });
-      requestAnimationFrame(render);
-    }
-    render();
-  <\\/script>
-</body>
-</html>`,
-
-            threejs: `<!DOCTYPE html>
-<html>
-<head>
-  <style>body { margin:0; overflow:hidden; background:#000; }</style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\\/script>
-</head>
-<body>
-  <script>
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    const geo = new THREE.TorusKnotGeometry(1.8, 0.5, 100, 16);
-    const mat = new THREE.MeshNormalMaterial({ wireframe: true });
-    const mesh = new THREE.Mesh(geo, mat);
-    scene.add(mesh);
-    camera.position.z = 5;
-
-    function animate() {
-      requestAnimationFrame(animate);
-      mesh.rotation.x += 0.01;
-      mesh.rotation.y += 0.015;
-      renderer.render(scene, camera);
-    }
-    animate();
-  <\\/script>
-</body>
-</html>`
-        };
-
-        function loadTemplate(key) {
-            if (!key || !TEMPLATES[key]) return;
-            if (editor.value.trim() && !confirm("Replace current code with template?")) return;
-            editor.value = TEMPLATES[key].replace(/<\\\/script>/g, '<\/script>');
-            projectTitle.value = key === 'canvas2d' ? 'Orbit Dodger 2D' : (key === 'pong' ? 'Neon Pong Match' : 'Physics Sandbox');
-            updateLineNumbers();
-            runCode();
-        }
-
-        /* -------------------------------------------------------------
-           2. EDITOR TOOLS & LINE NUMBER SYNC
-        ------------------------------------------------------------- */
-        function updateLineNumbers() {
-            const lines = editor.value.split('\n').length;
-            lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join('<br>');
-            const bytes = new Blob([editor.value]).size;
-            metricsDisplay.textContent = `${lines} lines | ${(bytes / 1024).toFixed(1)} KB`;
-        }
-
-        editor.addEventListener('input', updateLineNumbers);
-        editor.addEventListener('scroll', () => {
-            lineNumbers.scrollTop = editor.scrollTop;
-        });
-
-        // Tab indentation support
-        editor.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                const start = editor.selectionStart, end = editor.selectionEnd;
-                editor.value = editor.value.substring(0, start) + "  " + editor.value.substring(end);
-                editor.selectionStart = editor.selectionEnd = start + 2;
-                updateLineNumbers();
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                runCode();
-            }
-        });
-
-        /* -------------------------------------------------------------
-           3. LIVE EXECUTION & CONSOLE INTERCEPTOR
-        ------------------------------------------------------------- */
-        function runCode() {
-            const rawCode = editor.value;
-            if (!rawCode.trim()) return;
-
-            // Injected script to bridge console.log to Studio Console
-            const bridgeScript = `
-                <script>
-                    (function(){
-                        const _log = console.log, _err = console.error, _warn = console.warn;
-                        console.log = (...args) => { _log(...args); window.parent.postMessage({ type:'LOG', text: args.join(' ') }, '*'); };
-                        console.error = (...args) => { _err(...args); window.parent.postMessage({ type:'ERROR', text: args.join(' ') }, '*'); };
-                        console.warn = (...args) => { _warn(...args); window.parent.postMessage({ type:'WARN', text: args.join(' ') }, '*'); };
-                        window.onerror = (msg, src, lin, col) => { window.parent.postMessage({ type:'ERROR', text: msg + ' (line ' + lin + ')' }, '*'); };
-                    })();
-                <\\/script>
-            `.replace(/<\\\/script>/g, '<\/script>');
-
-            const completeHTML = rawCode.includes('<head>') 
-                ? rawCode.replace('<head>', '<head>' + bridgeScript)
-                : bridgeScript + rawCode;
-
-            const blob = new Blob([completeHTML], { type: 'text/html' });
-            iframe.src = URL.createObjectURL(blob);
-            addLog("Executing code in live sandbox environment...", "info");
-        }
-
-        window.addEventListener('message', (e) => {
-            if (e.data && e.data.type) {
-                if (e.data.type === 'LOG') addLog("[LOG] " + e.data.text, "info");
-                if (e.data.type === 'ERROR') addLog("[ERROR] " + e.data.text, "error");
-                if (e.data.type === 'WARN') addLog("[WARN] " + e.data.text, "warn");
-            }
-        });
-
-        function addLog(text, type = "info") {
-            const el = document.createElement('div');
-            el.className = 'log-' + type;
-            el.textContent = text;
-            consoleLogs.appendChild(el);
-            consoleLogs.scrollTop = consoleLogs.scrollHeight;
-        }
-
-        function clearConsole() { consoleLogs.innerHTML = ''; }
-
-        /* -------------------------------------------------------------
-           4. CODE SNIPPET INSERTERS
-        ------------------------------------------------------------- */
-        const SNIPPETS = {
-            gameloop: `\n// --- Standard 60FPS Game Loop ---\nfunction update(dt) {\n  // Update game physics & state\n}\nfunction render() {\n  // Draw frame to canvas\n}\nlet lastTime = performance.now();\nfunction loop(now) {\n  let dt = (now - lastTime) / 1000;\n  lastTime = now;\n  update(dt);\n  render();\n  requestAnimationFrame(loop);\n}\nrequestAnimationFrame(loop);\n`,
-            keyboard: `\n// --- Keyboard Listener ---\nconst keys = {};\nwindow.addEventListener('keydown', e => { keys[e.key] = true; });\nwindow.addEventListener('keyup', e => { keys[e.key] = false; });\n`,
-            audio: `\n// --- Web Audio Bleep Synth ---\nfunction playBeep(freq = 440, type = 'sine') {\n  const ctx = new (window.AudioContext || window.webkitAudioContext)();\n  const osc = ctx.createOscillator();\n  osc.type = type;\n  osc.frequency.setValueAtTime(freq, ctx.currentTime);\n  osc.connect(ctx.destination);\n  osc.start();\n  osc.stop(ctx.currentTime + 0.15);\n}\n`,
-            canvas: `\n// --- Auto-Resizing Canvas ---\nconst canvas = document.createElement('canvas');\nconst ctx = canvas.getContext('2d');\ndocument.body.appendChild(canvas);\nfunction resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }\nwindow.addEventListener('resize', resize); resize();\n`
-        };
-
-        function insertSnippet(type) {
-            if (!SNIPPETS[type]) return;
-            const start = editor.selectionStart;
-            editor.value = editor.value.substring(0, start) + SNIPPETS[type] + editor.value.substring(start);
-            updateLineNumbers();
-            addLog(`Inserted snippet: ${type}`, "info");
-        }
-
-        /* -------------------------------------------------------------
-           5. IMPORT & EXPORT
-        ------------------------------------------------------------- */
-        function downloadCodeFile() {
-            const title = (projectTitle.value || 'game').replace(/[^a-z0-9_-]/gi, '_');
-            const blob = new Blob([editor.value], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `${title}.html`;
-            a.click();
-            addLog(`Exported game as ${title}.html`, "info");
-        }
-
-        function importLocalCode(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                editor.value = ev.target.result;
-                projectTitle.value = file.name.replace(/\.[^/.]+$/, "");
-                updateLineNumbers();
-                runCode();
-                addLog(`Loaded local file: ${file.name}`, "info");
-            };
-            reader.readAsText(file);
-        }
-
-        /* -------------------------------------------------------------
-           6. VIEWPORT SWITCHER & FULLSCREEN
-        ------------------------------------------------------------- */
-        function setDeviceViewport(width, btn) {
-            document.querySelectorAll('.viewport-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('device-frame').style.width = width;
-        }
-
-        function toggleFullscreenFrame() {
-            if (iframe.requestFullscreen) iframe.requestFullscreen();
-            else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
-        }
-
-        /* -------------------------------------------------------------
-           7. PUBLISH TO NETWORK
-        ------------------------------------------------------------- */
-        function openPublishModal() {
-            document.getElementById('pub-title').value = projectTitle.value;
-            document.getElementById('publish-modal').style.display = 'flex';
-        }
-        function closePublishModal() {
-            document.getElementById('publish-modal').style.display = 'none';
-        }
-
-        async function publishGameToNetwork() {
-            if (!sbClient) return alert("Database is not connected.");
-            const pubBtn = document.getElementById('pub-btn');
-            pubBtn.disabled = true;
-            pubBtn.innerText = "Deploying Node... ⚡";
-
-            const gameRecord = {
-                title: document.getElementById('pub-title').value.trim(),
-                author: document.getElementById('pub-author').value.trim(),
-                email: document.getElementById('pub-email').value.trim(),
-                source_url: document.getElementById('pub-source').value.trim() || null,
-                html_code: editor.value,
+            const newGame = {
+                title: document.getElementById('game-name').value.trim(),
+                author: document.getElementById('author').value.trim(),
+                source_url: document.getElementById('source').value.trim() || null,
+                html_code: document.getElementById('html-code').value,
+                email: document.getElementById('email').value.trim(),
                 status: 'live',
                 play_count: 0
             };
 
-            const { error } = await sbClient.from('games').insert([gameRecord]);
-            if (error) {
-                alert("Publication failed: " + error.message);
-                pubBtn.disabled = false;
-                pubBtn.innerText = "Confirm & Launch ➔";
-            } else {
-                alert("🎉 Game deployed successfully to the Arcade Library!");
+            try {
+                if (!sbClient) throw new Error("Supabase is not configured.");
+                const { error } = await sbClient.from('games').insert([newGame]);
+                if (error) throw error;
+                alert("🎉 Project published successfully! It is now live in the Arcade Library.");
                 window.location.href = "library.html";
+            } catch (err) {
+                alert("Error: " + (err.message || "Failed to publish"));
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Publish Project to Index →";
             }
+        });
+
+        // Code stats & Drop zone
+        const codeInput = document.getElementById('html-code');
+        const statsDisplay = document.getElementById('code-stats');
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        function updateCodeStats() {
+            const code = codeInput.value;
+            const lines = code ? code.split('\n').length : 0;
+            statsDisplay.textContent = `${code.length.toLocaleString()} chars | ${lines} lines`;
+        }
+        codeInput.addEventListener('input', updateCodeStats);
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => { if (e.target.files.length) readFile(e.target.files[0]); });
+
+        function readFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                codeInput.value = e.target.result;
+                updateCodeStats();
+                const nameInput = document.getElementById('game-name');
+                if (!nameInput.value) nameInput.value = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
+            };
+            reader.readAsText(file);
         }
 
-        // Initialize with default template
-        loadTemplate('canvas2d');
+        // Sandbox Modal Preview
+        const sandboxModal = document.getElementById('sandbox-modal');
+        const sandboxFrame = document.getElementById('sandbox-frame');
+        document.getElementById('run-sandbox-btn').addEventListener('click', () => {
+            const code = codeInput.value.trim();
+            if (!code) return alert("Please enter HTML code first.");
+            const blob = new Blob([code], { type: 'text/html' });
+            sandboxFrame.src = URL.createObjectURL(blob);
+            sandboxModal.style.display = 'flex';
+        });
+        document.getElementById('close-sandbox-btn').addEventListener('click', () => {
+            sandboxModal.style.display = 'none';
+            sandboxFrame.src = 'about:blank';
+        });
     </script>
 </body>
 </html>
