@@ -1,1017 +1,1470 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">I’m Afk — Liquid Glass Web Arcade</title>
+    <title>Root Operations Hub — I’m Afk</title>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts & CDN Libraries -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Three.js & GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
         :root {
-            --bg-deep: #0a0a12;
-            --glass-card: rgba(16, 22, 36, 0.65);
-            --glass-card-hover: rgba(22, 30, 48, 0.8);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-border-hover: rgba(147, 197, 253, 0.4);
+            --bg-deep: #07090e;
+            --bg-surface: #0c111d;
+            --glass-card: rgba(15, 22, 36, 0.75);
+            --glass-card-hover: rgba(20, 30, 48, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-border-focus: rgba(103, 232, 249, 0.4);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --text-light: #64748b;
+            --text-dim: #64748b;
             --accent-ice: #67e8f9;
             --accent-blue: #3b82f6;
-            --btn-pill: rgba(255, 255, 255, 0.08);
-            --font-display: 'Space Grotesk', sans-serif;
+            --accent-purple: #a855f7;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #ef4444;
             --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        html[lang="ar"] {
-            --font-main: 'Tajawal', system-ui, sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.1) 0%, transparent 45%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
             color: var(--text-main);
             font-family: var(--font-main);
-            overflow-x: hidden;
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* WebGL Background Canvas */
-        #webgl-canvas {
+        /* Ambient glowing blur spots */
+        .ambient-glow {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: all;
-        }
-
-        .content-layer {
-            position: relative;
-            z-index: 1;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(103, 232, 249, 0.1) 0%, transparent 70%);
+            filter: blur(80px);
             pointer-events: none;
+            z-index: 0;
         }
 
-        .interactive-elem {
-            pointer-events: auto;
-        }
-
-        /* Header Navigation */
-        .glass-nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        /* ------------------ AUTHENTICATION GATE ------------------ */
+        #auth-gate {
+            position: fixed;
+            inset: 0;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 18px clamp(24px, 4vw, 48px);
-            background: rgba(10, 10, 18, 0.6);
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+            background: rgba(7, 9, 14, 0.85);
             backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border);
         }
 
-        .brand-block {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text-main);
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-        }
-
-        .brand-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            color: var(--accent-ice);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: clamp(20px, 3vw, 36px);
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            transition: all 0.25s;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: #fff;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
-        }
-
-        .lang-toggle {
-            background: var(--btn-pill);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 7px 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-        }
-
-        .lang-toggle:hover {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.04);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 80px 24px 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--glass-border);
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--accent-ice);
-            margin-bottom: 24px;
-            backdrop-filter: blur(15px);
-        }
-
-        .hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.8rem, 6.5vw, 5.4rem);
-            line-height: 1.02;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, #ffffff 40%, rgba(255, 255, 255, 0.65) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: clamp(1.05rem, 1.35vw, 1.25rem);
-            color: var(--text-muted);
-            max-width: 640px;
-            margin: 0 auto 40px;
-            line-height: 1.6;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 50px;
-        }
-
-        .btn-liquid-primary {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            color: #ffffff;
-            padding: 16px 38px;
-            border-radius: 50px;
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 700;
-            text-decoration: none;
-            letter-spacing: 0.04em;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-liquid-primary:hover {
-            background: #ffffff;
-            color: #0a0a12;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 45px rgba(255, 255, 255, 0.25);
-        }
-
-        .btn-liquid-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 16px 32px;
-            border-radius: 50px;
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.25s;
-        }
-
-        .btn-liquid-secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        /* Metric Highlights Strip */
-        .stats-strip {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            max-width: 650px;
+        .auth-card {
             width: 100%;
-            margin: 0 auto;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .stat-item small {
-            display: block;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-light);
-            margin-bottom: 4px;
-        }
-
-        .stat-item strong {
-            font-family: var(--font-display);
-            font-size: 1.15rem;
-            color: #fff;
-            font-weight: 700;
-        }
-
-        /* Spotlight Showcase */
-        .spotlight-section {
-            max-width: 1240px;
-            margin: 40px auto 90px;
-            padding: 0 clamp(20px, 4vw, 48px);
-        }
-
-        .section-header {
-            margin-bottom: 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .section-header h2 {
-            font-family: var(--font-display);
-            font-size: clamp(1.6rem, 2.6vw, 2.2rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .showcase-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 28px;
-        }
-
-        .showcase-card {
+            max-width: 440px;
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
             border-radius: 28px;
-            padding: 36px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            padding: 42px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(103, 232, 249, 0.1);
+        }
+
+        .auth-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(103, 232, 249, 0.2), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(103, 232, 249, 0.3);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--accent-ice);
+            box-shadow: 0 0 25px rgba(103, 232, 249, 0.2);
+        }
+
+        .auth-card h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+
+        .auth-card p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 24px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+            background: #090d16;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            text-align: center;
+            letter-spacing: 4px;
+            outline: none;
+            margin-bottom: 18px;
+            transition: 0.3s;
+        }
+
+        .auth-input:focus {
+            border-color: var(--accent-ice);
+            box-shadow: 0 0 20px rgba(103, 232, 249, 0.25);
+        }
+
+        .btn-unlock {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-ice), var(--accent-blue));
+            color: #040810;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-unlock:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(103, 232, 249, 0.4);
+        }
+
+        /* ------------------ MAIN ADMIN DASHBOARD ------------------ */
+        #admin-panel {
+            display: none;
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px clamp(16px, 3vw, 40px) 80px;
+        }
+
+        /* Top Command Bar */
+        .admin-nav {
+            display: flex;
             justify-content: space-between;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .showcase-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--glass-border-hover);
-        }
-
-        /* Information & Philosophy */
-        .info-grid {
-            max-width: 1240px;
-            margin: 0 auto 90px;
-            padding: 0 clamp(20px, 4vw, 48px);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-        }
-
-        .info-box {
+            align-items: center;
+            padding: 18px 28px;
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
-            border-radius: 26px;
-            padding: 34px;
+            border-radius: 24px;
             backdrop-filter: blur(20px);
+            margin-bottom: 28px;
         }
 
-        .info-box h3 {
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            box-shadow: 0 0 10px var(--accent-emerald);
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .brand-title {
             font-family: var(--font-display);
-            font-size: 1.3rem;
-            margin-bottom: 14px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.01em;
+        }
+
+        .nav-tools {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .session-timer {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-ice);
+            background: rgba(103, 232, 249, 0.08);
+            border: 1px solid rgba(103, 232, 249, 0.2);
+            padding: 6px 14px;
+            border-radius: 50px;
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 7px 16px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-glass-danger {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        .btn-glass-danger:hover {
+            background: var(--accent-rose);
             color: #fff;
         }
 
-        .info-box p, .info-box li {
-            color: var(--text-muted);
-            font-size: 0.92rem;
-            line-height: 1.6;
+        /* Metric Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
         }
 
-        .info-list {
-            list-style: none;
+        .metric-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 22px;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--glass-border-focus);
+        }
+
+        .metric-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .metric-sub {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        /* Tab Navigation Bar */
+        .tabs-header {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 14px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 9px 20px;
+            border-radius: 50px;
+            font-family: var(--font-display);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            background: rgba(103, 232, 249, 0.15);
+            border-color: rgba(103, 232, 249, 0.3);
+            color: var(--accent-ice);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Controls / Filter Bar */
+        .control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .admin-input {
+            background: rgba(9, 13, 22, 0.8);
+            border: 1px solid var(--glass-border);
+            padding: 10px 16px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .admin-input:focus {
+            border-color: var(--accent-ice);
+            box-shadow: 0 0 15px rgba(103, 232, 249, 0.2);
+        }
+
+        .admin-select {
+            background: #090d16;
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Bulk Action Bar */
+        .bulk-bar {
+            display: none;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 12px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Table View */
+        .table-responsive {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px 20px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--glass-border);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+        .badge-live { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-takedown { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .action-cluster {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-sm:hover { background: rgba(255, 255, 255, 0.15); }
+        .btn-sm-primary { background: rgba(103, 232, 249, 0.15); color: var(--accent-ice); border-color: rgba(103, 232, 249, 0.3); }
+        .btn-sm-primary:hover { background: var(--accent-ice); color: #000; }
+        .btn-sm-danger { color: #fca5a5; }
+        .btn-sm-danger:hover { background: var(--accent-rose); color: #fff; }
+
+        /* ------------------ MODALS (INSPECTOR, SANDBOX, TERMINAL) ------------------ */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 7, 12, 0.85);
+            backdrop-filter: blur(25px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-window {
+            width: min(96vw, 1100px);
+            max-height: 90vh;
+            background: var(--bg-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
         }
 
-        .info-list li {
-            position: relative;
-            padding-left: 20px;
-        }
-        .info-list li::before {
-            content: "✦";
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: var(--accent-ice);
-            font-size: 0.8rem;
+        .modal-header {
+            padding: 16px 24px;
+            background: rgba(18, 24, 38, 0.95);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        html[dir="rtl"] .info-list li { padding-left: 0; padding-right: 20px; }
-        html[dir="rtl"] .info-list li::before { left: auto; right: 0; }
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
 
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--glass-border);
-            padding: 45px 24px;
-            text-align: center;
-            background: rgba(10, 10, 18, 0.85);
-            backdrop-filter: blur(20px);
+        .code-editor-area {
+            width: 100%;
+            height: 380px;
+            background: #050811;
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 16px;
+            color: #38bdf8;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+        }
+
+        /* Sandbox Device Switcher */
+        .device-bar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .device-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
             color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .device-btn.active {
+            background: var(--accent-ice);
+            color: #000;
+        }
+
+        .sandbox-viewport {
+            width: 100%;
+            height: 520px;
+            margin: 0 auto;
+            transition: width 0.3s ease;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        #sandbox-frame { width: 100%; height: 100%; border: none; }
+
+        /* Interactive Terminal Drawer */
+        .terminal-box {
+            background: #050811;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            font-family: var(--font-mono);
+            color: #a5f3fc;
             font-size: 0.85rem;
         }
 
-        .footer-links {
+        .terminal-output {
+            height: 280px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        .terminal-input-line {
             display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
         }
 
-        .footer-pill {
-            background: var(--btn-pill);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 7px 18px;
-            border-radius: 50px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-        .footer-pill:hover {
-            border-color: var(--accent-ice);
+        .terminal-prompt { color: var(--accent-ice); font-weight: 700; }
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
             color: #fff;
-            transform: translateY(-2px);
+            font-family: inherit;
+            font-size: inherit;
         }
 
-        @media (max-width: 850px) {
-            .showcase-grid { grid-template-columns: 1fr; }
-            .info-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
+        /* Audit Log List */
+        .audit-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .audit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-family: var(--font-mono);
         }
     </style>
 </head>
 <body>
 
-    <!-- WebGL Liquid Refraction Canvas -->
-    <canvas id="webgl-canvas"></canvas>
+    <div class="ambient-glow" style="top: -10%; left: -10%;"></div>
+    <div class="ambient-glow" style="bottom: -10%; right: -10%;"></div>
 
-    <div class="content-layer">
-        <header class="glass-nav interactive-elem">
-            <a href="index.html" class="brand-block" id="main-brand-logo">
-                <div class="brand-icon">✦</div>
-                <span>I’M AFK</span>
-            </a>
+    <!-- ================= 1. SECURITY PASSCODE GATE ================= -->
+    <div id="auth-gate">
+        <div class="auth-card">
+            <div class="auth-icon">🛡️</div>
+            <h2>Root Operations Portal</h2>
+            <p>Enter cryptographic passkey to unlock node control.</p>
+            <form onsubmit="event.preventDefault(); verifyPasscode();">
+                <input type="password" id="pass-input" class="auth-input" placeholder="••••••••••••••" autocomplete="off" required autofocus>
+                <button type="submit" class="btn-unlock">Authorize Session ➔</button>
+            </form>
+            <div id="warning-text" style="color: var(--accent-rose); font-size: 0.8rem; margin-top: 14px; font-weight: 600;"></div>
+        </div>
+    </div>
 
-            <ul class="nav-links">
-                <li><a href="library.html" data-i18n="nav.library">Arcade Library</a></li>
-                <li><a href="#about" data-i18n="nav.about">Platform</a></li>
-                <li><a href="submit.html" data-i18n="nav.submit">Submit Game</a></li>
-                <li><a href="contact.html" data-i18n="nav.contact">Support</a></li>
-            </ul>
-
-            <div class="nav-actions">
-                <button type="button" class="lang-toggle" id="lang-btn">العربية</button>
+    <!-- ================= 2. MAIN OPERATIONS HUB ================= -->
+    <div id="admin-panel">
+        <!-- Top Nav Bar -->
+        <header class="admin-nav">
+            <div class="brand-cluster">
+                <div class="status-dot"></div>
+                <div>
+                    <div class="brand-title">I’M AFK &bull; Command Node</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Root Authorization Verified &bull; Active Cluster</div>
+                </div>
+            </div>
+            <div class="nav-tools">
+                <span class="session-timer" id="session-timer">LOCK IN: 15:00</span>
+                <button class="btn-glass" onclick="openTerminalModal()">⚡ Terminal</button>
+                <a href="index.html" class="btn-glass">Return to Arcade</a>
+                <button class="btn-glass btn-glass-danger" onclick="terminateSession()">Lock Node</button>
             </div>
         </header>
 
-        <main>
-            <!-- Hero Showcase -->
-            <section class="hero">
-                <div class="eyebrow interactive-elem">
-                    <span>✦</span>
-                    <span data-i18n="hero.eyebrow">Interactive Liquid Glass Arcade</span>
-                </div>
-                <h1 data-i18n="hero.title">Pure Web Experiences & <span>Games.</span></h1>
-                <p data-i18n="hero.lead">No downloads, zero latency, and zero tracking. Discover standalone HTML5 creations hosted smoothly for instant client-side execution.</p>
-                
-                <div class="hero-actions interactive-elem">
-                    <a href="library.html" class="btn-liquid-primary" data-i18n="hero.ctaPlay">
-                        Enter Arcade Library ➔
-                    </a>
-                    <a href="submit.html" class="btn-liquid-secondary" data-i18n="hero.ctaSubmit">
-                        Submit a Project ↗
-                    </a>
-                </div>
-
-                <div class="stats-strip interactive-elem">
-                    <div class="stat-item">
-                        <small data-i18n="stat.status">Architecture</small>
-                        <strong data-i18n="stat.statusVal">Client-Side</strong>
-                    </div>
-                    <div class="stat-item">
-                        <small data-i18n="stat.cost">Access</small>
-                        <strong data-i18n="stat.costVal">100% Free</strong>
-                    </div>
-                    <div class="stat-item">
-                        <small data-i18n="stat.speed">Latency</small>
-                        <strong data-i18n="stat.speedVal">0.0 ms</strong>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Spotlight Showcase -->
-            <section class="spotlight-section interactive-elem">
-                <div class="section-header">
-                    <div>
-                        <h2 data-i18n="spot.title">⭐ Featured Gateways</h2>
-                        <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="spot.sub">Jump straight into the arcade or explore open developer tools.</p>
-                    </div>
-                    <a href="library.html" class="btn-liquid-secondary" style="padding: 8px 20px; font-size: 0.85rem;" data-i18n="spot.allGames">
-                        Browse All Games →
-                    </a>
-                </div>
-
-                <div class="showcase-grid">
-                    <div class="showcase-card">
-                        <div>
-                            <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-ice); letter-spacing: 0.1em; text-transform: uppercase;">ARCADE SPOTLIGHT</span>
-                            <h3 style="font-family: var(--font-display); font-size: 1.8rem; margin: 8px 0 14px; color: #fff;">Curated Standalone Mini-Games</h3>
-                            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Explore retro classics, puzzle experiments, and fast-paced arcade physics designed to run effortlessly on any screen size.</p>
-                        </div>
-                        <div style="margin-top: 24px;">
-                            <a href="library.html" class="btn-liquid-primary" style="padding: 12px 28px; font-size: 0.9rem;">
-                                Launch Library Catalog ➔
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="showcase-card" style="background: rgba(22, 18, 32, 0.65);">
-                        <div>
-                            <span style="font-size: 0.75rem; font-weight: 700; color: #c084fc; letter-spacing: 0.1em; text-transform: uppercase;">CREATOR HUB</span>
-                            <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin: 8px 0 12px; color: #fff;">Publish Your Creation</h3>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.55;">Have an HTML5 or JavaScript game? Test it in our live sandbox and deploy it to our global community index.</p>
-                        </div>
-                        <div style="margin-top: 20px;">
-                            <a href="submit.html" class="btn-liquid-secondary" style="padding: 10px 22px; font-size: 0.85rem;">
-                                Open Submission Studio ↗
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Guidelines & Physics Specs -->
-            <section class="info-grid interactive-elem" id="about">
-                <div class="info-box">
-                    <h3 data-i18n="info.title1">Ethereal Mechanics</h3>
-                    <p data-i18n="info.desc1">The background is powered by real-time WebGL metaball physics with refraction, chromatic aberration, Fresnel normal mapping, and surface tension simulation.</p>
-                    <ul class="info-list">
-                        <li data-i18n="info.item1">Move your cursor to repel and interact with liquid droplets.</li>
-                        <li data-i18n="info.item2">Click and drag anywhere on the canvas to spawn new fluid nodes.</li>
-                        <li data-i18n="info.item3">Watch droplets merge, split, and deform via soft-body springs.</li>
-                    </ul>
-                </div>
-
-                <div class="info-box">
-                    <h3 data-i18n="info.title2">Platform Architecture</h3>
-                    <p data-i18n="info.desc2">Every game is run within an isolated client-side sandbox without tracking or intrusive advertisements.</p>
-                    <ul class="info-list">
-                        <li data-i18n="info.item4">Open submission pipeline for indie HTML5 creators.</li>
-                        <li data-i18n="info.item5">Automated repository synchronization with GitHub Pages.</li>
-                        <li data-i18n="info.item6">Rapid 24-hour DMCA takedown review protocol.</li>
-                    </ul>
-                </div>
-            </section>
-        </main>
-
-        <footer class="interactive-elem">
-            <div class="footer-links">
-                <a href="library.html" class="footer-pill" data-i18n="foot.library">Arcade Library</a>
-                <a href="submit.html" class="footer-pill" data-i18n="foot.submit">Submit Game</a>
-                <a href="contact.html" class="footer-pill" data-i18n="foot.contact">Support / DMCA</a>
-                <a href="tos.html" class="footer-pill" data-i18n="foot.tos">Terms of Service</a>
+        <!-- Metric Cards -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Catalog <span>📦</span></div>
+                <div class="metric-value" id="m-total">0</div>
+                <div class="metric-sub">Catalog records indexed</div>
             </div>
-            <p>&copy; 2024–2026 I’m Afk &bull; Liquid Glass Arcade</p>
-        </footer>
+            <div class="metric-card">
+                <div class="metric-label">Live Nodes <span>🟢</span></div>
+                <div class="metric-value" style="color: var(--accent-emerald);" id="m-live">0</div>
+                <div class="metric-sub" id="m-live-percent">100% active operational ratio</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Takedowns / Flags <span>🚨</span></div>
+                <div class="metric-value" style="color: var(--accent-rose);" id="m-takedowns">0</div>
+                <div class="metric-sub">Isolated quarantine entries</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Total Code Footprint <span>💾</span></div>
+                <div class="metric-value" style="color: var(--accent-ice);" id="m-size">0 KB</div>
+                <div class="metric-sub">Aggregated standalone scripts</div>
+            </div>
+        </section>
+
+        <!-- Tab Switching Bar -->
+        <div class="tabs-header">
+            <button class="tab-btn active" onclick="switchTab('catalog')">🎮 Catalog Management</button>
+            <button class="tab-btn" onclick="switchTab('deploy')">🚀 Direct Deploy Studio</button>
+            <button class="tab-btn" onclick="switchTab('scanner')">🛡️ Code Safety Scanner</button>
+            <button class="tab-btn" onclick="switchTab('backup')">💾 Backup & JSON Data</button>
+            <button class="tab-btn" onclick="switchTab('audit')">📜 Audit & Logs</button>
+        </div>
+
+        <!-- ================= TAB 1: CATALOG MANAGEMENT ================= -->
+        <div id="tab-catalog" class="tab-content active">
+            <div class="control-bar">
+                <div class="search-group">
+                    <input type="text" id="catalog-search" class="admin-input" placeholder="Search by title, author, email, or ID..." oninput="renderFilteredCatalog()">
+                    <select id="status-filter" class="admin-select" onchange="renderFilteredCatalog()">
+                        <option value="all">All Statuses</option>
+                        <option value="live">Only Live</option>
+                        <option value="takedown">Only Taken Down</option>
+                    </select>
+                    <select id="sort-filter" class="admin-select" onchange="renderFilteredCatalog()">
+                        <option value="newest">Sort: Newest First</option>
+                        <option value="oldest">Sort: Oldest First</option>
+                        <option value="alpha">Sort: Title (A-Z)</option>
+                        <option value="size">Sort: Code Size</option>
+                    </select>
+                </div>
+                <button class="btn-glass" onclick="fetchFullDatabase()">↻ Sync Cloud DB</button>
+            </div>
+
+            <!-- Bulk Operation Toolbar -->
+            <div id="bulk-bar" class="bulk-bar">
+                <span id="bulk-count" style="font-weight: 700; color: #fff;">0 items selected</span>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-sm btn-sm-primary" onclick="bulkSetStatus('live')">Set Selected LIVE</button>
+                    <button class="btn-sm btn-sm-danger" onclick="bulkSetStatus('takedown')">Bulk Takedown</button>
+                    <button class="btn-sm" onclick="bulkExportSelected()">Export JSON</button>
+                    <button class="btn-sm btn-sm-danger" onclick="bulkDeleteSelected()">Delete Selected</button>
+                </div>
+            </div>
+
+            <!-- Main Table View -->
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" id="select-all-cb" onchange="toggleSelectAll(this)"></th>
+                            <th>Game Project</th>
+                            <th>Author / Email</th>
+                            <th>Size</th>
+                            <th>Status</th>
+                            <th>Published</th>
+                            <th style="text-align: right;">Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="catalog-tbody">
+                        <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">Syncing catalog with Supabase cluster...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: DIRECT DEPLOY STUDIO ================= -->
+        <div id="tab-deploy" class="tab-content">
+            <div style="background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px;">
+                <h3 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 6px;">Deploy Game Node Directly</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 24px;">Publish an approved HTML5 build directly to the live catalog without public queue restrictions.</p>
+                
+                <form onsubmit="event.preventDefault(); handleAdminDeploy();" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">Title *</label>
+                        <input type="text" id="deploy-title" class="admin-input" placeholder="e.g. Quantum Breakout" required style="margin-top: 6px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">Author Credits *</label>
+                        <input type="text" id="deploy-author" class="admin-input" placeholder="e.g. Studio Vertex" required style="margin-top: 6px;">
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">Contact Email (Optional)</label>
+                        <input type="email" id="deploy-email" class="admin-input" placeholder="admin@imafk.net" style="margin-top: 6px;">
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">Executable HTML5 Code *</label>
+                        <textarea id="deploy-code" class="code-editor-area" style="height: 240px; margin-top: 6px;" placeholder="<!DOCTYPE html>&#10;<html>...</html>" required></textarea>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <button type="submit" class="btn-unlock" style="max-width: 240px;">🚀 Launch to Global Node</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: CODE SAFETY SCANNER ================= -->
+        <div id="tab-scanner" class="tab-content">
+            <div style="background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h3 style="font-family: var(--font-display); font-size: 1.3rem;">Static Script Security Audit</h3>
+                        <p style="color: var(--text-muted); font-size: 0.88rem;">Scans catalog items for cryptominers, malicious eval, credential scrapers, and external outbound connections.</p>
+                    </div>
+                    <button class="btn-glass" onclick="runGlobalSecurityAudit()">⚡ Run Global Scan</button>
+                </div>
+                <div id="scanner-results" style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="color: var(--text-muted); padding: 30px; text-align: center;">Click "Run Global Scan" to audit all stored game codebases.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 4: BACKUP & DATA EXPORT ================= -->
+        <div id="tab-backup" class="tab-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div style="background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px;">
+                    <h3 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 8px;">Export Catalog Snapshot</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Download a complete, offline-compatible JSON backup of all games, metadata, and embedded HTML codes.</p>
+                    <button class="btn-glass" style="background: var(--accent-ice); color: #000; font-weight: 700;" onclick="exportFullDatabaseJSON()">📥 Download .json Backup</button>
+                </div>
+                <div style="background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px;">
+                    <h3 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 8px;">Restore Snapshot</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Import a previously exported JSON file to restore deleted entries or seed initial game clusters.</p>
+                    <input type="file" id="import-json-file" accept=".json" style="display:none;" onchange="handleJSONImport(event)">
+                    <button class="btn-glass" onclick="document.getElementById('import-json-file').click()">📤 Select JSON Backup</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 5: AUDIT & LOGS ================= -->
+        <div id="tab-audit" class="tab-content">
+            <div style="background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                    <h3 style="font-family: var(--font-display); font-size: 1.2rem;">Session Operations Audit Log</h3>
+                    <button class="btn-sm" onclick="clearAuditLogs()">Clear Log</button>
+                </div>
+                <ul class="audit-list" id="audit-log-container">
+                    <li class="audit-item"><span>[SYSTEM READY]</span><span>Root moderation environment initialized.</span></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <!-- WebGL Physics Script -->
+    <!-- ================= INSPECTOR & CODE EDITOR MODAL ================= -->
+    <div class="admin-modal" id="editor-modal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <div>
+                    <h3 id="editor-modal-title" style="font-family: var(--font-display); font-size: 1.15rem;">Live Code Editor & Patch</h3>
+                    <span id="editor-modal-meta" style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">ID: --</span>
+                </div>
+                <button class="btn-sm btn-sm-danger" onclick="closeEditorModal()">✕ Close</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Title</label>
+                        <input type="text" id="edit-title" class="admin-input" style="margin-top: 4px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Author Credits</label>
+                        <input type="text" id="edit-author" class="admin-input" style="margin-top: 4px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Contact Email</label>
+                        <input type="email" id="edit-email" class="admin-input" style="margin-top: 4px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Status</label>
+                        <select id="edit-status" class="admin-select" style="width: 100%; margin-top: 4px;">
+                            <option value="live">Live (Active)</option>
+                            <option value="takedown">Taken Down / Quarantined</option>
+                        </select>
+                    </div>
+                </div>
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Standalone Code</label>
+                <textarea id="edit-code" class="code-editor-area" style="margin-top: 6px;"></textarea>
+            </div>
+            <div style="padding: 16px 24px; background: rgba(18, 24, 38, 0.95); border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                <span id="editor-stats" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">0 chars</span>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-glass" onclick="testEditedCodeInSandbox()">⚡ Test Run Changes</button>
+                    <button class="btn-glass" style="background: var(--accent-emerald); color: #000; font-weight: 700;" onclick="saveEditedGame()">Save & Patch Database</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MULTI-DEVICE SANDBOX MODAL ================= -->
+    <div class="admin-modal" id="sandbox-modal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <div>
+                    <h3 id="sandbox-title" style="font-family: var(--font-display); font-size: 1.15rem; color: var(--accent-ice);">Live Sandbox</h3>
+                </div>
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div class="device-bar">
+                        <button class="device-btn active" onclick="setSandboxViewport('100%', this)">🖥️ Full</button>
+                        <button class="device-btn" onclick="setSandboxViewport('768px', this)">📱 Tablet</button>
+                        <button class="device-btn" onclick="setSandboxViewport('390px', this)">📱 Mobile</button>
+                    </div>
+                    <button class="btn-sm" onclick="reloadSandboxFrame()">↻ Reload</button>
+                    <button class="btn-sm btn-sm-danger" onclick="closeSandboxModal()">✕ Close</button>
+                </div>
+            </div>
+            <div class="modal-body" style="background: #04060a; padding: 20px; display: flex; align-items: center; justify-content: center;">
+                <div class="sandbox-viewport" id="sandbox-viewport-box">
+                    <iframe id="sandbox-frame" sandbox="allow-scripts allow-forms allow-pointer-lock allow-modals" allow="fullscreen; autoplay; gamepad"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= INTERACTIVE TERMINAL MODAL ================= -->
+    <div class="admin-modal" id="terminal-modal">
+        <div class="modal-window" style="max-width: 800px;">
+            <div class="modal-header">
+                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-ice); font-size: 0.88rem;">⚡ AFK Root CLI Terminal</span>
+                <button class="btn-sm btn-sm-danger" onclick="closeTerminalModal()">✕ Close</button>
+            </div>
+            <div class="modal-body">
+                <div class="terminal-box">
+                    <div class="terminal-output" id="terminal-output">
+                        Type "help" for a list of available operations.<br>
+                    </div>
+                    <div class="terminal-input-line">
+                        <span class="terminal-prompt">root@imafk:~#</span>
+                        <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" onkeydown="handleTerminalCommand(event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        const MAX_DROPLETS = 35, FIXED_DT_MS = 8, MAX_FRAME_DT_MS = 100, MAX_CATCHUP = 6;
-        const canvas = document.getElementById("webgl-canvas");
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false });
-        renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        /* -------------------------------------------------------------
+           1. SECURITY AUTHENTICATION & SESSION LIFECYCLE
+        ------------------------------------------------------------- */
+        const _k = [95, 118, 124, 121, 114, 133, 130, 128, 63, 61, 62, 61];
+        let sessionTimerInterval = null;
+        let sessionSecondsRemaining = 900; // 15 mins
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-        const bgCanvas = document.createElement("canvas");
-        const bgCtx = bgCanvas.getContext("2d");
-        const bgTexture = new THREE.CanvasTexture(bgCanvas);
-        bgTexture.minFilter = THREE.LinearFilter;
-        bgTexture.magFilter = THREE.LinearFilter;
-
-        function drawBackground() {
-            const w = renderer.domElement.width, h = renderer.domElement.height;
-            bgCanvas.width = w; bgCanvas.height = h;
-
-            const grd = bgCtx.createLinearGradient(0, 0, w * 0.7, h);
-            grd.addColorStop(0, "#e8dbc8");
-            grd.addColorStop(0.35, "#5b8cdb");
-            grd.addColorStop(0.6, "#2d6fd4");
-            grd.addColorStop(1, "#101830");
-            bgCtx.fillStyle = grd;
-            bgCtx.fillRect(0, 0, w, h);
-
-            bgCtx.save();
-            bgCtx.globalAlpha = 0.35;
-            for (let i = 0; i < 5; i++) {
-                const cx = w * (0.2 + i * 0.18), cy = h * (0.3 + Math.sin(i * 1.3) * 0.25);
-                const rg = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.35);
-                const hue = 200 + i * 25;
-                rg.addColorStop(0, `hsla(${hue}, 80%, 65%, 0.6)`);
-                rg.addColorStop(1, `hsla(${hue}, 60%, 40%, 0)`);
-                bgCtx.fillStyle = rg;
-                bgCtx.fillRect(0, 0, w, h);
-            }
-            bgCtx.restore();
-
-            bgCtx.fillStyle = "#ffffff";
-            bgCtx.textAlign = "center";
-            bgCtx.textBaseline = "middle";
-            const titleSize = Math.round(w * 0.11);
-            bgCtx.font = `700 ${titleSize}px 'Space Grotesk', sans-serif`;
-            bgCtx.fillText("I'M AFK", w * 0.5, h * 0.38);
-
-            const subSize = Math.round(w * 0.02);
-            bgCtx.font = `500 ${subSize}px 'Space Grotesk', sans-serif`;
-            bgCtx.globalAlpha = 0.5;
-            bgCtx.fillText("LIQUID GLASS ARCADE", w * 0.5, h * 0.38 + titleSize * 0.85);
-            bgCtx.globalAlpha = 1;
-            bgTexture.needsUpdate = true;
-        }
-
-        document.fonts.ready.then(drawBackground);
-        drawBackground();
-
-        const MAX_ENTRIES = MAX_DROPLETS * 2;
-        const dropletBuf = new Float32Array(MAX_ENTRIES * 4);
-        const dropletTex = new THREE.DataTexture(dropletBuf, MAX_ENTRIES, 1, THREE.RGBAFormat, THREE.FloatType);
-        dropletTex.minFilter = THREE.NearestFilter;
-        dropletTex.magFilter = THREE.NearestFilter;
-        dropletTex.needsUpdate = true;
-
-        let drops = [], uid = 0;
-        function spawn(x, y, r, vx = 0, vy = 0) {
-            if (drops.length >= MAX_DROPLETS) return null;
-            const area = Math.PI * r * r, angle = Math.random() * Math.PI * 2, spd = 0.0003 + Math.random() * 0.0008;
-            const d = {
-                id: uid++, x, y, r, area,
-                vx: vx || Math.cos(angle) * spd, vy: vy || Math.sin(angle) * spd,
-                alive: true, wanderAngle: Math.random() * Math.PI * 2, wanderSpeed: 0.3 + Math.random() * 0.5,
-                softPrevX: x, softPrevY: y, softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0
-            };
-            drops.push(d);
-            return d;
-        }
-
-        for (let i = 0; i < 14; i++) spawn((Math.random() - 0.5) * 0.8, (Math.random() - 0.5) * 0.6, 0.035 + Math.random() * 0.045);
-
-        const vertSrc = `void main(){ gl_Position = vec4(position, 1.0); }`;
-        const fragSrc = `
-            precision highp float;
-            #define MAX_N ${MAX_ENTRIES}
-            uniform vec2 uRes;
-            uniform sampler2D uData;
-            uniform sampler2D uBg;
-            uniform int uCount;
-            uniform float uTime;
-
-            void main(){
-                vec2 uv = gl_FragCoord.xy / uRes;
-                float asp = uRes.x / uRes.y;
-                vec2 p = (uv - 0.5) * vec2(asp, 1.0);
-
-                float field = 0.0;
-                vec2 grad = vec2(0.0);
-                vec2 lens = vec2(0.0);
-                float lensW = 0.0;
-
-                for(int i = 0; i < MAX_N; i++){
-                    if(i >= uCount) break;
-                    vec4 d = texture2D(uData, vec2((float(i)+0.5)/float(MAX_N), 0.5));
-                    vec2 c = d.xy;
-                    float r = d.z;
-                    if(r < 0.001) continue;
-                    vec2 delta = p - c;
-                    float dSq = dot(delta, delta) + 1e-5;
-                    float contrib = r * r / dSq;
-                    field += contrib;
-                    grad += -2.0 * contrib / dSq * delta;
-                    float w = r * r / (dSq + r * r);
-                    lens += (c - p) * w;
-                    lensW += w;
-                }
-
-                lens /= (lensW + 0.001);
-                float lensLen = length(lens);
-                float thr = 1.0;
-                float edge = smoothstep(thr - 0.08, thr + 0.03, field);
-
-                float refractStrength = 0.04;
-                float mappedLens = atan(lensLen * 6.0) * refractStrength;
-                vec2 refractDir = (lensLen > 1e-5) ? lens / lensLen : vec2(0.0);
-                float refractMask = smoothstep(thr - 0.2, thr + 1.5, field);
-                vec2 refractedUV = clamp(uv + refractDir * mappedLens * refractMask, 0.001, 0.999);
-
-                vec3 bgClean = texture2D(uBg, uv).rgb;
-
-                float gradLen = length(grad);
-                float nScale = atan(gradLen * 0.5) * 0.3;
-                vec2 nGrad = (gradLen > 1e-4) ? (grad / gradLen) * nScale : vec2(0.0);
-                vec3 N = normalize(vec3(-nGrad, 1.0));
-                vec3 L = normalize(vec3(0.3, 0.6, 1.0));
-                vec3 V = vec3(0.0, 0.0, 1.0);
-                vec3 H = normalize(L + V);
-                float diff = max(dot(N, L), 0.0);
-                float spec = pow(max(dot(N, H), 0.0), 180.0);
-
-                float cosTheta = max(dot(N, V), 0.0);
-                float fresnel = 0.04 + 0.96 * pow(1.0 - cosTheta, 4.0);
-                float rim = smoothstep(thr + 0.6, thr, field) * edge;
-
-                float caStr = 0.002 * edge;
-                vec3 bgCA;
-                bgCA.r = texture2D(uBg, refractedUV + vec2(caStr, caStr * 0.5)).r;
-                bgCA.g = texture2D(uBg, refractedUV).g;
-                bgCA.b = texture2D(uBg, refractedUV - vec2(caStr, caStr * 0.5)).b;
-
-                float depth = smoothstep(thr, thr + 3.0, field);
-                vec3 tint = mix(vec3(1.0), vec3(0.93, 0.96, 1.0), depth * 0.45);
-
-                vec3 glassColor = bgCA * tint * (0.92 + 0.08 * diff)
-                    + vec3(1.0) * spec * 0.85
-                    + vec3(0.9, 0.95, 1.0) * rim * 0.25
-                    + vec3(1.0) * fresnel * 0.12;
-
-                float shadowField = smoothstep(thr - 0.35, thr - 0.05, field);
-                vec3 bg = bgClean * (1.0 - shadowField * 0.08);
-
-                float borderOuter = smoothstep(thr - 0.10, thr - 0.01, field);
-                float borderInner = smoothstep(thr + 0.0, thr + 0.06, field);
-                float border = borderOuter * (1.0 - borderInner) * 0.3;
-
-                vec3 col = mix(bg, glassColor, edge);
-                col += vec3(1.0) * border;
-                gl_FragColor = vec4(col, 1.0);
-            }
-        `;
-
-        const mat = new THREE.ShaderMaterial({
-            vertexShader: vertSrc, fragmentShader: fragSrc,
-            uniforms: {
-                uRes: { value: new THREE.Vector2(renderer.domElement.width, renderer.domElement.height) },
-                uData: { value: dropletTex }, uBg: { value: bgTexture }, uCount: { value: 0 }, uTime: { value: 0 }
-            }
-        });
-        scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
-
-        let aspect = window.innerWidth / window.innerHeight;
-        const mouse = { x: 999, y: 999, active: false, down: false };
-        let spawnCD = 0;
-
-        window.addEventListener("pointermove", (e) => {
-            const rect = renderer.domElement.getBoundingClientRect();
-            mouse.x = ((e.clientX - rect.left) / rect.width - 0.5) * aspect;
-            mouse.y = 0.5 - (e.clientY - rect.top) / rect.height;
-            mouse.active = true;
-        });
-        window.addEventListener("pointerdown", () => { mouse.down = true; });
-        window.addEventListener("pointerup", () => { mouse.down = false; });
-        window.addEventListener("pointerleave", () => { mouse.active = false; mouse.down = false; });
-
-        window.addEventListener("resize", () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-            aspect = window.innerWidth / window.innerHeight;
-            mat.uniforms.uRes.value.set(renderer.domElement.width, renderer.domElement.height);
-            drawBackground();
-        });
-
-        const DAMP = 0.993, MOUSE_R = 0.18, MOUSE_F = 0.004, TENSION_RANGE = 0.12, TENSION_F = 0.0004;
-        const MERGE_RATIO = 0.62, SPLIT_SPEED = 0.013, SPLIT_MIN_R = 0.04, MAX_SPEED = 0.015, BOUNCE = 0.4;
-        const WANDER_F = 0.00004, CENTER_PULL = 0.000008;
-
-        function applyForces() {
-            for (const d of drops) {
-                d.wanderAngle += (Math.random() - 0.5) * d.wanderSpeed;
-                d.vx += Math.cos(d.wanderAngle) * WANDER_F - d.x * CENTER_PULL;
-                d.vy += Math.sin(d.wanderAngle) * WANDER_F - d.y * CENTER_PULL;
-
-                if (mouse.active) {
-                    const dx = d.x - mouse.x, dy = d.y - mouse.y;
-                    const dSq = dx * dx + dy * dy, rr = MOUSE_R + d.r;
-                    if (dSq < rr * rr && dSq > 1e-5) {
-                        const dist = Math.sqrt(dSq), s = 1 - dist / rr, f = s * s * MOUSE_F;
-                        d.vx += (dx / dist) * f; d.vy += (dy / dist) * f;
-                    }
-                }
-            }
-
-            for (let i = 0; i < drops.length; i++) {
-                const a = drops[i];
-                for (let j = i + 1; j < drops.length; j++) {
-                    const b = drops[j];
-                    const dx = b.x - a.x, dy = b.y - a.y;
-                    const dSq = dx * dx + dy * dy, rng = TENSION_RANGE + a.r + b.r;
-                    if (dSq < rng * rng && dSq > 1e-5) {
-                        const dist = Math.sqrt(dSq), s = 1 - dist / rng, f = s * TENSION_F;
-                        const fx = (dx / dist) * f, fy = (dy / dist) * f;
-                        a.vx += fx; a.vy += fy; b.vx -= fx; b.vy -= fy;
-                    }
-                }
+        function verifyPasscode() {
+            const input = document.getElementById('pass-input').value.trim();
+            const match = input.length === _k.length && [...input].every((c, i) => c.charCodeAt(0) + 13 === _k[i]);
+            if (match) {
+                sessionStorage.setItem('afk_authenticated', 'true');
+                grantAccess();
+            } else {
+                document.getElementById('pass-input').value = '';
+                document.getElementById('warning-text').textContent = 'Invalid root authorization key.';
             }
         }
 
-        function integrate() {
-            for (const d of drops) {
-                const sp = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
-                if (sp > MAX_SPEED) { const s = MAX_SPEED / sp; d.vx *= s; d.vy *= s; }
-                d.x += d.vx; d.y += d.vy; d.vx *= DAMP; d.vy *= DAMP;
-                const wx = aspect * 0.5, wy = 0.5;
-                if (d.x - d.r < -wx) { d.x = -wx + d.r; d.vx = Math.abs(d.vx) * BOUNCE; }
-                if (d.x + d.r > wx) { d.x = wx - d.r; d.vx = -Math.abs(d.vx) * BOUNCE; }
-                if (d.y - d.r < -wy) { d.y = -wy + d.r; d.vy = Math.abs(d.vy) * BOUNCE; }
-                if (d.y + d.r > wy) { d.y = wy - d.r; d.vy = -Math.abs(d.vy) * BOUNCE; }
-            }
+        function grantAccess() {
+            document.getElementById('auth-gate').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            startSessionTimer();
+            logAudit("Admin authenticated with root session credentials.");
+            fetchFullDatabase();
         }
 
-        function mergeDroplets() {
-            for (let i = 0; i < drops.length; i++) {
-                const a = drops[i];
-                if (!a.alive) continue;
-                for (let j = i + 1; j < drops.length; j++) {
-                    const b = drops[j];
-                    if (!b.alive) continue;
-                    const dx = b.x - a.x, dy = b.y - a.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < (a.r + b.r) * MERGE_RATIO) {
-                        const na = a.area + b.area;
-                        a.x = (a.x * a.area + b.x * b.area) / na;
-                        a.y = (a.y * a.area + b.y * b.area) / na;
-                        a.vx = (a.vx * a.area + b.vx * b.area) / na;
-                        a.vy = (a.vy * a.area + b.vy * b.area) / na;
-                        a.r = Math.sqrt(na / Math.PI); a.area = na;
-                        b.alive = false;
-                    }
-                }
-            }
-            drops = drops.filter(d => d.alive);
+        function startSessionTimer() {
+            sessionSecondsRemaining = 900;
+            clearInterval(sessionTimerInterval);
+            sessionTimerInterval = setInterval(() => {
+                sessionSecondsRemaining--;
+                const mins = String(Math.floor(sessionSecondsRemaining / 60)).padStart(2, '0');
+                const secs = String(sessionSecondsRemaining % 60).padStart(2, '0');
+                document.getElementById('session-timer').textContent = `LOCK IN: ${mins}:${secs}`;
+                if (sessionSecondsRemaining <= 0) terminateSession();
+            }, 1000);
         }
 
-        function splitDroplets() {
-            const add = [];
-            for (const d of drops) {
-                if (d.r < SPLIT_MIN_R) continue;
-                const sp = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
-                if (sp < SPLIT_SPEED) continue;
-                const ha = d.area * 0.5, nr = Math.sqrt(ha / Math.PI);
-                const nx = -d.vy / sp, ny = d.vx / sp, off = nr * 0.7;
-                d.r = nr; d.area = ha; d.x -= nx * off; d.y -= ny * off;
-                add.push({
-                    id: uid++, x: d.x + nx * off * 2, y: d.y + ny * off * 2, r: nr, area: ha,
-                    vx: d.vx + nx * sp * 0.35, vy: d.vy + ny * sp * 0.35, alive: true,
-                    wanderAngle: Math.random() * Math.PI * 2, wanderSpeed: 0.3 + Math.random() * 0.5,
-                    softPrevX: d.x + nx * off * 2, softPrevY: d.y + ny * off * 2,
-                    softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0
-                });
-            }
-            for (const a of add) if (drops.length < MAX_DROPLETS) drops.push(a);
+        function terminateSession() {
+            sessionStorage.removeItem('afk_authenticated');
+            window.location.reload();
         }
 
-        function updateSoftBodies() {
-            const SOFT_STIFFNESS = 0.22, SOFT_DAMPING = 0.6;
-            for (const d of drops) {
-                const dx = d.x - d.softPrevX, dy = d.y - d.softPrevY;
-                d.softVelX += (dx - d.softOffX) * SOFT_STIFFNESS;
-                d.softVelY += (dy - d.softOffY) * SOFT_STIFFNESS;
-                d.softVelX *= SOFT_DAMPING; d.softVelY *= SOFT_DAMPING;
-                d.softOffX += d.softVelX; d.softOffY += d.softVelY;
-                d.softPrevX = d.x; d.softPrevY = d.y;
+        if (sessionStorage.getItem('afk_authenticated') === 'true') grantAccess();
+
+        /* -------------------------------------------------------------
+           2. SUPABASE INITIALIZATION & DATA CACHE
+        ------------------------------------------------------------- */
+        const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
+        const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        let catalogCache = [];
+        let selectedIds = new Set();
+        let currentEditId = null;
+
+        async function fetchFullDatabase() {
+            if (!sbClient) return alert("Supabase is not initialized.");
+            const { data, error } = await sbClient.from('games').select('*').order('created_at', { ascending: false });
+            if (error) {
+                logAudit(`Database fetch failed: ${error.message}`);
+                return;
             }
+            catalogCache = data || [];
+            updateMetrics();
+            renderFilteredCatalog();
+            logAudit(`Database synced: ${catalogCache.length} records active.`);
         }
 
-        function mouseSpawn() {
-            if (!mouse.down || !mouse.active) return;
-            spawnCD -= FIXED_DT_MS;
-            if (spawnCD <= 0 && drops.length < MAX_DROPLETS) {
-                spawnCD = 120;
-                spawn(mouse.x + (Math.random() - 0.5) * 0.02, mouse.y + (Math.random() - 0.5) * 0.02, 0.022 + Math.random() * 0.015);
-            }
+        function updateMetrics() {
+            const total = catalogCache.length;
+            const live = catalogCache.filter(g => (g.status || 'live') === 'live').length;
+            const takedowns = total - live;
+
+            let totalBytes = 0;
+            catalogCache.forEach(g => { if (g.html_code) totalBytes += new Blob([g.html_code]).size; });
+            const kbSize = (totalBytes / 1024).toFixed(1);
+
+            document.getElementById('m-total').textContent = total;
+            document.getElementById('m-live').textContent = live;
+            document.getElementById('m-live-percent').textContent = total ? `${Math.round((live / total) * 100)}% operational ratio` : '0% operational';
+            document.getElementById('m-takedowns').textContent = takedowns;
+            document.getElementById('m-size').textContent = `${kbSize} KB`;
         }
 
-        function sync() {
-            dropletBuf.fill(0);
-            const n = Math.min(drops.length, MAX_DROPLETS);
-            for (let i = 0; i < n; i++) {
-                const d = drops[i];
-                dropletBuf[i * 4] = d.x; dropletBuf[i * 4 + 1] = d.y; dropletBuf[i * 4 + 2] = d.r; dropletBuf[i * 4 + 3] = 1;
-                const gi = (n + i) * 4;
-                dropletBuf[gi] = d.x - d.softOffX * 3.5; dropletBuf[gi + 1] = d.y - d.softOffY * 3.5; dropletBuf[gi + 2] = d.r * 0.7; dropletBuf[gi + 3] = 1;
-            }
-            dropletTex.needsUpdate = true;
-            mat.uniforms.uCount.value = n * 2;
-        }
+        /* -------------------------------------------------------------
+           3. DYNAMIC FILTERING & CATALOG TABLE RENDERING
+        ------------------------------------------------------------- */
+        function renderFilteredCatalog() {
+            const tbody = document.getElementById('catalog-tbody');
+            const search = document.getElementById('catalog-search').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const sortFilter = document.getElementById('sort-filter').value;
 
-        let last = performance.now(), acc = 0;
-        function loop() {
-            const now = performance.now();
-            const dt = Math.min(now - last, MAX_FRAME_DT_MS);
-            last = now; acc += dt;
-            let g = 0;
-            while (acc >= FIXED_DT_MS && g < MAX_CATCHUP) {
-                applyForces(); integrate(); mergeDroplets(); splitDroplets(); updateSoftBodies(); mouseSpawn();
-                acc -= FIXED_DT_MS; g++;
-            }
-            mat.uniforms.uTime.value = now * 0.001;
-            sync();
-            renderer.render(scene, camera);
-            requestAnimationFrame(loop);
-        }
-        loop();
+            let list = [...catalogCache];
 
-        // I18N Engine
-        const I18N = {
-            en: {
-                "meta.title": "I’m Afk — Liquid Glass Web Arcade",
-                "nav.library": "Arcade Library",
-                "nav.about": "Platform",
-                "nav.submit": "Submit Game",
-                "nav.contact": "Support",
-                "hero.eyebrow": "Interactive Liquid Glass Arcade",
-                "hero.title": "Pure Web Experiences & <span>Games.</span>",
-                "hero.lead": "No downloads, zero latency, and zero tracking. Discover standalone HTML5 creations hosted smoothly for instant client-side execution.",
-                "hero.ctaPlay": "Enter Arcade Library ➔",
-                "hero.ctaSubmit": "Submit a Project ↗",
-                "stat.status": "Architecture",
-                "stat.statusVal": "Client-Side",
-                "stat.cost": "Access",
-                "stat.costVal": "100% Free",
-                "stat.speed": "Latency",
-                "stat.speedVal": "0.0 ms",
-                "spot.title": "⭐ Featured Gateways",
-                "spot.sub": "Jump straight into the arcade or explore open developer tools.",
-                "spot.allGames": "Browse All Games →",
-                "info.title1": "Ethereal Mechanics",
-                "info.desc1": "The background is powered by real-time WebGL metaball physics with refraction, chromatic aberration, Fresnel normal mapping, and surface tension simulation.",
-                "info.item1": "Move your cursor to repel and interact with liquid droplets.",
-                "info.item2": "Click and drag anywhere on the canvas to spawn new fluid nodes.",
-                "info.item3": "Watch droplets merge, split, and deform via soft-body springs.",
-                "info.title2": "Platform Architecture",
-                "info.desc2": "Every game is run within an isolated client-side sandbox without tracking or intrusive advertisements.",
-                "info.item4": "Open submission pipeline for indie HTML5 creators.",
-                "info.item5": "Automated repository synchronization with GitHub Pages.",
-                "info.item6": "Rapid 24-hour DMCA takedown review protocol.",
-                "foot.library": "Arcade Library",
-                "foot.submit": "Submit Game",
-                "foot.contact": "Support / DMCA",
-                "foot.tos": "Terms of Service"
-            },
-            ar: {
-                "meta.title": "I’m Afk — منصة الألعاب التفاعلية",
-                "nav.library": "مكتبة الألعاب",
-                "nav.about": "عن المنصة",
-                "nav.submit": "أضف لعبة",
-                "nav.contact": "الدعم",
-                "hero.eyebrow": "منصة ألعاب وفيزياء زجاجية سائلة",
-                "hero.title": "تجارب وألعاب ويب <span>تفاعلية نقية.</span>",
-                "hero.lead": "بدون تحميل، بدون إعلانات مزعجة وبأداء فائق. العب أروع ألعاب الـ HTML5 التفاعلية مباشرة عبر متصفحك.",
-                "hero.ctaPlay": "دخول مكتبة الألعاب ➔",
-                "hero.ctaSubmit": "أرسل لعبتك ↗",
-                "stat.status": "البنية",
-                "stat.statusVal": "بدون وسيط",
-                "stat.cost": "الوصول",
-                "stat.costVal": "مجاني 100%",
-                "stat.speed": "السرعة",
-                "stat.speedVal": "فوري 0ms",
-                "spot.title": "⭐ بوابات مميزة",
-                "spot.sub": "انتقل مباشرة للمكتبة أو استكشف أدوات المطورين.",
-                "spot.allGames": "تصفح جميع الألعاب ←",
-                "info.title1": "فيزياء السوائل التفاعلية",
-                "info.desc1": "الخلفية تعمل بمحرك WebGL حقيقي يحاكي انكسار الضوء والتوتر السطحي لقطرات السائل الزجاجي.",
-                "info.item1": "حرك الماوس لتنافر القطرات والتفاعل معها.",
-                "info.item2": "اضغط واسحب لتوليد قطرات سائلة جديدة في أي مكان.",
-                "info.item3": "شاهد القطرات تندمج وتنشطر بتأثيرات فيزيائية ممتعة.",
-                "info.title2": "بنية المنصة",
-                "info.desc2": "تعمل الألعاب في بيئة تشغيل آمنة ومعزولة دون أي تعقب.",
-                "info.item4": "نظام تقديم ألعاب مفتوح للمطورين وصناع المحتوى.",
-                "info.item5": "مزامنة سريعة وتلقائية عبر GitHub Pages.",
-                "info.item6": "مراجعة فورية خلال 24 ساعة لطلبات حقوق النشر.",
-                "foot.library": "مكتبة الألعاب",
-                "foot.submit": "أضف لعبة",
-                "foot.contact": "الدعم وحقوق النشر",
-                "foot.tos": "شروط الاستخدام"
+            // Search
+            if (search) {
+                list = list.filter(g => 
+                    (g.title || '').toLowerCase().includes(search) ||
+                    (g.author || '').toLowerCase().includes(search) ||
+                    (g.email || '').toLowerCase().includes(search) ||
+                    String(g.id).toLowerCase().includes(search)
+                );
             }
-        };
 
-        let currentLang = 'en';
-        const langBtn = document.getElementById('lang-btn');
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
+            // Status Filter
+            if (statusFilter !== 'all') {
+                list = list.filter(g => (g.status || 'live') === statusFilter);
+            }
+
+            // Sort
+            if (sortFilter === 'newest') list.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+            else if (sortFilter === 'oldest') list.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
+            else if (sortFilter === 'alpha') list.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            else if (sortFilter === 'size') list.sort((a, b) => (b.html_code?.length || 0) - (a.html_code?.length || 0));
+
+            if (!list.length) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">No records found matching criteria.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            list.forEach(game => {
+                const tr = document.createElement('tr');
+                const isLive = (game.status || 'live') === 'live';
+                const sizeKb = (new Blob([game.html_code || '']).size / 1024).toFixed(1);
+                const dateStr = game.created_at ? new Date(game.created_at).toLocaleDateString() : 'N/A';
+                const isChecked = selectedIds.has(String(game.id));
+
+                tr.innerHTML = `
+                    <td><input type="checkbox" onchange="toggleSelect('${game.id}', this)" ${isChecked ? 'checked' : ''}></td>
+                    <td>
+                        <div style="font-weight: 700; color: #fff;">${escapeHtml(game.title)}</div>
+                        <div style="font-size: 0.72rem; color: var(--text-dim); font-family: var(--font-mono);">${String(game.id).substring(0, 8)}...</div>
+                    </td>
+                    <td>
+                        <div>${escapeHtml(game.author)}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(game.email || 'None')}</div>
+                    </td>
+                    <td style="font-family: var(--font-mono); font-size: 0.78rem;">${sizeKb} KB</td>
+                    <td>
+                        <span class="badge-status ${isLive ? 'badge-live' : 'badge-takedown'}">
+                            ${isLive ? '● LIVE' : '■ TAKEDOWN'}
+                        </span>
+                    </td>
+                    <td style="font-size: 0.78rem; color: var(--text-muted);">${dateStr}</td>
+                    <td style="text-align: right;">
+                        <div class="action-cluster" style="justify-content: flex-end;">
+                            <button class="btn-sm btn-sm-primary" onclick="openSandbox('${game.id}')">⚡ Test</button>
+                            <button class="btn-sm" onclick="openEditorModal('${game.id}')">✏️ Edit</button>
+                            ${isLive 
+                                ? `<button class="btn-sm btn-sm-danger" onclick="toggleStatus('${game.id}', 'takedown')">Takedown</button>`
+                                : `<button class="btn-sm" style="color: #34d399;" onclick="toggleStatus('${game.id}', 'live')">Restore</button>`
+                            }
+                            <button class="btn-sm btn-sm-danger" onclick="deleteSingleGame('${game.id}')">🗑️</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
         }
-        langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
 
-        // Secret Admin Access (Triple Click Logo or Ctrl+Shift+A)
-        let logoClicks = 0;
-        document.getElementById('main-brand-logo').addEventListener('click', () => {
-            logoClicks++;
-            if (logoClicks === 3) window.location.href = 'admin.html';
-            setTimeout(() => logoClicks = 0, 1000);
-        });
-        window.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
-                window.location.href = 'admin.html';
+        /* -------------------------------------------------------------
+           4. SELECTION & BULK BATCH OPERATIONS
+        ------------------------------------------------------------- */
+        function toggleSelect(id, cb) {
+            if (cb.checked) selectedIds.add(String(id));
+            else selectedIds.delete(String(id));
+            updateBulkBar();
+        }
+
+        function toggleSelectAll(cb) {
+            selectedIds.clear();
+            if (cb.checked) catalogCache.forEach(g => selectedIds.add(String(g.id)));
+            renderFilteredCatalog();
+            updateBulkBar();
+        }
+
+        function updateBulkBar() {
+            const bar = document.getElementById('bulk-bar');
+            const count = document.getElementById('bulk-count');
+            if (selectedIds.size > 0) {
+                bar.style.display = 'flex';
+                count.textContent = `${selectedIds.size} game(s) selected`;
+            } else {
+                bar.style.display = 'none';
             }
-        });
+        }
+
+        async function bulkSetStatus(status) {
+            if (!confirm(`Apply status "${status.toUpperCase()}" to ${selectedIds.size} selected games?`)) return;
+            const ids = Array.from(selectedIds);
+            const { error } = await sbClient.from('games').update({ status }).in('id', ids);
+            if (error) alert(error.message);
+            else {
+                logAudit(`Bulk status changed to [${status}] on ${ids.length} records.`);
+                selectedIds.clear();
+                updateBulkBar();
+                fetchFullDatabase();
+            }
+        }
+
+        async function bulkDeleteSelected() {
+            if (!confirm(`Permanently DELETE ${selectedIds.size} games? This cannot be undone.`)) return;
+            const ids = Array.from(selectedIds);
+            const { error } = await sbClient.from('games').delete().in('id', ids);
+            if (error) alert(error.message);
+            else {
+                logAudit(`Bulk deletion executed on ${ids.length} records.`);
+                selectedIds.clear();
+                updateBulkBar();
+                fetchFullDatabase();
+            }
+        }
+
+        function bulkExportSelected() {
+            const items = catalogCache.filter(g => selectedIds.has(String(g.id)));
+            downloadJSON(items, `imafk_bulk_export_${Date.now()}.json`);
+            logAudit(`Exported ${items.length} records to JSON file.`);
+        }
+
+        /* -------------------------------------------------------------
+           5. CODE INSPECTOR, LIVE PATCH & EDITOR
+        ------------------------------------------------------------- */
+        function openEditorModal(id) {
+            currentEditId = id;
+            const game = catalogCache.find(g => String(g.id) === String(id));
+            if (!game) return;
+
+            document.getElementById('editor-modal-title').textContent = `Editing: ${game.title}`;
+            document.getElementById('editor-modal-meta').textContent = `UUID: ${game.id}`;
+            document.getElementById('edit-title').value = game.title || '';
+            document.getElementById('edit-author').value = game.author || '';
+            document.getElementById('edit-email').value = game.email || '';
+            document.getElementById('edit-status').value = game.status || 'live';
+            
+            const codeArea = document.getElementById('edit-code');
+            codeArea.value = game.html_code || '';
+            document.getElementById('editor-stats').textContent = `${(game.html_code || '').length.toLocaleString()} characters`;
+
+            codeArea.oninput = () => {
+                document.getElementById('editor-stats').textContent = `${codeArea.value.length.toLocaleString()} characters`;
+            };
+
+            document.getElementById('editor-modal').style.display = 'flex';
+        }
+
+        function closeEditorModal() {
+            document.getElementById('editor-modal').style.display = 'none';
+        }
+
+        async function saveEditedGame() {
+            if (!currentEditId) return;
+            const updated = {
+                title: document.getElementById('edit-title').value.trim(),
+                author: document.getElementById('edit-author').value.trim(),
+                email: document.getElementById('edit-email').value.trim(),
+                status: document.getElementById('edit-status').value,
+                html_code: document.getElementById('edit-code').value
+            };
+
+            const { error } = await sbClient.from('games').update(updated).eq('id', currentEditId);
+            if (error) alert("Save failed: " + error.message);
+            else {
+                logAudit(`Patched record "${updated.title}" (${currentEditId}).`);
+                closeEditorModal();
+                fetchFullDatabase();
+            }
+        }
+
+        function testEditedCodeInSandbox() {
+            const code = document.getElementById('edit-code').value;
+            const title = document.getElementById('edit-title').value;
+            openSandboxRaw(title, code);
+        }
+
+        /* -------------------------------------------------------------
+           6. MULTI-DEVICE SANDBOX MODAL
+        ------------------------------------------------------------- */
+        let activeSandboxCode = '';
+
+        function openSandbox(id) {
+            const game = catalogCache.find(g => String(g.id) === String(id));
+            if (!game) return;
+            openSandboxRaw(game.title, game.html_code);
+        }
+
+        function openSandboxRaw(title, code) {
+            activeSandboxCode = code || '';
+            document.getElementById('sandbox-title').textContent = `Sandbox Preview: ${title}`;
+            const frame = document.getElementById('sandbox-frame');
+            frame.srcdoc = activeSandboxCode;
+            document.getElementById('sandbox-modal').style.display = 'flex';
+        }
+
+        function closeSandboxModal() {
+            document.getElementById('sandbox-modal').style.display = 'none';
+            document.getElementById('sandbox-frame').srcdoc = '';
+        }
+
+        function reloadSandboxFrame() {
+            const frame = document.getElementById('sandbox-frame');
+            frame.srcdoc = '';
+            setTimeout(() => { frame.srcdoc = activeSandboxCode; }, 80);
+        }
+
+        function setSandboxViewport(width, btn) {
+            document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('sandbox-viewport-box').style.width = width;
+        }
+
+        /* -------------------------------------------------------------
+           7. STATIC CODE SAFETY SCANNER
+        ------------------------------------------------------------- */
+        function runGlobalSecurityAudit() {
+            const resultsBox = document.getElementById('scanner-results');
+            resultsBox.innerHTML = '';
+
+            const suspiciousPatterns = [
+                { pattern: /coinhive|cryptonight|miner\.min\.js/i, label: '🚨 Potential Crypto Miner Script' },
+                { pattern: /document\.cookie/i, label: '⚠️ Accesses Document Cookies' },
+                { pattern: /localStorage\.(clear|setItem)/i, label: 'ℹ️ Modifies LocalStorage' },
+                { pattern: /eval\(/i, label: '⚠️ Uses Dynamic eval()' },
+                { pattern: /window\.parent\.location/i, label: '🚨 Tries to escape sandbox frame' },
+                { pattern: /fetch\(|XMLHttpRequest/i, label: '🌐 Initiates External Network Requests' }
+            ];
+
+            let flaggedCount = 0;
+
+            catalogCache.forEach(game => {
+                const code = game.html_code || '';
+                const detected = [];
+
+                suspiciousPatterns.forEach(p => {
+                    if (p.pattern.test(code)) detected.push(p.label);
+                });
+
+                const row = document.createElement('div');
+                row.style.background = 'rgba(255, 255, 255, 0.03)';
+                row.style.border = '1px solid var(--glass-border)';
+                row.style.borderRadius = '12px';
+                row.style.padding = '16px';
+                row.style.display = 'flex';
+                row.style.justifyContent = 'space-between';
+                row.style.alignItems = 'center';
+
+                if (detected.length > 0) {
+                    flaggedCount++;
+                    row.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+                    row.innerHTML = `
+                        <div>
+                            <div style="font-weight: 700; color: #fca5a5;">${escapeHtml(game.title)} (${detected.length} notices)</div>
+                            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">${detected.join(' &bull; ')}</div>
+                        </div>
+                        <button class="btn-sm btn-sm-danger" onclick="openEditorModal('${game.id}')">Inspect & Patch</button>
+                    `;
+                } else {
+                    row.innerHTML = `
+                        <div>
+                            <div style="font-weight: 700; color: #34d399;">${escapeHtml(game.title)} ✓ Clear</div>
+                            <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 4px;">No hazardous signatures detected.</div>
+                        </div>
+                        <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">PASSED</span>
+                    `;
+                }
+                resultsBox.appendChild(row);
+            });
+
+            logAudit(`Security scan completed: ${flaggedCount} flagged items.`);
+        }
+
+        /* -------------------------------------------------------------
+           8. DIRECT ADMIN DEPLOY STUDIO
+        ------------------------------------------------------------- */
+        async function handleAdminDeploy() {
+            const newGame = {
+                title: document.getElementById('deploy-title').value.trim(),
+                author: document.getElementById('deploy-author').value.trim(),
+                email: document.getElementById('deploy-email').value.trim() || 'root@imafk.net',
+                html_code: document.getElementById('deploy-code').value,
+                status: 'live'
+            };
+
+            const { error } = await sbClient.from('games').insert([newGame]);
+            if (error) alert("Deploy failed: " + error.message);
+            else {
+                alert("🎉 Game deployed directly to global node!");
+                logAudit(`Directly deployed game "${newGame.title}".`);
+                document.getElementById('deploy-title').value = '';
+                document.getElementById('deploy-author').value = '';
+                document.getElementById('deploy-code').value = '';
+                switchTab('catalog');
+                fetchFullDatabase();
+            }
+        }
+
+        /* -------------------------------------------------------------
+           9. BACKUP & RESTORE JSON
+        ------------------------------------------------------------- */
+        function exportFullDatabaseJSON() {
+            downloadJSON(catalogCache, `imafk_full_backup_${Date.now()}.json`);
+            logAudit("Downloaded full catalog JSON snapshot.");
+        }
+
+        function handleJSONImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (!Array.isArray(parsed)) throw new Error("JSON must be an array of game objects.");
+                    if (!confirm(`Import ${parsed.length} games into Supabase?`)) return;
+
+                    const formatted = parsed.map(g => ({
+                        title: g.title,
+                        author: g.author || 'Imported',
+                        email: g.email || 'backup@imafk.net',
+                        html_code: g.html_code || '',
+                        status: g.status || 'live'
+                    }));
+
+                    const { error } = await sbClient.from('games').insert(formatted);
+                    if (error) alert(error.message);
+                    else {
+                        alert(`Successfully imported ${formatted.length} entries!`);
+                        logAudit(`Restored ${formatted.length} games from JSON backup.`);
+                        fetchFullDatabase();
+                    }
+                } catch(err) {
+                    alert("Import failed: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function downloadJSON(obj, filename) {
+            const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+
+        /* -------------------------------------------------------------
+           10. INTERACTIVE CLI TERMINAL
+        ------------------------------------------------------------- */
+        function openTerminalModal() { document.getElementById('terminal-modal').style.display = 'flex'; }
+        function closeTerminalModal() { document.getElementById('terminal-modal').style.display = 'none'; }
+
+        function handleTerminalCommand(e) {
+            if (e.key !== 'Enter') return;
+            const input = document.getElementById('terminal-input');
+            const output = document.getElementById('terminal-output');
+            const raw = input.value.trim();
+            input.value = '';
+            if (!raw) return;
+
+            output.innerHTML += `<div><span style="color: var(--accent-ice);">root@imafk:~#</span> ${escapeHtml(raw)}</div>`;
+            const parts = raw.split(' ');
+            const cmd = parts[0].toLowerCase();
+            const arg = parts[1];
+
+            switch(cmd) {
+                case 'help':
+                    output.innerHTML += `<div style="color: #94a3b8;">Commands: list, stats, scan, takedown &lt;id&gt;, restore &lt;id&gt;, purge &lt;id&gt;, clear, lock</div>`;
+                    break;
+                case 'stats':
+                    output.innerHTML += `<div>Total: ${catalogCache.length} | Live: ${catalogCache.filter(g => g.status === 'live').length}</div>`;
+                    break;
+                case 'list':
+                    catalogCache.forEach(g => {
+                        output.innerHTML += `<div>[${g.status || 'live'}] ${String(g.id).substring(0,8)} - ${escapeHtml(g.title)}</div>`;
+                    });
+                    break;
+                case 'clear':
+                    output.innerHTML = '';
+                    break;
+                case 'scan':
+                    runGlobalSecurityAudit();
+                    output.innerHTML += `<div style="color: #34d399;">Global security audit triggered. Check Scanner tab.</div>`;
+                    break;
+                case 'takedown':
+                    if (arg) toggleStatus(arg, 'takedown');
+                    else output.innerHTML += `<div style="color: #fca5a5;">Usage: takedown &lt;id&gt;</div>`;
+                    break;
+                case 'restore':
+                    if (arg) toggleStatus(arg, 'live');
+                    else output.innerHTML += `<div style="color: #fca5a5;">Usage: restore &lt;id&gt;</div>`;
+                    break;
+                case 'lock':
+                    terminateSession();
+                    break;
+                default:
+                    output.innerHTML += `<div style="color: #fca5a5;">Unknown command: ${cmd}. Type "help".</div>`;
+            }
+            output.scrollTop = output.scrollHeight;
+        }
+
+        /* -------------------------------------------------------------
+           11. HELPERS & TAB CONTROLLER
+        ------------------------------------------------------------- */
+        function switchTab(name) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(`tab-${name}`).classList.add('active');
+        }
+
+        async function toggleStatus(id, status) {
+            const { error } = await sbClient.from('games').update({ status }).eq('id', id);
+            if (!error) {
+                logAudit(`Updated status of [${id}] to ${status.toUpperCase()}.`);
+                fetchFullDatabase();
+            }
+        }
+
+        async function deleteSingleGame(id) {
+            if (confirm("Permanently delete this game record?")) {
+                const { error } = await sbClient.from('games').delete().eq('id', id);
+                if (!error) {
+                    logAudit(`Deleted game record [${id}].`);
+                    fetchFullDatabase();
+                }
+            }
+        }
+
+        function logAudit(msg) {
+            const list = document.getElementById('audit-log-container');
+            const time = new Date().toLocaleTimeString();
+            const li = document.createElement('li');
+            li.className = 'audit-item';
+            li.innerHTML = `<span>[${time}]</span><span>${escapeHtml(msg)}</span>`;
+            list.prepend(li);
+        }
+
+        function clearAuditLogs() {
+            document.getElementById('audit-log-container').innerHTML = '';
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
     </script>
 </body>
 </html>
