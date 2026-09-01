@@ -378,7 +378,7 @@
             position: relative;
         }
 
-        /* Activity Icon Rail */
+        /* Leftmost Activity Icon Rail (VSCode style) */
         .activity-rail {
             width: var(--rail-width);
             background: var(--bg-surface);
@@ -526,7 +526,6 @@
             flex-direction: column;
             gap: 8px;
             transition: 0.2s;
-            cursor: pointer;
         }
         .panel-card:hover {
             border-color: rgba(255, 255, 255, 0.2);
@@ -1443,7 +1442,7 @@
                 <!-- File Tabs & Multi-file support -->
                 <div class="editor-tabs-bar">
                     <div class="tabs-list">
-                        <button class="tab-btn active" id="tab-file-html">
+                        <button class="tab-btn active" id="tab-file-html" onclick="switchFileTab('html')">
                             <span>📄</span> index.html
                         </button>
                     </div>
@@ -1897,7 +1896,7 @@
       requestAnimationFrame(loop);
     }
     loop();
-  </script>
+  <\\/script>
 </body>
 </html>`,
 
@@ -1983,7 +1982,7 @@
       ctx.fillStyle = "#00f0ff"; ctx.fillText(s1, 230, 40);
       ctx.fillStyle = "#ff0055"; ctx.fillText(s2, 310, 40);
     }, 1000 / 60);
-  </script>
+  <\\/script>
 </body>
 </html>`,
 
@@ -2077,7 +2076,7 @@
       requestAnimationFrame(loop);
     }
     loop();
-  </script>
+  <\\/script>
 </body>
 </html>`,
 
@@ -2175,7 +2174,7 @@
       requestAnimationFrame(loop);
     }
     loop();
-  </script>
+  <\\/script>
 </body>
 </html>`,
 
@@ -2253,7 +2252,7 @@
 
       // Draw Player
       ctx.fillStyle = "#00f0ff";
-      ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.fillRect(p.x, p.y, p.w, h);
 
       ctx.fillStyle = "#fff";
       ctx.font = "14px monospace";
@@ -2262,7 +2261,7 @@
       requestAnimationFrame(loop);
     }
     loop();
-  </script>
+  <\\/script>
 </body>
 </html>`,
 
@@ -2325,7 +2324,7 @@
       requestAnimationFrame(render);
     }
     render();
-  </script>
+  <\\/script>
 </body>
 </html>`,
 
@@ -2335,7 +2334,7 @@
   <meta charset="utf-8">
   <title>3D Cyber Torus</title>
   <style>body { margin:0; overflow:hidden; background:#000; }</style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\\/script>
 </head>
 <body>
   <script>
@@ -2370,7 +2369,7 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
-  </script>
+  <\\/script>
 </body>
 </html>`
         };
@@ -2384,7 +2383,7 @@
                 const defaultProj = {
                     id: 'proj_' + Date.now(),
                     title: 'Space Orbit Dodger 2D',
-                    code: STARTER_TEMPLATES.canvas2d,
+                    code: STARTER_TEMPLATES.canvas2d.replace(/<\\\/script>/g, '<\/script>'),
                     updatedAt: Date.now(),
                     snapshots: []
                 };
@@ -2452,7 +2451,7 @@
             const newProj = {
                 id: 'proj_' + Date.now(),
                 title: title,
-                code: STARTER_TEMPLATES[templateKey] || STARTER_TEMPLATES.canvas2d,
+                code: (STARTER_TEMPLATES[templateKey] || STARTER_TEMPLATES.canvas2d).replace(/<\\\/script>/g, '<\/script>'),
                 updatedAt: Date.now(),
                 snapshots: []
             };
@@ -2616,7 +2615,8 @@
                         }
                         requestAnimationFrame(measureFps);
                     })();
-                </` + `script>`;
+                <\\/script>
+            `.replace(/<\\\/script>/g, '<\/script>');
 
             let finalHtml = rawCode;
             if (finalHtml.includes('<head>')) {
@@ -2783,6 +2783,7 @@
            -------------------------------------------------------------------------- */
         function formatCode() {
             let code = editor.value;
+            // Simple robust indentation formatter
             let lines = code.split('\n');
             let indent = 0;
             let formatted = lines.map(line => {
@@ -2888,7 +2889,7 @@
             if (!STARTER_TEMPLATES[key]) return;
             if (editor.value.trim() && !confirm("Replace current code buffer with this starter game kit?")) return;
             
-            editor.value = STARTER_TEMPLATES[key];
+            editor.value = STARTER_TEMPLATES[key].replace(/<\\\/script>/g, '<\/script>');
             const titles = {
                 canvas2d: 'Space Orbit Dodger 2D',
                 pong: 'Neon Cyber Pong',
