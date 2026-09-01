@@ -1,116 +1,248 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" data-theme="cyberpunk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AFK Game Studio & Web IDE — I’M AFK</title>
+    <title>AFK Game Studio & Web IDE — Next-Gen Arcade Engine</title>
     
-    <!-- Google Fonts & Libraries -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
+    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* ==========================================================================
+           THEME ENGINE & COLOR PALETTES
+           ========================================================================== */
         :root {
-            --bg-deep: #07090e;
-            --bg-surface: #0c111d;
-            --studio-panel: rgba(14, 20, 34, 0.9);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-border-focus: rgba(103, 232, 249, 0.45);
+            --bg-deep: #05070c;
+            --bg-surface: #0a0e1a;
+            --bg-panel: #0f1526;
+            --bg-subtle: rgba(255, 255, 255, 0.04);
+            --bg-hover: rgba(255, 255, 255, 0.08);
+            --bg-active: rgba(255, 255, 255, 0.14);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --border-glow: rgba(0, 240, 255, 0.4);
+            
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --text-dim: #64748b;
-            --accent-ice: #67e8f9;
-            --accent-blue: #3b82f6;
-            --accent-emerald: #10b981;
+            
+            --accent-cyan: #00f0ff;
+            --accent-pink: #ff0055;
+            --accent-lime: #00ff66;
             --accent-amber: #f59e0b;
-            --btn-pill: rgba(255, 255, 255, 0.08);
-            --font-display: 'Space Grotesk', sans-serif;
+            --accent-blue: #3b82f6;
+            --accent-purple: #a855f7;
+
+            --font-display: 'Space Grotesk', -apple-system, sans-serif;
             --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
             --font-code: 'JetBrains Mono', monospace;
+            
+            --editor-bg: #070a12;
+            --sidebar-width: 320px;
+            --rail-width: 54px;
+            --header-height: 56px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Theme Variants */
+        [data-theme="synthwave"] {
+            --bg-deep: #0e0720;
+            --bg-surface: #170e33;
+            --bg-panel: #201344;
+            --border-glass: rgba(255, 110, 255, 0.15);
+            --border-glow: rgba(255, 0, 128, 0.5);
+            --accent-cyan: #ff71ce;
+            --accent-pink: #01cdfe;
+            --accent-lime: #05ffa1;
+            --accent-amber: #fffb96;
+            --editor-bg: #110926;
+        }
 
+        [data-theme="matrix"] {
+            --bg-deep: #020b05;
+            --bg-surface: #041409;
+            --bg-panel: #072210;
+            --border-glass: rgba(0, 255, 102, 0.15);
+            --border-glow: rgba(0, 255, 102, 0.5);
+            --accent-cyan: #00ff66;
+            --accent-pink: #10b981;
+            --accent-lime: #34d399;
+            --accent-amber: #6ee7b7;
+            --editor-bg: #020d06;
+        }
+
+        [data-theme="monokai"] {
+            --bg-deep: #16181b;
+            --bg-surface: #1f2227;
+            --bg-panel: #282c34;
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --border-glow: rgba(230, 219, 116, 0.4);
+            --accent-cyan: #66d9ef;
+            --accent-pink: #f92672;
+            --accent-lime: #a6e22e;
+            --accent-amber: #fd971f;
+            --editor-bg: #1b1d22;
+        }
+
+        [data-theme="bloodmoon"] {
+            --bg-deep: #0f0507;
+            --bg-surface: #1c0a0e;
+            --bg-panel: #2a0e15;
+            --border-glass: rgba(255, 50, 50, 0.15);
+            --border-glow: rgba(255, 0, 55, 0.5);
+            --accent-cyan: #ff3366;
+            --accent-pink: #ff003c;
+            --accent-lime: #ff9900;
+            --accent-amber: #ffaa00;
+            --editor-bg: #140609;
+        }
+
+        /* Base Resets */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             background-color: var(--bg-deep);
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 90% 90%, rgba(103, 232, 249, 0.08) 0%, transparent 45%);
             color: var(--text-main);
             font-family: var(--font-main);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Top Command Navbar */
-        .studio-nav {
-            height: 64px;
-            background: rgba(10, 14, 24, 0.95);
-            border-bottom: 1px solid var(--glass-border);
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+        /* ==========================================================================
+           COMMAND CENTER NAVBAR
+           ========================================================================== */
+        .studio-navbar {
+            height: var(--header-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-glass);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 clamp(16px, 2.5vw, 32px);
-            z-index: 50;
+            padding: 0 16px;
+            z-index: 100;
             flex-shrink: 0;
-        }
-
-        .brand-cluster {
-            display: flex;
-            align-items: center;
             gap: 12px;
-            text-decoration: none;
-            color: var(--text-main);
         }
 
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            color: var(--accent-ice);
-        }
-
-        .studio-title-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid transparent;
-            color: #fff;
-            font-family: var(--font-display);
-            font-size: 1.05rem;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 8px;
-            outline: none;
-            width: 240px;
-            transition: all 0.2s;
-        }
-        .studio-title-input:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--accent-ice);
-        }
-
-        .studio-tools {
+        .nav-left, .nav-center, .nav-right {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .btn-studio {
-            background: var(--btn-pill);
-            border: 1px solid var(--glass-border);
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
             color: var(--text-main);
-            padding: 7px 16px;
-            border-radius: 50px;
+            font-weight: 800;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 900;
+            font-size: 1rem;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+        }
+
+        .project-title-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 2px 10px;
+            transition: all 0.2s;
+        }
+        .project-title-box:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+            background: var(--bg-panel);
+        }
+        .project-title-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            width: 200px;
+            padding: 4px 0;
+        }
+
+        /* Auto-save Status Indicator */
+        .save-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-family: var(--font-code);
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            transition: 0.3s;
+        }
+        .save-indicator.saving {
+            color: var(--accent-amber);
+            border-color: var(--accent-amber);
+        }
+        .save-indicator.saved {
+            color: var(--accent-lime);
+        }
+        .save-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-lime);
+            box-shadow: 0 0 8px var(--accent-lime);
+            animation: pulse-dot 2s infinite ease-in-out;
+        }
+        .save-indicator.saving .save-dot {
+            background: var(--accent-amber);
+            box-shadow: 0 0 8px var(--accent-amber);
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.6; }
+        }
+
+        /* Buttons & Actions */
+        .btn {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 8px;
             font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
@@ -118,500 +250,1654 @@
             align-items: center;
             gap: 6px;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.18s ease;
+            font-family: var(--font-main);
+            white-space: nowrap;
         }
-        .btn-studio:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--accent-ice);
+        .btn:hover {
+            background: var(--bg-hover);
+            border-color: rgba(255, 255, 255, 0.25);
             color: #fff;
+            transform: translateY(-1px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn-icon {
+            padding: 6px 9px;
+            font-size: 0.9rem;
+        }
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.75rem;
         }
 
         .btn-run {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #040807;
+            background: linear-gradient(135deg, #00ff66, #059669);
+            border: 1px solid #10b981;
+            color: #021a0d;
             font-weight: 800;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 16px rgba(0, 255, 102, 0.35);
         }
         .btn-run:hover {
             background: #34d399;
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 24px rgba(0, 255, 102, 0.6);
             transform: translateY(-1px);
+            color: #000;
         }
 
         .btn-publish {
-            background: linear-gradient(135deg, var(--accent-ice), var(--accent-blue));
-            color: #040810;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            color: #030a16;
             font-weight: 800;
-            border: none;
-            box-shadow: 0 0 15px rgba(103, 232, 249, 0.3);
+            box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
         }
         .btn-publish:hover {
+            box-shadow: 0 0 24px rgba(0, 240, 255, 0.55);
             transform: translateY(-1px);
-            box-shadow: 0 0 25px rgba(103, 232, 249, 0.5);
         }
 
-        /* Main Split Workspace */
-        .workspace {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            overflow: hidden;
+        .btn-primary {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+        .btn-primary:hover {
+            background: var(--accent-cyan);
+            color: #000;
         }
 
-        /* Left Editor Pane */
-        .editor-pane {
+        /* Dropdown Menus */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 190px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 15px rgba(0, 240, 255, 0.15);
+            z-index: 200;
+            margin-top: 6px;
+        }
+        .dropdown-content.right {
+            left: auto;
+            right: 0;
+        }
+        .dropdown:hover .dropdown-content,
+        .dropdown.open .dropdown-content {
             display: flex;
             flex-direction: column;
-            border-right: 1px solid var(--glass-border);
-            background: #090d16;
-            overflow: hidden;
+            gap: 2px;
+            animation: fadeInDown 0.15s ease;
         }
-
-        .pane-toolbar {
-            height: 44px;
-            background: rgba(16, 22, 36, 0.9);
-            border-bottom: 1px solid var(--glass-border);
+        .dropdown-item {
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            gap: 8px;
+            transition: 0.15s;
+        }
+        .dropdown-item:hover {
+            background: var(--bg-hover);
+            color: var(--accent-cyan);
+        }
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-glass);
+            margin: 4px 0;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           MAIN STUDIO BODY & ACTIVITY RAIL
+           ========================================================================== */
+        .studio-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Activity Icon Rail */
+        .activity-rail {
+            width: var(--rail-width);
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-glass);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            gap: 8px;
+            z-index: 40;
             flex-shrink: 0;
         }
 
-        .snippet-strip {
+        .rail-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-dim);
             display: flex;
-            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .rail-btn:hover {
+            color: var(--text-main);
+            background: var(--bg-subtle);
+        }
+        .rail-btn.active {
+            color: var(--accent-cyan);
+            background: var(--bg-subtle);
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+        .rail-btn.active::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--accent-cyan);
+            border-radius: 0 4px 4px 0;
         }
 
-        .snippet-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 3px 10px;
+        .rail-bottom {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%) translateX(10px);
+            background: #0d1322;
+            color: #fff;
+            padding: 4px 9px;
             border-radius: 6px;
             font-size: 0.72rem;
-            font-family: var(--font-code);
+            font-family: var(--font-main);
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+            z-index: 500;
+        }
+        .tooltip:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) translateX(14px);
+        }
+
+        /* Collapsible Studio Drawer / Sidebar */
+        .studio-sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border-glass);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: width 0.25s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.25s;
+        }
+        .studio-sidebar.collapsed {
+            width: 0;
+            border-right: none;
+        }
+
+        .sidebar-header {
+            height: 42px;
+            padding: 0 14px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
+        .sidebar-tab-content.active {
+            display: flex;
+        }
+
+        /* Sidebar Panels & Cards */
+        .panel-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .panel-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: var(--bg-hover);
+        }
+        .panel-card-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .panel-card-desc {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Project Items in Manager */
+        .project-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 12px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
             cursor: pointer;
             transition: 0.2s;
         }
-        .snippet-btn:hover {
-            background: rgba(103, 232, 249, 0.15);
-            color: var(--accent-ice);
-            border-color: var(--accent-ice);
+        .project-item:hover {
+            border-color: var(--accent-cyan);
+            background: var(--bg-hover);
+        }
+        .project-item.active {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
         }
 
-        .editor-container {
-            flex: 1;
-            position: relative;
+        /* Sound Lab UI */
+        .sound-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        .sound-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-glass);
+            padding: 8px;
+            border-radius: 8px;
             display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Pixel Sprite Generator Mini Grid */
+        .pixel-grid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .pixel-canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 22px);
+            grid-template-rows: repeat(8, 22px);
+            gap: 2px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid var(--border-glass);
+        }
+        .pixel-cell {
+            width: 22px;
+            height: 22px;
+            background: #111827;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .pixel-cell:hover {
+            outline: 1px solid #fff;
+        }
+        .palette-row {
+            display: flex;
+            gap: 5px;
+        }
+        .palette-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid var(--border-glass);
+        }
+        .palette-swatch.active {
+            outline: 2px solid #fff;
+            transform: scale(1.15);
+        }
+
+        /* ==========================================================================
+           MAIN WORKSPACE (EDITOR & LIVE PREVIEW)
+           ========================================================================== */
+        .workspace {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            background: var(--bg-deep);
+        }
+
+        /* Split Panes */
+        .pane-editor {
+            flex: 1;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            background: var(--editor-bg);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pane-divider {
+            width: 6px;
+            background: var(--border-glass);
+            cursor: col-resize;
+            transition: background 0.2s;
+            position: relative;
+            z-index: 30;
+            flex-shrink: 0;
+        }
+        .pane-divider:hover, .pane-divider.dragging {
+            background: var(--accent-cyan);
+            box-shadow: 0 0 12px var(--accent-cyan);
+        }
+
+        .pane-preview {
+            flex: 1;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            background: #020408;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* File Tabs Bar */
+        .editor-tabs-bar {
+            height: 38px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            flex-shrink: 0;
+        }
+
+        .tabs-list {
+            display: flex;
+            gap: 3px;
+            height: 100%;
+            align-items: flex-end;
+        }
+
+        .tab-btn {
+            height: 32px;
+            padding: 0 14px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-family: var(--font-code);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.15s;
+        }
+        .tab-btn:hover {
+            color: #fff;
+            background: var(--bg-subtle);
+        }
+        .tab-btn.active {
+            color: var(--accent-cyan);
+            background: var(--editor-bg);
+            border-color: var(--border-glass);
+            border-top: 2px solid var(--accent-cyan);
+        }
+
+        /* Editor Sub-toolbar */
+        .editor-toolbar {
+            height: 34px;
+            background: rgba(0, 0, 0, 0.18);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-family: var(--font-code);
+            flex-shrink: 0;
+        }
+
+        /* Search & Replace Floating Bar */
+        .search-bar {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 6px 12px;
+            position: absolute;
+            top: 72px;
+            right: 20px;
+            z-index: 50;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+        .search-bar.active { display: flex; }
+        .search-input {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            font-size: 0.78rem;
+            font-family: var(--font-code);
+            padding: 3px 8px;
+            border-radius: 4px;
+            outline: none;
+            width: 140px;
+        }
+
+        /* Code Editor Textarea & Gutter */
+        .editor-workspace {
+            flex: 1;
+            display: flex;
+            position: relative;
             overflow: hidden;
         }
 
-        .line-numbers {
-            width: 44px;
-            padding: 16px 8px;
-            background: #06080e;
+        .line-gutter {
+            width: 48px;
+            background: rgba(0, 0, 0, 0.25);
+            border-right: 1px solid var(--border-glass);
+            padding: 14px 8px;
             color: var(--text-dim);
             font-family: var(--font-code);
             font-size: 0.82rem;
-            line-height: 1.5;
+            line-height: 1.55;
             text-align: right;
             user-select: none;
-            border-right: 1px solid var(--glass-border);
             overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .code-textarea {
+        .code-input-area {
             flex: 1;
             background: transparent;
             border: none;
             outline: none;
-            padding: 16px;
+            padding: 14px;
             color: #7dd3fc;
             font-family: var(--font-code);
-            font-size: 0.85rem;
-            line-height: 1.5;
+            font-size: 0.84rem;
+            line-height: 1.55;
             resize: none;
             white-space: pre;
             tab-size: 2;
             overflow: auto;
+            caret-color: var(--accent-cyan);
         }
 
-        /* Right Preview & Sandbox Pane */
-        .preview-pane {
+        /* Preview Toolbar */
+        .preview-toolbar {
+            height: 38px;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid var(--border-glass);
             display: flex;
-            flex-direction: column;
-            background: #04060a;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .viewport-controller {
-            display: flex;
-            gap: 6px;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            flex-shrink: 0;
         }
 
-        .viewport-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
+        .viewport-switcher {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .view-pill {
+            background: transparent;
+            border: 1px solid transparent;
             color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 600;
             padding: 3px 8px;
             border-radius: 6px;
-            font-size: 0.75rem;
             cursor: pointer;
+            transition: 0.15s;
         }
-        .viewport-btn.active {
-            background: var(--accent-ice);
-            color: #000;
-            font-weight: 700;
+        .view-pill:hover {
+            color: #fff;
+            background: var(--bg-subtle);
+        }
+        .view-pill.active {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: rgba(0, 240, 255, 0.4);
+            color: var(--accent-cyan);
         }
 
-        .sandbox-container {
+        /* Sandbox Frame Stage */
+        .sandbox-stage {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            padding: 12px;
             background: #000;
             overflow: hidden;
+            position: relative;
         }
 
-        .device-frame {
+        .device-wrapper {
             width: 100%;
             height: 100%;
-            transition: width 0.3s ease;
             background: #000;
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--border-glass);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            transition: width 0.25s ease, height 0.25s ease;
+            position: relative;
         }
 
-        #sandbox-iframe {
+        #sandbox-frame {
             width: 100%;
             height: 100%;
             border: none;
             display: block;
+            background: #000;
         }
 
-        /* Debugger / Console Drawer */
+        /* Live Diagnostics Strip */
+        .diagnostics-strip {
+            height: 26px;
+            background: rgba(0, 0, 0, 0.6);
+            border-top: 1px solid var(--border-glass);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            font-size: 0.7rem;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+        }
+        .fps-badge {
+            color: var(--accent-lime);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Integrated Console & Debugger Drawer */
         .console-drawer {
-            height: 130px;
-            background: #080b12;
-            border-top: 1px solid var(--glass-border);
+            height: 140px;
+            background: #04070d;
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            border-top: 1px solid var(--border-glass);
+            transition: height 0.2s ease;
+        }
+        .console-drawer.minimized {
+            height: 30px;
+        }
+
+        .console-header-bar {
+            height: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            font-size: 0.72rem;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+        }
+
+        .console-logs-list {
+            flex: 1;
+            padding: 6px 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-family: var(--font-code);
+            font-size: 0.76rem;
+        }
+
+        .log-entry {
+            display: flex;
+            gap: 8px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .log-entry.info { color: #94a3b8; }
+        .log-entry.warn { color: var(--accent-amber); }
+        .log-entry.error { color: #f87171; }
+        .log-entry.system { color: var(--accent-cyan); font-weight: 600; }
+        .log-entry.eval { color: var(--accent-lime); }
+
+        .console-repl-bar {
+            height: 30px;
+            border-top: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0 8px;
+            gap: 6px;
+        }
+        .repl-prompt {
+            color: var(--accent-cyan);
+            font-family: var(--font-code);
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .repl-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
             font-family: var(--font-code);
             font-size: 0.78rem;
         }
 
-        .console-header {
-            padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-muted);
-            font-size: 0.72rem;
-            text-transform: uppercase;
-        }
-
-        .console-logs {
-            flex: 1;
-            padding: 8px 14px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .log-info { color: #94a3b8; }
-        .log-error { color: #f87171; }
-        .log-warn { color: #fde047; }
-
-        /* Publish Modal */
-        .studio-modal {
+        /* ==========================================================================
+           MODALS & OVERLAYS
+           ========================================================================== */
+        .modal-backdrop {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(7, 9, 14, 0.85);
-            backdrop-filter: blur(20px);
-            z-index: 99999;
+            background: rgba(2, 4, 8, 0.85);
+            backdrop-filter: blur(14px);
+            z-index: 9999;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            animation: modalFade 0.2s ease;
+        }
+        .modal-backdrop.active { display: flex; }
+
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        .modal-card {
+        .modal-box {
             width: 100%;
-            max-width: 540px;
-            background: var(--studio-panel);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 36px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(103, 232, 249, 0.15);
+            max-width: 580px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 240, 255, 0.12);
+            position: relative;
         }
+        .modal-box.lg { max-width: 780px; }
 
-        .input-group {
+        .modal-header {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 16px;
         }
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .modal-close:hover { color: #fff; }
 
-        .input-group label {
-            font-size: 0.8rem;
+        .input-label {
+            font-size: 0.78rem;
             font-weight: 700;
             color: var(--text-muted);
+            margin-bottom: 5px;
+            display: block;
         }
-
-        .modal-input {
+        .text-input {
             width: 100%;
-            background: rgba(9, 13, 22, 0.85);
-            border: 1px solid var(--glass-border);
-            padding: 12px 16px;
-            border-radius: 12px;
+            background: var(--bg-deep);
+            border: 1px solid var(--border-glass);
+            padding: 10px 14px;
+            border-radius: 8px;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.86rem;
+            font-family: var(--font-main);
             outline: none;
             transition: 0.2s;
+            margin-bottom: 14px;
         }
-        .modal-input:focus {
-            border-color: var(--accent-ice);
-            box-shadow: 0 0 15px rgba(103, 232, 249, 0.2);
+        .text-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
         }
 
-        @media (max-width: 900px) {
-            .workspace { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
-            .editor-pane { border-right: none; border-bottom: 1px solid var(--glass-border); }
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: slideUp 0.2s ease;
+            pointer-events: auto;
+        }
+        .toast.success { border-color: var(--accent-lime); color: var(--accent-lime); }
+        .toast.info { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .toast.warn { border-color: var(--accent-amber); color: var(--accent-amber); }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 950px) {
+            .workspace { flex-direction: column; }
+            .pane-divider { width: 100%; height: 6px; cursor: row-resize; }
+            .studio-sidebar { position: absolute; left: var(--rail-width); top: 0; bottom: 0; z-index: 80; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Studio Command Navbar -->
-    <header class="studio-nav">
-        <div style="display: flex; align-items: center; gap: 16px;">
-            <a href="index.html" class="brand-cluster" title="Return to Arcade">
-                <div class="brand-icon">✦</div>
-                <span style="font-family: var(--font-display); font-weight: 700;">I’M AFK</span>
+    <!-- ==========================================================================
+         TOP COMMAND CENTER NAVBAR
+         ========================================================================== -->
+    <header class="studio-navbar">
+        <div class="nav-left">
+            <a href="index.html" class="nav-brand" title="Return to Arcade Hub">
+                <div class="brand-badge">✦</div>
+                <span>I’M AFK <span style="font-size: 0.72rem; color: var(--accent-cyan); font-weight: 600;">STUDIO PRO</span></span>
             </a>
-            <input type="text" id="project-title" class="studio-title-input" value="Untitled Game Prototype" placeholder="Project Name">
+
+            <!-- Project Title Rename -->
+            <div class="project-title-box" title="Click to rename game">
+                <input type="text" id="project-title-input" class="project-title-input" value="Cyber Nova 2D" spellcheck="false">
+            </div>
+
+            <!-- Auto-save Status Badge -->
+            <div class="save-indicator saved" id="save-status-badge" title="Auto-saved locally and memory buffered">
+                <div class="save-dot"></div>
+                <span id="save-status-text">Saved</span>
+            </div>
         </div>
 
-        <!-- Action Tools -->
-        <div class="studio-tools">
-            <select id="template-select" class="btn-studio" style="padding: 6px 12px; outline:none;" onchange="loadTemplate(this.value)">
-                <option value="">⚡ Load Starter Template...</option>
-                <option value="canvas2d">🎮 2D Canvas Game Loop</option>
-                <option value="pong">⚡ Retro Pong Match</option>
-                <option value="particles">✨ Interactive Physics Toy</option>
-                <option value="threejs">🌐 3D WebGL (Three.js)</option>
-            </select>
+        <div class="nav-center">
+            <!-- Run Engine Button -->
+            <button class="btn btn-run" onclick="runSandbox()" title="Compile and test game (Ctrl+Enter)">
+                ▶ RUN GAME
+            </button>
 
-            <button class="btn-studio" onclick="downloadCodeFile()" title="Download .html file">💾 Export HTML</button>
-            <input type="file" id="file-importer" accept=".html,.htm" style="display:none;" onchange="importLocalCode(event)">
-            <button class="btn-studio" onclick="document.getElementById('file-importer').click()">📂 Open</button>
-            
-            <button class="btn-studio btn-run" onclick="runCode()">▶ Run (Ctrl+Enter)</button>
-            <button class="btn-studio btn-publish" onclick="openPublishModal()">🚀 Publish to Arcade</button>
+            <!-- Live Reload Toggle -->
+            <button class="btn btn-sm" id="live-reload-btn" onclick="toggleLiveReload()" title="Auto-recompile as you type">
+                ⚡ Live: <span id="live-reload-status" style="color: var(--accent-lime);">ON</span>
+            </button>
 
-            <a href="submit.html" class="btn-studio" style="border-radius: 50px;">Direct Upload</a>
+            <!-- Snapshot Quick Save -->
+            <button class="btn" onclick="takeSnapshot()" title="Save milestone snapshot (Ctrl+S)">
+                💾 Snapshot
+            </button>
+        </div>
+
+        <div class="nav-right">
+            <!-- Project Manager Hub Modal Trigger -->
+            <button class="btn" onclick="openProjectsModal()" title="View and switch all saved games">
+                📂 My Games (<span id="project-count-badge">1</span>)
+            </button>
+
+            <!-- Export / Backup Dropdown -->
+            <div class="dropdown">
+                <button class="btn">📦 Export ▾</button>
+                <div class="dropdown-content right">
+                    <button class="dropdown-item" onclick="downloadGameHTML()">
+                        <span>🌐</span> Export Standalone .HTML
+                    </button>
+                    <button class="dropdown-item" onclick="exportProjectJSON()">
+                        <span>💾</span> Backup Project .JSON
+                    </button>
+                    <button class="dropdown-item" onclick="exportFullStudioBackup()">
+                        <span>🗄️</span> Backup Entire Studio (All Games)
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="copySourceCode()">
+                        <span>📋</span> Copy Raw Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- Import Dropdown -->
+            <div class="dropdown">
+                <button class="btn">📂 Import ▾</button>
+                <div class="dropdown-content right">
+                    <button class="dropdown-item" onclick="document.getElementById('import-html-file').click()">
+                        <span>📄</span> Load .HTML Game File
+                    </button>
+                    <button class="dropdown-item" onclick="document.getElementById('import-json-file').click()">
+                        <span>📦</span> Restore Project .JSON
+                    </button>
+                    <button class="dropdown-item" onclick="document.getElementById('import-studio-file').click()">
+                        <span>🗄️</span> Restore Full Workspace
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hidden File Inputs for Import -->
+            <input type="file" id="import-html-file" accept=".html,.htm" style="display:none;" onchange="handleImportHTML(event)">
+            <input type="file" id="import-json-file" accept=".json" style="display:none;" onchange="handleImportJSON(event)">
+            <input type="file" id="import-studio-file" accept=".json" style="display:none;" onchange="handleImportStudioBackup(event)">
+
+            <!-- Publish to Arcade Network -->
+            <button class="btn btn-publish" onclick="openPublishModal()" title="Deploy to Global Arcade Library">
+                🚀 Ship to Arcade
+            </button>
         </div>
     </header>
 
-    <!-- Workspace -->
-    <main class="workspace">
-        <!-- Editor Pane -->
-        <section class="editor-pane">
-            <div class="pane-toolbar">
-                <div class="snippet-strip">
-                    <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-dim); margin-right: 4px;">Snippets:</span>
-                    <button class="snippet-btn" onclick="insertSnippet('gameloop')">+ Game Loop</button>
-                    <button class="snippet-btn" onclick="insertSnippet('keyboard')">+ Keys Listener</button>
-                    <button class="snippet-btn" onclick="insertSnippet('audio')">+ Sound Synth</button>
-                    <button class="snippet-btn" onclick="insertSnippet('canvas')">+ Auto Canvas</button>
-                </div>
-                <span id="editor-metrics">0 lines | 0 KB</span>
+    <!-- ==========================================================================
+         STUDIO WORKSPACE & DOCK
+         ========================================================================== -->
+    <div class="studio-body">
+        
+        <!-- Leftmost Activity Rail (Tools & Drawers) -->
+        <nav class="activity-rail">
+            <button class="rail-btn active tooltip" data-tooltip="Game Templates & Starters" onclick="switchSidebarTab('templates', this)">⚡</button>
+            <button class="rail-btn tooltip" data-tooltip="Code Arsenal & Snippets" onclick="switchSidebarTab('snippets', this)">🧩</button>
+            <button class="rail-btn tooltip" data-tooltip="8-Bit Sound FX Generator" onclick="switchSidebarTab('soundlab', this)">🔊</button>
+            <button class="rail-btn tooltip" data-tooltip="Pixel Sprite Painter" onclick="switchSidebarTab('pixelart', this)">🎨</button>
+            <button class="rail-btn tooltip" data-tooltip="Game Math & Physics Cheats" onclick="switchSidebarTab('cheatsheet', this)">📐</button>
+            <button class="rail-btn tooltip" data-tooltip="Time Machine / Snapshots" onclick="switchSidebarTab('history', this)">🕒</button>
+            
+            <div class="rail-bottom">
+                <button class="rail-btn tooltip" data-tooltip="Studio Settings & Themes" onclick="openSettingsModal()">⚙️</button>
+                <button class="rail-btn tooltip" data-tooltip="Keyboard Shortcuts" onclick="openShortcutsModal()">⌨️</button>
+            </div>
+        </nav>
+
+        <!-- Collapsible Tool Sidebar -->
+        <aside class="studio-sidebar" id="studio-sidebar">
+            <div class="sidebar-header">
+                <span id="sidebar-title">STARTER TEMPLATES</span>
+                <button class="btn btn-sm" onclick="toggleSidebar()" title="Collapse drawer">◀</button>
             </div>
 
-            <div class="editor-container">
-                <div class="line-numbers" id="line-numbers">1</div>
-                <textarea id="code-editor" class="code-textarea" spellcheck="false" placeholder="Write HTML5 / JS game code here..."></textarea>
+            <div class="sidebar-content">
+                
+                <!-- TAB 1: TEMPLATES -->
+                <div class="sidebar-tab-content active" id="tab-templates">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Pick a clean base game architecture to jumpstart your build:</p>
+                    
+                    <div class="panel-card" onclick="loadStarterTemplate('canvas2d')">
+                        <div class="panel-card-title">🌟 2D Space Orbit Dodger <span style="font-size:0.7rem; color:var(--accent-lime);">Beginner</span></div>
+                        <div class="panel-card-desc">Complete 2D canvas game loop, keyboard handling, scoring, star spawning & audio blips.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="loadStarterTemplate('pong')">
+                        <div class="panel-card-title">⚡ Neon Cyber Pong <span style="font-size:0.7rem; color:var(--accent-cyan);">Classic</span></div>
+                        <div class="panel-card-desc">Reactive AI paddle, high-speed neon ball trails, screen shake & particle impact sparks.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="loadStarterTemplate('flappy')">
+                        <div class="panel-card-title">🐦 Flappy Drone 2D <span style="font-size:0.7rem; color:var(--accent-amber);">Physics</span></div>
+                        <div class="panel-card-desc">Velocity physics, gravity, procedural obstacle pillars, tap/space controls, and score UI.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="loadStarterTemplate('asteroids')">
+                        <div class="panel-card-title">🚀 360 Asteroid Fighter <span style="font-size:0.7rem; color:var(--accent-pink);">Action</span></div>
+                        <div class="panel-card-desc">Rotational inertia, space wrapping, laser cannons, rock splitting & debris particles.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="loadStarterTemplate('platformer')">
+                        <div class="panel-card-title">🏃 Neon Platformer Jump <span style="font-size:0.7rem; color:var(--accent-purple);">Platformer</span></div>
+                        <div class="panel-card-desc">Tile collision, double jumps, floating platforms, collectible gems and death pit respawn.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="loadStarterTemplate('particles')">
+                        <div class="panel-card-title">✨ Interactive Galaxy Sandbox <span style="font-size:0.7rem; color:var(--accent-cyan);">Visuals</span></div>
+                        <div class="panel-card-desc">300+ physics particles reacting to cursor gravity, color speed shifts, and explosive click waves.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="loadStarterTemplate('threejs')">
+                        <div class="panel-card-title">🌐 3D Cyber Torus (Three.js) <span style="font-size:0.7rem; color:var(--accent-blue);">3D WebGL</span></div>
+                        <div class="panel-card-desc">Perspective camera, wireframe geometry, neon infinite grid floor, and orbit controls.</div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: CODE ARSENAL / SNIPPETS -->
+                <div class="sidebar-tab-content" id="tab-snippets">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Click to inject battle-tested game modules into your code:</p>
+                    
+                    <div class="panel-card" onclick="insertCodeSnippet('particles')">
+                        <div class="panel-card-title">💥 Particle Explosion Burst</div>
+                        <div class="panel-card-desc">Spawns 25 colorful expanding & fading spark particles on collision.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="insertCodeSnippet('shake')">
+                        <div class="panel-card-title">📳 Screen Shake Kick</div>
+                        <div class="panel-card-desc">Adds impactful screen tremor effect on hits or explosions.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="insertCodeSnippet('highscore')">
+                        <div class="panel-card-title">🏆 Local Highscore Storage</div>
+                        <div class="panel-card-desc">Saves and displays personal best score persistent in browser.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="insertCodeSnippet('joystick')">
+                        <div class="panel-card-title">🕹️ Mobile Virtual Touch D-Pad</div>
+                        <div class="panel-card-desc">On-screen responsive touch controls for mobile/tablet screens.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="insertCodeSnippet('gamepad')">
+                        <div class="panel-card-title">🎮 Xbox / DualShock Controller API</div>
+                        <div class="panel-card-desc">Plug & play Bluetooth/USB gamepad polling listener.</div>
+                    </div>
+
+                    <div class="panel-card" onclick="insertCodeSnippet('collision')">
+                        <div class="panel-card-title">🧱 AABB Box & Circle Collision Math</div>
+                        <div class="panel-card-desc">Ultra-fast collision detectors for rectangles and radial circles.</div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: 8-BIT SOUND FX LAB -->
+                <div class="sidebar-tab-content" id="tab-soundlab">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Synthesize zero-asset retro audio directly in JavaScript with Web Audio:</p>
+                    
+                    <div class="sound-grid">
+                        <div class="sound-card">
+                            <span style="font-size:1.2rem;">🔫</span>
+                            <span style="font-size:0.75rem; font-weight:700;">Laser Shot</span>
+                            <div style="display:flex; gap:4px;">
+                                <button class="btn btn-sm" onclick="previewSfx('laser')">▶ Play</button>
+                                <button class="btn btn-sm btn-primary" onclick="injectSfxCode('laser')">+ Add</button>
+                            </div>
+                        </div>
+
+                        <div class="sound-card">
+                            <span style="font-size:1.2rem;">🦘</span>
+                            <span style="font-size:0.75rem; font-weight:700;">Jump Boing</span>
+                            <div style="display:flex; gap:4px;">
+                                <button class="btn btn-sm" onclick="previewSfx('jump')">▶ Play</button>
+                                <button class="btn btn-sm btn-primary" onclick="injectSfxCode('jump')">+ Add</button>
+                            </div>
+                        </div>
+
+                        <div class="sound-card">
+                            <span style="font-size:1.2rem;">🪙</span>
+                            <span style="font-size:0.75rem; font-weight:700;">Coin Pickup</span>
+                            <div style="display:flex; gap:4px;">
+                                <button class="btn btn-sm" onclick="previewSfx('coin')">▶ Play</button>
+                                <button class="btn btn-sm btn-primary" onclick="injectSfxCode('coin')">+ Add</button>
+                            </div>
+                        </div>
+
+                        <div class="sound-card">
+                            <span style="font-size:1.2rem;">💣</span>
+                            <span style="font-size:0.75rem; font-weight:700;">Explosion</span>
+                            <div style="display:flex; gap:4px;">
+                                <button class="btn btn-sm" onclick="previewSfx('explosion')">▶ Play</button>
+                                <button class="btn btn-sm btn-primary" onclick="injectSfxCode('explosion')">+ Add</button>
+                            </div>
+                        </div>
+
+                        <div class="sound-card">
+                            <span style="font-size:1.2rem;">⚡</span>
+                            <span style="font-size:0.75rem; font-weight:700;">Power-up</span>
+                            <div style="display:flex; gap:4px;">
+                                <button class="btn btn-sm" onclick="previewSfx('powerup')">▶ Play</button>
+                                <button class="btn btn-sm btn-primary" onclick="injectSfxCode('powerup')">+ Add</button>
+                            </div>
+                        </div>
+
+                        <div class="sound-card">
+                            <span style="font-size:1.2rem;">🩸</span>
+                            <span style="font-size:0.75rem; font-weight:700;">Damage / Hurt</span>
+                            <div style="display:flex; gap:4px;">
+                                <button class="btn btn-sm" onclick="previewSfx('hurt')">▶ Play</button>
+                                <button class="btn btn-sm btn-primary" onclick="injectSfxCode('hurt')">+ Add</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" style="margin-top:8px; justify-content:center;" onclick="injectFullSoundEngine()">
+                        🔊 Inject Universal `playSound(type)` Function
+                    </button>
+                </div>
+
+                <!-- TAB 4: PIXEL SPRITE PAINTER -->
+                <div class="sidebar-tab-content" id="tab-pixelart">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Draw quick 8x8 retro pixel sprites and export canvas drawing code:</p>
+                    
+                    <div class="pixel-grid-container">
+                        <div class="pixel-canvas-grid" id="pixel-canvas-grid"></div>
+                        
+                        <div class="palette-row">
+                            <div class="palette-swatch active" style="background:#00f0ff;" onclick="selectPixelColor('#00f0ff', this)"></div>
+                            <div class="palette-swatch" style="background:#ff0055;" onclick="selectPixelColor('#ff0055', this)"></div>
+                            <div class="palette-swatch" style="background:#00ff66;" onclick="selectPixelColor('#00ff66', this)"></div>
+                            <div class="palette-swatch" style="background:#f59e0b;" onclick="selectPixelColor('#f59e0b', this)"></div>
+                            <div class="palette-swatch" style="background:#ffffff;" onclick="selectPixelColor('#ffffff', this)"></div>
+                            <div class="palette-swatch" style="background:#111827;" onclick="selectPixelColor('clear', this)" title="Eraser"></div>
+                        </div>
+
+                        <div style="display:flex; gap:6px; width:100%; margin-top:6px;">
+                            <button class="btn btn-sm" style="flex:1;" onclick="clearPixelGrid()">Clear</button>
+                            <button class="btn btn-sm btn-primary" style="flex:2;" onclick="injectPixelSpriteCode()">+ Inject Draw Function</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: GAME MATH CHEAT SHEET -->
+                <div class="sidebar-tab-content" id="tab-cheatsheet">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Quick essential game formulas. Click to copy:</p>
+                    
+                    <div class="panel-card" onclick="copyCheatCode('const dist = Math.hypot(x2 - x1, y2 - y1);')">
+                        <div class="panel-card-title">Distance between 2 points</div>
+                        <code style="font-size:0.72rem; color:var(--accent-cyan);">Math.hypot(x2 - x1, y2 - y1)</code>
+                    </div>
+
+                    <div class="panel-card" onclick="copyCheatCode('const angle = Math.atan2(targetY - y, targetX - x);')">
+                        <div class="panel-card-title">Angle towards target</div>
+                        <code style="font-size:0.72rem; color:var(--accent-cyan);">Math.atan2(targetY - y, targetX - x)</code>
+                    </div>
+
+                    <div class="panel-card" onclick="copyCheatCode('const lerp = (a, b, t) => a + (b - a) * t;')">
+                        <div class="panel-card-title">Smooth Lerp (Interpolation)</div>
+                        <code style="font-size:0.72rem; color:var(--accent-cyan);">(a, b, t) => a + (b - a) * t</code>
+                    </div>
+
+                    <div class="panel-card" onclick="copyCheatCode('const clamp = (val, min, max) => Math.min(Math.max(val, min), max);')">
+                        <div class="panel-card-title">Clamp Value between Bounds</div>
+                        <code style="font-size:0.72rem; color:var(--accent-cyan);">(val, min, max) => Math.min(Math.max(val, min), max)</code>
+                    </div>
+
+                    <div class="panel-card" onclick="copyCheatCode('const rand = (min, max) => Math.random() * (max - min) + min;')">
+                        <div class="panel-card-title">Random Range (min, max)</div>
+                        <code style="font-size:0.72rem; color:var(--accent-cyan);">(min, max) => Math.random() * (max - min) + min</code>
+                    </div>
+                </div>
+
+                <!-- TAB 6: TIME MACHINE & SNAPSHOTS -->
+                <div class="sidebar-tab-content" id="tab-history">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.75rem; color:var(--text-muted);">Saved Milestones:</span>
+                        <button class="btn btn-sm btn-primary" onclick="takeSnapshot()">+ Save Now</button>
+                    </div>
+                    <div id="snapshots-list" style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+                        <!-- Snapshots populated by JS -->
+                    </div>
+                </div>
+
             </div>
-        </section>
+        </aside>
 
-        <!-- Preview Pane -->
-        <section class="preview-pane">
-            <div class="pane-toolbar">
-                <div class="viewport-controller">
-                    <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-dim); margin-right: 4px;">Screen:</span>
-                    <button class="viewport-btn active" onclick="setDeviceViewport('100%', this)">🖥️ Full</button>
-                    <button class="viewport-btn" onclick="setDeviceViewport('768px', this)">📱 Tablet</button>
-                    <button class="viewport-btn" onclick="setDeviceViewport('390px', this)">📱 Mobile</button>
+        <!-- ==========================================================================
+             SPLIT WORKSPACE: CODE EDITOR & LIVE PREVIEW
+             ========================================================================== -->
+        <main class="workspace" id="workspace-container">
+            
+            <!-- LEFT PANE: CODE EDITOR -->
+            <section class="pane-editor" id="pane-editor">
+                
+                <!-- File Tabs & Multi-file support -->
+                <div class="editor-tabs-bar">
+                    <div class="tabs-list">
+                        <button class="tab-btn active" id="tab-file-html">
+                            <span>📄</span> index.html
+                        </button>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <button class="btn btn-sm" onclick="toggleSearchBar()" title="Find / Replace (Ctrl+F)">🔍 Find</button>
+                        <button class="btn btn-sm" onclick="formatCode()" title="Auto format & indent code">✨ Format</button>
+                        <button class="btn btn-sm" onclick="zoomCode(-1)" title="Decrease font size">A-</button>
+                        <button class="btn btn-sm" onclick="zoomCode(1)" title="Increase font size">A+</button>
+                    </div>
                 </div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn-studio" style="padding: 2px 10px; font-size: 0.75rem;" onclick="runCode()">↻ Reload</button>
-                    <button class="btn-studio" style="padding: 2px 10px; font-size: 0.75rem;" onclick="toggleFullscreenFrame()">⛶ Fullscreen</button>
+
+                <!-- Search & Replace Mini Bar -->
+                <div class="search-bar" id="search-bar">
+                    <input type="text" id="find-input" class="search-input" placeholder="Find string..." oninput="highlightSearchMatches()">
+                    <input type="text" id="replace-input" class="search-input" placeholder="Replace with...">
+                    <button class="btn btn-sm" onclick="executeReplace()">Replace</button>
+                    <button class="btn btn-sm" onclick="executeReplaceAll()">All</button>
+                    <button class="btn btn-sm" onclick="toggleSearchBar()">✕</button>
+                </div>
+
+                <!-- Editor Toolbar & Metrics -->
+                <div class="editor-toolbar">
+                    <span id="editor-cursor-pos">Ln 1, Col 1</span>
+                    <span id="editor-metrics-info">0 lines | 0.0 KB</span>
+                </div>
+
+                <!-- Code Area with Line Numbers -->
+                <div class="editor-workspace">
+                    <div class="line-gutter" id="line-gutter">1</div>
+                    <textarea id="code-editor" class="code-input-area" spellcheck="false" placeholder="Type or paste HTML/JS game code here..."></textarea>
+                </div>
+            </section>
+
+            <!-- RESIZABLE SPLIT DIVIDER -->
+            <div class="pane-divider" id="pane-divider" title="Drag to resize panels"></div>
+
+            <!-- RIGHT PANE: LIVE SANDBOX & PREVIEW -->
+            <section class="pane-preview" id="pane-preview">
+                
+                <!-- Viewport & Screen Mode Controls -->
+                <div class="preview-toolbar">
+                    <div class="viewport-switcher">
+                        <span style="font-size:0.72rem; color:var(--text-dim); margin-right:4px;">Display:</span>
+                        <button class="view-pill active" onclick="setDeviceViewport('100%', '100%', this)">🖥️ Full</button>
+                        <button class="view-pill" onclick="setDeviceViewport('640px', '480px', this)">🕹️ 4:3 Retro</button>
+                        <button class="view-pill" onclick="setDeviceViewport('768px', '100%', this)">📱 Tablet</button>
+                        <button class="view-pill" onclick="setDeviceViewport('390px', '780px', this)">📱 Mobile</button>
+                    </div>
+
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-sm" onclick="runSandbox()" title="Restart Game Sandbox">↻ Reload</button>
+                        <button class="btn btn-sm" onclick="captureGameScreenshot()" title="Take Screenshot of game canvas">📸 Snap</button>
+                        <button class="btn btn-sm" onclick="toggleSandboxFullscreen()" title="Play in Fullscreen">⛶ Expand</button>
+                    </div>
+                </div>
+
+                <!-- Sandbox Container -->
+                <div class="sandbox-stage">
+                    <div class="device-wrapper" id="device-wrapper">
+                        <iframe id="sandbox-frame" sandbox="allow-scripts allow-forms allow-pointer-lock allow-modals allow-same-origin" allow="fullscreen; autoplay; gamepad"></iframe>
+                    </div>
+                </div>
+
+                <!-- Diagnostics Bar -->
+                <div class="diagnostics-strip">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span class="fps-badge" id="live-fps-badge">⚡ 60 FPS</span>
+                        <span id="screen-res-badge">Canvas: 100%</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span id="error-badge" style="color:var(--text-dim);">● 0 Errors</span>
+                    </div>
+                </div>
+
+                <!-- Collapsible Console & JS REPL Drawer -->
+                <div class="console-drawer" id="console-drawer">
+                    <div class="console-header-bar">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-weight:700; color:#fff;">CONSOLE & REPL</span>
+                            <span style="font-size:0.7rem; color:var(--text-dim);" id="console-count-text">0 messages</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <button class="btn btn-sm" onclick="clearConsole()">Clear</button>
+                            <button class="btn btn-sm" onclick="toggleConsoleDrawer()" id="console-toggle-btn">▾ Minimize</button>
+                        </div>
+                    </div>
+
+                    <div class="console-logs-list" id="console-logs-list">
+                        <div class="log-entry system">✦ [STUDIO READY] Engine initialized. Write code, test live, and build something epic.</div>
+                    </div>
+
+                    <!-- Live JS REPL Input -->
+                    <div class="console-repl-bar">
+                        <span class="repl-prompt">❯</span>
+                        <input type="text" id="repl-input" class="repl-input" placeholder="Type JS command directly into live game (e.g. score=9999)..." onkeydown="handleReplKey(event)">
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- ==========================================================================
+         PROJECTS MANAGER HUB MODAL
+         ========================================================================== -->
+    <div class="modal-backdrop" id="projects-modal">
+        <div class="modal-box lg">
+            <div class="modal-header">
+                <div class="modal-title">📂 Project Hub & Saved Games</div>
+                <button class="modal-close" onclick="closeProjectsModal()">✕</button>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <p style="font-size:0.82rem; color:var(--text-muted);">All projects are continuously saved in your browser storage. You will never lose progress.</p>
+                <button class="btn btn-primary" onclick="createNewProject()">+ Create New Game</button>
+            </div>
+
+            <div id="projects-grid-list" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; max-height:360px; overflow-y:auto; padding:4px;">
+                <!-- Populated dynamically -->
+            </div>
+
+            <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-glass); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.75rem; color:var(--text-dim);">Storage backend: LocalStorage + Snapshot Buffer</span>
+                <button class="btn" onclick="closeProjectsModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         SETTINGS & THEMES MODAL
+         ========================================================================== -->
+    <div class="modal-backdrop" id="settings-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">⚙️ Studio Settings & Themes</div>
+                <button class="modal-close" onclick="closeSettingsModal()">✕</button>
+            </div>
+
+            <label class="input-label">Studio Visual Theme</label>
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:16px;">
+                <button class="btn" onclick="setTheme('cyberpunk')">⚡ Cyberpunk</button>
+                <button class="btn" onclick="setTheme('synthwave')">🌆 Synthwave '84</button>
+                <button class="btn" onclick="setTheme('matrix')">📟 Matrix Terminal</button>
+                <button class="btn" onclick="setTheme('monokai')">🎨 Monokai Slate</button>
+                <button class="btn" onclick="setTheme('bloodmoon')">🩸 Bloodmoon</button>
+            </div>
+
+            <label class="input-label">Editor Font Size</label>
+            <div style="display:flex; gap:8px; margin-bottom:16px;">
+                <button class="btn" onclick="setEditorFontSize('12px')">Small (12px)</button>
+                <button class="btn" onclick="setEditorFontSize('14px')">Medium (14px)</button>
+                <button class="btn" onclick="setEditorFontSize('16px')">Large (16px)</button>
+            </div>
+
+            <label class="input-label">Auto-Run Typing Delay</label>
+            <div style="display:flex; gap:8px; margin-bottom:16px;">
+                <button class="btn" onclick="setAutoRunDelay(800)">Fast (800ms)</button>
+                <button class="btn" onclick="setAutoRunDelay(1500)">Standard (1.5s)</button>
+                <button class="btn" onclick="setAutoRunDelay(3000)">Relaxed (3s)</button>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end;">
+                <button class="btn btn-primary" onclick="closeSettingsModal()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         KEYBOARD SHORTCUTS MODAL
+         ========================================================================== -->
+    <div class="modal-backdrop" id="shortcuts-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">⌨️ Keyboard Shortcuts</div>
+                <button class="modal-close" onclick="closeShortcutsModal()">✕</button>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:0.84rem;">
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Run Game Live</span>
+                    <kbd style="background:var(--bg-subtle); padding:2px 8px; border-radius:4px; border:1px solid var(--border-glass);">Ctrl + Enter / Cmd + Enter</kbd>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Save Snapshot Milestone</span>
+                    <kbd style="background:var(--bg-subtle); padding:2px 8px; border-radius:4px; border:1px solid var(--border-glass);">Ctrl + S / Cmd + S</kbd>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Find / Search in Code</span>
+                    <kbd style="background:var(--bg-subtle); padding:2px 8px; border-radius:4px; border:1px solid var(--border-glass);">Ctrl + F</kbd>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Smart Indentation (Tab / Shift+Tab)</span>
+                    <kbd style="background:var(--bg-subtle); padding:2px 8px; border-radius:4px; border:1px solid var(--border-glass);">Tab</kbd>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Format & Clean Code</span>
+                    <kbd style="background:var(--bg-subtle); padding:2px 8px; border-radius:4px; border:1px solid var(--border-glass);">Ctrl + Alt + F</kbd>
                 </div>
             </div>
 
-            <div class="sandbox-container">
-                <div class="device-frame" id="device-frame">
-                    <iframe id="sandbox-iframe" sandbox="allow-scripts allow-forms allow-pointer-lock allow-modals" allow="fullscreen; autoplay; gamepad"></iframe>
-                </div>
+            <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+                <button class="btn btn-primary" onclick="closeShortcutsModal()">Got It</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         PUBLISH TO ARCADE MODAL
+         ========================================================================== -->
+    <div class="modal-backdrop" id="publish-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">🚀 Ship Game to Arcade</div>
+                <button class="modal-close" onclick="closePublishModal()">✕</button>
             </div>
 
-            <!-- Debugger Output -->
-            <div class="console-drawer">
-                <div class="console-header">
-                    <span>Studio Console & Diagnostics</span>
-                    <button style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:0.75rem;" onclick="clearConsole()">Clear</button>
-                </div>
-                <div class="console-logs" id="console-logs">
-                    <div class="log-info">[STUDIO READY] Write code or load a template, then click "Run" to test.</div>
-                </div>
-            </div>
-        </section>
-    </main>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+                Publish your game directly to the public network. Anyone can play it instantly in browser.
+            </p>
 
-    <!-- Publish Modal -->
-    <div class="studio-modal" id="publish-modal">
-        <div class="modal-card">
-            <h2 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 6px;">🚀 Publish to Global Arcade</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Deploy your creation directly to the public network index.</p>
+            <form onsubmit="event.preventDefault(); deployGameToArcade();">
+                <label class="input-label">Game Title *</label>
+                <input type="text" id="pub-game-title" class="text-input" placeholder="e.g. Neon Cyber Runner" required>
 
-            <form onsubmit="event.preventDefault(); publishGameToNetwork();">
-                <div class="input-group">
-                    <label>Project Title *</label>
-                    <input type="text" id="pub-title" class="modal-input" required>
-                </div>
-                <div class="input-group">
-                    <label>Author / Studio Name *</label>
-                    <input type="text" id="pub-author" class="modal-input" placeholder="e.g. PixelForge / @handle" required>
-                </div>
-                <div class="input-group">
-                    <label>Contact Email (for takedowns/updates) *</label>
-                    <input type="email" id="pub-email" class="modal-input" placeholder="dev@domain.com" required>
-                </div>
-                <div class="input-group">
-                    <label>Repository / Source URL (Optional)</label>
-                    <input type="url" id="pub-source" class="modal-input" placeholder="https://github.com/user/project">
-                </div>
+                <label class="input-label">Author / Studio Tag *</label>
+                <input type="text" id="pub-game-author" class="text-input" placeholder="e.g. PixelDev or @yourhandle" required>
 
-                <div style="margin: 16px 0; font-size: 0.8rem; color: var(--text-muted);">
-                    By publishing, you confirm your game runs in the browser and complies with open-source community standards.
-                </div>
+                <label class="input-label">Developer Email (for updates/takedowns) *</label>
+                <input type="email" id="pub-game-email" class="text-input" placeholder="dev@example.com" required>
 
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" class="btn-studio" onclick="closePublishModal()">Cancel</button>
-                    <button type="submit" class="btn-studio btn-publish" id="pub-btn">Confirm & Launch ➔</button>
+                <label class="input-label">Source / GitHub URL (Optional)</label>
+                <input type="url" id="pub-game-source" class="text-input" placeholder="https://github.com/...">
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+                    <button type="button" class="btn" onclick="closePublishModal()">Cancel</button>
+                    <button type="submit" class="btn btn-publish" id="pub-submit-btn">🚀 Deploy Live Now</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ==========================================================================
+         STUDIO JAVASCRIPT ENGINE & ARCHITECTURE
+         ========================================================================== -->
     <script>
+        /* --------------------------------------------------------------------------
+           1. SUPABASE CLIENT & CLOUD CONFIG
+           -------------------------------------------------------------------------- */
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
-        const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        const sbClient = (window.supabase && SUPABASE_URL) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
+        /* --------------------------------------------------------------------------
+           2. DOM ELEMENTS CACHE
+           -------------------------------------------------------------------------- */
         const editor = document.getElementById('code-editor');
-        const lineNumbers = document.getElementById('line-numbers');
-        const metricsDisplay = document.getElementById('editor-metrics');
-        const consoleLogs = document.getElementById('console-logs');
-        const iframe = document.getElementById('sandbox-iframe');
-        const projectTitle = document.getElementById('project-title');
+        const lineGutter = document.getElementById('line-gutter');
+        const metricsInfo = document.getElementById('editor-metrics-info');
+        const cursorPos = document.getElementById('editor-cursor-pos');
+        const projectTitleInput = document.getElementById('project-title-input');
+        const saveStatusBadge = document.getElementById('save-status-badge');
+        const saveStatusText = document.getElementById('save-status-text');
+        const projectCountBadge = document.getElementById('project-count-badge');
+        const frame = document.getElementById('sandbox-frame');
+        const consoleLogsList = document.getElementById('console-logs-list');
+        const consoleCountText = document.getElementById('console-count-text');
+        const liveFpsBadge = document.getElementById('live-fps-badge');
+        const errorBadge = document.getElementById('error-badge');
+        const deviceWrapper = document.getElementById('device-wrapper');
+        const replInput = document.getElementById('repl-input');
 
-        const TEMPLATES = {
+        /* --------------------------------------------------------------------------
+           3. STUDIO STATE & BULLETPROOF SAVING SYSTEM
+           -------------------------------------------------------------------------- */
+        const STORAGE_KEY_MANIFEST = 'afk_studio_projects_v2';
+        const STORAGE_KEY_ACTIVE = 'afk_studio_active_id_v2';
+        const STORAGE_KEY_SETTINGS = 'afk_studio_settings_v2';
+
+        let activeProjectId = null;
+        let autoSaveTimer = null;
+        let autoRunTimer = null;
+        let liveReloadEnabled = true;
+        let autoRunDelayMs = 1500;
+        let totalConsoleLogs = 0;
+        let totalErrors = 0;
+        let currentPixelColor = '#00f0ff';
+        let pixelGridData = Array(64).fill(null);
+
+        // Default Starter Templates
+        const STARTER_TEMPLATES = {
             canvas2d: `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
+  <title>2D Space Orbit Dodger</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:#0a0a12; color:#67e8f9; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; overflow:hidden; }
-    canvas { background:#0f172a; border:2px solid rgba(255,255,255,0.15); border-radius:14px; box-shadow:0 0 30px rgba(0,0,0,0.8); }
+    body { background:#070913; color:#67e8f9; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; overflow:hidden; }
+    canvas { background: radial-gradient(circle at 50% 50%, #0f172a 0%, #05070f 100%); border: 2px solid rgba(0,240,255,0.3); border-radius:14px; box-shadow:0 0 35px rgba(0,240,255,0.2); }
   </style>
 </head>
 <body>
-  <h2 style="margin-bottom:12px;">🌟 2D ORBIT DODGER</h2>
-  <canvas id="c" width="480" height="360"></canvas>
-  <p style="color:#94a3b8; font-size:13px; margin-top:10px;">Use [Arrow Keys] or [A/D] to Move</p>
+  <h2 style="margin-bottom:10px; font-family:monospace; letter-spacing:1px;">🌟 ORBIT DODGER 2D</h2>
+  <canvas id="game" width="480" height="380"></canvas>
+  <p style="color:#94a3b8; font-size:13px; margin-top:10px;">Move: [A/D] or [Arrow Keys] | Boost: [Space]</p>
 
   <script>
-    const canvas = document.getElementById("c");
+    const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
 
-    let player = { x: 240, y: 320, size: 20, speed: 6 };
-    let stars = [];
-    let score = 0, gameOver = false;
+    let player = { x: 240, y: 330, r: 16, speed: 6, vx: 0 };
+    let stars = [], particles = [];
+    let score = 0, bestScore = localStorage.getItem("dodger_best") || 0;
+    let gameOver = false;
     let keys = {};
 
     window.onkeydown = e => keys[e.key] = true;
     window.onkeyup = e => keys[e.key] = false;
 
+    function playBlip(freq = 440) {
+      try {
+        const ac = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.connect(g); g.connect(ac.destination);
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.2, ac.currentTime);
+        g.gain.linearRampToValueAtTime(0.01, ac.currentTime + 0.1);
+        o.start(); o.stop(ac.currentTime + 0.1);
+      } catch(e){}
+    }
+
     function spawnStar() {
-      stars.push({ x: Math.random() * 460 + 10, y: -10, speed: 2 + Math.random() * 3, size: 8 });
+      stars.push({
+        x: Math.random() * 440 + 20,
+        y: -10,
+        vy: 2.5 + Math.random() * 3.5,
+        r: 6 + Math.random() * 6,
+        color: Math.random() > 0.3 ? '#f43f5e' : '#f59e0b'
+      });
+    }
+
+    function spawnExplosion(x, y) {
+      for (let i = 0; i < 24; i++) {
+        let angle = Math.random() * Math.PI * 2;
+        let speed = Math.random() * 5 + 1;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          color: Math.random() > 0.5 ? '#00f0ff' : '#ff0055'
+        });
+      }
     }
 
     function loop() {
       if (!gameOver) {
-        if ((keys["ArrowLeft"] || keys["a"]) && player.x > 15) player.x -= player.speed;
-        if ((keys["ArrowRight"] || keys["d"]) && player.x < 465) player.x += player.speed;
+        if ((keys["ArrowLeft"] || keys["a"]) && player.x > player.r + 5) player.x -= player.speed;
+        if ((keys["ArrowRight"] || keys["d"]) && player.x < canvas.width - player.r - 5) player.x += player.speed;
 
-        if (Math.random() < 0.04) spawnStar();
+        if (Math.random() < 0.05) spawnStar();
 
+        // Update Stars
         for (let i = stars.length - 1; i >= 0; i--) {
           let s = stars[i];
-          s.y += s.speed;
+          s.y += s.vy;
 
-          if (Math.hypot(player.x - s.x, player.y - s.y) < player.size) {
+          // Check Collision
+          if (Math.hypot(player.x - s.x, player.y - s.y) < player.r + s.r) {
             gameOver = true;
-            console.log("Game Over! Final Score: " + score);
+            spawnExplosion(player.x, player.y);
+            playBlip(150);
+            if (score > bestScore) {
+              bestScore = score;
+              localStorage.setItem("dodger_best", bestScore);
+            }
           }
 
-          if (s.y > 380) { stars.splice(i, 1); score += 10; }
+          if (s.y > canvas.height + 20) {
+            stars.splice(i, 1);
+            score += 10;
+            if (score % 50 === 0) playBlip(600);
+          }
         }
       }
 
-      ctx.fillStyle = "#0f172a";
-      ctx.fillRect(0, 0, 480, 360);
+      // Update Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        let p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        p.alpha -= 0.025;
+        if (p.alpha <= 0) particles.splice(i, 1);
+      }
 
-      ctx.fillStyle = "#67e8f9";
-      ctx.beginPath();
-      ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
-      ctx.fill();
+      // Draw Screen
+      ctx.fillStyle = "rgba(7, 9, 19, 0.3)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#f43f5e";
-      stars.forEach(s => {
+      // Draw Player
+      if (!gameOver) {
+        ctx.save();
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#00f0ff";
+        ctx.fillStyle = "#00f0ff";
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Draw Stars
+      stars.forEach(s => {
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
       });
 
+      // Draw Particles
+      particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fillRect(p.x, p.y, 3, 3);
+        ctx.globalAlpha = 1;
+      });
+
+      // UI Text
       ctx.fillStyle = "#fff";
-      ctx.font = "16px sans-serif";
-      ctx.fillText("Score: " + score, 15, 25);
+      ctx.font = "14px monospace";
+      ctx.fillText("SCORE: " + score, 16, 26);
+      ctx.fillText("BEST: " + bestScore, canvas.width - 110, 26);
 
       if (gameOver) {
-        ctx.fillStyle = "#f43f5e";
-        ctx.font = "24px sans-serif";
-        ctx.fillText("GAME OVER - Press R to Restart", 70, 180);
+        ctx.fillStyle = "#ff0055";
+        ctx.font = "24px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("MISSION TERMINATED", canvas.width / 2, 170);
+        ctx.fillStyle = "#fff";
+        ctx.font = "15px monospace";
+        ctx.fillText("Press [R] to Respawn", canvas.width / 2, 205);
+        ctx.textAlign = "start";
         if (keys["r"] || keys["R"]) {
-          gameOver = false; score = 0; stars = []; player.x = 240;
+          gameOver = false; score = 0; stars = []; particles = []; player.x = 240;
         }
       }
 
       requestAnimationFrame(loop);
     }
     loop();
-  <\\/script>
+  </script>
 </body>
 </html>`,
 
@@ -619,32 +1905,364 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <title>Neon Cyber Pong</title>
   <style>
-    body { margin:0; background:#07090e; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:#fff; font-family:sans-serif; }
-    canvas { border:2px solid rgba(255,255,255,0.15); background:#0f172a; border-radius:12px; }
+    body { margin:0; background:#04060c; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:#fff; font-family:monospace; }
+    canvas { border:2px solid #00f0ff; background:#0a0e1c; border-radius:12px; box-shadow:0 0 30px rgba(0,240,255,0.25); }
   </style>
 </head>
 <body>
-  <h2>⚡ NEON PONG DYNAMICS</h2>
-  <canvas id="c" width="500" height="350"></canvas>
-  <p style="color:#888; font-size:13px; margin-top:8px;">Move mouse vertically to defend</p>
+  <h2 style="margin-bottom:8px; color:#00f0ff;">⚡ NEON CYBER PONG</h2>
+  <canvas id="c" width="560" height="360"></canvas>
+  <p style="color:#64748b; font-size:12px; margin-top:8px;">Control Left Paddle with Mouse</p>
   <script>
-    const c = document.getElementById("c"), x = c.getContext("2d");
-    let p1 = 130, p2 = 130, bx = 250, by = 175, vx = 4, vy = 3;
+    const c = document.getElementById("c"), ctx = c.getContext("2d");
+    let p1 = 140, p2 = 140, bx = 280, by = 180, vx = 5, vy = 4;
+    let s1 = 0, s2 = 0;
+    let trail = [];
+
     c.onmousemove = e => { p1 = e.clientY - c.getBoundingClientRect().top - 40; };
+
+    function sfx(freq) {
+      try {
+        const ac = new (window.AudioContext||window.webkitAudioContext)();
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.connect(g); g.connect(ac.destination);
+        o.frequency.value = freq; g.gain.setValueAtTime(0.2, ac.currentTime);
+        g.gain.linearRampToValueAtTime(0.01, ac.currentTime + 0.1);
+        o.start(); o.stop(ac.currentTime + 0.1);
+      } catch(e){}
+    }
+
     setInterval(() => {
       bx += vx; by += vy;
-      if (by < 0 || by > 340) vy *= -1;
-      if (bx < 20 && by > p1 && by < p1 + 80) vx = Math.abs(vx);
-      if (bx > 470) vx = -Math.abs(vx);
-      p2 += (by - (p2 + 40)) * 0.08;
-      if (bx < 0 || bx > 500) { bx = 250; by = 175; vx *= -1; }
-      x.fillStyle = "#0f172a"; x.fillRect(0, 0, 500, 350);
-      x.fillStyle = "#38bdf8"; x.fillRect(10, p1, 10, 80);
-      x.fillRect(480, p2, 10, 80);
-      x.fillStyle = "#f43f5e"; x.beginPath(); x.arc(bx, by, 7, 0, Math.PI * 2); x.fill();
+      trail.push({ x: bx, y: by, a: 1 });
+      if (trail.length > 12) trail.shift();
+
+      if (by < 10 || by > 350) { vy *= -1; sfx(300); }
+      if (bx < 25 && by > p1 && by < p1 + 80) { vx = Math.abs(vx) * 1.05; sfx(650); }
+      if (bx > 535 && by > p2 && by < p2 + 80) { vx = -Math.abs(vx) * 1.05; sfx(550); }
+
+      p2 += (by - (p2 + 40)) * 0.12;
+
+      if (bx < 0) { s2++; reset(); }
+      if (bx > 560) { s1++; reset(); }
+
+      function reset() {
+        bx = 280; by = 180; vx = (Math.random() > 0.5 ? 5 : -5); vy = (Math.random() - 0.5) * 8;
+        sfx(200);
+      }
+
+      ctx.fillStyle = "rgba(10, 14, 28, 0.3)";
+      ctx.fillRect(0, 0, 560, 360);
+
+      // Draw Net
+      ctx.strokeStyle = "rgba(255,255,255,0.1)";
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath(); ctx.moveTo(280, 0); ctx.lineTo(280, 360); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw Paddles
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillRect(12, p1, 10, 80);
+      ctx.fillStyle = "#ff0055";
+      ctx.fillRect(538, p2, 10, 80);
+
+      // Draw Ball Trail
+      trail.forEach((t, i) => {
+        ctx.fillStyle = "rgba(0, 240, 255, " + (i / trail.length * 0.5) + ")";
+        ctx.beginPath(); ctx.arc(t.x, t.y, 6, 0, Math.PI*2); ctx.fill();
+      });
+
+      // Draw Ball
+      ctx.fillStyle = "#fff";
+      ctx.beginPath(); ctx.arc(bx, by, 7, 0, Math.PI * 2); ctx.fill();
+
+      // Scores
+      ctx.font = "24px monospace";
+      ctx.fillStyle = "#00f0ff"; ctx.fillText(s1, 230, 40);
+      ctx.fillStyle = "#ff0055"; ctx.fillText(s2, 310, 40);
     }, 1000 / 60);
-  <\\/script>
+  </script>
+</body>
+</html>`,
+
+            flappy: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Flappy Cyber Drone</title>
+  <style>
+    body { margin:0; background:#05070e; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:#fff; font-family:monospace; }
+    canvas { border:2px solid #a855f7; background:#0b0d18; border-radius:12px; }
+  </style>
+</head>
+<body>
+  <h2 style="margin-bottom:8px; color:#a855f7;">🐦 FLAPPY CYBER DRONE</h2>
+  <canvas id="c" width="400" height="500"></canvas>
+  <p style="color:#64748b; font-size:12px; margin-top:8px;">[Spacebar] or [Click Screen] to Thrust</p>
+  <script>
+    const c = document.getElementById("c"), ctx = c.getContext("2d");
+    let drone = { y: 250, vy: 0, g: 0.35, lift: -6.5 };
+    let pipes = [], score = 0, gameOver = false, frame = 0;
+
+    function flap() {
+      if (gameOver) { reset(); return; }
+      drone.vy = drone.lift;
+    }
+    window.onkeydown = e => { if (e.code === "Space") flap(); };
+    window.onpointerdown = () => flap();
+
+    function reset() {
+      drone.y = 250; drone.vy = 0; pipes = []; score = 0; gameOver = false; frame = 0;
+    }
+
+    function loop() {
+      frame++;
+      ctx.fillStyle = "#0b0d18";
+      ctx.fillRect(0, 0, 400, 500);
+
+      if (!gameOver) {
+        drone.vy += drone.g;
+        drone.y += drone.vy;
+
+        if (frame % 85 === 0) {
+          let gap = 120;
+          let top = Math.random() * (260 - 50) + 50;
+          pipes.push({ x: 400, top, bottom: 500 - top - gap, passed: false });
+        }
+
+        for (let i = pipes.length - 1; i >= 0; i--) {
+          let p = pipes[i];
+          p.x -= 3;
+          if (!p.passed && p.x < 100) { p.passed = true; score++; }
+
+          // Collision Check
+          if (100 + 12 > p.x && 100 - 12 < p.x + 45) {
+            if (drone.y - 12 < p.top || drone.y + 12 > 500 - p.bottom) gameOver = true;
+          }
+          if (p.x < -50) pipes.splice(i, 1);
+        }
+
+        if (drone.y > 490 || drone.y < 10) gameOver = true;
+      }
+
+      // Draw Pipes
+      ctx.fillStyle = "#00ff66";
+      pipes.forEach(p => {
+        ctx.fillRect(p.x, 0, 45, p.top);
+        ctx.fillRect(p.x, 500 - p.bottom, 45, p.bottom);
+      });
+
+      // Draw Drone
+      ctx.fillStyle = "#00f0ff";
+      ctx.beginPath(); ctx.arc(100, drone.y, 14, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(100 - 18, drone.y - 3, 36, 6);
+
+      // Score
+      ctx.fillStyle = "#fff";
+      ctx.font = "24px monospace";
+      ctx.fillText("SCORE: " + score, 20, 40);
+
+      if (gameOver) {
+        ctx.fillStyle = "#ff0055";
+        ctx.font = "28px monospace";
+        ctx.fillText("CRASHED!", 130, 240);
+        ctx.fillStyle = "#fff";
+        ctx.font = "14px monospace";
+        ctx.fillText("Tap or Space to Retry", 110, 275);
+      }
+
+      requestAnimationFrame(loop);
+    }
+    loop();
+  </script>
+</body>
+</html>`,
+
+            asteroids: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>360 Asteroid Starfighter</title>
+  <style>
+    body { margin:0; background:#030509; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:#00f0ff; font-family:monospace; }
+    canvas { border:2px solid #00f0ff; background:#070a14; border-radius:12px; }
+  </style>
+</head>
+<body>
+  <h2>🚀 360 ASTEROID STARFIGHTER</h2>
+  <canvas id="c" width="500" height="400"></canvas>
+  <p style="color:#94a3b8; font-size:12px; margin-top:8px;">[ArrowLeft/Right] Turn | [ArrowUp] Thrust | [Space] Fire</p>
+  <script>
+    const c = document.getElementById("c"), ctx = c.getContext("2d");
+    let ship = { x: 250, y: 200, a: 0, vx: 0, vy: 0 };
+    let bullets = [], rocks = [], keys = {}, score = 0;
+
+    window.onkeydown = e => keys[e.code] = true;
+    window.onkeyup = e => keys[e.code] = false;
+
+    for (let i = 0; i < 5; i++) spawnRock();
+    function spawnRock() {
+      rocks.push({
+        x: Math.random() * 500, y: Math.random() * 400,
+        vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
+        r: 25
+      });
+    }
+
+    function loop() {
+      if (keys["ArrowLeft"]) ship.a -= 0.08;
+      if (keys["ArrowRight"]) ship.a += 0.08;
+      if (keys["ArrowUp"]) {
+        ship.vx += Math.cos(ship.a) * 0.15;
+        ship.vy += Math.sin(ship.a) * 0.15;
+      }
+      if (keys["Space"] && bullets.length < 8) {
+        bullets.push({ x: ship.x, y: ship.y, vx: Math.cos(ship.a) * 7, vy: Math.sin(ship.a) * 7, life: 40 });
+        keys["Space"] = false;
+      }
+
+      ship.x = (ship.x + ship.vx + 500) % 500;
+      ship.y = (ship.y + ship.vy + 400) % 400;
+      ship.vx *= 0.98; ship.vy *= 0.98;
+
+      ctx.fillStyle = "#070a14";
+      ctx.fillRect(0, 0, 500, 400);
+
+      // Draw Ship
+      ctx.save();
+      ctx.translate(ship.x, ship.y);
+      ctx.rotate(ship.a);
+      ctx.strokeStyle = "#00f0ff";
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(-10, -8); ctx.lineTo(-6, 0); ctx.lineTo(-10, 8); ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+
+      // Bullets
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        let b = bullets[i];
+        b.x = (b.x + b.vx + 500) % 500;
+        b.y = (b.y + b.vy + 400) % 400;
+        b.life--;
+        ctx.fillStyle = "#ff0055";
+        ctx.fillRect(b.x - 2, b.y - 2, 4, 4);
+
+        rocks.forEach((r, ri) => {
+          if (Math.hypot(b.x - r.x, b.y - r.y) < r.r) {
+            rocks.splice(ri, 1);
+            bullets.splice(i, 1);
+            score += 100;
+            spawnRock();
+          }
+        });
+        if (b.life <= 0) bullets.splice(i, 1);
+      }
+
+      // Rocks
+      ctx.strokeStyle = "#a855f7";
+      rocks.forEach(r => {
+        r.x = (r.x + r.vx + 500) % 500;
+        r.y = (r.y + r.vy + 400) % 400;
+        ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2); ctx.stroke();
+      });
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "14px monospace";
+      ctx.fillText("SCORE: " + score, 15, 25);
+      requestAnimationFrame(loop);
+    }
+    loop();
+  </script>
+</body>
+</html>`,
+
+            platformer: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Neon Platformer</title>
+  <style>
+    body { margin:0; background:#070914; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:#fff; font-family:monospace; }
+    canvas { border:2px solid #00ff66; background:#0d1124; border-radius:12px; }
+  </style>
+</head>
+<body>
+  <h2>🏃 NEON PLATFORMER HERO</h2>
+  <canvas id="c" width="480" height="340"></canvas>
+  <p style="color:#888; font-size:12px; margin-top:8px;">[A/D or Arrows] Run | [W / Space] Jump</p>
+  <script>
+    const c = document.getElementById("c"), ctx = c.getContext("2d");
+    let p = { x: 50, y: 200, w: 20, h: 26, vx: 0, vy: 0, grounded: false };
+    let plats = [
+      { x: 0, y: 310, w: 480, h: 30 },
+      { x: 100, y: 240, w: 90, h: 12 },
+      { x: 230, y: 190, w: 90, h: 12 },
+      { x: 360, y: 130, w: 80, h: 12 }
+    ];
+    let gems = [{ x: 140, y: 215, got: false }, { x: 270, y: 165, got: false }, { x: 400, y: 105, got: false }];
+    let keys = {}, score = 0;
+
+    window.onkeydown = e => keys[e.key] = true;
+    window.onkeyup = e => keys[e.key] = false;
+
+    function loop() {
+      if (keys["ArrowLeft"] || keys["a"]) p.vx = -4;
+      else if (keys["ArrowRight"] || keys["d"]) p.vx = 4;
+      else p.vx *= 0.7;
+
+      if ((keys["ArrowUp"] || keys["w"] || keys[" "]) && p.grounded) {
+        p.vy = -9.5; p.grounded = false;
+      }
+
+      p.vy += 0.45; // gravity
+      p.x += p.vx;
+      p.y += p.vy;
+
+      p.grounded = false;
+      plats.forEach(pl => {
+        if (p.x + p.w > pl.x && p.x < pl.x + pl.w && p.y + p.h > pl.y && p.y + p.h < pl.y + pl.h + p.vy + 2 && p.vy >= 0) {
+          p.y = pl.y - p.h;
+          p.vy = 0;
+          p.grounded = true;
+        }
+      });
+
+      gems.forEach(g => {
+        if (!g.got && Math.hypot((p.x+10)-g.x, (p.y+13)-g.y) < 18) {
+          g.got = true; score += 500;
+        }
+      });
+
+      ctx.fillStyle = "#0d1124";
+      ctx.fillRect(0, 0, 480, 340);
+
+      // Draw Platforms
+      ctx.fillStyle = "#00ff66";
+      plats.forEach(pl => ctx.fillRect(pl.x, pl.y, pl.w, pl.h));
+
+      // Draw Gems
+      gems.forEach(g => {
+        if (!g.got) {
+          ctx.fillStyle = "#ff0055";
+          ctx.beginPath(); ctx.arc(g.x, g.y, 7, 0, Math.PI*2); ctx.fill();
+        }
+      });
+
+      // Draw Player
+      ctx.fillStyle = "#00f0ff";
+      ctx.fillRect(p.x, p.y, p.w, p.h);
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "14px monospace";
+      ctx.fillText("SCORE: " + score, 15, 25);
+
+      requestAnimationFrame(loop);
+    }
+    loop();
+  </script>
 </body>
 </html>`,
 
@@ -652,60 +2270,72 @@
 <html>
 <head>
   <style>
-    body { margin:0; overflow:hidden; background:#05070d; }
+    body { margin:0; overflow:hidden; background:#04060c; font-family:monospace; }
     canvas { display:block; }
+    #ui { position:absolute; top:12px; left:16px; color:#00f0ff; pointer-events:none; }
   </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <div id="ui">✨ GALAXY PARTICLE TOY — Move cursor & Click to Shockwave</div>
+  <canvas id="c"></canvas>
   <script>
-    const c = document.getElementById('canvas');
-    const ctx = c.getContext('2d');
+    const c = document.getElementById('c'), ctx = c.getContext('2d');
     c.width = window.innerWidth; c.height = window.innerHeight;
-    let particles = [];
-    let mouse = { x: c.width/2, y: c.height/2 };
+    let pts = [], mouse = { x: c.width/2, y: c.height/2, down: false };
 
-    for(let i=0; i<100; i++) {
-      particles.push({
+    for (let i = 0; i < 240; i++) {
+      pts.push({
         x: Math.random() * c.width, y: Math.random() * c.height,
         vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
-        r: Math.random() * 3 + 1
+        r: Math.random() * 2.5 + 1,
+        color: ['#00f0ff', '#ff0055', '#00ff66', '#f59e0b'][Math.floor(Math.random()*4)]
       });
     }
 
     window.onmousemove = e => { mouse.x = e.clientX; mouse.y = e.clientY; };
+    window.onmousedown = () => {
+      pts.forEach(p => {
+        let angle = Math.atan2(p.y - mouse.y, p.x - mouse.x);
+        p.vx += Math.cos(angle) * 12;
+        p.vy += Math.sin(angle) * 12;
+      });
+    };
 
     function render() {
-      ctx.fillStyle = "rgba(5, 7, 13, 0.2)";
+      ctx.fillStyle = "rgba(4, 6, 12, 0.2)";
       ctx.fillRect(0, 0, c.width, c.height);
 
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if(p.x < 0 || p.x > c.width) p.vx *= -1;
-        if(p.y < 0 || p.y > c.height) p.vy *= -1;
-
-        ctx.fillStyle = "#67e8f9";
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-
+      pts.forEach(p => {
         let dx = mouse.x - p.x, dy = mouse.y - p.y;
         let dist = Math.hypot(dx, dy);
-        if(dist < 120) {
-          ctx.strokeStyle = "rgba(103, 232, 249, " + (1 - dist/120) + ")";
-          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+        if (dist < 200) {
+          p.vx += (dx / dist) * 0.2;
+          p.vy += (dy / dist) * 0.2;
         }
+
+        p.x += p.vx; p.y += p.vy;
+        p.vx *= 0.98; p.vy *= 0.98;
+
+        if (p.x < 0 || p.x > c.width) p.vx *= -1;
+        if (p.y < 0 || p.y > c.height) p.vy *= -1;
+
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
       });
       requestAnimationFrame(render);
     }
     render();
-  <\\/script>
+  </script>
 </body>
 </html>`,
 
             threejs: `<!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <title>3D Cyber Torus</title>
   <style>body { margin:0; overflow:hidden; background:#000; }</style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\\/script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
   <script>
@@ -715,186 +2345,1151 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    const geo = new THREE.TorusKnotGeometry(1.8, 0.5, 100, 16);
+    const geo = new THREE.TorusKnotGeometry(2, 0.6, 128, 24);
     const mat = new THREE.MeshNormalMaterial({ wireframe: true });
     const mesh = new THREE.Mesh(geo, mat);
     scene.add(mesh);
-    camera.position.z = 5;
+
+    const grid = new THREE.GridHelper(50, 40, 0x00f0ff, 0x220044);
+    grid.position.y = -3.5;
+    scene.add(grid);
+
+    camera.position.z = 6; camera.position.y = 1;
 
     function animate() {
       requestAnimationFrame(animate);
       mesh.rotation.x += 0.01;
       mesh.rotation.y += 0.015;
+      grid.position.z = (grid.position.z + 0.05) % 1.25;
       renderer.render(scene, camera);
     }
     animate();
-  <\\/script>
+
+    window.onresize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+  </script>
 </body>
 </html>`
         };
 
-        function loadTemplate(key) {
-            if (!key || !TEMPLATES[key]) return;
-            if (editor.value.trim() && !confirm("Replace current code with template?")) return;
-            editor.value = TEMPLATES[key].replace(/<\\\/script>/g, '<\/script>');
-            projectTitle.value = key === 'canvas2d' ? 'Orbit Dodger 2D' : (key === 'pong' ? 'Neon Pong Match' : 'Physics Sandbox');
-            updateLineNumbers();
-            runCode();
+        /* --------------------------------------------------------------------------
+           4. PERSISTENT STORAGE ENGINE (Auto-Save, Load, Multi-Project Manager)
+           -------------------------------------------------------------------------- */
+        function initProjectManifest() {
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || 'null');
+            if (!manifest || manifest.length === 0) {
+                const defaultProj = {
+                    id: 'proj_' + Date.now(),
+                    title: 'Space Orbit Dodger 2D',
+                    code: STARTER_TEMPLATES.canvas2d,
+                    updatedAt: Date.now(),
+                    snapshots: []
+                };
+                manifest = [defaultProj];
+                localStorage.setItem(STORAGE_KEY_MANIFEST, JSON.stringify(manifest));
+                localStorage.setItem(STORAGE_KEY_ACTIVE, defaultProj.id);
+            }
+            
+            activeProjectId = localStorage.getItem(STORAGE_KEY_ACTIVE) || manifest[0].id;
+            const current = manifest.find(p => p.id === activeProjectId) || manifest[0];
+            activeProjectId = current.id;
+
+            projectTitleInput.value = current.title;
+            editor.value = current.code;
+            updateMetrics();
+            refreshSnapshotsList(current.snapshots || []);
+            updateProjectCountBadge(manifest.length);
         }
 
-        function updateLineNumbers() {
-            const lines = editor.value.split('\n').length;
-            lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join('<br>');
-            const bytes = new Blob([editor.value]).size;
-            metricsDisplay.textContent = `${lines} lines | ${(bytes / 1024).toFixed(1)} KB`;
+        function getActiveProject() {
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+            return manifest.find(p => p.id === activeProjectId);
         }
 
-        editor.addEventListener('input', updateLineNumbers);
-        editor.addEventListener('scroll', () => { lineNumbers.scrollTop = editor.scrollTop; });
+        function saveActiveProjectImmediate() {
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            if (idx === -1) return;
 
-        editor.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                const start = editor.selectionStart, end = editor.selectionEnd;
-                editor.value = editor.value.substring(0, start) + "  " + editor.value.substring(end);
-                editor.selectionStart = editor.selectionEnd = start + 2;
-                updateLineNumbers();
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                runCode();
-            }
-        });
+            manifest[idx].title = projectTitleInput.value.trim() || 'Untitled Game';
+            manifest[idx].code = editor.value;
+            manifest[idx].updatedAt = Date.now();
 
-        function runCode() {
+            localStorage.setItem(STORAGE_KEY_MANIFEST, JSON.stringify(manifest));
+            
+            saveStatusBadge.classList.remove('saving');
+            saveStatusBadge.classList.add('saved');
+            saveStatusText.textContent = 'Saved';
+        }
+
+        function triggerAutoSave() {
+            saveStatusBadge.classList.remove('saved');
+            saveStatusBadge.classList.add('saving');
+            saveStatusText.textContent = 'Saving...';
+
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => {
+                saveActiveProjectImmediate();
+            }, 600);
+
+            if (liveReloadEnabled) {
+                clearTimeout(autoRunTimer);
+                autoRunTimer = setTimeout(() => {
+                    runSandbox(true);
+                }, autoRunDelayMs);
+            }
+        }
+
+        function updateProjectCountBadge(count) {
+            projectCountBadge.textContent = count;
+        }
+
+        function createNewProject(title = 'New Game Prototype', templateKey = 'canvas2d') {
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+            const newProj = {
+                id: 'proj_' + Date.now(),
+                title: title,
+                code: STARTER_TEMPLATES[templateKey] || STARTER_TEMPLATES.canvas2d,
+                updatedAt: Date.now(),
+                snapshots: []
+            };
+            manifest.unshift(newProj);
+            localStorage.setItem(STORAGE_KEY_MANIFEST, JSON.stringify(manifest));
+            localStorage.setItem(STORAGE_KEY_ACTIVE, newProj.id);
+            
+            activeProjectId = newProj.id;
+            projectTitleInput.value = newProj.title;
+            editor.value = newProj.code;
+            updateMetrics();
+            runSandbox();
+            refreshProjectsModalList();
+            updateProjectCountBadge(manifest.length);
+            showToast(`Created project "${newProj.title}"`, 'success');
+            closeProjectsModal();
+        }
+
+        function switchProject(id) {
+            saveActiveProjectImmediate();
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+            const target = manifest.find(p => p.id === id);
+            if (!target) return;
+
+            activeProjectId = target.id;
+            localStorage.setItem(STORAGE_KEY_ACTIVE, target.id);
+            projectTitleInput.value = target.title;
+            editor.value = target.code;
+            updateMetrics();
+            refreshSnapshotsList(target.snapshots || []);
+            runSandbox();
+            closeProjectsModal();
+            showToast(`Loaded "${target.title}"`, 'info');
+        }
+
+        function deleteProject(id, e) {
+            if (e) e.stopPropagation();
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+            if (manifest.length <= 1) {
+                alert("Cannot delete the only project in your workspace.");
+                return;
+            }
+            if (!confirm("Are you sure you want to delete this project?")) return;
+
+            manifest = manifest.filter(p => p.id !== id);
+            localStorage.setItem(STORAGE_KEY_MANIFEST, JSON.stringify(manifest));
+            if (activeProjectId === id) {
+                switchProject(manifest[0].id);
+            }
+            refreshProjectsModalList();
+            updateProjectCountBadge(manifest.length);
+            showToast("Project deleted", "warn");
+        }
+
+        /* --------------------------------------------------------------------------
+           5. TIME MACHINE & MILESTONE SNAPSHOTS
+           -------------------------------------------------------------------------- */
+        function takeSnapshot(customLabel) {
+            saveActiveProjectImmediate();
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            if (idx === -1) return;
+
+            if (!manifest[idx].snapshots) manifest[idx].snapshots = [];
+            
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const label = customLabel || `Snapshot at ${timeStr}`;
+
+            manifest[idx].snapshots.unshift({
+                id: 'snap_' + Date.now(),
+                label: label,
+                code: editor.value,
+                timestamp: Date.now()
+            });
+
+            // Keep max 20 snapshots
+            if (manifest[idx].snapshots.length > 20) manifest[idx].snapshots.pop();
+
+            localStorage.setItem(STORAGE_KEY_MANIFEST, JSON.stringify(manifest));
+            refreshSnapshotsList(manifest[idx].snapshots);
+            showToast("Milestone snapshot saved! 💾", "success");
+        }
+
+        function restoreSnapshot(snapId) {
+            const current = getActiveProject();
+            if (!current || !current.snapshots) return;
+            const snap = current.snapshots.find(s => s.id === snapId);
+            if (!snap) return;
+
+            if (!confirm(`Restore to "${snap.label}"? Unsaved edits in the current buffer will be overwritten.`)) return;
+
+            editor.value = snap.code;
+            updateMetrics();
+            saveActiveProjectImmediate();
+            runSandbox();
+            showToast(`Restored to ${snap.label}`, "info");
+        }
+
+        function refreshSnapshotsList(snapshots) {
+            const listEl = document.getElementById('snapshots-list');
+            if (!snapshots || snapshots.length === 0) {
+                listEl.innerHTML = '<div style="font-size:0.75rem; color:var(--text-dim); padding:8px 0;">No snapshots saved yet. Click "+ Save Now" to bookmark code states.</div>';
+                return;
+            }
+
+            listEl.innerHTML = snapshots.map(s => `
+                <div class="panel-card" style="padding:7px 10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:0.78rem; font-weight:700; color:#fff;">${s.label}</span>
+                        <button class="btn btn-sm" onclick="restoreSnapshot('${s.id}')">Restore</button>
+                    </div>
+                    <span style="font-size:0.7rem; color:var(--text-dim);">${new Date(s.timestamp).toLocaleTimeString()}</span>
+                </div>
+            `).join('');
+        }
+
+        /* --------------------------------------------------------------------------
+           6. LIVE COMPILATION & SANDBOX EXECUTION
+           -------------------------------------------------------------------------- */
+        function runSandbox(isSilent = false) {
             const rawCode = editor.value;
             if (!rawCode.trim()) return;
 
+            totalErrors = 0;
+            updateErrorBadge();
+
+            // Bridge script injected into sandbox for deep error catching & console mirror
             const bridgeScript = `
                 <script>
                     (function(){
                         const _log = console.log, _err = console.error, _warn = console.warn;
-                        console.log = (...args) => { _log(...args); window.parent.postMessage({ type:'LOG', text: args.join(' ') }, '*'); };
-                        console.error = (...args) => { _err(...args); window.parent.postMessage({ type:'ERROR', text: args.join(' ') }, '*'); };
-                        console.warn = (...args) => { _warn(...args); window.parent.postMessage({ type:'WARN', text: args.join(' ') }, '*'); };
-                        window.onerror = (msg, src, lin, col) => { window.parent.postMessage({ type:'ERROR', text: msg + ' (line ' + lin + ')' }, '*'); };
+                        console.log = (...args) => {
+                            _log(...args);
+                            window.parent.postMessage({ type: 'LOG', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        console.error = (...args) => {
+                            _err(...args);
+                            window.parent.postMessage({ type: 'ERROR', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        console.warn = (...args) => {
+                            _warn(...args);
+                            window.parent.postMessage({ type: 'WARN', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        window.onerror = (msg, src, lin, col, err) => {
+                            window.parent.postMessage({ type: 'ERROR', text: msg + ' [Line ' + lin + ']' }, '*');
+                            return false;
+                        };
+
+                        // FPS Meter Bridge
+                        let lastFrame = performance.now(), frames = 0;
+                        function measureFps() {
+                            frames++;
+                            let now = performance.now();
+                            if (now - lastFrame >= 1000) {
+                                window.parent.postMessage({ type: 'FPS', fps: frames }, '*');
+                                frames = 0;
+                                lastFrame = now;
+                            }
+                            requestAnimationFrame(measureFps);
+                        }
+                        requestAnimationFrame(measureFps);
                     })();
-                <\\/script>
-            `.replace(/<\\\/script>/g, '<\/script>');
+                </` + `script>`;
 
-            const completeHTML = rawCode.includes('<head>') 
-                ? rawCode.replace('<head>', '<head>' + bridgeScript)
-                : bridgeScript + rawCode;
+            let finalHtml = rawCode;
+            if (finalHtml.includes('<head>')) {
+                finalHtml = finalHtml.replace('<head>', '<head>' + bridgeScript);
+            } else {
+                finalHtml = bridgeScript + finalHtml;
+            }
 
-            const blob = new Blob([completeHTML], { type: 'text/html' });
-            iframe.src = URL.createObjectURL(blob);
-            addLog("Executing code in live sandbox environment...", "info");
+            const blob = new Blob([finalHtml], { type: 'text/html' });
+            frame.src = URL.createObjectURL(blob);
+
+            if (!isSilent) {
+                appendConsoleLog('[SANDBOX] Code compiled and launched successfully.', 'system');
+            }
         }
 
+        // Handle Messages from Game Sandbox Frame
         window.addEventListener('message', (e) => {
-            if (e.data && e.data.type) {
-                if (e.data.type === 'LOG') addLog("[LOG] " + e.data.text, "info");
-                if (e.data.type === 'ERROR') addLog("[ERROR] " + e.data.text, "error");
-                if (e.data.type === 'WARN') addLog("[WARN] " + e.data.text, "warn");
+            if (!e.data || !e.data.type) return;
+
+            if (e.data.type === 'LOG') {
+                appendConsoleLog(e.data.text, 'info');
+            } else if (e.data.type === 'WARN') {
+                appendConsoleLog(e.data.text, 'warn');
+            } else if (e.data.type === 'ERROR') {
+                totalErrors++;
+                updateErrorBadge();
+                appendConsoleLog(e.data.text, 'error');
+            } else if (e.data.type === 'FPS') {
+                liveFpsBadge.textContent = `⚡ ${e.data.fps} FPS`;
             }
         });
 
-        function addLog(text, type = "info") {
+        function appendConsoleLog(text, type = 'info') {
+            totalConsoleLogs++;
+            consoleCountText.textContent = `${totalConsoleLogs} items`;
+
             const el = document.createElement('div');
-            el.className = 'log-' + type;
-            el.textContent = text;
-            consoleLogs.appendChild(el);
-            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+            el.className = `log-entry ${type}`;
+            el.textContent = `❯ ${text}`;
+            consoleLogsList.appendChild(el);
+            consoleLogsList.scrollTop = consoleLogsList.scrollHeight;
         }
 
-        function clearConsole() { consoleLogs.innerHTML = ''; }
+        function clearConsole() {
+            consoleLogsList.innerHTML = '';
+            totalConsoleLogs = 0;
+            totalErrors = 0;
+            consoleCountText.textContent = '0 items';
+            updateErrorBadge();
+        }
 
-        const SNIPPETS = {
-            gameloop: `\n// --- Standard 60FPS Game Loop ---\nfunction update(dt) {\n  // Update state\n}\nfunction render() {\n  // Draw frame\n}\nlet lastTime = performance.now();\nfunction loop(now) {\n  let dt = (now - lastTime) / 1000;\n  lastTime = now;\n  update(dt);\n  render();\n  requestAnimationFrame(loop);\n}\nrequestAnimationFrame(loop);\n`,
-            keyboard: `\n// --- Keyboard Listener ---\nconst keys = {};\nwindow.addEventListener('keydown', e => { keys[e.key] = true; });\nwindow.addEventListener('keyup', e => { keys[e.key] = false; });\n`,
-            audio: `\n// --- Web Audio Synth ---\nfunction playBeep(freq = 440, type = 'sine') {\n  const ctx = new (window.AudioContext || window.webkitAudioContext)();\n  const osc = ctx.createOscillator();\n  osc.type = type;\n  osc.frequency.setValueAtTime(freq, ctx.currentTime);\n  osc.connect(ctx.destination);\n  osc.start();\n  osc.stop(ctx.currentTime + 0.15);\n}\n`,
-            canvas: `\n// --- Auto-Resizing Canvas ---\nconst canvas = document.createElement('canvas');\nconst ctx = canvas.getContext('2d');\ndocument.body.appendChild(canvas);\nfunction resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }\nwindow.addEventListener('resize', resize); resize();\n`
+        function updateErrorBadge() {
+            if (totalErrors > 0) {
+                errorBadge.textContent = `● ${totalErrors} Error${totalErrors > 1 ? 's' : ''}`;
+                errorBadge.style.color = '#f87171';
+                errorBadge.style.fontWeight = '700';
+            } else {
+                errorBadge.textContent = `● 0 Errors`;
+                errorBadge.style.color = 'var(--text-dim)';
+                errorBadge.style.fontWeight = '400';
+            }
+        }
+
+        function toggleConsoleDrawer() {
+            const drawer = document.getElementById('console-drawer');
+            const btn = document.getElementById('console-toggle-btn');
+            drawer.classList.toggle('minimized');
+            btn.textContent = drawer.classList.contains('minimized') ? '▴ Expand' : '▾ Minimize';
+        }
+
+        // Live JS REPL in Sandbox
+        function handleReplKey(e) {
+            if (e.key === 'Enter') {
+                const code = replInput.value.trim();
+                if (!code) return;
+                appendConsoleLog(`> ${code}`, 'eval');
+                try {
+                    frame.contentWindow.eval(code);
+                } catch(err) {
+                    appendConsoleLog(err.message, 'error');
+                }
+                replInput.value = '';
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           7. CODE EDITOR METRICS, INDENTATION & LINE NUMBERS
+           -------------------------------------------------------------------------- */
+        function updateMetrics() {
+            const text = editor.value;
+            const lines = text.split('\n').length;
+            lineGutter.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join('<br>');
+            
+            const bytes = new Blob([text]).size;
+            metricsInfo.textContent = `${lines} lines | ${(bytes / 1024).toFixed(1)} KB`;
+        }
+
+        editor.addEventListener('input', () => {
+            updateMetrics();
+            triggerAutoSave();
+        });
+
+        editor.addEventListener('scroll', () => {
+            lineGutter.scrollTop = editor.scrollTop;
+        });
+
+        editor.addEventListener('click', updateCursorPos);
+        editor.addEventListener('keyup', updateCursorPos);
+
+        function updateCursorPos() {
+            const pos = editor.selectionStart;
+            const lines = editor.value.substring(0, pos).split('\n');
+            const curLine = lines.length;
+            const curCol = lines[lines.length - 1].length + 1;
+            cursorPos.textContent = `Ln ${curLine}, Col ${curCol}`;
+        }
+
+        // Smart Tab, Indentation, and Auto-closing Brackets
+        editor.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                editor.value = editor.value.substring(0, start) + "  " + editor.value.substring(end);
+                editor.selectionStart = editor.selectionEnd = start + 2;
+                updateMetrics();
+                triggerAutoSave();
+            }
+
+            // Keyboard shortcut Ctrl+Enter / Cmd+Enter: Run
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                runSandbox();
+            }
+
+            // Shortcut Ctrl+S / Cmd+S: Snapshot
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                takeSnapshot();
+            }
+
+            // Auto-close brackets
+            const pairs = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
+            if (pairs[e.key]) {
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                if (start === end) {
+                    e.preventDefault();
+                    editor.value = editor.value.substring(0, start) + e.key + pairs[e.key] + editor.value.substring(end);
+                    editor.selectionStart = editor.selectionEnd = start + 1;
+                    updateMetrics();
+                    triggerAutoSave();
+                }
+            }
+        });
+
+        projectTitleInput.addEventListener('input', () => {
+            triggerAutoSave();
+        });
+
+        /* --------------------------------------------------------------------------
+           8. FORMATTER, SEARCH & UTILITIES
+           -------------------------------------------------------------------------- */
+        function formatCode() {
+            let code = editor.value;
+            let lines = code.split('\n');
+            let indent = 0;
+            let formatted = lines.map(line => {
+                let trimmed = line.trim();
+                if (trimmed.startsWith('</') || trimmed.startsWith('}') || trimmed.startsWith(']')) {
+                    indent = Math.max(0, indent - 1);
+                }
+                let indented = '  '.repeat(indent) + trimmed;
+                if ((trimmed.endsWith('{') || (trimmed.startsWith('<') && !trimmed.startsWith('</') && !trimmed.endsWith('/>') && !trimmed.includes('</'))) && !trimmed.startsWith('<!')) {
+                    indent++;
+                }
+                return indented;
+            }).join('\n');
+
+            editor.value = formatted;
+            updateMetrics();
+            triggerAutoSave();
+            showToast("Code auto-formatted ✨", "info");
+        }
+
+        function toggleSearchBar() {
+            const bar = document.getElementById('search-bar');
+            bar.classList.toggle('active');
+            if (bar.classList.contains('active')) {
+                document.getElementById('find-input').focus();
+            }
+        }
+
+        function highlightSearchMatches() {
+            // Find input live handler
+        }
+
+        function executeReplace() {
+            const find = document.getElementById('find-input').value;
+            const rep = document.getElementById('replace-input').value;
+            if (!find) return;
+            editor.value = editor.value.replace(find, rep);
+            updateMetrics();
+            triggerAutoSave();
+        }
+
+        function executeReplaceAll() {
+            const find = document.getElementById('find-input').value;
+            const rep = document.getElementById('replace-input').value;
+            if (!find) return;
+            editor.value = editor.value.split(find).join(rep);
+            updateMetrics();
+            triggerAutoSave();
+            showToast(`Replaced all matches of "${find}"`, "info");
+        }
+
+        function zoomCode(dir) {
+            const curSize = parseInt(window.getComputedStyle(editor).fontSize);
+            const newSize = Math.max(10, Math.min(24, curSize + dir * 2));
+            editor.style.fontSize = newSize + 'px';
+            lineGutter.style.fontSize = newSize + 'px';
+        }
+
+        function toggleLiveReload() {
+            liveReloadEnabled = !liveReloadEnabled;
+            document.getElementById('live-reload-status').textContent = liveReloadEnabled ? 'ON' : 'OFF';
+            document.getElementById('live-reload-status').style.color = liveReloadEnabled ? 'var(--accent-lime)' : 'var(--text-dim)';
+            showToast(`Live Auto-Run: ${liveReloadEnabled ? 'Enabled' : 'Disabled'}`, 'info');
+        }
+
+        /* --------------------------------------------------------------------------
+           9. RESIZABLE SPLITTER
+           -------------------------------------------------------------------------- */
+        const divider = document.getElementById('pane-divider');
+        const paneEditor = document.getElementById('pane-editor');
+        const workspace = document.getElementById('workspace-container');
+
+        let isDraggingDivider = false;
+
+        divider.addEventListener('mousedown', (e) => {
+            isDraggingDivider = true;
+            divider.classList.add('dragging');
+            document.body.style.cursor = 'col-resize';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingDivider) return;
+            const bounds = workspace.getBoundingClientRect();
+            const offset = e.clientX - bounds.left;
+            const pct = (offset / bounds.width) * 100;
+            if (pct > 15 && pct < 85) {
+                paneEditor.style.flex = `0 0 ${pct}%`;
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDraggingDivider) {
+                isDraggingDivider = false;
+                divider.classList.remove('dragging');
+                document.body.style.cursor = 'default';
+            }
+        });
+
+        /* --------------------------------------------------------------------------
+           10. STARTER TEMPLATES & SNIPPETS INJECTION
+           -------------------------------------------------------------------------- */
+        function loadStarterTemplate(key) {
+            if (!STARTER_TEMPLATES[key]) return;
+            if (editor.value.trim() && !confirm("Replace current code buffer with this starter game kit?")) return;
+            
+            editor.value = STARTER_TEMPLATES[key];
+            const titles = {
+                canvas2d: 'Space Orbit Dodger 2D',
+                pong: 'Neon Cyber Pong',
+                flappy: 'Flappy Cyber Drone',
+                asteroids: '360 Asteroid Fighter',
+                platformer: 'Neon Platformer Hero',
+                particles: 'Galaxy Particle Sandbox',
+                threejs: '3D Cyber Torus Three.js'
+            };
+            projectTitleInput.value = titles[key] || 'Game Project';
+            updateMetrics();
+            saveActiveProjectImmediate();
+            runSandbox();
+            showToast(`Loaded ${titles[key]} kit! 🚀`, 'success');
+        }
+
+        const CODE_SNIPPETS = {
+            particles: `\n// --- Particle Explosion Burst ---
+let sparks = [];
+function createBurst(x, y, color = '#00f0ff', count = 20) {
+  for (let i = 0; i < count; i++) {
+    let angle = Math.random() * Math.PI * 2;
+    let spd = Math.random() * 4 + 1;
+    sparks.push({ x, y, vx: Math.cos(angle)*spd, vy: Math.sin(angle)*spd, alpha: 1, color });
+  }
+}
+function updateSparks(ctx) {
+  for (let i = sparks.length - 1; i >= 0; i--) {
+    let s = sparks[i];
+    s.x += s.vx; s.y += s.vy; s.alpha -= 0.03;
+    if (s.alpha <= 0) { sparks.splice(i, 1); continue; }
+    ctx.fillStyle = s.color;
+    ctx.globalAlpha = s.alpha;
+    ctx.fillRect(s.x, s.y, 3, 3);
+    ctx.globalAlpha = 1;
+  }
+}\n`,
+            shake: `\n// --- Screen Shake FX ---
+let screenShake = 0;
+function triggerShake(intensity = 10) { screenShake = intensity; }
+function applyShake(ctx) {
+  if (screenShake > 0) {
+    let dx = (Math.random() - 0.5) * screenShake;
+    let dy = (Math.random() - 0.5) * screenShake;
+    ctx.translate(dx, dy);
+    screenShake *= 0.9;
+    if (screenShake < 0.5) screenShake = 0;
+  }
+}\n`,
+            highscore: `\n// --- Persistent Highscore System ---
+const Highscore = {
+  get: () => parseInt(localStorage.getItem('my_game_best') || 0),
+  save: (score) => {
+    if (score > Highscore.get()) {
+      localStorage.setItem('my_game_best', score);
+      return true;
+    }
+    return false;
+  }
+};\n`,
+            joystick: `\n// --- Mobile Touch Virtual Joystick ---
+const touchControls = { x: 0, y: 0, active: false };
+window.addEventListener('touchstart', e => {
+  touchControls.active = true;
+  touchControls.x = e.touches[0].clientX;
+  touchControls.y = e.touches[0].clientY;
+});
+window.addEventListener('touchend', () => { touchControls.active = false; });\n`,
+            gamepad: `\n// --- Gamepad Poller ---
+function getGamepadInput() {
+  const gp = navigator.getGamepads ? navigator.getGamepads()[0] : null;
+  if (!gp) return null;
+  return {
+    leftStickX: gp.axes[0] || 0,
+    leftStickY: gp.axes[1] || 0,
+    buttonA: gp.buttons[0] && gp.buttons[0].pressed
+  };
+}\n`,
+            collision: `\n// --- Collision Math ---
+function checkCircleCollision(x1, y1, r1, x2, y2, r2) {
+  return Math.hypot(x2 - x1, y2 - y1) < (r1 + r2);
+}
+function checkAABB(r1, r2) {
+  return r1.x < r2.x + r2.w && r1.x + r1.w > r2.x && r1.y < r2.y + r2.h && r1.y + r1.h > r2.y;
+}\n`
         };
 
-        function insertSnippet(type) {
-            if (!SNIPPETS[type]) return;
+        function insertCodeSnippet(key) {
+            if (!CODE_SNIPPETS[key]) return;
             const start = editor.selectionStart;
-            editor.value = editor.value.substring(0, start) + SNIPPETS[type] + editor.value.substring(start);
-            updateLineNumbers();
-            addLog(`Inserted snippet: ${type}`, "info");
+            editor.value = editor.value.substring(0, start) + CODE_SNIPPETS[key] + editor.value.substring(start);
+            updateMetrics();
+            triggerAutoSave();
+            showToast(`Injected snippet: ${key}`, 'info');
         }
 
-        function downloadCodeFile() {
-            const title = (projectTitle.value || 'game').replace(/[^a-z0-9_-]/gi, '_');
+        /* --------------------------------------------------------------------------
+           11. 8-BIT AUDIO SYNTHESIS & SOUND LAB
+           -------------------------------------------------------------------------- */
+        function previewSfx(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination);
+
+                if (type === 'laser') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(880, now);
+                    osc.frequency.exponentialRampToValueAtTime(110, now + 0.15);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                } else if (type === 'jump') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                } else if (type === 'coin') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(987.77, now);
+                    osc.frequency.setValueAtTime(1318.51, now + 0.08);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                } else if (type === 'explosion') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(120, now);
+                    osc.frequency.exponentialRampToValueAtTime(20, now + 0.4);
+                    gain.gain.setValueAtTime(0.4, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now); osc.stop(now + 0.4);
+                } else if (type === 'powerup') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(850, now + 0.25);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                } else if (type === 'hurt') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.linearRampToValueAtTime(60, now + 0.2);
+                    gain.gain.setValueAtTime(0.4, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now); osc.stop(now + 0.2);
+                }
+            } catch(e){}
+        }
+
+        function injectSfxCode(type) {
+            const code = `\n// Play SFX: ${type}\nplaySfx("${type}");\n`;
+            const start = editor.selectionStart;
+            editor.value = editor.value.substring(0, start) + code + editor.value.substring(start);
+            updateMetrics();
+            triggerAutoSave();
+            showToast(`Injected call to playSfx('${type}')`, 'info');
+        }
+
+        function injectFullSoundEngine() {
+            const engine = `\n// --- Universal Web Audio 8-Bit SFX Engine ---
+function playSfx(type) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+
+    if (type === 'laser') {
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(110, now + 0.15);
+      gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+      osc.start(now); osc.stop(now + 0.15);
+    } else if (type === 'jump') {
+      osc.type = 'square'; osc.frequency.setValueAtTime(150, now);
+      osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+      gain.gain.setValueAtTime(0.25, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+      osc.start(now); osc.stop(now + 0.15);
+    } else if (type === 'coin') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, now);
+      osc.frequency.setValueAtTime(1318.51, now + 0.08);
+      gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+    } else if (type === 'explosion') {
+      osc.type = 'triangle'; osc.frequency.setValueAtTime(120, now);
+      osc.frequency.exponentialRampToValueAtTime(20, now + 0.4);
+      gain.gain.setValueAtTime(0.4, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+      osc.start(now); osc.stop(now + 0.4);
+    } else if (type === 'powerup') {
+      osc.type = 'triangle'; osc.frequency.setValueAtTime(300, now);
+      osc.frequency.exponentialRampToValueAtTime(850, now + 0.25);
+      gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+    } else if (type === 'hurt') {
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, now);
+      osc.frequency.linearRampToValueAtTime(60, now + 0.2);
+      gain.gain.setValueAtTime(0.4, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+      osc.start(now); osc.stop(now + 0.2);
+    }
+  } catch(e){}
+}\n`;
+            const start = editor.selectionStart;
+            editor.value = editor.value.substring(0, start) + engine + editor.value.substring(start);
+            updateMetrics();
+            triggerAutoSave();
+            showToast("Injected full 8-bit sound engine! 🔊", "success");
+        }
+
+        /* --------------------------------------------------------------------------
+           12. PIXEL ART SPRITE PAINTER
+           -------------------------------------------------------------------------- */
+        function initPixelGrid() {
+            const gridEl = document.getElementById('pixel-canvas-grid');
+            gridEl.innerHTML = '';
+            for (let i = 0; i < 64; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'pixel-cell';
+                cell.onclick = () => {
+                    if (currentPixelColor === 'clear') {
+                        pixelGridData[i] = null;
+                        cell.style.background = '#111827';
+                    } else {
+                        pixelGridData[i] = currentPixelColor;
+                        cell.style.background = currentPixelColor;
+                    }
+                };
+                gridEl.appendChild(cell);
+            }
+        }
+
+        function selectPixelColor(color, el) {
+            currentPixelColor = color;
+            document.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function clearPixelGrid() {
+            pixelGridData = Array(64).fill(null);
+            document.querySelectorAll('.pixel-cell').forEach(c => c.style.background = '#111827');
+        }
+
+        function injectPixelSpriteCode() {
+            const jsonMap = JSON.stringify(pixelGridData);
+            const code = `\n// --- 8x8 Pixel Sprite Renderer ---
+const spriteData = ${jsonMap};
+function drawCustomSprite(ctx, x, y, pixelSize = 3) {
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      let color = spriteData[row * 8 + col];
+      if (color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+      }
+    }
+  }
+}\n`;
+            const start = editor.selectionStart;
+            editor.value = editor.value.substring(0, start) + code + editor.value.substring(start);
+            updateMetrics();
+            triggerAutoSave();
+            showToast("Injected drawCustomSprite() code! 🎨", "success");
+        }
+
+        /* --------------------------------------------------------------------------
+           13. CHEAT SHEET QUICK COPY
+           -------------------------------------------------------------------------- */
+        function copyCheatCode(code) {
+            navigator.clipboard.writeText(code);
+            showToast("Formula copied to clipboard! 📋", "info");
+        }
+
+        /* --------------------------------------------------------------------------
+           14. SIDEBAR DOCK & TAB SWITCHING
+           -------------------------------------------------------------------------- */
+        function switchSidebarTab(tabKey, btn) {
+            const sidebar = document.getElementById('studio-sidebar');
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+            }
+
+            document.querySelectorAll('.rail-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            document.querySelectorAll('.sidebar-tab-content').forEach(tc => tc.classList.remove('active'));
+            const target = document.getElementById(`tab-${tabKey}`);
+            if (target) target.classList.add('active');
+
+            const titles = {
+                templates: 'STARTER TEMPLATES',
+                snippets: 'CODE ARSENAL',
+                soundlab: '8-BIT SOUND LAB',
+                pixelart: 'PIXEL SPRITE PAINTER',
+                cheatsheet: 'MATH & PHYSICS CHEAT SHEET',
+                history: 'TIME MACHINE & SNAPSHOTS'
+            };
+            document.getElementById('sidebar-title').textContent = titles[tabKey] || 'TOOLS';
+        }
+
+        function toggleSidebar() {
+            document.getElementById('studio-sidebar').classList.toggle('collapsed');
+        }
+
+        /* --------------------------------------------------------------------------
+           15. VIEWPORT & DEVICE TESTING
+           -------------------------------------------------------------------------- */
+        function setDeviceViewport(w, h, btn) {
+            document.querySelectorAll('.view-pill').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            deviceWrapper.style.width = w;
+            deviceWrapper.style.height = h;
+            document.getElementById('screen-res-badge').textContent = `Target: ${w} × ${h}`;
+        }
+
+        function toggleSandboxFullscreen() {
+            if (frame.requestFullscreen) frame.requestFullscreen();
+            else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
+        }
+
+        function captureGameScreenshot() {
+            try {
+                const canvas = frame.contentDocument ? frame.contentDocument.querySelector('canvas') : null;
+                if (!canvas) {
+                    showToast("No active canvas element found in game to capture.", "warn");
+                    return;
+                }
+                const dataUrl = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                a.download = `${(projectTitleInput.value || 'game').replace(/[^a-z0-9_-]/gi, '_')}_screenshot.png`;
+                a.click();
+                showToast("Screenshot saved to downloads! 📸", "success");
+            } catch(e) {
+                showToast("Cannot capture canvas due to cross-origin sandboxing.", "warn");
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           16. EXPORT & IMPORT BACKUP SYSTEMS
+           -------------------------------------------------------------------------- */
+        function downloadGameHTML() {
+            saveActiveProjectImmediate();
+            const title = (projectTitleInput.value || 'game').replace(/[^a-z0-9_-]/gi, '_');
             const blob = new Blob([editor.value], { type: 'text/html' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = `${title}.html`;
             a.click();
-            addLog(`Exported game as ${title}.html`, "info");
+            showToast(`Exported ${title}.html 🌐`, "success");
         }
 
-        function importLocalCode(e) {
+        function exportProjectJSON() {
+            saveActiveProjectImmediate();
+            const proj = getActiveProject();
+            if (!proj) return;
+            const blob = new Blob([JSON.stringify(proj, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${(proj.title || 'project').replace(/[^a-z0-9_-]/gi, '_')}.afk.json`;
+            a.click();
+            showToast("Project JSON backup exported! 💾", "success");
+        }
+
+        function exportFullStudioBackup() {
+            saveActiveProjectImmediate();
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+            const bundle = {
+                app: 'AFK_GAME_STUDIO',
+                version: '2.0',
+                exportedAt: Date.now(),
+                projects: manifest
+            };
+            const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `afk_studio_workspace_backup_${Date.now()}.json`;
+            a.click();
+            showToast("Full Studio workspace backup exported! 🗄️", "success");
+        }
+
+        function copySourceCode() {
+            navigator.clipboard.writeText(editor.value);
+            showToast("Game source code copied to clipboard! 📋", "info");
+        }
+
+        function handleImportHTML(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = (ev) => {
+                const title = file.name.replace(/\.[^/.]+$/, "");
+                createNewProject(title);
                 editor.value = ev.target.result;
-                projectTitle.value = file.name.replace(/\.[^/.]+$/, "");
-                updateLineNumbers();
-                runCode();
-                addLog(`Loaded local file: ${file.name}`, "info");
+                projectTitleInput.value = title;
+                updateMetrics();
+                saveActiveProjectImmediate();
+                runSandbox();
+                showToast(`Imported ${file.name}! 📄`, "success");
             };
             reader.readAsText(file);
         }
 
-        function setDeviceViewport(width, btn) {
-            document.querySelectorAll('.viewport-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('device-frame').style.width = width;
+        function handleImportJSON(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (!data.code) throw new Error("Invalid project structure");
+                    
+                    let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+                    const newProj = {
+                        id: 'proj_' + Date.now(),
+                        title: data.title || 'Imported Game',
+                        code: data.code,
+                        updatedAt: Date.now(),
+                        snapshots: data.snapshots || []
+                    };
+                    manifest.unshift(newProj);
+                    localStorage.setItem(STORAGE_KEY_MANIFEST, JSON.stringify(manifest));
+                    switchProject(newProj.id);
+                    showToast(`Restored project: ${newProj.title}! 📦`, "success");
+                } catch(err) {
+                    alert("Failed to parse JSON project file: " + err.message);
+                }
+            };
+            reader.readAsText(file);
         }
 
-        function toggleFullscreenFrame() {
-            if (iframe.requestFullscreen) iframe.requestFullscreen();
-            else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+        function handleImportStudioBackup(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (!data.projects || !Array.isArray(data.projects)) throw new Error("Invalid workspace backup");
+                    if (!confirm(`Restore full backup with ${data.projects.length} projects? This will merge into your workspace.`)) return;
+
+                    let manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+                    const existingIds = new Set(manifest.map(p => p.id));
+                    data.projects.forEach(p => {
+                        if (!existingIds.has(p.id)) manifest.push(p);
+                        else manifest.push({ ...p, id: 'proj_' + Date.now() + Math.random().toString(36).substr(2, 4) });
+                    });
+
+                    localStorage.setItem(STORAGE_KEY_MANIFEST, JSON.stringify(manifest));
+                    updateProjectCountBadge(manifest.length);
+                    switchProject(manifest[0].id);
+                    showToast("Workspace backup successfully restored! 🗄️", "success");
+                } catch(err) {
+                    alert("Backup restore failed: " + err.message);
+                }
+            };
+            reader.readAsText(file);
         }
 
+        /* --------------------------------------------------------------------------
+           17. PROJECT HUB MODAL
+           -------------------------------------------------------------------------- */
+        function openProjectsModal() {
+            saveActiveProjectImmediate();
+            refreshProjectsModalList();
+            document.getElementById('projects-modal').classList.add('active');
+        }
+
+        function closeProjectsModal() {
+            document.getElementById('projects-modal').classList.remove('active');
+        }
+
+        function refreshProjectsModalList() {
+            const grid = document.getElementById('projects-grid-list');
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_KEY_MANIFEST) || '[]');
+            
+            grid.innerHTML = manifest.map(p => {
+                const isActive = p.id === activeProjectId;
+                const dateStr = new Date(p.updatedAt || Date.now()).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const lines = (p.code || '').split('\n').length;
+                return `
+                    <div class="project-item ${isActive ? 'active' : ''}" onclick="switchProject('${p.id}')">
+                        <div>
+                            <div style="font-weight:700; font-size:0.86rem; color:#fff; display:flex; align-items:center; gap:6px;">
+                                <span>${isActive ? '🟢' : '📁'}</span> ${p.title}
+                            </div>
+                            <div style="font-size:0.72rem; color:var(--text-dim); margin-top:3px;">
+                                ${lines} lines • Edited ${dateStr}
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            ${manifest.length > 1 ? `<button class="btn btn-sm" style="color:#f87171;" onclick="deleteProject('${p.id}', event)" title="Delete Game">🗑️</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* --------------------------------------------------------------------------
+           18. SETTINGS & SHORTCUTS MODALS
+           -------------------------------------------------------------------------- */
+        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+        function openShortcutsModal() { document.getElementById('shortcuts-modal').classList.add('active'); }
+        function closeShortcutsModal() { document.getElementById('shortcuts-modal').classList.remove('active'); }
+
+        function setTheme(themeKey) {
+            document.documentElement.setAttribute('data-theme', themeKey);
+            localStorage.setItem('afk_studio_theme', themeKey);
+            showToast(`Theme set to ${themeKey}`, 'info');
+        }
+
+        function setEditorFontSize(size) {
+            editor.style.fontSize = size;
+            lineGutter.style.fontSize = size;
+            showToast(`Font size set to ${size}`, 'info');
+        }
+
+        function setAutoRunDelay(ms) {
+            autoRunDelayMs = ms;
+            showToast(`Auto-run debounce set to ${ms}ms`, 'info');
+        }
+
+        /* --------------------------------------------------------------------------
+           19. PUBLISH DIRECTLY TO ARCADE
+           -------------------------------------------------------------------------- */
         function openPublishModal() {
-            document.getElementById('pub-title').value = projectTitle.value;
-            document.getElementById('publish-modal').style.display = 'flex';
-        }
-        function closePublishModal() {
-            document.getElementById('publish-modal').style.display = 'none';
+            document.getElementById('pub-game-title').value = projectTitleInput.value;
+            document.getElementById('publish-modal').classList.add('active');
         }
 
-        async function publishGameToNetwork() {
-            if (!sbClient) return alert("Database is not connected.");
-            const pubBtn = document.getElementById('pub-btn');
-            pubBtn.disabled = true;
-            pubBtn.innerText = "Deploying Node... ⚡";
+        function closePublishModal() {
+            document.getElementById('publish-modal').classList.remove('active');
+        }
+
+        async function deployGameToArcade() {
+            if (!sbClient) {
+                alert("Database is offline or not configured.");
+                return;
+            }
+            const btn = document.getElementById('pub-submit-btn');
+            btn.disabled = true;
+            btn.textContent = '🚀 Deploying Live...';
 
             const gameRecord = {
-                title: document.getElementById('pub-title').value.trim(),
-                author: document.getElementById('pub-author').value.trim(),
-                email: document.getElementById('pub-email').value.trim(),
-                source_url: document.getElementById('pub-source').value.trim() || null,
+                title: document.getElementById('pub-game-title').value.trim(),
+                author: document.getElementById('pub-game-author').value.trim(),
+                email: document.getElementById('pub-game-email').value.trim(),
+                source_url: document.getElementById('pub-game-source').value.trim() || null,
                 html_code: editor.value,
                 status: 'live',
                 play_count: 0
             };
 
-            const { error } = await sbClient.from('games').insert([gameRecord]);
+            const { data, error } = await sbClient.from('games').insert([gameRecord]);
             if (error) {
-                alert("Publication failed: " + error.message);
-                pubBtn.disabled = false;
-                pubBtn.innerText = "Confirm & Launch ➔";
+                alert("Deployment failed: " + error.message);
+                btn.disabled = false;
+                btn.textContent = '🚀 Deploy Live Now';
             } else {
-                alert("🎉 Game deployed successfully to the Arcade Library!");
-                window.location.href = "library.html";
+                showToast("🎉 Game deployed successfully to Arcade!", "success");
+                closePublishModal();
+                btn.disabled = false;
+                btn.textContent = '🚀 Deploy Live Now';
+                setTimeout(() => {
+                    window.location.href = 'library.html';
+                }, 1200);
             }
         }
 
-        loadTemplate('canvas2d');
+        /* --------------------------------------------------------------------------
+           20. TOAST NOTIFICATION ENGINE
+           -------------------------------------------------------------------------- */
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = { success: '✅', info: '⚡', warn: '⚠️' };
+            toast.innerHTML = `<span>${icons[type] || '✦'}</span> <span>${msg}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(15px)';
+                toast.style.transition = '0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 2600);
+        }
+
+        /* --------------------------------------------------------------------------
+           21. INITIALIZATION ON BOOT
+           -------------------------------------------------------------------------- */
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('afk_studio_theme') || 'cyberpunk';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            initPixelGrid();
+            initProjectManifest();
+            runSandbox();
+        });
     </script>
 </body>
 </html>
