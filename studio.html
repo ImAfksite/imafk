@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AFK Game Studio & Web IDE — Next-Gen Arcade Engine</title>
+    <title>AFK Game Studio</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1109,7 +1109,7 @@
         <div class="nav-left">
             <a href="index.html" class="nav-brand" title="Return to Arcade Hub">
                 <div class="brand-badge">✦</div>
-                <span>I’M AFK <span style="font-size: 0.72rem; color: var(--accent-cyan); font-weight: 600;">STUDIO PRO</span></span>
+                <span>I’M AFK <span style="font-size: 0.72rem; color: var(--accent-cyan); font-weight: 600;">STUDIO v1.5</span></span>
             </a>
 
             <!-- Project Title Rename -->
@@ -1137,14 +1137,14 @@
 
             <!-- Snapshot Quick Save -->
             <button class="btn" onclick="takeSnapshot()" title="Save milestone snapshot (Ctrl+S)">
-                💾 Snapshot
+                💾 Save
             </button>
         </div>
 
         <div class="nav-right">
             <!-- Project Manager Hub Modal Trigger -->
             <button class="btn" onclick="openProjectsModal()" title="View and switch all saved games">
-                📂 My Games (<span id="project-count-badge">1</span>)
+                My Games (<span id="project-count-badge">1</span>)
             </button>
 
             <!-- Export / Backup Dropdown -->
@@ -1190,7 +1190,7 @@
 
             <!-- Publish to Arcade Network -->
             <button class="btn btn-publish" onclick="openPublishModal()" title="Deploy to Global Arcade Library">
-                🚀 Ship to Arcade
+                 Publish
             </button>
         </div>
     </header>
@@ -1229,32 +1229,32 @@
                     <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Pick a clean base game architecture to jumpstart your build:</p>
                     
                     <div class="panel-card" onclick="loadStarterTemplate('canvas2d')">
-                        <div class="panel-card-title">🌟 2D Space Orbit Dodger <span style="font-size:0.7rem; color:var(--accent-lime);">Beginner</span></div>
+                        <div class="panel-card-title">2D Space Orbit Dodger <span style="font-size:0.7rem; color:var(--accent-lime);">Beginner</span></div>
                         <div class="panel-card-desc">Complete 2D canvas game loop, keyboard handling, scoring, star spawning & audio blips.</div>
                     </div>
 
                     <div class="panel-card" onclick="loadStarterTemplate('pong')">
-                        <div class="panel-card-title">⚡ Neon Cyber Pong <span style="font-size:0.7rem; color:var(--accent-cyan);">Classic</span></div>
+                        <div class="panel-card-title">Neon Cyber Pong <span style="font-size:0.7rem; color:var(--accent-cyan);">Classic</span></div>
                         <div class="panel-card-desc">Reactive AI paddle, high-speed neon ball trails, screen shake & particle impact sparks.</div>
                     </div>
 
                     <div class="panel-card" onclick="loadStarterTemplate('flappy')">
-                        <div class="panel-card-title">🐦 Flappy Drone 2D <span style="font-size:0.7rem; color:var(--accent-amber);">Physics</span></div>
+                        <div class="panel-card-title">Flappy Drone 2D <span style="font-size:0.7rem; color:var(--accent-amber);">Physics</span></div>
                         <div class="panel-card-desc">Velocity physics, gravity, procedural obstacle pillars, tap/space controls, and score UI.</div>
                     </div>
 
                     <div class="panel-card" onclick="loadStarterTemplate('asteroids')">
-                        <div class="panel-card-title">🚀 360 Asteroid Fighter <span style="font-size:0.7rem; color:var(--accent-pink);">Action</span></div>
+                        <div class="panel-card-title">360 Asteroid Fighter <span style="font-size:0.7rem; color:var(--accent-pink);">Action</span></div>
                         <div class="panel-card-desc">Rotational inertia, space wrapping, laser cannons, rock splitting & debris particles.</div>
                     </div>
 
                     <div class="panel-card" onclick="loadStarterTemplate('platformer')">
-                        <div class="panel-card-title">🏃 Neon Platformer Jump <span style="font-size:0.7rem; color:var(--accent-purple);">Platformer</span></div>
+                        <div class="panel-card-title">Neon Platformer Jump <span style="font-size:0.7rem; color:var(--accent-purple);">Platformer</span></div>
                         <div class="panel-card-desc">Tile collision, double jumps, floating platforms, collectible gems and death pit respawn.</div>
                     </div>
 
                     <div class="panel-card" onclick="loadStarterTemplate('particles')">
-                        <div class="panel-card-title">✨ Interactive Galaxy Sandbox <span style="font-size:0.7rem; color:var(--accent-cyan);">Visuals</span></div>
+                        <div class="panel-card-title">Interactive Galaxy Sandbox <span style="font-size:0.7rem; color:var(--accent-cyan);">Visuals</span></div>
                         <div class="panel-card-desc">300+ physics particles reacting to cursor gravity, color speed shifts, and explosive click waves.</div>
                     </div>
 
@@ -1269,32 +1269,32 @@
                     <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Click to inject battle-tested game modules into your code:</p>
                     
                     <div class="panel-card" onclick="insertCodeSnippet('particles')">
-                        <div class="panel-card-title">💥 Particle Explosion Burst</div>
+                        <div class="panel-card-title">Particle Explosion Burst</div>
                         <div class="panel-card-desc">Spawns 25 colorful expanding & fading spark particles on collision.</div>
                     </div>
 
                     <div class="panel-card" onclick="insertCodeSnippet('shake')">
-                        <div class="panel-card-title">📳 Screen Shake Kick</div>
+                        <div class="panel-card-title">Screen Shake Kick</div>
                         <div class="panel-card-desc">Adds impactful screen tremor effect on hits or explosions.</div>
                     </div>
 
                     <div class="panel-card" onclick="insertCodeSnippet('highscore')">
-                        <div class="panel-card-title">🏆 Local Highscore Storage</div>
+                        <div class="panel-card-title">Local Highscore Storage</div>
                         <div class="panel-card-desc">Saves and displays personal best score persistent in browser.</div>
                     </div>
 
                     <div class="panel-card" onclick="insertCodeSnippet('joystick')">
-                        <div class="panel-card-title">🕹️ Mobile Virtual Touch D-Pad</div>
+                        <div class="panel-card-title">Mobile Virtual Touch D-Pad</div>
                         <div class="panel-card-desc">On-screen responsive touch controls for mobile/tablet screens.</div>
                     </div>
 
                     <div class="panel-card" onclick="insertCodeSnippet('gamepad')">
-                        <div class="panel-card-title">🎮 Xbox / DualShock Controller API</div>
+                        <div class="panel-card-title">Xbox / DualShock Controller API</div>
                         <div class="panel-card-desc">Plug & play Bluetooth/USB gamepad polling listener.</div>
                     </div>
 
                     <div class="panel-card" onclick="insertCodeSnippet('collision')">
-                        <div class="panel-card-title">🧱 AABB Box & Circle Collision Math</div>
+                        <div class="panel-card-title">AABB Box & Circle Collision Math</div>
                         <div class="panel-card-desc">Ultra-fast collision detectors for rectangles and radial circles.</div>
                     </div>
                 </div>
@@ -1443,13 +1443,13 @@
                 <div class="editor-tabs-bar">
                     <div class="tabs-list">
                         <button class="tab-btn active" id="tab-file-html" onclick="switchFileTab('html')">
-                            <span>📄</span> index.html
+                            <span> </span> index.html
                         </button>
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 6px;">
                         <button class="btn btn-sm" onclick="toggleSearchBar()" title="Find / Replace (Ctrl+F)">🔍 Find</button>
-                        <button class="btn btn-sm" onclick="formatCode()" title="Auto format & indent code">✨ Format</button>
+                        <button class="btn btn-sm" onclick="formatCode()" title="Auto format & indent code">Format</button>
                         <button class="btn btn-sm" onclick="zoomCode(-1)" title="Decrease font size">A-</button>
                         <button class="btn btn-sm" onclick="zoomCode(1)" title="Increase font size">A+</button>
                     </div>
@@ -1487,10 +1487,10 @@
                 <div class="preview-toolbar">
                     <div class="viewport-switcher">
                         <span style="font-size:0.72rem; color:var(--text-dim); margin-right:4px;">Display:</span>
-                        <button class="view-pill active" onclick="setDeviceViewport('100%', '100%', this)">🖥️ Full</button>
-                        <button class="view-pill" onclick="setDeviceViewport('640px', '480px', this)">🕹️ 4:3 Retro</button>
-                        <button class="view-pill" onclick="setDeviceViewport('768px', '100%', this)">📱 Tablet</button>
-                        <button class="view-pill" onclick="setDeviceViewport('390px', '780px', this)">📱 Mobile</button>
+                        <button class="view-pill active" onclick="setDeviceViewport('100%', '100%', this)">Full</button>
+                        <button class="view-pill" onclick="setDeviceViewport('640px', '480px', this)">4:3 Retro</button>
+                        <button class="view-pill" onclick="setDeviceViewport('768px', '100%', this)">Tablet</button>
+                        <button class="view-pill" onclick="setDeviceViewport('390px', '780px', this)">Mobile</button>
                     </div>
 
                     <div style="display: flex; gap: 6px;">
@@ -1510,7 +1510,7 @@
                 <!-- Diagnostics Bar -->
                 <div class="diagnostics-strip">
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <span class="fps-badge" id="live-fps-badge">⚡ 60 FPS</span>
+                        <span class="fps-badge" id="live-fps-badge">60 FPS</span>
                         <span id="screen-res-badge">Canvas: 100%</span>
                     </div>
                     <div style="display:flex; align-items:center; gap:8px;">
@@ -1578,17 +1578,17 @@
     <div class="modal-backdrop" id="settings-modal">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title">⚙️ Studio Settings & Themes</div>
+                <div class="modal-title">Studio Settings & Themes</div>
                 <button class="modal-close" onclick="closeSettingsModal()">✕</button>
             </div>
 
             <label class="input-label">Studio Visual Theme</label>
             <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:16px;">
-                <button class="btn" onclick="setTheme('cyberpunk')">⚡ Cyberpunk</button>
-                <button class="btn" onclick="setTheme('synthwave')">🌆 Synthwave '84</button>
-                <button class="btn" onclick="setTheme('matrix')">📟 Matrix Terminal</button>
-                <button class="btn" onclick="setTheme('monokai')">🎨 Monokai Slate</button>
-                <button class="btn" onclick="setTheme('bloodmoon')">🩸 Bloodmoon</button>
+                <button class="btn" onclick="setTheme('cyberpunk')">Cyberpunk</button>
+                <button class="btn" onclick="setTheme('synthwave')">Synthwave '84</button>
+                <button class="btn" onclick="setTheme('matrix')">Matrix Terminal</button>
+                <button class="btn" onclick="setTheme('monokai')">Monokai Slate</button>
+                <button class="btn" onclick="setTheme('bloodmoon')">Bloodmoon</button>
             </div>
 
             <label class="input-label">Editor Font Size</label>
@@ -1656,7 +1656,7 @@
     <div class="modal-backdrop" id="publish-modal">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title">🚀 Ship Game to Arcade</div>
+                <div class="modal-title">Publish Game</div>
                 <button class="modal-close" onclick="closePublishModal()">✕</button>
             </div>
 
@@ -1679,7 +1679,7 @@
 
                 <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
                     <button type="button" class="btn" onclick="closePublishModal()">Cancel</button>
-                    <button type="submit" class="btn btn-publish" id="pub-submit-btn">🚀 Deploy Live Now</button>
+                    <button type="submit" class="btn btn-publish" id="pub-submit-btn">Lunch</button>
                 </div>
             </form>
         </div>
