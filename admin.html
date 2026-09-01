@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Root Operations Hub — I’m Afk</title>
+    <title>Admin  — I’m Afk</title>
     
     <!-- Google Fonts & CDN Libraries -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -654,7 +654,7 @@
             </div>
             <div class="nav-tools">
                 <span class="session-timer" id="session-timer">LOCK IN: 15:00</span>
-                <button class="btn-glass" onclick="openTerminalModal()">⚡ Terminal</button>
+                <button class="btn-glass" onclick="openTerminalModal()"> Terminal</button>
                 <a href="index.html" class="btn-glass">Return to Arcade</a>
                 <button class="btn-glass btn-glass-danger" onclick="terminateSession()">Lock Node</button>
             </div>
@@ -673,7 +673,7 @@
                 <div class="metric-sub" id="m-live-percent">100% active operational ratio</div>
             </div>
             <div class="metric-card">
-                <div class="metric-label">Takedowns / Flags <span>🚨</span></div>
+                <div class="metric-label">Takedowns / Flags </div>
                 <div class="metric-value" style="color: var(--accent-rose);" id="m-takedowns">0</div>
                 <div class="metric-sub">Isolated quarantine entries</div>
             </div>
@@ -686,11 +686,11 @@
 
         <!-- Tab Switching Bar -->
         <div class="tabs-header">
-            <button class="tab-btn active" onclick="switchTab('catalog')">🎮 Catalog Management</button>
-            <button class="tab-btn" onclick="switchTab('deploy')">🚀 Direct Deploy Studio</button>
-            <button class="tab-btn" onclick="switchTab('scanner')">🛡️ Code Safety Scanner</button>
-            <button class="tab-btn" onclick="switchTab('backup')">💾 Backup & JSON Data</button>
-            <button class="tab-btn" onclick="switchTab('audit')">📜 Audit & Logs</button>
+            <button class="tab-btn active" onclick="switchTab('catalog')"> Catalog Management</button>
+            <button class="tab-btn" onclick="switchTab('deploy')"> Direct Publish Studio</button>
+            <button class="tab-btn" onclick="switchTab('scanner')"> Code Safety Scanner</button>
+            <button class="tab-btn" onclick="switchTab('backup')"> Backup & JSON Data</button>
+            <button class="tab-btn" onclick="switchTab('audit')"> Audit & Logs</button>
         </div>
 
         <!-- ================= TAB 1: CATALOG MANAGEMENT ================= -->
@@ -1065,8 +1065,8 @@
                     <td style="font-size: 0.78rem; color: var(--text-muted);">${dateStr}</td>
                     <td style="text-align: right;">
                         <div class="action-cluster" style="justify-content: flex-end;">
-                            <button class="btn-sm btn-sm-primary" onclick="openSandbox('${game.id}')">⚡ Test</button>
-                            <button class="btn-sm" onclick="openEditorModal('${game.id}')">✏️ Edit</button>
+                            <button class="btn-sm btn-sm-primary" onclick="openSandbox('${game.id}')"> Test</button>
+                            <button class="btn-sm" onclick="openEditorModal('${game.id}')"> Edit</button>
                             ${isLive 
                                 ? `<button class="btn-sm btn-sm-danger" onclick="toggleStatus('${game.id}', 'takedown')">Takedown</button>`
                                 : `<button class="btn-sm" style="color: #34d399;" onclick="toggleStatus('${game.id}', 'live')">Restore</button>`
