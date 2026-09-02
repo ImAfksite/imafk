@@ -1,653 +1,812 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="meta.title">Library — I’M AFK</title>
     
-    <!-- Google Fonts -->
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* ==========================================================================
+           DESIGN SYSTEM: ADDITION7-INSPIRED CLEAN ARCHITECTURE
+           ========================================================================== */
         :root {
-            --bg-deep: #07090e;
-            --glass-card: rgba(16, 22, 36, 0.72);
-            --glass-card-hover: rgba(22, 32, 52, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-border-hover: rgba(103, 232, 249, 0.45);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --text-light: #64748b;
-            --accent-ice: #67e8f9;
-            --accent-blue: #3b82f6;
-            --accent-purple: #a855f7;
-            --accent-emerald: #10b981;
-            --accent-amber: #f59e0b;
-            --accent-rose: #f43f5e;
-            --btn-pill: rgba(255, 255, 255, 0.08);
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-display: 'Space Grotesk', -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
+            
+            --nav-height: 52px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-pill: 9999px;
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.15s var(--ease-out);
         }
 
-        html[lang="ar"] { --font-main: 'Tajawal', system-ui, sans-serif; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html[lang="ar"] { 
+            --font-ui: 'Tajawal', system-ui, sans-serif; 
+            --font-display: 'Tajawal', sans-serif;
+        }
+
+        /* DARK THEME (Default) */
+        [data-theme="dark"] {
+            --bg-canvas: #090a0d;
+            --bg-surface: #111318;
+            --bg-panel: #16181f;
+            --bg-elevated: #1d202a;
+            --bg-input: #101217;
+            --bg-hover: rgba(255, 255, 255, 0.04);
+            --bg-active: #232734;
+
+            --border: rgba(255, 255, 255, 0.09);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --border-focus: #3b82f6;
+
+            --text-main: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --text-dim: #4b5563;
+
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-subtle: rgba(59, 130, 246, 0.12);
+            --accent-text: #60a5fa;
+
+            --success: #10b981;
+            --success-subtle: rgba(16, 185, 129, 0.12);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+
+            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* LIGHT THEME */
+        [data-theme="light"] {
+            --bg-canvas: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-panel: #f1f5f9;
+            --bg-elevated: #e2e8f0;
+            --bg-input: #ffffff;
+            --bg-hover: rgba(0, 0, 0, 0.04);
+            --bg-active: #e2e8f0;
+
+            --border: rgba(0, 0, 0, 0.09);
+            --border-subtle: rgba(0, 0, 0, 0.05);
+            --border-strong: rgba(0, 0, 0, 0.18);
+            --border-focus: #2563eb;
+
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-subtle: rgba(37, 99, 235, 0.08);
+            --accent-text: #2563eb;
+
+            --success: #059669;
+            --success-subtle: rgba(5, 150, 105, 0.08);
+            --warning: #d97706;
+            --danger: #dc2626;
+
+            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            background-color: var(--bg-deep);
-            background-image: 
-                radial-gradient(circle at 20% 10%, rgba(59, 130, 246, 0.15) 0%, transparent 45%),
-                radial-gradient(circle at 80% 60%, rgba(103, 232, 249, 0.1) 0%, transparent 45%),
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            background-color: var(--bg-canvas);
             color: var(--text-main);
-            font-family: var(--font-main);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            line-height: 1.5;
             min-height: 100vh;
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Glass Header */
-        .glass-nav {
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* ==========================================================================
+           TOP NAVIGATION
+           ========================================================================== */
+        .navbar {
             position: sticky;
             top: 0;
             z-index: 100;
+            height: var(--nav-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 18px clamp(24px, 4vw, 48px);
-            background: rgba(7, 9, 14, 0.7);
-            backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border);
+            justify-content: space-between;
+            padding: 0 clamp(16px, 3vw, 32px);
+            flex-shrink: 0;
         }
 
-        .brand-block {
-            display: inline-flex;
+        .brand-link {
+            display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             text-decoration: none;
             color: var(--text-main);
-            font-family: var(--font-display);
             font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            letter-spacing: -0.3px;
+        }
+        .brand-badge {
+            width: 22px;
+            height: 22px;
+            background: var(--text-main);
+            color: var(--bg-surface);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: clamp(20px, 3vw, 36px);
+            gap: 20px;
             align-items: center;
         }
-
         .nav-links a {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            transition: all 0.25s;
+            font-size: 12px;
+            font-weight: 500;
+            transition: var(--transition-fast);
         }
-        .nav-links a:hover, .nav-links a.active { color: #fff; }
-
-        .lang-toggle {
-            background: var(--btn-pill);
-            border: 1px solid var(--glass-border);
+        .nav-links a:hover, .nav-links a.active {
             color: var(--text-main);
-            padding: 7px 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
         }
 
-        /* Real Live Telemetry Bar */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Buttons & Utility Controls */
+        .btn {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 5px 11px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--border-strong);
+            color: var(--text-main);
+        }
+        .btn:active {
+            transform: translateY(1px);
+        }
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+            color: #ffffff;
+        }
+        .btn-icon {
+            padding: 5px 8px;
+        }
+
+        /* ==========================================================================
+           TELEMETRY STRIP
+           ========================================================================== */
         .telemetry-strip {
-            max-width: 1240px;
-            margin: 30px auto 10px;
-            padding: 0 clamp(20px, 4vw, 48px);
+            max-width: 1180px;
+            width: 100%;
+            margin: 20px auto 0;
+            padding: 0 clamp(16px, 3vw, 32px);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 12px;
         }
 
-        .live-indicator {
+        .telemetry-tag {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #34d399;
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 0.82rem;
-            font-weight: 700;
+            gap: 6px;
+            background: var(--success-subtle);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: var(--success);
+            padding: 3px 9px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
             font-family: var(--font-mono);
+            font-weight: 500;
         }
-
         .pulse-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background: var(--accent-emerald);
-            box-shadow: 0 0 10px var(--accent-emerald);
-            animation: pulse 1.8s infinite;
+            background: var(--success);
+            animation: pulse-ring 2s infinite ease-in-out;
         }
-
-        @keyframes pulse {
+        @keyframes pulse-ring {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.75); }
+            50% { opacity: 0.4; transform: scale(0.8); }
         }
 
-        .telemetry-metrics {
+        .telemetry-stats {
             display: flex;
-            gap: 24px;
+            gap: 16px;
             font-family: var(--font-mono);
-            font-size: 0.82rem;
+            font-size: 11px;
             color: var(--text-muted);
         }
-        .telemetry-metrics strong { color: #fff; }
+        .telemetry-stats strong { color: var(--text-main); }
 
-        /* Header Intro */
-        .library-hero {
-            text-align: center;
-            padding: 30px 24px 20px;
-            max-width: 800px;
+        /* ==========================================================================
+           HERO & HEADINGS
+           ========================================================================== */
+        .hero-section {
+            max-width: 1180px;
+            width: 100%;
             margin: 0 auto;
+            padding: 24px clamp(16px, 3vw, 32px) 16px;
         }
-
-        .library-hero h1 {
+        .hero-title {
             font-family: var(--font-display);
-            font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
             font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 13px;
+            max-width: 540px;
         }
 
-        /* Trending Section */
-        .trending-section {
-            max-width: 1240px;
-            margin: 20px auto 40px;
-            padding: 0 clamp(20px, 4vw, 48px);
+        /* ==========================================================================
+           TRENDING & FEATURED SECTION
+           ========================================================================== */
+        .section-container {
+            max-width: 1180px;
+            width: 100%;
+            margin: 16px auto 0;
+            padding: 0 clamp(16px, 3vw, 32px);
         }
 
-        .trending-header {
+        .section-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
         }
-        .trending-header h2 {
+        .section-title {
             font-family: var(--font-display);
-            font-size: 1.35rem;
+            font-size: 12px;
             font-weight: 700;
-            letter-spacing: -0.01em;
-            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-secondary);
         }
 
         .trending-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
+            gap: 12px;
         }
 
         .trending-card {
-            background: linear-gradient(135deg, rgba(25, 33, 52, 0.8), rgba(16, 22, 36, 0.6));
-            border: 1px solid rgba(103, 232, 249, 0.25);
-            border-radius: 24px;
-            padding: 24px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(103, 232, 249, 0.08);
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
+            transition: var(--transition-fast);
+            box-shadow: var(--shadow-card);
         }
-
         .trending-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-ice);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(103, 232, 249, 0.2);
+            background: var(--bg-panel);
+            border-color: var(--border-strong);
+            transform: translateY(-1px);
         }
 
-        .rank-badge {
+        .trending-rank {
             font-family: var(--font-mono);
-            font-weight: 800;
-            font-size: 1.6rem;
-            color: var(--accent-ice);
-            margin-right: 18px;
-            opacity: 0.9;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-right: 14px;
+            width: 24px;
+            flex-shrink: 0;
+        }
+        html[dir="rtl"] .trending-rank {
+            margin-right: 0;
+            margin-left: 14px;
+        }
+        .trending-card:hover .trending-rank {
+            color: var(--accent-text);
         }
 
-        /* Filter & Search Bar */
-        .catalog-controls {
-            max-width: 1240px;
-            margin: 20px auto 35px;
-            padding: 0 clamp(20px, 4vw, 48px);
+        /* ==========================================================================
+           CATALOG CONTROLS (SEARCH, SORT, FILTER)
+           ========================================================================== */
+        .controls-panel {
+            max-width: 1180px;
+            width: 100%;
+            margin: 24px auto 0;
+            padding: 0 clamp(16px, 3vw, 32px);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
-        .search-row {
+        .search-sort-row {
             display: flex;
-            gap: 14px;
+            gap: 10px;
             align-items: center;
         }
 
-        .search-glass-box {
+        .search-box {
             position: relative;
             flex: 1;
         }
-
-        .search-input {
-            width: 100%;
-            background: rgba(14, 20, 32, 0.7);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(20px);
-            padding: 14px 20px 14px 48px;
-            border-radius: 100px;
-            color: #ffffff;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .search-input:focus {
-            border-color: var(--accent-ice);
-            background: rgba(18, 26, 42, 0.9);
-            box-shadow: 0 0 25px rgba(103, 232, 249, 0.2);
-        }
-
         .search-icon {
             position: absolute;
-            left: 18px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             pointer-events: none;
+            font-size: 12px;
+        }
+        html[dir="rtl"] .search-icon {
+            left: auto;
+            right: 10px;
+        }
+        .search-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            padding: 7px 10px 7px 30px;
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition-fast);
+        }
+        html[dir="rtl"] .search-input {
+            padding: 7px 30px 7px 10px;
+        }
+        .search-input:focus {
+            border-color: var(--border-focus);
         }
 
-        html[dir="rtl"] .search-input { padding: 14px 48px 14px 20px; }
-        html[dir="rtl"] .search-icon { left: auto; right: 18px; }
-
-        .sort-select {
-            background: #0d131f;
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 13px 20px;
-            border-radius: 50px;
-            font-size: 0.85rem;
+        .select-input {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            padding: 7px 10px;
+            border-radius: var(--radius-sm);
             outline: none;
             cursor: pointer;
         }
+        .select-input:focus {
+            border-color: var(--border-focus);
+        }
 
-        .tags-row {
+        .filter-tags {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
-        .tag-pill {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 7px 18px;
-            border-radius: 50px;
-            font-size: 0.82rem;
+        .filter-tag {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        .filter-tag:hover {
+            color: var(--text-main);
+            border-color: var(--border-strong);
+        }
+        .filter-tag.active {
+            background: var(--text-main);
+            color: var(--bg-surface);
+            border-color: var(--text-main);
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .tag-pill:hover, .tag-pill.active {
-            background: rgba(103, 232, 249, 0.15);
-            border-color: rgba(103, 232, 249, 0.4);
-            color: var(--accent-ice);
-        }
-
-        /* Game Grid */
-        .game-grid-section {
-            max-width: 1240px;
-            margin: 0 auto 90px;
-            padding: 0 clamp(20px, 4vw, 48px);
-        }
-
-        .game-grid {
+        /* ==========================================================================
+           MAIN CATALOG GRID
+           ========================================================================== */
+        .catalog-grid {
+            max-width: 1180px;
+            width: 100%;
+            margin: 16px auto 60px;
+            padding: 0 clamp(16px, 3vw, 32px);
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+            flex: 1;
         }
 
-        .game-card-wrapper {
-            perspective: 1000px;
-            cursor: pointer;
-        }
-
-        .game-card {
-            background: var(--glass-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 26px;
-            padding: 26px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, background 0.3s;
+        .catalog-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 270px;
+            min-height: 180px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            box-shadow: var(--shadow-card);
             position: relative;
-            overflow: hidden;
+        }
+        .catalog-card:hover {
+            background: var(--bg-panel);
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-pop);
         }
 
-        .game-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-        }
-
-        .game-card-wrapper:hover .game-card {
-            transform: translateY(-6px);
-            background: var(--glass-card-hover);
-            border-color: var(--glass-border-hover);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.15);
-        }
-
-        .card-top {
+        .card-header-row {
             display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .card-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #fff;
-        }
-
-        .card-tag-row {
-            display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
-            width: 100%;
+            gap: 10px;
+            margin-bottom: 10px;
         }
-
-        .card-tag {
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--accent-ice);
-        }
-
-        .card-plays {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
         .card-title {
             font-family: var(--font-display);
-            font-size: 1.2rem;
+            font-size: 14px;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-main);
+            line-height: 1.3;
         }
-
-        .card-body {
+        .card-badge {
+            font-size: 10px;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-elevated);
             color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.55;
-            margin-bottom: 20px;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .play-pill {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--glass-border);
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            transition: all 0.2s;
-        }
-
-        .game-card-wrapper:hover .play-pill {
-            background: #ffffff;
-            color: #0a0a12;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-        }
-
-        /* Fullscreen Game Player Overlay */
-        #player-view {
-            display: none;
-            position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #000;
-            z-index: 999999;
-            flex-direction: column;
-        }
-
-        .player-top-bar {
-            height: 60px;
-            background: rgba(10, 10, 18, 0.95);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
+            border: 1px solid var(--border);
+            text-transform: uppercase;
             flex-shrink: 0;
         }
 
-        .player-back-btn {
-            background: var(--btn-pill);
-            color: #fff;
-            border: 1px solid var(--glass-border);
-            padding: 8px 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.82rem;
-            cursor: pointer;
-            transition: 0.2s;
+        .card-author {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
         }
-        .player-back-btn:hover { background: #fff; color: #000; }
 
-        .player-game-title {
+        .card-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 11px;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+
+        .play-indicator {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-text);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ==========================================================================
+           FULLSCREEN RUNNER OVERLAY
+           ========================================================================== */
+        #player-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        #player-overlay.active {
+            display: flex;
+        }
+
+        .player-navbar {
+            height: 44px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .player-title {
             font-family: var(--font-display);
-            font-size: 1.1rem;
+            font-size: 13px;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .player-actions {
             display: flex;
-            gap: 8px;
+            align-items: center;
+            gap: 6px;
         }
-
-        .player-action-btn {
-            background: var(--btn-pill);
-            border: 1px solid var(--glass-border);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 0.78rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .player-action-btn:hover { background: rgba(255, 255, 255, 0.2); }
 
         #game-frame {
             flex: 1;
             width: 100%;
             border: none;
-            background: #000;
+            background: #ffffff;
         }
 
-        footer {
-            border-top: 1px solid var(--glass-border);
-            padding: 45px 24px;
-            text-align: center;
-            background: rgba(10, 10, 18, 0.85);
+        /* ==========================================================================
+           FOOTER
+           ========================================================================== */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 24px clamp(16px, 3vw, 32px);
+            background: var(--bg-surface);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 11px;
+            margin-top: auto;
+        }
+
+        @media (max-width: 640px) {
+            .navbar { padding: 0 12px; }
+            .nav-links { display: none; }
+            .telemetry-strip { flex-direction: column; align-items: flex-start; }
+            .search-sort-row { flex-direction: column; }
+            .select-input { width: 100%; }
+            .footer { flex-direction: column; gap: 8px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <div id="catalog-view">
-        <header class="glass-nav">
-            <a href="index.html" class="brand-block">
-                <span>✦</span>
-                <span>I’M AFK</span>
+    <!-- CATALOG VIEW -->
+    <div id="catalog-view" style="display: flex; flex-direction: column; min-height: 100vh;">
+        
+        <!-- Top Navbar -->
+        <header class="navbar">
+            <a href="index.html" class="brand-link" title="I’M AFK Hub">
+                <div class="brand-badge">✦</div>
+                <span>I’M AFK <span style="font-size:11px; color:var(--text-muted); font-weight:500;">Library</span></span>
             </a>
 
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="library.html" class="active">Library</a></li>
-                <li><a href="submit.html">Submit</a></li>
-                <li><a href="contact.html">Support</a></li>
+                <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+                <li><a href="library.html" class="active" data-i18n="nav.library">Library</a></li>
+                <li><a href="studio.html" data-i18n="nav.studio">Studio</a></li>
+                <li><a href="submit.html" data-i18n="nav.submit">Submit</a></li>
+                <li><a href="contact.html" data-i18n="nav.support">Support</a></li>
             </ul>
 
-            <div>
-                <button type="button" class="lang-toggle" id="lang-btn">العربية</button>
+            <div class="nav-actions">
+                <a href="studio.html" class="btn btn-primary" data-i18n="nav.openStudio">+ Create Project</a>
+                <button type="button" class="btn" id="lang-btn">العربية</button>
+                <button type="button" class="btn btn-icon" id="theme-btn" onclick="toggleTheme()" title="Switch Theme">◐</button>
             </div>
         </header>
 
-        <!-- Live Player Telemetry Banner (Real Supabase Presence & Aggregated DB Counter) -->
+        <!-- Live Telemetry Status -->
         <div class="telemetry-strip">
-            <div class="live-indicator">
+            <div class="telemetry-tag">
                 <div class="pulse-dot"></div>
-                <span><strong id="live-players-count">1</strong> PLAYERS ACTIVE NOW</span>
+                <span><strong id="live-players-count">1</strong> <span data-i18n="telemetry.active">Active Users</span></span>
             </div>
-            <div class="telemetry-metrics">
-                <span>Total Network Plays: <strong id="total-plays-count">0</strong></span>
-                <span>Catalog Health: <strong style="color: var(--accent-ice);" id="catalog-health">Connecting...</strong></span>
+            <div class="telemetry-stats">
+                <span><span data-i18n="telemetry.plays">Total Plays</span>: <strong id="total-plays-count">0</strong></span>
+                <span><span data-i18n="telemetry.status">Network Status</span>: <strong id="catalog-health" style="color: var(--success);">Connecting...</strong></span>
             </div>
         </div>
 
-        <main>
-            <div class="library-hero">
-                <h1 data-i18n="lib.title">Main <span>Library</span></h1>
-                <p data-i18n="lib.lead">Select any standalone HTML5 creation to launch immediately in full focus mode.</p>
+        <!-- Hero Header -->
+        <section class="hero-section">
+            <h1 class="hero-title" data-i18n="lib.title">Curated Web Projects & Games</h1>
+            <p class="hero-desc" data-i18n="lib.lead">Run standalone HTML5 and JavaScript creations directly in your browser with zero latency.</p>
+        </section>
+
+        <!-- Trending Section -->
+        <section class="section-container">
+            <div class="section-header">
+                <span class="section-title" data-i18n="trend.title">Trending & Most Played</span>
+            </div>
+            <div class="trending-grid" id="trending-container">
+                <div style="color: var(--text-muted); font-size: 12px; padding: 12px 0;">Loading trending catalog...</div>
+            </div>
+        </section>
+
+        <!-- Search & Filters -->
+        <section class="controls-panel">
+            <div class="search-sort-row">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="game-search" class="search-input" placeholder="Search by title or author..." oninput="filterAndSortGames()">
+                </div>
+                <select id="sort-select" class="select-input" onchange="filterAndSortGames()">
+                    <option value="popular">Sort: Most Played</option>
+                    <option value="newest">Sort: Newest</option>
+                    <option value="alpha">Sort: Title (A-Z)</option>
+                </select>
             </div>
 
-            <!--  Real Trending & Most Popular Showcase -->
-            <section class="trending-section">
-                <div class="trending-header">
-                    <h2 data-i18n="trend.title">Trending & Most Played</h2>
-                </div>
-                <div class="trending-grid" id="trending-container">
-                    <div style="color: var(--text-muted); font-size: 0.88rem; padding: 20px;">Fetching trending games...</div>
-                </div>
-            </section>
-
-            <!-- Catalog Search & Filter Controls -->
-            <div class="catalog-controls">
-                <div class="search-row">
-                    <div class="search-glass-box">
-                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        <input type="text" id="game-search" class="search-input" placeholder="Search by game name, author, or keyword..." oninput="filterAndSortGames()">
-                    </div>
-                    <select id="sort-select" class="sort-select" onchange="filterAndSortGames()">
-                        <option value="popular">Sort: Most Played</option>
-                        <option value="newest">Sort: Newest First</option>
-                        <option value="alpha">Sort: Title (A-Z)</option>
-                    </select>
-                </div>
-
-                <div class="tags-row">
-                    <button class="tag-pill active" onclick="setCategoryFilter('all', this)">All Games</button>
-                    <button class="tag-pill" onclick="setCategoryFilter('popular', this)">🔥 Most Played</button>
-                    <button class="tag-pill" onclick="setCategoryFilter('arcade', this)">🕹️ Arcade</button>
-                    <button class="tag-pill" onclick="setCategoryFilter('classic', this)">⚡ Classic</button>
-                    <button class="tag-pill" onclick="setCategoryFilter('community', this)">🌐 Community</button>
-                </div>
+            <div class="filter-tags">
+                <button class="filter-tag active" onclick="setCategoryFilter('all', this)" data-i18n="filter.all">All</button>
+                <button class="filter-tag" onclick="setCategoryFilter('popular', this)" data-i18n="filter.popular">Most Played</button>
+                <button class="filter-tag" onclick="setCategoryFilter('arcade', this)" data-i18n="filter.arcade">Interactive</button>
+                <button class="filter-tag" onclick="setCategoryFilter('classic', this)" data-i18n="filter.classic">Classic</button>
+                <button class="filter-tag" onclick="setCategoryFilter('community', this)" data-i18n="filter.community">Community</button>
             </div>
+        </section>
 
-            <!-- Main Game Grid -->
-            <section class="game-grid-section">
-                <div class="game-grid" id="game-container">
-                    <div style="text-align: center; grid-column: 1/-1; padding: 50px; color: var(--text-muted);">Syncing arcade catalog...</div>
-                </div>
-            </section>
+        <!-- Main Catalog Grid -->
+        <main class="catalog-grid" id="game-container">
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                Syncing workspace catalog...
+            </div>
         </main>
 
-        <footer>
-            <p>&copy; 2026 I’M AFK &bull; Curated Web Arcade</p>
+        <!-- Minimal Footer -->
+        <footer class="footer">
+            <span>&copy; 2026 I’M AFK &bull; Web Studio & Hub</span>
+            <span style="font-family: var(--font-mono);">Addition7 Precision Standard</span>
         </footer>
     </div>
 
-    <!-- FULLSCREEN GAME RUNNER -->
-    <div id="player-view">
-        <div class="player-top-bar">
-            <button class="player-back-btn" id="player-back-btn">← Back to Library</button>
-            <div class="player-game-title" id="player-game-title">Game Title</div>
+    <!-- FULLSCREEN DEDICATED PLAYER OVERLAY -->
+    <div id="player-overlay">
+        <div class="player-navbar">
+            <div class="player-title">
+                <button class="btn" id="player-back-btn" style="padding: 4px 8px;">← <span data-i18n="player.back">Back</span></button>
+                <span id="player-game-title" style="margin-left: 6px;">Game Title</span>
+            </div>
+
             <div class="player-actions">
-                <button class="player-action-btn" id="player-reload-btn">Restart</button>
-                <button class="player-action-btn" id="player-tab-btn">New Tab ↗</button>
-                <button class="player-action-btn" id="player-fullscreen-btn">Fullscreen ⛶</button>
+                <button class="btn" id="player-edit-btn" title="Open in I’M AFK Studio">✎ <span data-i18n="player.edit">Open in Studio</span></button>
+                <button class="btn" id="player-reload-btn" title="Restart Application">↻ <span data-i18n="player.reload">Reload</span></button>
+                <button class="btn" id="player-tab-btn" title="Open in New Tab">↗ <span data-i18n="player.newTab">New Tab</span></button>
+                <button class="btn btn-icon" id="player-fullscreen-btn" title="Fullscreen">⛶</button>
             </div>
         </div>
         <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-modals allow-popups" allow="fullscreen; autoplay; gamepad"></iframe>
     </div>
 
+    <!-- ==========================================================================
+         CORE JAVASCRIPT ENGINE
+         ========================================================================== -->
     <script>
+        /* -------------------------------------------------------------
+           1. INTERNATIONALIZATION (EN & AR)
+        ------------------------------------------------------------- */
         const I18N = {
             en: {
-                "meta.title": "Arcade Library & Live Telemetry — I’M AFK",
-                "lib.title": "Arcade <span>Library</span>",
-                "lib.lead": "Select any standalone HTML5 creation to launch immediately in full focus mode.",
-                "trend.title": "Trending & Most Played"
+                "meta.title": "Library — I’M AFK",
+                "nav.home": "Home",
+                "nav.library": "Library",
+                "nav.studio": "Studio",
+                "nav.submit": "Submit",
+                "nav.support": "Support",
+                "nav.openStudio": "+ Create Project",
+                "telemetry.active": "Active Users",
+                "telemetry.plays": "Total Plays",
+                "telemetry.status": "Network Status",
+                "lib.title": "Curated Web Projects & Games",
+                "lib.lead": "Run standalone HTML5 and JavaScript creations directly in your browser with zero latency.",
+                "trend.title": "Trending & Most Played",
+                "filter.all": "All",
+                "filter.popular": "Most Played",
+                "filter.arcade": "Interactive",
+                "filter.classic": "Classic",
+                "filter.community": "Community",
+                "player.back": "Back",
+                "player.edit": "Open in Studio",
+                "player.reload": "Reload",
+                "player.newTab": "New Tab"
             },
             ar: {
-                "meta.title": "مكتبة الألعاب والأكثر لعباً — I’M AFK",
-                "lib.title": "مكتبة <span>الألعاب</span>",
-                "lib.lead": "اختر أي لعبة لتشغيلها مباشرة بشاشة كاملة وبدون إعلانات.",
-                "trend.title": "الألعاب الأكثر شعبية ولعباً الآن"
+                "meta.title": "مكتبة المشاريع والألعاب — I’M AFK",
+                "nav.home": "الرئيسية",
+                "nav.library": "المكتبة",
+                "nav.studio": "المحرر",
+                "nav.submit": "إرسال مشروع",
+                "nav.support": "الدعم",
+                "nav.openStudio": "+ مشروع جديد",
+                "telemetry.active": "مستخدم نشط",
+                "telemetry.plays": "إجمالي التشغيل",
+                "telemetry.status": "حالة الشبكة",
+                "lib.title": "مكتبة مشاريع وتطبيقات الويب",
+                "lib.lead": "شغّل تطبيقات وألعاب HTML5 و JavaScript مباشرة في متصفحك دون إعلانات.",
+                "trend.title": "الأكثر استخداماً ولعباً",
+                "filter.all": "الكل",
+                "filter.popular": "الأكثر لعباً",
+                "filter.arcade": "تفاعلي",
+                "filter.classic": "كلاسيكي",
+                "filter.community": "المجتمع",
+                "player.back": "رجوع",
+                "player.edit": "فتح في المحرر",
+                "player.reload": "إعادة تحميل",
+                "player.newTab": "نافذة جديدة"
             }
         };
 
         let currentLang = 'en';
         const langBtn = document.getElementById('lang-btn');
+
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
@@ -655,104 +814,171 @@
             langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
+                if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
             });
         }
         langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
 
         /* -------------------------------------------------------------
-           1. SUPABASE CLIENT & REAL PRESENCE ENGINE
+           2. THEME ENGINE
+        ------------------------------------------------------------- */
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('afk_studio_theme', next);
+        }
+
+        const savedTheme = localStorage.getItem('afk_studio_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        /* -------------------------------------------------------------
+           3. SUPABASE CLIENT & LIVE PRESENCE
         ------------------------------------------------------------- */
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-        const GITHUB_USER = 'imafksite'; 
+        
+        const GITHUB_USER = 'imafksite';
         const GITHUB_REPO = 'imafk';
 
         let catalog = [];
         let activeCategory = 'all';
 
-        // Real Supabase Presence Channel for Concurrent Online Users
         function initPresenceTracker() {
             if (!sbClient) return;
-            const presenceChannel = sbClient.channel('imafk-live-presence', {
+            const channel = sbClient.channel('imafk-live-presence', {
                 config: { presence: { key: 'user_' + Math.random().toString(36).substring(2, 9) } }
             });
 
-            presenceChannel.on('presence', { event: 'sync' }, () => {
-                const state = presenceChannel.presenceState();
+            channel.on('presence', { event: 'sync' }, () => {
+                const state = channel.presenceState();
                 const totalOnline = Object.keys(state).reduce((acc, key) => acc + state[key].length, 0);
                 document.getElementById('live-players-count').textContent = Math.max(1, totalOnline).toLocaleString();
             });
 
-            presenceChannel.subscribe(async (status) => {
+            channel.subscribe(async (status) => {
                 if (status === 'SUBSCRIBED') {
-                    await presenceChannel.track({ online_at: new Date().toISOString() });
+                    await channel.track({ online_at: new Date().toISOString() });
                 }
             });
         }
 
         /* -------------------------------------------------------------
-           2. REAL PLAY COUNT RECORDING & DB SYNC
-        ------------------------------------------------------------- */
-        async function recordRealPlay(game) {
-            game.play_count = (game.play_count || 0) + 1;
-            
-            // Persist locally for instant responsiveness
-            localStorage.setItem('playcount_' + (game.id || game.title), game.play_count);
-
-            updateGlobalPlaysCounter();
-            renderTrending();
-            filterAndSortGames();
-
-            // Persist real count to Supabase
-            if (sbClient && game.id && game.type === 'supabase') {
-                try {
-                    await sbClient.from('games').update({ play_count: game.play_count }).eq('id', game.id);
-                } catch (e) {
-                    console.warn("Could not sync play count:", e);
-                }
-            }
-        }
-
-        function updateGlobalPlaysCounter() {
-            const total = catalog.reduce((acc, g) => acc + (g.play_count || 0), 0);
-            document.getElementById('total-plays-count').textContent = total.toLocaleString();
-        }
-
-        /* -------------------------------------------------------------
-           3. DUAL-SOURCE CATALOG FETCH & INIT
+           4. BUILT-IN FALLBACK STARTER CREATIONS
         ------------------------------------------------------------- */
         const BUILTINS = [
             {
-                title: 'Retro Snake',
-                author: 'Classic Arcade',
+                id: 'snake_core',
+                title: 'Retro Snake 2D',
+                author: 'AFK Core',
                 category: 'classic',
                 play_count: 0,
                 type: 'builtin',
-                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;color:#67e8f9;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{border:2px solid rgba(255,255,255,0.15);background:#0f172a;border-radius:14px;box-shadow:0 0 30px rgba(0,0,0,0.8);}</style></head><body><h2 style="font-weight:600;letter-spacing:1px;">RETRO SNAKE</h2><canvas id="c" width="400" height="400"></canvas><p style="color:#94a3b8;font-size:13px;margin-top:12px;">Use Arrow Keys to Navigate</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let s=[{x:10,y:10}],d={x:1,y:0},f={x:15,y:15},score=0;setInterval(()=>{let h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||s.some(p=>p.x===h.x&&p.y===h.y)){s=[{x:10,y:10}];d={x:1,y:0};score=0;return;}s.unshift(h);if(h.x===f.x&&h.y===f.y){score+=10;f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else s.pop();x.fillStyle="#0f172a";x.fillRect(0,0,400,400);x.fillStyle="#f43f5e";x.fillRect(f.x*20,f.y*20,18,18);x.fillStyle="#38bdf8";s.forEach(p=>x.fillRect(p.x*20,p.y*20,18,18));x.fillStyle="#fff";x.fillText("Score: "+score,14,24);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&d.y===0)d={x:0,y:-1};if(e.key==="ArrowDown"&&d.y===0)d={x:0,y:1};if(e.key==="ArrowLeft"&&d.x===0)d={x:-1,y:0};if(e.key==="ArrowRight"&&d.x===0)d={x:1,y:0};};<\/script></body></html>`
+                html_code: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; background: #0c0e14; color: #f3f4f6; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
+    canvas { border: 1px solid rgba(255, 255, 255, 0.15); background: #12151e; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <canvas id="c" width="400" height="400"></canvas>
+  <p style="color: #9ca3af; font-size: 12px; margin-top: 10px;">Arrow Keys to Move</p>
+  <script>
+    const c = document.getElementById("c"), ctx = c.getContext("2d");
+    let snake = [{x: 10, y: 10}], dir = {x: 1, y: 0}, food = {x: 15, y: 15}, score = 0;
+    
+    setInterval(() => {
+      let head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+      if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || snake.some(p => p.x === head.x && p.y === head.y)) {
+        snake = [{x: 10, y: 10}]; dir = {x: 1, y: 0}; score = 0; return;
+      }
+      snake.unshift(head);
+      if (head.x === food.x && head.y === food.y) {
+        score += 10; food = {x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
+      } else snake.pop();
+
+      ctx.fillStyle = "#12151e"; ctx.fillRect(0, 0, 400, 400);
+      ctx.fillStyle = "#ef4444"; ctx.fillRect(food.x * 20, food.y * 20, 18, 18);
+      ctx.fillStyle = "#3b82f6"; snake.forEach(p => ctx.fillRect(p.x * 20, p.y * 20, 18, 18));
+      ctx.fillStyle = "#fff"; ctx.font = "12px monospace"; ctx.fillText("SCORE: " + score, 10, 20);
+    }, 100);
+
+    window.onkeydown = e => {
+      if (e.key === "ArrowUp" && dir.y === 0) dir = {x: 0, y: -1};
+      if (e.key === "ArrowDown" && dir.y === 0) dir = {x: 0, y: 1};
+      if (e.key === "ArrowLeft" && dir.x === 0) dir = {x: -1, y: 0};
+      if (e.key === "ArrowRight" && dir.x === 0) dir = {x: 1, y: 0};
+    };
+  <\/script>
+</body>
+</html>`
             },
             {
-                title: 'Neon Pong',
-                author: 'Cyber Arcade',
+                id: 'pong_core',
+                title: 'Minimalist Pong',
+                author: 'AFK Core',
                 category: 'arcade',
                 play_count: 0,
                 type: 'builtin',
-                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#090d16;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#fff;font-family:sans-serif;}canvas{border:2px solid rgba(255,255,255,0.15);background:#0f172a;border-radius:14px;box-shadow:0 0 30px rgba(0,0,0,0.8);}</style></head><body><h2 style="font-weight:600;letter-spacing:1px;">NEON PONG</h2><canvas id="c" width="500" height="350"></canvas><p style="color:#94a3b8;font-size:13px;margin-top:12px;">Move mouse vertically to defend</p><script>const c=document.getElementById("c"),x=c.getContext("2d");let p1=130,p2=130,bx=250,by=175,vx=4,vy=3;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-40;};setInterval(()=>{bx+=vx;by+=vy;if(by<0||by>340)vy*=-1;if(bx<20&&by>p1&&by<p1+80)vx=Math.abs(vx);if(bx>470)vx=-Math.abs(vx);p2+=(by-(p2+40))*0.08;if(bx<0||bx>500){bx=250;by=175;vx*=-1;}x.fillStyle="#0f172a";x.fillRect(0,0,500,350);x.fillStyle="#38bdf8";x.fillRect(10,p1,10,80);x.fillRect(480,p2,10,80);x.fillStyle="#f43f5e";x.beginPath();x.arc(bx,by,6,0,Math.PI*2);x.fill();},1000/60);<\/script></body></html>`
+                html_code: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; background: #0c0e14; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: monospace; }
+    canvas { border: 1px solid rgba(255, 255, 255, 0.15); background: #12151e; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <canvas id="c" width="480" height="320"></canvas>
+  <p style="color: #6b7280; font-size: 11px; margin-top: 8px;">Move mouse vertically</p>
+  <script>
+    const c = document.getElementById("c"), ctx = c.getContext("2d");
+    let p1 = 120, p2 = 120, bx = 240, by = 160, vx = 4, vy = 3, s1 = 0, s2 = 0;
+    c.onmousemove = e => { p1 = e.clientY - c.getBoundingClientRect().top - 35; };
+
+    setInterval(() => {
+      bx += vx; by += vy;
+      if (by < 5 || by > 315) vy *= -1;
+      if (bx < 20 && by > p1 && by < p1 + 70) vx = Math.abs(vx) * 1.05;
+      if (bx > 460 && by > p2 && by < p2 + 70) vx = -Math.abs(vx) * 1.05;
+      p2 += (by - (p2 + 35)) * 0.1;
+
+      if (bx < 0) { s2++; reset(); }
+      if (bx > 480) { s1++; reset(); }
+      function reset() { bx = 240; by = 160; vx = (Math.random() > 0.5 ? 4 : -4); vy = (Math.random() - 0.5) * 6; }
+
+      ctx.fillStyle = "#12151e"; ctx.fillRect(0, 0, 480, 320);
+      ctx.fillStyle = "#3b82f6"; ctx.fillRect(10, p1, 8, 70);
+      ctx.fillStyle = "#ef4444"; ctx.fillRect(462, p2, 8, 70);
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillText(s1 + "   " + s2, 230, 25);
+    }, 1000 / 60);
+  <\/script>
+</body>
+</html>`
             }
         ];
 
+        /* -------------------------------------------------------------
+           5. DATA SYNC & CATALOG LOADER
+        ------------------------------------------------------------- */
         async function initLibrary() {
             catalog = [];
-            let connected = false;
+            let isConnected = false;
 
+            // 1. Fetch from Supabase
             if (sbClient) {
                 try {
                     const { data, error } = await sbClient.from('games').select('*').order('created_at', { ascending: false });
                     if (!error && Array.isArray(data)) {
-                        connected = true;
+                        isConnected = true;
                         data.filter(g => g.status === 'live').forEach((g) => {
-                            const localPlays = parseInt(localStorage.getItem('playcount_' + g.id)) || 0;
+                            const localPlays = parseInt(localStorage.getItem('afk_plays_' + g.id)) || 0;
                             catalog.push({
                                 id: g.id,
                                 title: g.title,
@@ -764,16 +990,19 @@
                             });
                         });
                     }
-                } catch (e) { console.warn(e); }
+                } catch (e) {
+                    console.warn("Supabase fetch notice:", e);
+                }
             }
 
+            // 2. Fetch from GitHub Contents API
             try {
                 const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
                 const files = await res.json();
                 if (Array.isArray(files)) {
-                    connected = true;
+                    isConnected = true;
                     files.filter(f => f.name.endsWith('.html')).forEach((f) => {
-                        const localPlays = parseInt(localStorage.getItem('playcount_' + f.name)) || 0;
+                        const localPlays = parseInt(localStorage.getItem('afk_plays_' + f.name)) || 0;
                         catalog.push({
                             id: f.name,
                             title: f.name.replace('.html', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
@@ -785,71 +1014,90 @@
                         });
                     });
                 }
-            } catch(e) { console.warn(e); }
+            } catch(e) {
+                console.warn("GitHub fetch notice:", e);
+            }
 
-            if (!catalog.length) {
+            // 3. Fallback to builtins if empty
+            if (catalog.length === 0) {
                 BUILTINS.forEach(b => {
-                    const localPlays = parseInt(localStorage.getItem('playcount_' + b.title)) || 0;
+                    const localPlays = parseInt(localStorage.getItem('afk_plays_' + b.id)) || 0;
                     catalog.push({ ...b, play_count: localPlays });
                 });
             }
 
-            document.getElementById('catalog-health').textContent = connected ? 'Connected (Live)' : 'Standalone (Offline)';
+            document.getElementById('catalog-health').textContent = isConnected ? 'Online (Connected)' : 'Local Buffer';
             
-            updateGlobalPlaysCounter();
+            updatePlaysCounter();
             renderTrending();
             filterAndSortGames();
             initPresenceTracker();
 
-            // Direct URL Query Parameter Launcher (e.g. ?play=Retro%20Snake)
-            const urlParams = new URLSearchParams(window.location.search);
-            const playTarget = urlParams.get('play');
-            if (playTarget) {
-                const targetGame = catalog.find(g => g.title.toLowerCase() === playTarget.toLowerCase());
-                if (targetGame) launchGameFlow(targetGame);
+            // Direct URL Query parameter launch: ?play=Title
+            const params = new URLSearchParams(window.location.search);
+            const playParam = params.get('play');
+            if (playParam) {
+                const target = catalog.find(g => g.title.toLowerCase() === playParam.toLowerCase());
+                if (target) launchGame(target);
+            }
+        }
+
+        function updatePlaysCounter() {
+            const total = catalog.reduce((sum, g) => sum + (g.play_count || 0), 0);
+            document.getElementById('total-plays-count').textContent = total.toLocaleString();
+        }
+
+        async function recordPlay(game) {
+            game.play_count = (game.play_count || 0) + 1;
+            localStorage.setItem('afk_plays_' + (game.id || game.title), game.play_count);
+            
+            updatePlaysCounter();
+            renderTrending();
+            filterAndSortGames();
+
+            if (sbClient && game.id && game.type === 'supabase') {
+                try {
+                    await sbClient.from('games').update({ play_count: game.play_count }).eq('id', game.id);
+                } catch(e){}
             }
         }
 
         /* -------------------------------------------------------------
-           4. RENDER TRENDING (RANKED BY ACTUAL PLAYS)
+           6. RENDER TRENDING & CATALOG
         ------------------------------------------------------------- */
         function renderTrending() {
-            const trendingContainer = document.getElementById('trending-container');
-            const trendingList = [...catalog].sort((a, b) => (b.play_count || 0) - (a.play_count || 0)).slice(0, 3);
+            const container = document.getElementById('trending-container');
+            const topList = [...catalog].sort((a, b) => (b.play_count || 0) - (a.play_count || 0)).slice(0, 3);
 
-            trendingContainer.innerHTML = '';
-            trendingList.forEach((game, idx) => {
+            container.innerHTML = '';
+            topList.forEach((game, idx) => {
                 const card = document.createElement('div');
                 card.className = 'trending-card';
                 card.innerHTML = `
-                    <div style="display: flex; align-items: center;">
-                        <span class="rank-badge">#${idx + 1}</span>
-                        <div>
-                            <span style="font-size: 0.72rem; font-weight: 700; color: var(--accent-ice); text-transform: uppercase;">🔥 ${(game.play_count || 0).toLocaleString()} Verified Plays</span>
-                            <h3 style="font-family: var(--font-display); font-size: 1.25rem; color: #fff; margin-top: 2px;">${game.title}</h3>
-                            <span style="font-size: 0.8rem; color: var(--text-muted);">By ${game.author}</span>
+                    <div style="display: flex; align-items: center; overflow: hidden;">
+                        <span class="trending-rank">0${idx + 1}</span>
+                        <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <div style="font-weight: 600; font-size: 13px; color: var(--text-main);">${game.title}</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">${game.author} &bull; ${(game.play_count || 0).toLocaleString()} plays</div>
                         </div>
                     </div>
-                    <span class="play-pill">Play ▶</span>
+                    <button class="btn" style="margin-left: 8px;">Run ▶</button>
                 `;
-                card.addEventListener('click', () => launchGameFlow(game));
-                trendingContainer.appendChild(card);
+                card.onclick = () => launchGame(game);
+                container.appendChild(card);
             });
         }
 
-        /* -------------------------------------------------------------
-           5. FILTERING & SORTING
-        ------------------------------------------------------------- */
         function setCategoryFilter(cat, btn) {
             activeCategory = cat;
-            document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
             btn.classList.add('active');
             filterAndSortGames();
         }
 
         function filterAndSortGames() {
             const container = document.getElementById('game-container');
-            const search = document.getElementById('game-search').value.toLowerCase();
+            const search = document.getElementById('game-search').value.toLowerCase().trim();
             const sort = document.getElementById('sort-select').value;
 
             let list = [...catalog];
@@ -870,107 +1118,118 @@
                 list.sort((a, b) => a.title.localeCompare(b.title));
             }
 
-            if (!list.length) {
-                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No games found matching your search.</div>`;
+            if (list.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No projects found matching your search.</div>`;
                 return;
             }
 
             container.innerHTML = '';
             list.forEach(game => {
-                const wrap = document.createElement('div');
-                wrap.className = 'game-card-wrapper';
-                wrap.innerHTML = `
-                    <div class="game-card">
-                        <div>
-                            <div class="card-top">
-                                <div class="card-avatar">${game.title.charAt(0)}</div>
-                                <div style="flex: 1;">
-                                    <div class="card-tag-row">
-                                        <span class="card-tag">${game.category || 'Arcade'}</span>
-                                        <span class="card-plays">🎮 ${(game.play_count || 0).toLocaleString()} plays</span>
-                                    </div>
-                                    <h3 class="card-title">${game.title}</h3>
-                                </div>
-                            </div>
-                            <p class="card-body">By ${game.author}. Click to launch in dedicated fullscreen mode.</p>
+                const card = document.createElement('div');
+                card.className = 'catalog-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="card-header-row">
+                            <h3 class="card-title">${game.title}</h3>
+                            <span class="card-badge">${game.category || 'App'}</span>
                         </div>
-                        <div class="card-footer">
-                            <span style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; font-weight: 700;">Zero Friction</span>
-                            <span class="play-pill">Play Now ▶</span>
-                        </div>
+                        <div class="card-author">By ${game.author}</div>
+                    </div>
+                    <div class="card-meta-row">
+                        <span>${(game.play_count || 0).toLocaleString()} plays</span>
+                        <span class="play-indicator">Run ▶</span>
                     </div>
                 `;
-                wrap.addEventListener('click', () => launchGameFlow(game));
-                container.appendChild(wrap);
+                card.onclick = () => launchGame(game);
+                container.appendChild(card);
             });
         }
 
         /* -------------------------------------------------------------
-           6. FULLSCREEN GAME RUNNER CONTROLLER
+           7. PLAYER CONTROLLER
         ------------------------------------------------------------- */
-        const catalogView = document.getElementById('catalog-view');
-        const playerView = document.getElementById('player-view');
+        const playerOverlay = document.getElementById('player-overlay');
         const gameFrame = document.getElementById('game-frame');
         const playerGameTitle = document.getElementById('player-game-title');
-        let activeRecord = { title: '', code: '', url: '' };
+        let currentActiveGame = null;
 
-        function launchGameFlow(game) {
-            recordRealPlay(game);
-            openGame(game.title, game.url, game.html_code);
-        }
-
-        function openGame(title, url, rawCode = null) {
-            activeRecord = { title, url, code: rawCode };
-            playerGameTitle.textContent = title;
-            catalogView.style.display = 'none';
-            playerView.style.display = 'flex';
-            window.scrollTo(0, 0);
+        function launchGame(game) {
+            currentActiveGame = game;
+            recordPlay(game);
+            playerGameTitle.textContent = game.title;
+            playerOverlay.classList.add('active');
 
             gameFrame.src = 'about:blank';
             setTimeout(() => {
-                if (rawCode) {
+                if (game.html_code) {
                     gameFrame.removeAttribute('src');
-                    gameFrame.srcdoc = rawCode;
-                } else if (url) {
+                    gameFrame.srcdoc = game.html_code;
+                } else if (game.url) {
                     gameFrame.removeAttribute('srcdoc');
-                    gameFrame.src = url;
+                    gameFrame.src = game.url;
                 }
-                setTimeout(() => gameFrame.focus(), 150);
-            }, 60);
+                setTimeout(() => gameFrame.focus(), 100);
+            }, 50);
         }
 
         function closeGame() {
-            playerView.style.display = 'none';
-            catalogView.style.display = 'block';
+            playerOverlay.classList.remove('active');
             gameFrame.srcdoc = '';
             gameFrame.src = 'about:blank';
         }
 
-        document.getElementById('player-back-btn').addEventListener('click', closeGame);
-        document.getElementById('player-reload-btn').addEventListener('click', () => {
-            const { code, url } = activeRecord;
+        document.getElementById('player-back-btn').onclick = closeGame;
+
+        document.getElementById('player-reload-btn').onclick = () => {
+            if (!currentActiveGame) return;
             gameFrame.srcdoc = '';
             gameFrame.src = 'about:blank';
             setTimeout(() => {
-                if (code) gameFrame.srcdoc = code;
-                else if (url) gameFrame.src = url;
-            }, 80);
-        });
+                if (currentActiveGame.html_code) gameFrame.srcdoc = currentActiveGame.html_code;
+                else if (currentActiveGame.url) gameFrame.src = currentActiveGame.url;
+            }, 60);
+        };
 
-        document.getElementById('player-tab-btn').addEventListener('click', () => {
-            if (activeRecord.code) {
+        document.getElementById('player-tab-btn').onclick = () => {
+            if (!currentActiveGame) return;
+            if (currentActiveGame.html_code) {
                 const w = window.open('', '_blank');
-                if (w) { w.document.write(activeRecord.code); w.document.close(); }
-            } else if (activeRecord.url) {
-                window.open(activeRecord.url, '_blank');
+                if (w) { w.document.write(currentActiveGame.html_code); w.document.close(); }
+            } else if (currentActiveGame.url) {
+                window.open(currentActiveGame.url, '_blank');
             }
-        });
+        };
 
-        document.getElementById('player-fullscreen-btn').addEventListener('click', () => {
+        document.getElementById('player-fullscreen-btn').onclick = () => {
             if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
             else if (gameFrame.webkitRequestFullscreen) gameFrame.webkitRequestFullscreen();
-        });
+        };
 
+        // Open directly into I’M AFK Studio
+        document.getElementById('player-edit-btn').onclick = () => {
+            if (!currentActiveGame || !currentActiveGame.html_code) {
+                window.location.href = 'studio.html';
+                return;
+            }
+
+            const manifest = JSON.parse(localStorage.getItem('afk_studio_projects_v3') || '[]');
+            const newProj = {
+                id: 'proj_' + Date.now(),
+                title: currentActiveGame.title,
+                files: [
+                    { name: "index.html", path: "index.html", type: "html", content: currentActiveGame.html_code }
+                ],
+                updatedAt: Date.now(),
+                snapshots: []
+            };
+
+            manifest.unshift(newProj);
+            localStorage.setItem('afk_studio_projects_v3', JSON.stringify(manifest));
+            localStorage.setItem('afk_studio_active_id_v3', newProj.id);
+            window.location.href = 'studio.html';
+        };
+
+        // Initialize Library
         initLibrary();
     </script>
 </body>
