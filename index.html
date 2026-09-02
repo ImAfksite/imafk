@@ -1,57 +1,126 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">I’M AFK</title>
+    <title data-i18n="meta.title">I’M AFK — Web Studio & Projects Hub</title>
     
-    <!-- Google Fonts -->
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     
-    <!-- Three.js & GSAP -->
+    <!-- Three.js Module -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
+        /* ==========================================================================
+           DESIGN SYSTEM: ADDITION7-INSPIRED CLEAN ARCHITECTURE
+           ========================================================================== */
         :root {
-            --bg-deep: #0a0a12;
-            --glass-card: rgba(16, 22, 36, 0.65);
-            --glass-card-hover: rgba(22, 30, 48, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-border-hover: rgba(103, 232, 249, 0.4);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --text-light: #64748b;
-            --accent-ice: #67e8f9;
-            --accent-blue: #3b82f6;
-            --btn-pill: rgba(255, 255, 255, 0.08);
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-display: 'Space Grotesk', -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
+            
+            --nav-height: 52px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 14px;
+            --radius-pill: 9999px;
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.15s var(--ease-out);
         }
 
-        html[lang="ar"] {
-            --font-main: 'Tajawal', system-ui, sans-serif;
+        html[lang="ar"] { 
+            --font-ui: 'Tajawal', system-ui, sans-serif; 
+            --font-display: 'Tajawal', sans-serif;
         }
 
-        * {
+        /* DARK THEME (Default) */
+        [data-theme="dark"] {
+            --bg-canvas: #090a0d;
+            --bg-surface: rgba(17, 19, 24, 0.75);
+            --bg-panel: rgba(22, 24, 31, 0.82);
+            --bg-elevated: #1d202a;
+            --bg-hover: rgba(255, 255, 255, 0.05);
+            --bg-active: #232734;
+
+            --border: rgba(255, 255, 255, 0.09);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-strong: rgba(255, 255, 255, 0.18);
+            --border-focus: #3b82f6;
+
+            --text-main: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --text-dim: #4b5563;
+
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-subtle: rgba(59, 130, 246, 0.12);
+            --accent-text: #60a5fa;
+
+            --success: #10b981;
+            --success-subtle: rgba(16, 185, 129, 0.12);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+
+            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        /* LIGHT THEME */
+        [data-theme="light"] {
+            --bg-canvas: #f8fafc;
+            --bg-surface: rgba(255, 255, 255, 0.82);
+            --bg-panel: rgba(241, 245, 249, 0.85);
+            --bg-elevated: #e2e8f0;
+            --bg-hover: rgba(0, 0, 0, 0.04);
+            --bg-active: #e2e8f0;
+
+            --border: rgba(0, 0, 0, 0.09);
+            --border-subtle: rgba(0, 0, 0, 0.05);
+            --border-strong: rgba(0, 0, 0, 0.18);
+            --border-focus: #2563eb;
+
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-subtle: rgba(37, 99, 235, 0.08);
+            --accent-text: #2563eb;
+
+            --success: #059669;
+            --success-subtle: rgba(5, 150, 105, 0.08);
+            --warning: #d97706;
+            --danger: #dc2626;
+
+            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            background-color: var(--bg-deep);
+            background-color: var(--bg-canvas);
             color: var(--text-main);
-            font-family: var(--font-main);
-            overflow-x: hidden;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            line-height: 1.5;
             min-height: 100vh;
-            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Fullscreen WebGL Liquid Refraction Background */
+        /* Fullscreen Three.js WebGL Fluid Physics Canvas */
         #webgl-canvas {
             position: fixed;
             top: 0;
@@ -62,392 +131,372 @@
             pointer-events: all;
         }
 
+        /* Non-blocking Content Layer */
         .content-layer {
             position: relative;
             z-index: 1;
             pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .interactive-elem {
+        .interactive-node {
             pointer-events: auto;
         }
 
-        /* Glass Header */
-        .glass-nav {
+        /* ==========================================================================
+           TOP NAVIGATION BAR
+           ========================================================================== */
+        .navbar {
             position: sticky;
             top: 0;
             z-index: 100;
+            height: var(--nav-height);
+            background: var(--bg-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 18px clamp(24px, 4vw, 48px);
-            background: rgba(10, 10, 18, 0.6);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border);
+            justify-content: space-between;
+            padding: 0 clamp(16px, 3vw, 32px);
+            flex-shrink: 0;
         }
 
-        .brand-block {
-            display: inline-flex;
+        .brand-link {
+            display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             text-decoration: none;
             color: var(--text-main);
-            font-family: var(--font-display);
             font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            letter-spacing: -0.3px;
+            cursor: pointer;
         }
-
-        .brand-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
-            border: 1px solid var(--glass-border);
+        .brand-badge {
+            width: 22px;
+            height: 22px;
+            background: var(--text-main);
+            color: var(--bg-canvas);
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            color: var(--accent-ice);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-size: 11px;
+            font-weight: 800;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: clamp(20px, 3vw, 36px);
+            gap: 20px;
             align-items: center;
         }
-
         .nav-links a {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            transition: all 0.25s;
+            font-size: 12px;
+            font-weight: 500;
+            transition: var(--transition-fast);
         }
-
         .nav-links a:hover, .nav-links a.active {
-            color: #fff;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
-        }
-
-        .lang-toggle {
-            background: var(--btn-pill);
-            border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 7px 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Buttons & Utility Controls */
+        .btn {
+            background: var(--bg-panel);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--border-strong);
+            color: var(--text-main);
+        }
+        .btn:active {
+            transform: translateY(1px);
+        }
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+            color: #ffffff;
+        }
+        .btn-icon {
+            padding: 6px 8px;
         }
 
-        .lang-toggle:hover {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.04);
-        }
-
-        /* Hero */
+        /* ==========================================================================
+           HERO SECTION
+           ========================================================================== */
         .hero {
-            min-height: 85vh;
+            min-height: 72vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 80px 24px 40px;
-            max-width: 1000px;
+            padding: 60px clamp(16px, 4vw, 32px) 30px;
+            max-width: 860px;
             margin: 0 auto;
         }
 
-        .eyebrow {
+        .eyebrow-badge {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--glass-border);
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--accent-ice);
-            margin-bottom: 24px;
-            backdrop-filter: blur(15px);
+            gap: 6px;
+            background: var(--bg-panel);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            padding: 3px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .eyebrow-badge span.dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
         }
 
         .hero h1 {
             font-family: var(--font-display);
-            font-size: clamp(2.8rem, 6.5vw, 5.4rem);
-            line-height: 1.02;
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            line-height: 1.08;
             font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, #ffffff 40%, rgba(255, 255, 255, 0.65) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: -1.2px;
+            color: var(--text-main);
+            margin-bottom: 16px;
         }
 
         .hero p {
-            font-size: clamp(1.05rem, 1.35vw, 1.25rem);
-            color: var(--text-muted);
-            max-width: 640px;
-            margin: 0 auto 40px;
+            font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+            color: var(--text-secondary);
+            max-width: 580px;
+            margin: 0 auto 32px;
             line-height: 1.6;
         }
 
         .hero-actions {
             display: flex;
-            gap: 16px;
+            gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+        }
+        .hero-actions .btn {
+            padding: 9px 18px;
+            font-size: 13px;
+            border-radius: var(--radius-sm);
         }
 
-        .btn-liquid-primary {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            color: #ffffff;
-            padding: 16px 42px;
-            border-radius: 50px;
-            font-family: var(--font-display);
-            font-size: 1.05rem;
-            font-weight: 700;
-            text-decoration: none;
-            letter-spacing: 0.04em;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-liquid-primary:hover {
-            background: #ffffff;
-            color: #0a0a12;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 45px rgba(255, 255, 255, 0.25);
-        }
-
-        .btn-liquid-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 16px 34px;
-            border-radius: 50px;
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.25s;
-        }
-
-        .btn-liquid-secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        /* Metric Highlights Strip */
+        /* Stats Strip */
         .stats-strip {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            max-width: 650px;
+            gap: 16px;
+            max-width: 540px;
             width: 100%;
             margin: 0 auto;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
         }
-
         .stat-item small {
             display: block;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
+            font-size: 10px;
+            font-family: var(--font-mono);
             text-transform: uppercase;
-            color: var(--text-light);
-            margin-bottom: 4px;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
         }
-
         .stat-item strong {
             font-family: var(--font-display);
-            font-size: 1.15rem;
-            color: #fff;
+            font-size: 13px;
+            color: var(--text-main);
             font-weight: 700;
         }
 
-        /* Gateways & Features */
-        .gateways-section {
-            max-width: 1240px;
-            margin: 40px auto 90px;
-            padding: 0 clamp(20px, 4vw, 48px);
+        /* ==========================================================================
+           GATEWAYS / HUBS (ADDITION7 GRID)
+           ========================================================================== */
+        .section-wrap {
+            max-width: 1180px;
+            width: 100%;
+            margin: 0 auto 60px;
+            padding: 0 clamp(16px, 3vw, 32px);
         }
 
         .gateways-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            gap: 14px;
         }
 
         .gateway-card {
-            background: var(--glass-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 34px;
+            background: var(--bg-surface);
             backdrop-filter: blur(20px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 22px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 280px;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            min-height: 200px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition-fast);
         }
-
         .gateway-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--glass-border-hover);
-            background: var(--glass-card-hover);
+            background: var(--bg-panel);
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-pop);
         }
 
-        .gateway-tag {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--accent-ice);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+        .gateway-num {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
             margin-bottom: 8px;
             display: block;
         }
-
         .gateway-title {
             font-family: var(--font-display);
-            font-size: 1.45rem;
+            font-size: 16px;
             font-weight: 700;
-            color: #fff;
-            margin-bottom: 10px;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            line-height: 1.3;
         }
-
         .gateway-desc {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.6;
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.5;
         }
-
         .gateway-action {
-            margin-top: 24px;
-            font-family: var(--font-display);
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: #fff;
-            display: inline-flex;
+            margin-top: 18px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-text);
+            display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
-        /* Platform Specs */
+        /* Specification Blocks */
         .specs-grid {
-            max-width: 1240px;
-            margin: 0 auto 90px;
-            padding: 0 clamp(20px, 4vw, 48px);
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 28px;
+            gap: 14px;
+            margin-top: 14px;
         }
-
         .spec-box {
-            background: var(--glass-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 26px;
-            padding: 34px;
+            background: var(--bg-surface);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 22px;
         }
-
         .spec-box h3 {
             font-family: var(--font-display);
-            font-size: 1.3rem;
-            margin-bottom: 14px;
-            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
         }
-
-        .spec-box p, .spec-box li {
-            color: var(--text-muted);
-            font-size: 0.92rem;
-            line-height: 1.6;
+        .spec-box p {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.55;
+            margin-bottom: 12px;
         }
-
         .spec-list {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
         }
-
         .spec-list li {
             position: relative;
-            padding-left: 20px;
+            padding-left: 14px;
         }
         .spec-list li::before {
-            content: "✦";
+            content: "•";
             position: absolute;
             left: 0;
-            top: 0;
-            color: var(--accent-ice);
-            font-size: 0.8rem;
+            color: var(--accent-text);
         }
-
-        html[dir="rtl"] .spec-list li { padding-left: 0; padding-right: 20px; }
+        html[dir="rtl"] .spec-list li { padding-left: 0; padding-right: 14px; }
         html[dir="rtl"] .spec-list li::before { left: auto; right: 0; }
 
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--glass-border);
-            padding: 45px 24px;
-            text-align: center;
-            background: rgba(10, 10, 18, 0.85);
+        /* ==========================================================================
+           FOOTER
+           ========================================================================== */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 24px clamp(16px, 3vw, 32px);
+            background: var(--bg-surface);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 11px;
+            margin-top: auto;
         }
-
         .footer-links {
             display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
+            gap: 12px;
         }
-
-        .footer-pill {
-            background: var(--btn-pill);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 7px 18px;
-            border-radius: 50px;
-            font-size: 0.78rem;
-            font-weight: 700;
+        .footer-links a {
+            color: var(--text-secondary);
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: var(--transition-fast);
         }
-        .footer-pill:hover {
-            border-color: var(--accent-ice);
-            color: #fff;
-            transform: translateY(-2px);
+        .footer-links a:hover {
+            color: var(--text-main);
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 860px) {
             .gateways-grid { grid-template-columns: 1fr; }
             .specs-grid { grid-template-columns: 1fr; }
             .nav-links { display: none; }
@@ -456,132 +505,154 @@
 </head>
 <body>
 
+    <!-- WebGL Liquid Refraction Background -->
     <canvas id="webgl-canvas"></canvas>
 
+    <!-- UI Overlay Layer -->
     <div class="content-layer">
-        <header class="glass-nav interactive-elem">
-            <a href="index.html" class="brand-block" id="main-brand-logo">
-                <div class="brand-icon">✦</div>
+        
+        <!-- Top Navigation -->
+        <header class="navbar interactive-node">
+            <a href="index.html" class="brand-link" id="main-brand-logo" title="I’M AFK Hub">
+                <div class="brand-badge">✦</div>
                 <span>I’M AFK</span>
             </a>
 
             <ul class="nav-links">
-                <li><a href="library.html" style="color: var(--accent-ice);" data-i18n="nav.library">Main Library</a></li>
-                <li><a href="#about" data-i18n="nav.about">About</a></li>
-                <li><a href="submit.html" data-i18n="nav.submit">Submit Game</a></li>
-                <li><a href="contact.html" data-i18n="nav.contact">Support</a></li>
+                <li><a href="library.html" data-i18n="nav.library">Library</a></li>
+                <li><a href="studio.html" data-i18n="nav.studio">Studio</a></li>
+                <li><a href="submit.html" data-i18n="nav.submit">Submit</a></li>
+                <li><a href="contact.html" data-i18n="nav.support">Support</a></li>
             </ul>
 
             <div class="nav-actions">
-                <button type="button" class="lang-toggle" id="lang-btn">العربية</button>
+                <a href="studio.html" class="btn btn-primary" data-i18n="nav.openStudio">+ Create Project</a>
+                <button type="button" class="btn" id="lang-btn">العربية</button>
+                <button type="button" class="btn btn-icon" id="theme-btn" onclick="toggleTheme()" title="Switch Theme">◐</button>
             </div>
         </header>
 
+        <!-- Main Hero -->
         <main>
-            <!-- Hero Gateway -->
             <section class="hero">
-                <div class="eyebrow interactive-elem">
-                    <span>✦</span>
-                    <span data-i18n="hero.eyebrow">Bubbles</span>
+                <div class="eyebrow-badge interactive-node">
+                    <span class="dot"></span>
+                    <span data-i18n="hero.eyebrow">Client-Side Web Studio & Projects Hub</span>
                 </div>
-                <h1 data-i18n="hero.title">Fun Web Experiences & <span>Games.</span></h1>
-                <p data-i18n="hero.lead">No downloads, zero latency, and zero tracking. Discover standalone HTML5 creations hosted smoothly for instant client-side execution.</p>
-                
-                <div class="hero-actions interactive-elem">
-                    <a href="library.html" class="btn-liquid-primary" data-i18n="hero.ctaPlay">
-                        Enter Library ➔
+
+                <h1 data-i18n="hero.title">Pure Web Experiments & Code Studio.</h1>
+                <p data-i18n="hero.lead">Fast, zero-friction web creation. Discover standalone HTML5 projects or build directly in the integrated multi-file code studio with instant browser preview.</p>
+
+                <div class="hero-actions interactive-node">
+                    <a href="library.html" class="btn btn-primary" data-i18n="hero.ctaLibrary">
+                        Explore Library ➔
                     </a>
-                    <a href="submit.html" class="btn-liquid-secondary" data-i18n="hero.ctaSubmit">
-                        Submit a Project ↗
+                    <a href="studio.html" class="btn" data-i18n="hero.ctaStudio">
+                        Launch Studio ↗
                     </a>
                 </div>
 
-                <div class="stats-strip interactive-elem">
+                <div class="stats-strip interactive-node">
                     <div class="stat-item">
-                        <small data-i18n="stat.status">Architecture</small>
-                        <strong data-i18n="stat.statusVal">Client-Side</strong>
+                        <small data-i18n="stat.runtime">Execution</small>
+                        <strong data-i18n="stat.runtimeVal">Client-Side</strong>
                     </div>
                     <div class="stat-item">
-                        <small data-i18n="stat.cost">Access</small>
-                        <strong data-i18n="stat.costVal">100% Free</strong>
+                        <small data-i18n="stat.access">Access</small>
+                        <strong data-i18n="stat.accessVal">100% Free</strong>
                     </div>
                     <div class="stat-item">
-                        <small data-i18n="stat.speed">Latency</small>
-                        <strong data-i18n="stat.speedVal">0.0 ms</strong>
+                        <small data-i18n="stat.latency">Latency</small>
+                        <strong data-i18n="stat.latencyVal">0.0 ms</strong>
                     </div>
                 </div>
             </section>
 
-            <!-- Portals / Gateways -->
-            <section class="gateways-section interactive-elem">
+            <!-- Portals Grid -->
+            <section class="section-wrap interactive-node">
                 <div class="gateways-grid">
-                    <a href="library.html" style="text-decoration: none;" class="gateway-card">
+                    
+                    <!-- Gateway 1: Library -->
+                    <a href="library.html" class="gateway-card">
                         <div>
-                            <span class="gateway-tag">01 / PLAY ARCADE</span>
-                            <h3 class="gateway-title">Live Games Catalog</h3>
-                            <p class="gateway-desc">Access our catalog of retro games, community simulations, and idle challenges with real-time player metrics.</p>
+                            <span class="gateway-num">01 // CATALOG</span>
+                            <h3 class="gateway-title" data-i18n="gate.libTitle">Interactive Library</h3>
+                            <p class="gateway-desc" data-i18n="gate.libDesc">Run curated HTML5 creations, simulations, and community tools directly in your browser with real-time metrics.</p>
                         </div>
-                        <div class="gateway-action">Explore Catalog ➔</div>
+                        <div class="gateway-action" data-i18n="gate.libAction">Open Library ➔</div>
                     </a>
 
-                    <a href="submit.html" style="text-decoration: none;" class="gateway-card">
+                    <!-- Gateway 2: Studio -->
+                    <a href="studio.html" class="gateway-card">
                         <div>
-                            <span class="gateway-tag" style="color: #c084fc;">02 / CREATOR STUDIO</span>
-                            <h3 class="gateway-title">Publish Your Build</h3>
-                            <p class="gateway-desc">Upload your HTML5 creation, test it in an isolated multi-device sandbox, and publish directly to the network.</p>
+                            <span class="gateway-num">02 // WORKSPACE</span>
+                            <h3 class="gateway-title" data-i18n="gate.studioTitle">Web Coding Studio</h3>
+                            <p class="gateway-desc" data-i18n="gate.studioDesc">Full-featured HTML/CSS/JS editor with multi-file management, instant sandbox preview, debugging console, and snapshot history.</p>
                         </div>
-                        <div class="gateway-action" style="color: #c084fc;">Open Studio ↗</div>
+                        <div class="gateway-action" data-i18n="gate.studioAction">Open Studio ↗</div>
                     </a>
 
-                    <a href="contact.html" style="text-decoration: none;" class="gateway-card">
+                    <!-- Gateway 3: Submit & Support -->
+                    <a href="submit.html" class="gateway-card">
                         <div>
-                            <span class="gateway-tag" style="color: #34d399;">03 / SUPPORT & POLICY</span>
-                            <h3 class="gateway-title">Rapid DMCA & Help</h3>
-                            <p class="gateway-desc">Direct inquiries, bug reports, and copyright notifications are addressed by administrators within 24 to 72 hours.</p>
+                            <span class="gateway-num">03 // PIPELINE</span>
+                            <h3 class="gateway-title" data-i18n="gate.submitTitle">Creator Submission</h3>
+                            <p class="gateway-desc" data-i18n="gate.submitDesc">Publish your own HTML5 creations directly to the public network or connect via automated repository synchronization.</p>
                         </div>
-                        <div class="gateway-action" style="color: #34d399;">Get Support ➔</div>
+                        <div class="gateway-action" data-i18n="gate.submitAction">Submit Project ➔</div>
                     </a>
-                </div>
-            </section>
 
-            <!-- Platform Architecture & Physics Details -->
-            <section class="specs-grid interactive-elem" id="about">
-                <div class="spec-box">
-                    <h3 data-i18n="info.title1">Ethereal Mechanics</h3>
-                    <p data-i18n="info.desc1">The background is powered by real-time WebGL metaball physics with refraction, chromatic aberration, Fresnel normal mapping, and surface tension simulation.</p>
-                    <ul class="spec-list">
-                        <li data-i18n="info.item1">Move your cursor to repel and interact with liquid droplets.</li>
-                        <li data-i18n="info.item2">Click and drag anywhere on the canvas to spawn new fluid nodes.</li>
-                        <li data-i18n="info.item3">Watch droplets merge, split, and deform via soft-body springs.</li>
-                    </ul>
                 </div>
 
-                <div class="spec-box">
-                    <h3 data-i18n="info.title2">Platform Architecture</h3>
-                    <p data-i18n="info.desc2">Every game is run within an isolated client-side sandbox without tracking or intrusive advertisements.</p>
-                    <ul class="spec-list">
-                        <li data-i18n="info.item4">Open submission pipeline for indie HTML5 creators.</li>
-                        <li data-i18n="info.item5">Automated repository synchronization with GitHub Pages.</li>
-                        <li data-i18n="info.item6">Rapid 24-hour DMCA takedown review protocol.</li>
-                    </ul>
+                <!-- Specifications & Architecture -->
+                <div class="specs-grid">
+                    <div class="spec-box">
+                        <h3 data-i18n="info.fluidTitle">Interactive Physics Engine</h3>
+                        <p data-i18n="info.fluidDesc">The background simulates real-time WebGL metaball fluid dynamics with optical refraction, chromatic aberration, Fresnel normal mapping, and soft-body spring deformation.</p>
+                        <ul class="spec-list">
+                            <li data-i18n="info.fluid1">Move cursor across the viewport to repel droplets.</li>
+                            <li data-i18n="info.fluid2">Click and drag anywhere on the canvas to spawn fluid nodes.</li>
+                            <li data-i18n="info.fluid3">Droplets merge and split dynamically based on velocity.</li>
+                        </ul>
+                    </div>
+
+                    <div class="spec-box">
+                        <h3 data-i18n="info.archTitle">Zero-Friction Architecture</h3>
+                        <p data-i18n="info.archDesc">Every project runs in an isolated client-side sandbox without tracking or external bloat.</p>
+                        <ul class="spec-list">
+                            <li data-i18n="info.arch1">Open file architecture supporting standalone .HTML and .JSON backups.</li>
+                            <li data-i18n="info.arch2">Continuous auto-saving to local browser storage.</li>
+                            <li data-i18n="info.arch3">Prompt 24-hour response policy for creator and support inquiries.</li>
+                        </ul>
+                    </div>
                 </div>
             </section>
         </main>
 
-        <footer class="interactive-elem">
+        <!-- Footer -->
+        <footer class="footer interactive-node">
+            <span>&copy; 2026 I’M AFK &bull; Addition7 Architecture</span>
             <div class="footer-links">
-                <a href="library.html" class="footer-pill" data-i18n="foot.library">Library</a>
-                <a href="submit.html" class="footer-pill" data-i18n="foot.submit">Submit Game</a>
-                <a href="contact.html" class="footer-pill" data-i18n="foot.contact">Support / DMCA</a>
-                <a href="tos.html" class="footer-pill" data-i18n="foot.tos">Terms of Service</a>
+                <a href="library.html" data-i18n="nav.library">Library</a>
+                <a href="studio.html" data-i18n="nav.studio">Studio</a>
+                <a href="submit.html" data-i18n="nav.submit">Submit</a>
+                <a href="contact.html" data-i18n="nav.support">Support</a>
+                <a href="tos.html">Terms</a>
             </div>
-            <p>&copy; 2026 I’m Afk &bull; Bubbles</p>
         </footer>
     </div>
 
-    <!-- WebGL Background Engine -->
+    <!-- ==========================================================================
+         WEBGL LIQUID METABALL ENGINE (EXACT MATHEMATICAL SPECIFICATION)
+         ========================================================================== -->
     <script>
-        const MAX_DROPLETS = 35, FIXED_DT_MS = 8, MAX_FRAME_DT_MS = 100, MAX_CATCHUP = 6;
+        /* ── Constants ──────────────────────────────────────────── */
+        const MAX_DROPLETS = 36;
+        const FIXED_DT_MS = 8;
+        const MAX_FRAME_DT_MS = 100;
+        const MAX_CATCHUP = 6;
+
+        /* ── Renderer ───────────────────────────────────────────── */
         const canvas = document.getElementById("webgl-canvas");
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false });
         renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
@@ -590,6 +661,7 @@
         const scene = new THREE.Scene();
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
+        /* ── Background Typography Texture ──────────────────────── */
         const bgCanvas = document.createElement("canvas");
         const bgCtx = bgCanvas.getContext("2d");
         const bgTexture = new THREE.CanvasTexture(bgCanvas);
@@ -597,21 +669,26 @@
         bgTexture.magFilter = THREE.LinearFilter;
 
         function drawBackground() {
-            const w = renderer.domElement.width, h = renderer.domElement.height;
-            bgCanvas.width = w; bgCanvas.height = h;
+            const w = renderer.domElement.width;
+            const h = renderer.domElement.height;
+            bgCanvas.width = w;
+            bgCanvas.height = h;
 
-            const grd = bgCtx.createLinearGradient(0, 0, w * 0.7, h);
+            /* Gradient background matching liquid glass palette */
+            const grd = bgCtx.createLinearGradient(0, 0, w * 0.6, h);
             grd.addColorStop(0, "#e8dbc8");
             grd.addColorStop(0.35, "#5b8cdb");
             grd.addColorStop(0.6, "#2d6fd4");
-            grd.addColorStop(1, "#101830");
+            grd.addColorStop(1, "#1a3fa0");
             bgCtx.fillStyle = grd;
             bgCtx.fillRect(0, 0, w, h);
 
+            /* Decorative color waves */
             bgCtx.save();
             bgCtx.globalAlpha = 0.35;
             for (let i = 0; i < 5; i++) {
-                const cx = w * (0.2 + i * 0.18), cy = h * (0.3 + Math.sin(i * 1.3) * 0.25);
+                const cx = w * (0.2 + i * 0.18);
+                const cy = h * (0.3 + Math.sin(i * 1.3) * 0.25);
                 const rg = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.35);
                 const hue = 200 + i * 25;
                 rg.addColorStop(0, `hsla(${hue}, 80%, 65%, 0.6)`);
@@ -621,24 +698,39 @@
             }
             bgCtx.restore();
 
+            /* Typography */
             bgCtx.fillStyle = "#ffffff";
             bgCtx.textAlign = "center";
             bgCtx.textBaseline = "middle";
-            const titleSize = Math.round(w * 0.11);
-            bgCtx.font = `700 ${titleSize}px 'Space Grotesk', sans-serif`;
-            bgCtx.fillText("I'M AFK", w * 0.5, h * 0.38);
 
-            const subSize = Math.round(w * 0.02);
+            const titleSize = Math.round(w * 0.13);
+            bgCtx.font = `700 ${titleSize}px 'Space Grotesk', sans-serif`;
+            bgCtx.fillText("Liquid", w * 0.5, h * 0.38);
+            bgCtx.fillText("Glass", w * 0.5, h * 0.38 + titleSize * 1.05);
+
+            const subSize = Math.round(w * 0.022);
             bgCtx.font = `500 ${subSize}px 'Space Grotesk', sans-serif`;
-            bgCtx.globalAlpha = 0.5;
-            bgCtx.fillText("LIQUID GLASS ARCADE", w * 0.5, h * 0.38 + titleSize * 0.85);
+            bgCtx.globalAlpha = 0.55;
+            bgCtx.fillText("I'M AFK Engine // Client-Side Studio", w * 0.5, h * 0.38 + titleSize * 2.3);
             bgCtx.globalAlpha = 1;
+
+            /* Scattered technical typography */
+            const words = ["physics", "refraction", "merge", "split", "surface tension", "metaball", "IOR", "glass", "droplet"];
+            bgCtx.globalAlpha = 0.08;
+            const scatterSize = Math.round(w * 0.018);
+            bgCtx.font = `500 ${scatterSize}px 'Space Grotesk', sans-serif`;
+            for (let i = 0; i < words.length; i++) {
+                bgCtx.fillText(words[i], w * (0.12 + (i % 4) * 0.25), h * (0.08 + Math.floor(i / 4) * 0.35 + (i % 3) * 0.12));
+            }
+            bgCtx.globalAlpha = 1;
+
             bgTexture.needsUpdate = true;
         }
 
         document.fonts.ready.then(drawBackground);
         drawBackground();
 
+        /* ── Droplet Data Buffer ────────────────────────────────── */
         const MAX_ENTRIES = MAX_DROPLETS * 2;
         const dropletBuf = new Float32Array(MAX_ENTRIES * 4);
         const dropletTex = new THREE.DataTexture(dropletBuf, MAX_ENTRIES, 1, THREE.RGBAFormat, THREE.FloatType);
@@ -646,22 +738,42 @@
         dropletTex.magFilter = THREE.NearestFilter;
         dropletTex.needsUpdate = true;
 
-        let drops = [], uid = 0;
+        let drops = [];
+        let uid = 0;
+
         function spawn(x, y, r, vx = 0, vy = 0) {
             if (drops.length >= MAX_DROPLETS) return null;
-            const area = Math.PI * r * r, angle = Math.random() * Math.PI * 2, spd = 0.0003 + Math.random() * 0.0008;
+            const area = Math.PI * r * r;
+            const angle = Math.random() * Math.PI * 2;
+            const spd = 0.0003 + Math.random() * 0.0008;
             const d = {
-                id: uid++, x, y, r, area,
-                vx: vx || Math.cos(angle) * spd, vy: vy || Math.sin(angle) * spd,
-                alive: true, wanderAngle: Math.random() * Math.PI * 2, wanderSpeed: 0.3 + Math.random() * 0.5,
-                softPrevX: x, softPrevY: y, softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0
+                id: uid++,
+                x,
+                y,
+                r,
+                area,
+                vx: vx || Math.cos(angle) * spd,
+                vy: vy || Math.sin(angle) * spd,
+                alive: true,
+                wanderAngle: Math.random() * Math.PI * 2,
+                wanderSpeed: 0.3 + Math.random() * 0.5,
+                softPrevX: x,
+                softPrevY: y,
+                softOffX: 0,
+                softOffY: 0,
+                softVelX: 0,
+                softVelY: 0
             };
             drops.push(d);
             return d;
         }
 
-        for (let i = 0; i < 14; i++) spawn((Math.random() - 0.5) * 0.8, (Math.random() - 0.5) * 0.6, 0.035 + Math.random() * 0.045);
+        /* Seed initial droplets */
+        for (let i = 0; i < 12; i++) {
+            spawn((Math.random() - 0.5) * 0.7, (Math.random() - 0.5) * 0.5, 0.03 + Math.random() * 0.05);
+        }
 
+        /* ── Liquid Glass Shader ────────────────────────────────── */
         const vertSrc = `void main(){ gl_Position = vec4(position, 1.0); }`;
         const fragSrc = `
             precision highp float;
@@ -677,6 +789,7 @@
                 float asp = uRes.x / uRes.y;
                 vec2 p = (uv - 0.5) * vec2(asp, 1.0);
 
+                /* Accumulate metaball field + lens displacement */
                 float field = 0.0;
                 vec2 grad = vec2(0.0);
                 vec2 lens = vec2(0.0);
@@ -693,6 +806,8 @@
                     float contrib = r * r / dSq;
                     field += contrib;
                     grad += -2.0 * contrib / dSq * delta;
+
+                    /* Smooth lens weight falloff */
                     float w = r * r / (dSq + r * r);
                     lens += (c - p) * w;
                     lensW += w;
@@ -703,7 +818,8 @@
                 float thr = 1.0;
                 float edge = smoothstep(thr - 0.08, thr + 0.03, field);
 
-                float refractStrength = 0.04;
+                /* Lens-based refraction */
+                float refractStrength = 0.035;
                 float mappedLens = atan(lensLen * 6.0) * refractStrength;
                 vec2 refractDir = (lensLen > 1e-5) ? lens / lensLen : vec2(0.0);
                 float refractMask = smoothstep(thr - 0.2, thr + 1.5, field);
@@ -711,6 +827,7 @@
 
                 vec3 bgClean = texture2D(uBg, uv).rgb;
 
+                /* Glass normal calculation */
                 float gradLen = length(grad);
                 float nScale = atan(gradLen * 0.5) * 0.3;
                 vec2 nGrad = (gradLen > 1e-4) ? (grad / gradLen) * nScale : vec2(0.0);
@@ -721,30 +838,38 @@
                 float diff = max(dot(N, L), 0.0);
                 float spec = pow(max(dot(N, H), 0.0), 180.0);
 
+                /* Fresnel (Schlick) */
                 float cosTheta = max(dot(N, V), 0.0);
                 float fresnel = 0.04 + 0.96 * pow(1.0 - cosTheta, 4.0);
+
+                /* Rim highlight */
                 float rim = smoothstep(thr + 0.6, thr, field) * edge;
 
-                float caStr = 0.002 * edge;
+                /* Chromatic aberration */
+                float caStr = 0.0018 * edge;
                 vec3 bgCA;
                 bgCA.r = texture2D(uBg, refractedUV + vec2(caStr, caStr * 0.5)).r;
                 bgCA.g = texture2D(uBg, refractedUV).g;
                 bgCA.b = texture2D(uBg, refractedUV - vec2(caStr, caStr * 0.5)).b;
 
+                /* Depth tint */
                 float depth = smoothstep(thr, thr + 3.0, field);
                 vec3 tint = mix(vec3(1.0), vec3(0.93, 0.96, 1.0), depth * 0.45);
 
+                /* Compose glass material */
                 vec3 glassColor = bgCA * tint * (0.92 + 0.08 * diff)
                     + vec3(1.0) * spec * 0.85
-                    + vec3(0.9, 0.95, 1.0) * rim * 0.25
-                    + vec3(1.0) * fresnel * 0.12;
+                    + vec3(0.9, 0.95, 1.0) * rim * 0.22
+                    + vec3(1.0) * fresnel * 0.10;
 
+                /* Soft shadow */
                 float shadowField = smoothstep(thr - 0.35, thr - 0.05, field);
-                vec3 bg = bgClean * (1.0 - shadowField * 0.08);
+                vec3 bg = bgClean * (1.0 - shadowField * 0.06);
 
+                /* Thin border */
                 float borderOuter = smoothstep(thr - 0.10, thr - 0.01, field);
                 float borderInner = smoothstep(thr + 0.0, thr + 0.06, field);
-                float border = borderOuter * (1.0 - borderInner) * 0.3;
+                float border = borderOuter * (1.0 - borderInner) * 0.28;
 
                 vec3 col = mix(bg, glassColor, edge);
                 col += vec3(1.0) * border;
@@ -753,14 +878,19 @@
         `;
 
         const mat = new THREE.ShaderMaterial({
-            vertexShader: vertSrc, fragmentShader: fragSrc,
+            vertexShader: vertSrc,
+            fragmentShader: fragSrc,
             uniforms: {
                 uRes: { value: new THREE.Vector2(renderer.domElement.width, renderer.domElement.height) },
-                uData: { value: dropletTex }, uBg: { value: bgTexture }, uCount: { value: 0 }, uTime: { value: 0 }
+                uData: { value: dropletTex },
+                uBg: { value: bgTexture },
+                uCount: { value: 0 },
+                uTime: { value: 0 }
             }
         });
         scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
 
+        /* ── User Interaction ───────────────────────────────────── */
         let aspect = window.innerWidth / window.innerHeight;
         const mouse = { x: 999, y: 999, active: false, down: false };
         let spawnCD = 0;
@@ -783,9 +913,19 @@
             drawBackground();
         });
 
-        const DAMP = 0.993, MOUSE_R = 0.18, MOUSE_F = 0.004, TENSION_RANGE = 0.12, TENSION_F = 0.0004;
-        const MERGE_RATIO = 0.62, SPLIT_SPEED = 0.013, SPLIT_MIN_R = 0.04, MAX_SPEED = 0.015, BOUNCE = 0.4;
-        const WANDER_F = 0.00004, CENTER_PULL = 0.000008;
+        /* ── Physics Constants ──────────────────────────────────── */
+        const DAMP = 0.993;
+        const MOUSE_R = 0.18;
+        const MOUSE_F = 0.004;
+        const TENSION_RANGE = 0.12;
+        const TENSION_F = 0.0004;
+        const MERGE_RATIO = 0.62;
+        const SPLIT_SPEED = 0.013;
+        const SPLIT_MIN_R = 0.04;
+        const MAX_SPEED = 0.015;
+        const BOUNCE = 0.4;
+        const WANDER_F = 0.00004;
+        const CENTER_PULL = 0.000008;
 
         function applyForces() {
             for (const d of drops) {
@@ -794,11 +934,16 @@
                 d.vy += Math.sin(d.wanderAngle) * WANDER_F - d.y * CENTER_PULL;
 
                 if (mouse.active) {
-                    const dx = d.x - mouse.x, dy = d.y - mouse.y;
-                    const dSq = dx * dx + dy * dy, rr = MOUSE_R + d.r;
+                    const dx = d.x - mouse.x;
+                    const dy = d.y - mouse.y;
+                    const dSq = dx * dx + dy * dy;
+                    const rr = MOUSE_R + d.r;
                     if (dSq < rr * rr && dSq > 1e-5) {
-                        const dist = Math.sqrt(dSq), s = 1 - dist / rr, f = s * s * MOUSE_F;
-                        d.vx += (dx / dist) * f; d.vy += (dy / dist) * f;
+                        const dist = Math.sqrt(dSq);
+                        const s = 1 - dist / rr;
+                        const f = s * s * MOUSE_F;
+                        d.vx += (dx / dist) * f;
+                        d.vy += (dy / dist) * f;
                     }
                 }
             }
@@ -807,12 +952,18 @@
                 const a = drops[i];
                 for (let j = i + 1; j < drops.length; j++) {
                     const b = drops[j];
-                    const dx = b.x - a.x, dy = b.y - a.y;
-                    const dSq = dx * dx + dy * dy, rng = TENSION_RANGE + a.r + b.r;
+                    const dx = b.x - a.x;
+                    const dy = b.y - a.y;
+                    const dSq = dx * dx + dy * dy;
+                    const rng = TENSION_RANGE + a.r + b.r;
                     if (dSq < rng * rng && dSq > 1e-5) {
-                        const dist = Math.sqrt(dSq), s = 1 - dist / rng, f = s * TENSION_F;
-                        const fx = (dx / dist) * f, fy = (dy / dist) * f;
-                        a.vx += fx; a.vy += fy; b.vx -= fx; b.vy -= fy;
+                        const dist = Math.sqrt(dSq);
+                        const s = 1 - dist / rng;
+                        const f = s * TENSION_F;
+                        const fx = (dx / dist) * f;
+                        const fy = (dy / dist) * f;
+                        a.vx += fx; a.vy += fy;
+                        b.vx -= fx; b.vy -= fy;
                     }
                 }
             }
@@ -821,10 +972,18 @@
         function integrate() {
             for (const d of drops) {
                 const sp = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
-                if (sp > MAX_SPEED) { const s = MAX_SPEED / sp; d.vx *= s; d.vy *= s; }
-                d.x += d.vx; d.y += d.vy;
-                d.vx *= DAMP; d.vy *= DAMP;
-                const wx = aspect * 0.5, wy = 0.5;
+                if (sp > MAX_SPEED) {
+                    const s = MAX_SPEED / sp;
+                    d.vx *= s;
+                    d.vy *= s;
+                }
+                d.x += d.vx;
+                d.y += d.vy;
+                d.vx *= DAMP;
+                d.vy *= DAMP;
+
+                const wx = aspect * 0.5;
+                const wy = 0.5;
                 if (d.x - d.r < -wx) { d.x = -wx + d.r; d.vx = Math.abs(d.vx) * BOUNCE; }
                 if (d.x + d.r > wx) { d.x = wx - d.r; d.vx = -Math.abs(d.vx) * BOUNCE; }
                 if (d.y - d.r < -wy) { d.y = -wy + d.r; d.vy = Math.abs(d.vy) * BOUNCE; }
@@ -839,7 +998,8 @@
                 for (let j = i + 1; j < drops.length; j++) {
                     const b = drops[j];
                     if (!b.alive) continue;
-                    const dx = b.x - a.x, dy = b.y - a.y;
+                    const dx = b.x - a.x;
+                    const dy = b.y - a.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < (a.r + b.r) * MERGE_RATIO) {
                         const na = a.area + b.area;
@@ -847,7 +1007,8 @@
                         a.y = (a.y * a.area + b.y * b.area) / na;
                         a.vx = (a.vx * a.area + b.vx * b.area) / na;
                         a.vy = (a.vy * a.area + b.vy * b.area) / na;
-                        a.r = Math.sqrt(na / Math.PI); a.area = na;
+                        a.r = Math.sqrt(na / Math.PI);
+                        a.area = na;
                         b.alive = false;
                     }
                 }
@@ -861,29 +1022,52 @@
                 if (d.r < SPLIT_MIN_R) continue;
                 const sp = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
                 if (sp < SPLIT_SPEED) continue;
-                const ha = d.area * 0.5, nr = Math.sqrt(ha / Math.PI);
-                const nx = -d.vy / sp, ny = d.vx / sp, off = nr * 0.7;
-                d.r = nr; d.area = ha; d.x -= nx * off; d.y -= ny * off;
+                const ha = d.area * 0.5;
+                const nr = Math.sqrt(ha / Math.PI);
+                const nx = -d.vy / sp;
+                const ny = d.vx / sp;
+                const off = nr * 0.7;
+                d.r = nr;
+                d.area = ha;
+                d.x -= nx * off;
+                d.y -= ny * off;
                 add.push({
-                    id: uid++, x: d.x + nx * off * 2, y: d.y + ny * off * 2, r: nr, area: ha,
-                    vx: d.vx + nx * sp * 0.35, vy: d.vy + ny * sp * 0.35, alive: true,
-                    wanderAngle: Math.random() * Math.PI * 2, wanderSpeed: 0.3 + Math.random() * 0.5,
-                    softPrevX: d.x + nx * off * 2, softPrevY: d.y + ny * off * 2,
-                    softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0
+                    id: uid++,
+                    x: d.x + nx * off * 2,
+                    y: d.y + ny * off * 2,
+                    r: nr,
+                    area: ha,
+                    vx: d.vx + nx * sp * 0.35,
+                    vy: d.vy + ny * sp * 0.35,
+                    alive: true,
+                    wanderAngle: Math.random() * Math.PI * 2,
+                    wanderSpeed: 0.3 + Math.random() * 0.5,
+                    softPrevX: d.x + nx * off * 2,
+                    softPrevY: d.y + ny * off * 2,
+                    softOffX: 0,
+                    softOffY: 0,
+                    softVelX: 0,
+                    softVelY: 0
                 });
             }
             for (const a of add) if (drops.length < MAX_DROPLETS) drops.push(a);
         }
 
+        /* Soft-body spring follow (creates organic teardrop trailing tail) */
+        const SOFT_STIFFNESS = 0.22;
+        const SOFT_DAMPING = 0.6;
         function updateSoftBodies() {
-            const SOFT_STIFFNESS = 0.22, SOFT_DAMPING = 0.6;
             for (const d of drops) {
-                const dx = d.x - d.softPrevX, dy = d.y - d.softPrevY;
+                const dx = d.x - d.softPrevX;
+                const dy = d.y - d.softPrevY;
                 d.softVelX += (dx - d.softOffX) * SOFT_STIFFNESS;
                 d.softVelY += (dy - d.softOffY) * SOFT_STIFFNESS;
-                d.softVelX *= SOFT_DAMPING; d.softVelY *= SOFT_DAMPING;
-                d.softOffX += d.softVelX; d.softOffY += d.softVelY;
-                d.softPrevX = d.x; d.softPrevY = d.y;
+                d.softVelX *= SOFT_DAMPING;
+                d.softVelY *= SOFT_DAMPING;
+                d.softOffX += d.softVelX;
+                d.softOffY += d.softVelY;
+                d.softPrevX = d.x;
+                d.softPrevY = d.y;
             }
         }
 
@@ -892,7 +1076,7 @@
             spawnCD -= FIXED_DT_MS;
             if (spawnCD <= 0 && drops.length < MAX_DROPLETS) {
                 spawnCD = 120;
-                spawn(mouse.x + (Math.random() - 0.5) * 0.02, mouse.y + (Math.random() - 0.5) * 0.02, 0.022 + Math.random() * 0.015);
+                spawn(mouse.x + (Math.random() - 0.5) * 0.02, mouse.y + (Math.random() - 0.5) * 0.02, 0.02 + Math.random() * 0.015);
             }
         }
 
@@ -901,23 +1085,39 @@
             const n = Math.min(drops.length, MAX_DROPLETS);
             for (let i = 0; i < n; i++) {
                 const d = drops[i];
-                dropletBuf[i * 4] = d.x; dropletBuf[i * 4 + 1] = d.y; dropletBuf[i * 4 + 2] = d.r; dropletBuf[i * 4 + 3] = 1;
+                dropletBuf[i * 4] = d.x;
+                dropletBuf[i * 4 + 1] = d.y;
+                dropletBuf[i * 4 + 2] = d.r;
+                dropletBuf[i * 4 + 3] = 1;
+
+                /* Ghost trailing blob */
                 const gi = (n + i) * 4;
-                dropletBuf[gi] = d.x - d.softOffX * 3.5; dropletBuf[gi + 1] = d.y - d.softOffY * 3.5; dropletBuf[gi + 2] = d.r * 0.7; dropletBuf[gi + 3] = 1;
+                dropletBuf[gi] = d.x - d.softOffX * 3.5;
+                dropletBuf[gi + 1] = d.y - d.softOffY * 3.5;
+                dropletBuf[gi + 2] = d.r * 0.7;
+                dropletBuf[gi + 3] = 1;
             }
             dropletTex.needsUpdate = true;
             mat.uniforms.uCount.value = n * 2;
         }
 
-        let last = performance.now(), acc = 0;
+        let last = performance.now();
+        let acc = 0;
         function loop() {
             const now = performance.now();
             const dt = Math.min(now - last, MAX_FRAME_DT_MS);
-            last = now; acc += dt;
+            last = now;
+            acc += dt;
             let g = 0;
             while (acc >= FIXED_DT_MS && g < MAX_CATCHUP) {
-                applyForces(); integrate(); mergeDroplets(); splitDroplets(); updateSoftBodies(); mouseSpawn();
-                acc -= FIXED_DT_MS; g++;
+                applyForces();
+                integrate();
+                mergeDroplets();
+                splitDroplets();
+                updateSoftBodies();
+                mouseSpawn();
+                acc -= FIXED_DT_MS;
+                g++;
             }
             mat.uniforms.uTime.value = now * 0.001;
             sync();
@@ -926,76 +1126,91 @@
         }
         loop();
 
-        // I18N Engine
+        /* -------------------------------------------------------------
+           INTERNATIONALIZATION & THEME SWITCHER
+        ------------------------------------------------------------- */
         const I18N = {
             en: {
-                "meta.title": "I’M AFK — Pure Web Arcade",
-                "nav.library": "Arcade Library ➔",
-                "nav.about": "Platform",
-                "nav.submit": "Submit Game",
-                "nav.contact": "Support",
-                "hero.eyebrow": "Liquid Glass Web Arcade",
-                "hero.title": "Pure Web Experiences & <span>Games.</span>",
-                "hero.lead": "No downloads, zero latency, and zero tracking. Discover standalone HTML5 creations hosted smoothly for instant client-side execution.",
-                "hero.ctaPlay": "Enter Arcade Library ➔",
-                "hero.ctaSubmit": "Submit a Project ↗",
-                "stat.status": "Architecture",
-                "stat.statusVal": "Client-Side",
-                "stat.cost": "Access",
-                "stat.costVal": "100% Free",
-                "stat.speed": "Latency",
-                "stat.speedVal": "0.0 ms",
-                "info.title1": "Ethereal Mechanics",
-                "info.desc1": "The background is powered by real-time WebGL metaball physics with refraction, chromatic aberration, Fresnel normal mapping, and surface tension simulation.",
-                "info.item1": "Move your cursor to repel and interact with liquid droplets.",
-                "info.item2": "Click and drag anywhere on the canvas to spawn new fluid nodes.",
-                "info.item3": "Watch droplets merge, split, and deform via soft-body springs.",
-                "info.title2": "Platform Architecture",
-                "info.desc2": "Every game is run within an isolated client-side sandbox without tracking or intrusive advertisements.",
-                "info.item4": "Open submission pipeline for indie HTML5 creators.",
-                "info.item5": "Automated repository synchronization with GitHub Pages.",
-                "info.item6": "Rapid 24-hour DMCA takedown review protocol.",
-                "foot.library": "Arcade Library",
-                "foot.submit": "Submit Game",
-                "foot.contact": "Support / DMCA",
-                "foot.tos": "Terms of Service"
+                "meta.title": "I’M AFK — Web Studio & Projects Hub",
+                "nav.library": "Library",
+                "nav.studio": "Studio",
+                "nav.submit": "Submit",
+                "nav.support": "Support",
+                "nav.openStudio": "+ Create Project",
+                "hero.eyebrow": "Client-Side Web Studio & Projects Hub",
+                "hero.title": "Pure Web Experiments & Code Studio.",
+                "hero.lead": "Fast, zero-friction web creation. Discover standalone HTML5 projects or build directly in the integrated multi-file code studio with instant browser preview.",
+                "hero.ctaLibrary": "Explore Library ➔",
+                "hero.ctaStudio": "Launch Studio ↗",
+                "stat.runtime": "Execution",
+                "stat.runtimeVal": "Client-Side",
+                "stat.access": "Access",
+                "stat.accessVal": "100% Free",
+                "stat.latency": "Latency",
+                "stat.latencyVal": "0.0 ms",
+                "gate.libTitle": "Interactive Library",
+                "gate.libDesc": "Run curated HTML5 creations, simulations, and community tools directly in your browser with real-time metrics.",
+                "gate.libAction": "Open Library ➔",
+                "gate.studioTitle": "Web Coding Studio",
+                "gate.studioDesc": "Full-featured HTML/CSS/JS editor with multi-file management, instant sandbox preview, debugging console, and snapshot history.",
+                "gate.studioAction": "Open Studio ↗",
+                "gate.submitTitle": "Creator Submission",
+                "gate.submitDesc": "Publish your own HTML5 creations directly to the public network or connect via automated repository synchronization.",
+                "gate.submitAction": "Submit Project ➔",
+                "info.fluidTitle": "Interactive Physics Engine",
+                "info.fluidDesc": "The background simulates real-time WebGL metaball fluid dynamics with optical refraction, chromatic aberration, Fresnel normal mapping, and soft-body spring deformation.",
+                "info.fluid1": "Move cursor across the viewport to repel droplets.",
+                "info.fluid2": "Click and drag anywhere on the canvas to spawn fluid nodes.",
+                "info.fluid3": "Droplets merge and split dynamically based on velocity.",
+                "info.archTitle": "Zero-Friction Architecture",
+                "info.archDesc": "Every project runs in an isolated client-side sandbox without tracking or external bloat.",
+                "info.arch1": "Open file architecture supporting standalone .HTML and .JSON backups.",
+                "info.arch2": "Continuous auto-saving to local browser storage.",
+                "info.arch3": "Prompt 24-hour response policy for creator and support inquiries."
             },
             ar: {
-                "meta.title": "I’M AFK — ألعاب ويب نقية",
-                "nav.library": "مكتبة الألعاب ➔",
-                "nav.about": "عن المنصة",
-                "nav.submit": "أضف لعبة",
-                "nav.contact": "الدعم",
-                "hero.eyebrow": "منصة ألعاب وفيزياء زجاجية سائلة",
-                "hero.title": "تجارب وألعاب ويب <span>تفاعلية نقية.</span>",
-                "hero.lead": "بدون تحميل، بدون إعلانات وبأداء فائق. العب أروع ألعاب الـ HTML5 التفاعلية مباشرة عبر متصفحك.",
-                "hero.ctaPlay": "دخول مكتبة الألعاب ➔",
-                "hero.ctaSubmit": "أرسل لعبتك ↗",
-                "stat.status": "البنية",
-                "stat.statusVal": "بدون وسيط",
-                "stat.cost": "الوصول",
-                "stat.costVal": "مجاني 100%",
-                "stat.speed": "السرعة",
-                "stat.speedVal": "فوري 0ms",
-                "info.title1": "فيزياء السوائل التفاعلية",
-                "info.desc1": "الخلفية تعمل بمحرك WebGL حقيقي يحاكي انكسار الضوء والتوتر السطحي لقطرات السائل الزجاجي.",
-                "info.item1": "حرك الماوس لتنافر القطرات والتفاعل معها.",
-                "info.item2": "اضغط واسحب لتوليد قطرات سائلة جديدة في أي مكان.",
-                "info.item3": "شاهد القطرات تندمج وتنشطر بتأثيرات فيزيائية ممتعة.",
-                "info.title2": "بنية المنصة",
-                "info.desc2": "تعمل الألعاب في بيئة تشغيل آمنة ومعزولة دون أي تعقب.",
-                "info.item4": "نظام تقديم ألعاب مفتوح للمطورين وصناع المحتوى.",
-                "info.item5": "مزامنة سريعة وتلقائية عبر GitHub Pages.",
-                "info.item6": "مراجعة فورية خلال 24 ساعة لطلبات حقوق النشر.",
-                "foot.library": "مكتبة الألعاب",
-                "foot.submit": "أضف لعبة",
-                "foot.contact": "الدعم وحقوق النشر",
-                "foot.tos": "شروط الاستخدام"
+                "meta.title": "I’M AFK — منصة ومحرر مشاريع الويب",
+                "nav.library": "المكتبة",
+                "nav.studio": "المحرر",
+                "nav.submit": "إرسال مشروع",
+                "nav.support": "الدعم",
+                "nav.openStudio": "+ مشروع جديد",
+                "hero.eyebrow": "منصة ومحرر مشاريع الويب الخفيفة",
+                "hero.title": "تجارب وأدوات ويب نقية وسريعة.",
+                "hero.lead": "بيئة برمجية متكاملة لتشغيل وبناء مشاريع وألعاب HTML5 و JavaScript مباشرة في المتصفح مع معاينة حية وفورية.",
+                "hero.ctaLibrary": "تصفح المكتبة ➔",
+                "hero.ctaStudio": "فتح المحرر ↗",
+                "stat.runtime": "التشغيل",
+                "stat.runtimeVal": "مباشر محلي",
+                "stat.access": "الوصول",
+                "stat.accessVal": "مجاني 100%",
+                "stat.latency": "الاستجابة",
+                "stat.latencyVal": "فوري 0ms",
+                "gate.libTitle": "مكتبة المشاريع",
+                "gate.libDesc": "شغّل تطبيقات وألعاب تفاعلية مباشرة مع قياس دقيق لعدد مرات الاستخدام.",
+                "gate.libAction": "دخول المكتبة ➔",
+                "gate.studioTitle": "محرر واستوديو الويب",
+                "gate.studioDesc": "محرر كود متقدم يدعم ملفات متعددة، حفظاً تلقائياً مستمراً، معاينة فورية ولوحة تحكم للأخطاء.",
+                "gate.studioAction": "فتح الاستوديو ↗",
+                "gate.submitTitle": "نشر ومشاركة المشاريع",
+                "gate.submitDesc": "أضف مشروعك الخاص بسهولة لمشاركته مع الجميع على المنصة دون تعقيد.",
+                "gate.submitAction": "إرسال مشروع ➔",
+                "info.fluidTitle": "محرك السوائل البصري",
+                "info.fluidDesc": "تعمل الخلفية بمحرك WebGL يحاكي انكسار الضوء والتوتر السطحي للقطرات والفيزياء التفاعلية الحقيقية.",
+                "info.fluid1": "حرّك المؤشر للتفاعل مع القطرات وتنافرها.",
+                "info.fluid2": "اضغط واسحب لتوليد قطرات سائلة جديدة في أي مكان.",
+                "info.fluid3": "تندمج وتنشطر القطرات فيزيائياً حسب سرعتها.",
+                "info.archTitle": "بنية تشغيل نظيفة",
+                "info.archDesc": "تعمل جميع المشاريع في بيئة معزولة وآمنة دون أي تتبع أو إعلانات.",
+                "info.arch1": "تصدير فوري كملف HTML مستقل أو كحزمة JSON كاملة.",
+                "info.arch2": "حفظ تلقائي مستمر في ذاكرة المتصفح دون فقدان التعديلات.",
+                "info.arch3": "استجابة سريعة خلال 24 ساعة لطلبات الدعم والمطورين."
             }
         };
 
         let currentLang = 'en';
         const langBtn = document.getElementById('lang-btn');
+
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
@@ -1003,12 +1218,22 @@
             langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
+                if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
             });
         }
         langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
 
-        // Secret Admin Trigger (Triple Click Logo or Ctrl+Shift+A)
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('afk_studio_theme', next);
+        }
+
+        const savedTheme = localStorage.getItem('afk_studio_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        /* Secret Admin Trigger (Triple Click Logo or Ctrl+Shift+A) */
         let logoClicks = 0;
         document.getElementById('main-brand-logo').addEventListener('click', () => {
             logoClicks++;
