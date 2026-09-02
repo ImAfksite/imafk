@@ -1,237 +1,384 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">Terms of Service — I’m Afk</title>
+    <title data-i18n="meta.title">Terms of Service — I’M AFK</title>
     
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
+        /* ==========================================================================
+           DESIGN SYSTEM: ADDITION7-INSPIRED CLEAN ARCHITECTURE
+           ========================================================================== */
         :root {
-            --bg-deep: #0a0a12;
-            --glass-card: rgba(16, 22, 36, 0.72);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-ice: #67e8f9;
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-display: 'Space Grotesk', -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
+            
+            --nav-height: 52px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-pill: 9999px;
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.15s var(--ease-out);
         }
 
-        html[lang="ar"] { --font-main: 'Tajawal', system-ui, sans-serif; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html[lang="ar"] { 
+            --font-ui: 'Tajawal', system-ui, sans-serif; 
+            --font-display: 'Tajawal', sans-serif;
+        }
+
+        /* DARK THEME (Default) */
+        [data-theme="dark"] {
+            --bg-canvas: #090a0d;
+            --bg-surface: #111318;
+            --bg-panel: #16181f;
+            --bg-elevated: #1d202a;
+            --bg-input: #101217;
+            --bg-hover: rgba(255, 255, 255, 0.04);
+            --bg-active: #232734;
+
+            --border: rgba(255, 255, 255, 0.09);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --border-focus: #3b82f6;
+
+            --text-main: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --text-dim: #4b5563;
+
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-subtle: rgba(59, 130, 246, 0.12);
+            --accent-text: #60a5fa;
+
+            --success: #10b981;
+            --success-subtle: rgba(16, 185, 129, 0.12);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+
+            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* LIGHT THEME */
+        [data-theme="light"] {
+            --bg-canvas: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-panel: #f1f5f9;
+            --bg-elevated: #e2e8f0;
+            --bg-input: #ffffff;
+            --bg-hover: rgba(0, 0, 0, 0.04);
+            --bg-active: #e2e8f0;
+
+            --border: rgba(0, 0, 0, 0.09);
+            --border-subtle: rgba(0, 0, 0, 0.05);
+            --border-strong: rgba(0, 0, 0, 0.18);
+            --border-focus: #2563eb;
+
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-subtle: rgba(37, 99, 235, 0.08);
+            --accent-text: #2563eb;
+
+            --success: #059669;
+            --success-subtle: rgba(5, 150, 105, 0.08);
+            --warning: #d97706;
+            --danger: #dc2626;
+
+            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% 20%, rgba(45, 111, 212, 0.18) 0%, transparent 60%),
-                              radial-gradient(circle at 80% 80%, rgba(91, 140, 219, 0.12) 0%, transparent 50%);
+            background-color: var(--bg-canvas);
             color: var(--text-main);
-            font-family: var(--font-main);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            line-height: 1.5;
             min-height: 100vh;
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* Scroll Progress Bar */
         .progress-track {
             position: fixed;
-            top: 65px;
+            top: var(--nav-height);
             left: 0;
             width: 100%;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.05);
+            height: 2px;
+            background: transparent;
             z-index: 101;
         }
-
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: var(--accent-ice);
-            box-shadow: 0 0 10px var(--accent-ice);
+            background: var(--accent);
             transition: width 0.1s ease-out;
         }
 
-        .glass-nav {
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* ==========================================================================
+           TOP NAVIGATION
+           ========================================================================== */
+        .navbar {
             position: sticky;
             top: 0;
             z-index: 100;
+            height: var(--nav-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 18px clamp(24px, 4vw, 48px);
-            background: rgba(10, 10, 18, 0.6);
-            backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border);
+            justify-content: space-between;
+            padding: 0 clamp(16px, 3vw, 32px);
+            flex-shrink: 0;
         }
 
-        .brand-block {
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            letter-spacing: -0.3px;
+        }
+        .brand-badge {
+            width: 22px;
+            height: 22px;
+            background: var(--text-main);
+            color: var(--bg-surface);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: var(--transition-fast);
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-main);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
             text-decoration: none;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--border-strong);
             color: var(--text-main);
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
+        }
+        .btn:active {
+            transform: translateY(1px);
+        }
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+            color: #ffffff;
+        }
+        .btn-icon {
+            padding: 6px 8px;
         }
 
-        .nav-back-btn, .lang-toggle {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 7px 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .nav-back-btn:hover, .lang-toggle:hover {
-            background: rgba(255, 255, 255, 0.16);
-            border-color: var(--accent-ice);
-            color: #fff;
-        }
-
+        /* ==========================================================================
+           LEGAL AGREEMENT CARD
+           ========================================================================== */
         .agreement-wrapper {
-            max-width: 960px;
-            margin: 50px auto 80px;
-            padding: 0 24px;
+            max-width: 860px;
+            width: 100%;
+            margin: 28px auto 60px;
+            padding: 0 clamp(16px, 3vw, 24px);
         }
 
-        .glass-legal-card {
-            background: var(--glass-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 44px;
-            backdrop-filter: blur(25px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        .legal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            box-shadow: var(--shadow-card);
             position: relative;
         }
 
-        #success-stamp {
+        .status-stamp {
             display: none;
             position: absolute;
-            top: 40px;
-            right: 40px;
-            padding: 10px 20px;
-            border: 2px solid var(--accent-ice);
-            color: var(--accent-ice);
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            border-radius: 10px;
-            background: rgba(103, 232, 249, 0.08);
-            transform: rotate(-6deg);
+            top: 24px;
+            right: 24px;
+            padding: 4px 10px;
+            border: 1px solid var(--success);
+            color: var(--success);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            background: var(--success-subtle);
         }
-
-        html[dir="rtl"] #success-stamp { right: auto; left: 40px; transform: rotate(6deg); }
+        html[dir="rtl"] .status-stamp {
+            right: auto;
+            left: 24px;
+        }
 
         .header-section {
-            text-align: center;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 26px;
-            margin-bottom: 26px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
         }
-
-        .header-section h1 {
+        .header-title {
             font-family: var(--font-display);
-            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
             font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        .header-meta {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
         }
 
         .scroll-box {
-            height: 460px;
+            max-height: 440px;
             overflow-y: auto;
-            padding: 24px;
-            background: rgba(9, 13, 22, 0.7);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            color: #d1d5db;
-            font-size: 0.93rem;
-            line-height: 1.65;
-            scrollbar-width: thin;
+            padding: 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.6;
         }
 
         .scroll-box h2 {
             font-family: var(--font-display);
-            font-size: 1.2rem;
-            margin: 30px 0 12px;
-            color: var(--accent-ice);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            margin: 20px 0 8px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 4px;
         }
         .scroll-box h2:first-child { margin-top: 0; }
 
-        ol { padding-left: 20px; margin-bottom: 16px; }
-        html[dir="rtl"] ol { padding-left: 0; padding-right: 20px; }
-        li { margin-bottom: 10px; color: var(--text-muted); }
-        li strong { color: #fff; }
+        ol { padding-left: 18px; margin-bottom: 14px; }
+        html[dir="rtl"] ol { padding-left: 0; padding-right: 18px; }
+        li { margin-bottom: 8px; color: var(--text-secondary); }
+        li strong { color: var(--text-main); }
 
         .action-panel {
-            margin-top: 28px;
-            background: rgba(9, 13, 22, 0.8);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 24px;
+            margin-top: 20px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
             text-align: center;
         }
 
         .agree-label {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-main);
             cursor: pointer;
-            margin-bottom: 18px;
-            color: #fff;
+        }
+        .agree-label input {
+            accent-color: var(--accent);
+            width: 14px;
+            height: 14px;
         }
 
-        .accept-btn {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #ffffff;
-            padding: 14px 36px;
-            border-radius: 50px;
-            font-family: var(--font-display);
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .accept-btn:hover:not(:disabled) {
-            background: #ffffff;
-            color: #0a0a12;
-            transform: translateY(-2px);
-        }
-
-        .accept-btn:disabled {
-            background: rgba(255, 255, 255, 0.06);
+        /* ==========================================================================
+           FOOTER
+           ========================================================================== */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 24px clamp(16px, 3vw, 32px);
+            background: var(--bg-surface);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             color: var(--text-muted);
-            cursor: not-allowed;
-            border-color: transparent;
+            font-size: 11px;
+            margin-top: auto;
         }
 
-        footer {
-            border-top: 1px solid var(--glass-border);
-            padding: 40px 24px;
-            text-align: center;
-            background: rgba(10, 10, 18, 0.85);
-            color: var(--text-muted);
-            font-size: 0.85rem;
+        @media (max-width: 640px) {
+            .navbar { padding: 0 12px; }
+            .nav-links { display: none; }
+            .footer { flex-direction: column; gap: 8px; text-align: center; }
         }
     </style>
 </head>
@@ -239,93 +386,122 @@
 
     <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
 
-    <header class="glass-nav">
-        <a href="index.html" class="brand-block">
-            <span>✦</span>
-            <span>I’M AFK</span>
+    <!-- Top Navigation -->
+    <header class="navbar">
+        <a href="index.html" class="brand-link" title="I’M AFK Hub">
+            <div class="brand-badge">✦</div>
+            <span>I’M AFK <span style="font-size:11px; color:var(--text-muted); font-weight:500;">Terms</span></span>
         </a>
-        <div style="display: flex; gap: 12px;">
-            <a href="index.html" class="nav-back-btn" data-i18n="nav.back">← Return to Hub</a>
-            <button type="button" class="lang-toggle" id="lang-btn">العربية</button>
+
+        <ul class="nav-links">
+            <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+            <li><a href="library.html" data-i18n="nav.library">Library</a></li>
+            <li><a href="studio.html" data-i18n="nav.studio">Studio</a></li>
+            <li><a href="submit.html" data-i18n="nav.submit">Submit</a></li>
+            <li><a href="contact.html" data-i18n="nav.support">Support</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <a href="index.html" class="btn" data-i18n="nav.back">← Return to Hub</a>
+            <button type="button" class="btn" id="lang-btn">العربية</button>
+            <button type="button" class="btn btn-icon" id="theme-btn" onclick="toggleTheme()" title="Switch Theme">◐</button>
         </div>
     </header>
 
+    <!-- Agreement Main Container -->
     <main class="agreement-wrapper">
-        <div class="glass-legal-card">
-            <div id="success-stamp" data-i18n="stamp.text">✓ CERTIFIED & RECORDED</div>
+        <div class="legal-card">
+            <div id="status-stamp" class="status-stamp" data-i18n="stamp.text">✓ CERTIFIED & STORED</div>
 
             <div class="header-section">
-                <h1 data-i18n="tos.title">Terms of Service & <span>License</span></h1>
-                <p style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-ice);" data-i18n="tos.audit">AUDIT CODE: 9.9.2-AFK-LIQUID &bull; 2024–2026</p>
+                <h1 class="header-title" data-i18n="tos.title">Terms of Service & License</h1>
+                <p class="header-meta" data-i18n="tos.audit">AUDIT CODE: 9.9.2-AFK-ADDITION7 &bull; 2026</p>
             </div>
 
             <div class="scroll-box" id="scroll-box">
                 <h2>Article I: Universal Scope & Definitions</h2>
                 <ol>
-                    <li><strong>The Platform:</strong> "I'm Afk" refers to this web portal, its directories, scripts, stylesheets, and hosting node.</li>
-                    <li><strong>Content:</strong> Any game, simulation, script, or asset made available for in-browser execution.</li>
-                    <li><strong>Electronic Signature:</strong> By clicking "I Accept" or using the node, you provide an electronic verification of understanding.</li>
+                    <li><strong>The Platform:</strong> "I’M AFK" refers to this web hub, its directories, sandboxes, scripts, and studio tools.</li>
+                    <li><strong>Content:</strong> Any game, simulation, script, or asset made available for in-browser client-side execution.</li>
+                    <li><strong>Electronic Verification:</strong> By continuing to use the hub or studio, you acknowledge understanding of these operating policies.</li>
                 </ol>
 
-                <h2>Article II: Hosting & Intermediary Role</h2>
+                <h2>Article II: Hosting & Sandboxed Architecture</h2>
                 <ol>
-                    <li><strong>Passive Conduit:</strong> The platform operates as a lightweight index and sandbox runner. Games are executed client-side.</li>
-                    <li><strong>No Agency:</strong> No commercial partnership or agency exists between the platform and third-party developers.</li>
+                    <li><strong>Client-Side Execution:</strong> Projects and code run entirely within isolated browser sandboxes.</li>
+                    <li><strong>No Intermediary Warranty:</strong> Third-party community submissions are provided on an as-is basis.</li>
                 </ol>
 
                 <h2>Article III: Limitation of Liability</h2>
                 <ol>
-                    <li>To the fullest extent permitted by applicable law, the platform is not liable for indirect or consequential damages resulting from browser gameplay or script execution.</li>
+                    <li>To the fullest extent permitted by applicable law, the platform is not liable for indirect damages resulting from local browser script execution.</li>
                 </ol>
 
-                <h2>Article IV: Copyright & 24-Hour DMCA Protocol</h2>
+                <h2>Article IV: Copyright & DMCA Policy</h2>
                 <ol>
-                    <li>We honor and respect digital copyright. Legitimate removal notices submitted through the support portal are processed within 24 to 72 hours.</li>
+                    <li>We honor digital copyright laws. Legitimate removal and copyright notices submitted through the support portal are processed promptly within 24 to 72 hours.</li>
                 </ol>
 
-                <h2>Article V: User Conduct & Privacy</h2>
+                <h2>Article V: Privacy & Data Integrity</h2>
                 <ol>
-                    <li>No aggressive web-scraping or automated botting of high-score modules.</li>
-                    <li>We collect minimal diagnostics to maintain uptime and do not sell data to third-party data brokers.</li>
+                    <li>All projects in the Studio are stored locally in your browser's LocalStorage.</li>
+                    <li>We collect minimal diagnostics to maintain uptime and do not sell user data to third-party brokers.</li>
                 </ol>
             </div>
 
             <div class="action-panel">
                 <label class="agree-label">
-                    <input type="checkbox" id="agree" style="accent-color: var(--accent-ice); width: 18px; height: 18px;">
+                    <input type="checkbox" id="agree">
                     <span data-i18n="action.checkboxText">I have read, understood, and agree to the Terms of Service.</span>
                 </label>
-                <div>
-                    <button id="accept-btn" class="accept-btn" onclick="handleAcceptance()" data-i18n="action.signBtn">Accept & Verify Protocol →</button>
-                </div>
-                <p id="status-msg" style="font-size: 0.85rem; font-weight: 600; margin-top: 14px;"></p>
+                <button id="accept-btn" class="btn btn-primary" onclick="handleAcceptance()" data-i18n="action.signBtn">
+                    Accept & Verify Terms ➔
+                </button>
             </div>
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2024–2026 I’m Afk &bull; Liquid Glass Protocol</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <span>&copy; 2026 I’M AFK &bull; Legal Protocol</span>
+        <span style="font-family: var(--font-mono);">Addition7 Precision Standard</span>
     </footer>
 
+    <!-- ==========================================================================
+         CORE JAVASCRIPT
+         ========================================================================== -->
     <script>
+        /* -------------------------------------------------------------
+           1. INTERNATIONALIZATION (EN & AR)
+        ------------------------------------------------------------- */
         const I18N = {
             en: {
-                "meta.title": "Terms of Service — I’m Afk",
+                "meta.title": "Terms of Service — I’M AFK",
+                "nav.home": "Home",
+                "nav.library": "Library",
+                "nav.studio": "Studio",
+                "nav.submit": "Submit",
+                "nav.support": "Support",
                 "nav.back": "← Return to Hub",
-                "stamp.text": "✓ CERTIFIED & RECORDED",
-                "tos.title": "Terms of Service & <span>License</span>",
-                "tos.audit": "AUDIT CODE: 9.9.2-AFK-LIQUID • 2024–2026",
+                "stamp.text": "✓ CERTIFIED & STORED",
+                "tos.title": "Terms of Service & License",
+                "tos.audit": "AUDIT CODE: 9.9.2-AFK-ADDITION7 • 2026",
                 "action.checkboxText": "I have read, understood, and agree to the Terms of Service.",
-                "action.signBtn": "Accept & Verify Protocol →"
+                "action.signBtn": "Accept & Verify Terms ➔"
             },
             ar: {
-                "meta.title": "شروط الخدمة والترخيص — I’m Afk",
+                "meta.title": "شروط الخدمة والترخيص — I’M AFK",
+                "nav.home": "الرئيسية",
+                "nav.library": "المكتبة",
+                "nav.studio": "المحرر",
+                "nav.submit": "إرسال مشروع",
+                "nav.support": "الدعم",
                 "nav.back": "← العودة إلى الرئيسية",
                 "stamp.text": "✓ تم التوثيق والاعتماد",
-                "tos.title": "شروط الخدمة <span>واتفاقية الاستخدام</span>",
-                "tos.audit": "رمز التوثيق: 9.9.2-AFK-LIQUID • 2024–2026",
+                "tos.title": "شروط الخدمة واتفاقية الاستخدام",
+                "tos.audit": "رمز التوثيق: 9.9.2-AFK-ADDITION7 • 2026",
                 "action.checkboxText": "قرأت وفهمت وأوافق تماماً على شروط الخدمة.",
-                "action.signBtn": "الموافقة والتوثيق ←"
+                "action.signBtn": "الموافقة والتوثيق ➔"
             }
         };
 
@@ -339,11 +515,27 @@
             langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
+                if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
             });
         }
         langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
 
+        /* -------------------------------------------------------------
+           2. THEME ENGINE
+        ------------------------------------------------------------- */
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('afk_studio_theme', next);
+        }
+
+        const savedTheme = localStorage.getItem('afk_studio_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        /* -------------------------------------------------------------
+           3. READING PROGRESS & VERIFICATION STATE
+        ------------------------------------------------------------- */
         const scrollBox = document.getElementById('scroll-box');
         const progressBar = document.getElementById('progress-bar');
         const STORAGE_KEY = 'imAfk_Agreed_Final';
@@ -354,9 +546,11 @@
             progressBar.style.width = ((st / sh) * 100) + '%';
         });
 
-        window.onload = function() {
-            if (localStorage.getItem(STORAGE_KEY) === 'true') showSignedState();
-        };
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem(STORAGE_KEY) === 'true') {
+                showSignedState();
+            }
+        });
 
         function handleAcceptance() {
             const cb = document.getElementById('agree');
@@ -371,12 +565,13 @@
         function showSignedState() {
             const btn = document.getElementById('accept-btn');
             const cb = document.getElementById('agree');
-            const stamp = document.getElementById('success-stamp');
+            const stamp = document.getElementById('status-stamp');
             stamp.style.display = 'block';
             cb.checked = true;
             cb.disabled = true;
             btn.disabled = true;
-            btn.innerText = currentLang === 'ar' ? 'تم توثيق الموافقة ✓' : 'VERIFIED & STORED ✓';
+            btn.style.opacity = '0.6';
+            btn.textContent = currentLang === 'ar' ? 'تم توثيق الموافقة ✓' : 'Verified & Stored ✓';
         }
     </script>
 </body>
