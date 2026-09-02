@@ -1,8 +1,4 @@
----
 
-### 2. `SECURITY.md`
-
-```markdown
 # Security Policy
 
 ## Supported Versions
