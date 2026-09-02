@@ -1,91 +1,70 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="cyberpunk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS STUDIO // Next-Gen Browser Game Engine</title>
+    <title>Studio — Creative Engine & 3D Workspace</title>
     
-    <!-- Fonts -->
+    <!-- Google Fonts: Addition7 Typography System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Three.js (Core 3D Engine) -->
+    <!-- Three.js + Controls for Visual 3D Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js OrbitControls & TransformControls -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TransformControls.js"></script>
-    <!-- Supabase Client for Cloud Backup & Publishing -->
+
+    <!-- Supabase Client for Cloud Arcade Publishing -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         /* ==========================================================================
-           1. CORE DESIGN SYSTEM & THEMES
+           ADDITION7 DESIGN SYSTEM: CLEAN, MATTE OBSIDIAN, PRECISE
            ========================================================================== */
         :root {
-            --bg-void: #05070c;
-            --bg-base: #090d16;
-            --bg-panel: #0e1320;
-            --bg-panel-header: #121829;
+            --bg-canvas: #07080c;
+            --bg-surface: #0c0e14;
+            --bg-panel: #11141c;
+            --bg-panel-subtle: #161a24;
             --bg-hover: rgba(255, 255, 255, 0.05);
-            --bg-active: rgba(0, 240, 255, 0.12);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(0, 240, 255, 0.35);
-
-            --accent-cyan: #00f0ff;
-            --accent-magenta: #ff0055;
-            --accent-lime: #00ff88;
-            --accent-purple: #a855f7;
-            --accent-amber: #f59e0b;
-            --accent-blue: #3b82f6;
+            --bg-active: rgba(255, 255, 255, 0.09);
+            
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-medium: rgba(255, 255, 255, 0.12);
+            --border-focus: rgba(56, 189, 248, 0.6);
 
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
-            
-            --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
+            --text-dim: #475569;
 
-            --topbar-h: 50px;
-            --dock-left-w: 280px;
-            --dock-right-w: 320px;
-            --dock-bottom-h: 240px;
+            --accent-primary: #38bdf8;
+            --accent-indigo: #818cf8;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            --font-display: 'Space Grotesk', -apple-system, sans-serif;
+            --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --header-height: 48px;
+            --sidebar-width: 260px;
+            --inspector-width: 290px;
+            --bottom-dock-height: 180px;
             --radius-sm: 6px;
-            --radius-md: 10px;
+            --radius-md: 9px;
             --radius-lg: 14px;
         }
 
-        [data-theme="synthwave"] {
-            --bg-void: #0b0518;
-            --bg-base: #130a2a;
-            --bg-panel: #1a0f38;
-            --bg-panel-header: #24144d;
-            --accent-cyan: #ff71ce;
-            --accent-magenta: #01cdfe;
-            --accent-lime: #05ffa1;
-            --border-glow: rgba(255, 113, 206, 0.4);
-        }
-
-        [data-theme="matrix"] {
-            --bg-void: #020b05;
-            --bg-base: #041409;
-            --bg-panel: #072010;
-            --bg-panel-header: #0b2e17;
-            --accent-cyan: #00ff66;
-            --accent-magenta: #10b981;
-            --accent-lime: #34d399;
-            --border-glow: rgba(0, 255, 102, 0.4);
-        }
-
-        /* Resets */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            background-color: var(--bg-void);
+            background-color: var(--bg-canvas);
             color: var(--text-primary);
-            font-family: var(--font-ui);
+            font-family: var(--font-sans);
             height: 100vh;
-            width: 100vw;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -96,1914 +75,2295 @@
         /* Scrollbars */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
-
-        /* Generic UI Elements */
-        .btn {
-            background: var(--bg-hover);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            padding: 5px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 0.78rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.15s ease;
-            font-family: var(--font-ui);
-            white-space: nowrap;
-        }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            transform: translateY(-1px);
-        }
-        .btn:active { transform: translateY(0); }
-        .btn-primary {
-            background: rgba(0, 240, 255, 0.15);
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-        }
-        .btn-primary:hover {
-            background: var(--accent-cyan);
-            color: #000;
-            box-shadow: 0 0 12px var(--accent-cyan);
-        }
-        .btn-play {
-            background: linear-gradient(135deg, #00ff88, #059669);
-            border: 1px solid #10b981;
-            color: #021a0d;
-            font-weight: 800;
-            box-shadow: 0 0 14px rgba(0, 255, 136, 0.35);
-        }
-        .btn-play:hover {
-            background: #34d399;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
-            color: #000;
-        }
-        .btn-play.playing {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            border-color: #f87171;
-            color: #fff;
-            box-shadow: 0 0 14px rgba(239, 68, 68, 0.4);
-        }
-        .btn-sm { padding: 3px 8px; font-size: 0.72rem; }
-        .btn-icon { padding: 5px 8px; font-size: 0.85rem; }
-
-        input, select, textarea {
-            background: var(--bg-void);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            padding: 5px 8px;
-            border-radius: var(--radius-sm);
-            font-family: var(--font-code);
-            font-size: 0.78rem;
-            outline: none;
-            transition: border 0.15s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
-        }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.14); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
 
         /* ==========================================================================
-           2. TOP COMMAND HEADER
+           TOP COMMAND BAR
            ========================================================================== */
-        .nexus-topbar {
-            height: var(--topbar-h);
-            background: var(--bg-base);
+        .studio-header {
+            height: var(--header-height);
+            background: var(--bg-surface);
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 14px;
-            z-index: 100;
             flex-shrink: 0;
+            z-index: 100;
             gap: 12px;
         }
 
-        .brand-zone {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .brand-logo {
-            font-family: var(--font-display);
-            font-weight: 800;
-            font-size: 1.05rem;
-            color: #fff;
+        .header-left, .header-center, .header-right {
             display: flex;
             align-items: center;
             gap: 8px;
-            letter-spacing: -0.5px;
         }
+
         .brand-badge {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
-            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-glyph {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid var(--border-medium);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #000;
-            font-weight: 900;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            font-size: 0.75rem;
+            color: var(--accent-primary);
         }
-        .project-name-input {
+
+        .project-title-field {
             background: transparent;
             border: 1px solid transparent;
+            color: var(--text-primary);
             font-family: var(--font-display);
-            font-weight: 700;
-            color: #fff;
             font-size: 0.88rem;
-            width: 170px;
-        }
-        .project-name-input:hover, .project-name-input:focus {
-            border-color: var(--border-subtle);
-            background: var(--bg-panel);
-        }
-
-        .playback-controls {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(0, 0, 0, 0.35);
-            padding: 3px 8px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .hud-stats {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: var(--font-code);
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-        .stat-item span { color: var(--accent-lime); font-weight: 700; }
-
-        /* ==========================================================================
-           3. STUDIO WORKSPACE MATRIX
-           ========================================================================== */
-        .nexus-workspace {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .nexus-main-row {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Dock Panes */
-        .dock-pane {
-            background: var(--bg-panel);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .dock-left {
-            width: var(--dock-left-w);
-            border-right: 1px solid var(--border-subtle);
-        }
-        .dock-right {
-            width: var(--dock-right-w);
-            border-left: 1px solid var(--border-subtle);
-        }
-        .dock-bottom {
-            height: var(--dock-bottom-h);
-            border-top: 1px solid var(--border-subtle);
-            background: var(--bg-panel);
-        }
-
-        .pane-header {
-            height: 34px;
-            background: var(--bg-panel-header);
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 10px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.6px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-        }
-
-        .pane-tabs {
-            display: flex;
-            height: 100%;
-            align-items: center;
-            gap: 2px;
-        }
-        .pane-tab {
-            padding: 0 10px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            font-size: 0.72rem;
             font-weight: 600;
-            color: var(--text-muted);
-            border-bottom: 2px solid transparent;
-            transition: 0.15s;
-        }
-        .pane-tab:hover { color: var(--text-primary); }
-        .pane-tab.active {
-            color: var(--accent-cyan);
-            border-bottom-color: var(--accent-cyan);
-            background: rgba(0, 240, 255, 0.04);
-        }
-
-        .pane-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        /* Resizer Bars */
-        .resizer-h {
-            height: 4px;
-            cursor: row-resize;
-            background: transparent;
-            transition: background 0.2s;
-            z-index: 50;
-        }
-        .resizer-h:hover { background: var(--accent-cyan); }
-        .resizer-v {
-            width: 4px;
-            cursor: col-resize;
-            background: transparent;
-            transition: background 0.2s;
-            z-index: 50;
-        }
-        .resizer-v:hover { background: var(--accent-cyan); }
-
-        /* ==========================================================================
-           4. 3D/2D CENTER VIEWPORT STAGE
-           ========================================================================== */
-        .viewport-stage {
-            flex: 1;
-            position: relative;
-            background: #020408;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #webgl-canvas-container {
-            flex: 1;
-            position: relative;
-            width: 100%;
-            height: 100%;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
             outline: none;
+            width: 170px;
+            transition: all 0.15s;
+        }
+        .project-title-field:hover, .project-title-field:focus {
+            background: var(--bg-panel);
+            border-color: var(--border-subtle);
         }
 
-        /* Viewport Floating HUD */
-        .viewport-hud {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+        .save-indicator {
             display: flex;
-            gap: 6px;
-            z-index: 30;
-            pointer-events: auto;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: var(--bg-hover);
         }
-        .hud-tool-pill {
-            background: rgba(9, 13, 22, 0.85);
-            backdrop-filter: blur(8px);
+        .save-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+        }
+        .save-indicator.saving .save-dot {
+            background: var(--accent-amber);
+        }
+
+        /* Buttons & Inputs */
+        .btn {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 5px 11px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            font-weight: 500;
+            font-family: var(--font-sans);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: background 0.12s, border-color 0.12s, transform 0.1s;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: var(--bg-panel-subtle);
+            border-color: var(--border-medium);
+        }
+        .btn:active { transform: scale(0.98); }
+        
+        .btn-sm { padding: 3px 7px; font-size: 0.72rem; }
+        .btn-icon { padding: 5px 7px; }
+
+        .btn-accent {
+            background: #1e293b;
+            border-color: rgba(56, 189, 248, 0.35);
+            color: #e0f2fe;
+        }
+        .btn-accent:hover {
+            background: #253349;
+            border-color: var(--accent-primary);
+        }
+
+        .btn-run {
+            background: #064e3b;
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #ecfdf5;
+            font-weight: 600;
+        }
+        .btn-run:hover { background: #047857; border-color: var(--accent-emerald); }
+
+        .btn-stop {
+            background: #4c0519;
+            border-color: rgba(244, 63, 94, 0.4);
+            color: #ffe4e6;
+        }
+        .btn-stop:hover { background: #881337; }
+
+        /* Segmented View Mode Switcher */
+        .segmented-control {
+            display: flex;
+            background: var(--bg-canvas);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
-            padding: 2px 4px;
-            display: flex;
+            padding: 2px;
             gap: 2px;
         }
-
-        .gizmo-mode-btn {
+        .seg-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 4px 8px;
+            font-size: 0.74rem;
+            font-weight: 500;
+            padding: 4px 10px;
             border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
             cursor: pointer;
+            transition: all 0.12s;
         }
-        .gizmo-mode-btn:hover { color: #fff; background: var(--bg-hover); }
-        .gizmo-mode-btn.active {
-            color: var(--accent-cyan);
-            background: rgba(0, 240, 255, 0.15);
+        .seg-btn:hover { color: var(--text-primary); }
+        .seg-btn.active {
+            background: var(--bg-panel);
+            color: var(--text-primary);
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
         }
 
-        .viewport-viewmodes {
+        /* Dropdown menus */
+        .dropdown { position: relative; }
+        .dropdown-menu {
+            display: none;
             position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-            gap: 6px;
-            z-index: 30;
+            top: 100%;
+            left: 0;
+            min-width: 180px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+            z-index: 500;
+            margin-top: 4px;
         }
-
-        /* ==========================================================================
-           5. SCENE HIERARCHY & ENTITY CARDS
-           ========================================================================== */
-        .scene-tree {
+        .dropdown-menu.right { left: auto; right: 0; }
+        .dropdown:hover .dropdown-menu, .dropdown.open .dropdown-menu {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
+        .dropdown-item {
+            padding: 6px 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.76rem;
+            text-align: left;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.12s;
+        }
+        .dropdown-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .dropdown-sep {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 3px 0;
+        }
+
+        /* ==========================================================================
+           MAIN STUDIO WORKSPACE LAYOUT
+           ========================================================================== */
+        .studio-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Left Sidebar (Hierarchy / Explorer / Library) --- */
+        .sidebar-left {
+            width: var(--sidebar-width);
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .sidebar-tabs-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border-subtle);
+            background: var(--bg-canvas);
+        }
+        .sidebar-nav-item {
+            flex: 1;
+            padding: 8px 4px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.12s;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .sidebar-nav-item:hover { color: var(--text-primary); }
+        .sidebar-nav-item.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-primary);
+            background: var(--bg-surface);
+        }
+
+        .sidebar-pane {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .sidebar-pane.active { display: flex; }
+
+        /* Scene Hierarchy Tree */
         .tree-node {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 5px 8px;
             border-radius: var(--radius-sm);
-            cursor: pointer;
             font-size: 0.76rem;
             color: var(--text-secondary);
-            transition: 0.15s;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.12s;
         }
         .tree-node:hover {
             background: var(--bg-hover);
-            color: #fff;
+            color: var(--text-primary);
         }
         .tree-node.selected {
-            background: var(--bg-active);
-            color: var(--accent-cyan);
-            border-left: 2px solid var(--accent-cyan);
-            font-weight: 700;
+            background: #1e293b;
+            color: #fff;
+            border-color: rgba(56, 189, 248, 0.4);
         }
+        .tree-node-icon { font-size: 0.8rem; margin-right: 6px; opacity: 0.8; }
 
-        /* Asset Grid */
-        .asset-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-            gap: 8px;
-        }
-        .asset-card {
-            background: rgba(0,0,0,0.3);
+        /* Card panels */
+        .item-card {
+            background: var(--bg-panel);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
-            padding: 8px 4px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+        .item-card:hover {
+            border-color: var(--border-medium);
+            background: var(--bg-panel-subtle);
+        }
+        .item-card-title {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .item-card-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            line-height: 1.35;
+        }
+
+        /* --- Center Workspace (Visual 3D & Code Editor) --- */
+        .center-workspace {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: 0.15s;
+            overflow: hidden;
+            position: relative;
+            background: var(--bg-canvas);
         }
-        .asset-card:hover {
-            border-color: var(--accent-cyan);
-            background: var(--bg-hover);
-            transform: translateY(-2px);
-        }
-        .asset-card-icon { font-size: 1.3rem; }
-        .asset-card-name { font-size: 0.68rem; color: var(--text-secondary); word-break: break-word; }
 
-        /* ==========================================================================
-           6. COMPONENT INSPECTOR STYLING
-           ========================================================================== */
-        .inspector-panel {
+        .viewport-stage {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 3D Visual Viewport */
+        .visual-3d-container {
+            flex: 1;
+            position: relative;
+            outline: none;
+            overflow: hidden;
+            background: #0a0c10;
+        }
+        #visual-3d-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Floating 3D Toolbar */
+        .viewport-overlay-tools {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 4px;
+            background: rgba(12, 14, 20, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-subtle);
+            padding: 3px;
+            border-radius: var(--radius-sm);
+            z-index: 10;
+        }
+
+        .tool-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.74rem;
+            cursor: pointer;
+            transition: 0.12s;
+        }
+        .tool-btn:hover { color: var(--text-primary); }
+        .tool-btn.active {
+            background: var(--bg-panel);
+            color: var(--accent-primary);
+            border-color: var(--border-medium);
+        }
+
+        /* Code Editor Container */
+        .code-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #090b10;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .code-tabs-bar {
+            height: 32px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px;
+            flex-shrink: 0;
+        }
+
+        .code-tabs-list {
+            display: flex;
+            gap: 2px;
+            height: 100%;
+            align-items: flex-end;
+        }
+
+        .code-tab {
+            height: 28px;
+            padding: 0 10px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.12s;
+        }
+        .code-tab:hover { color: var(--text-primary); }
+        .code-tab.active {
+            color: var(--accent-primary);
+            background: #090b10;
+            border-color: var(--border-subtle);
+        }
+
+        .code-editor-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .line-numbers {
+            width: 42px;
+            background: rgba(0, 0, 0, 0.25);
+            border-right: 1px solid var(--border-subtle);
+            padding: 10px 6px;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            text-align: right;
+            user-select: none;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .code-textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px;
+            color: #bae6fd;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            line-height: 1.5;
+            resize: none;
+            white-space: pre;
+            tab-size: 2;
+            overflow: auto;
+            caret-color: var(--accent-primary);
+        }
+
+        /* Runtime Preview Iframe Container */
+        .sandbox-container {
+            flex: 1;
+            background: #000;
+            display: none;
+            position: relative;
+        }
+        .sandbox-container.active { display: block; }
+        #sandbox-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Workspace Resizable Divider */
+        .pane-resizer {
+            width: 4px;
+            background: var(--border-subtle);
+            cursor: col-resize;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+        .pane-resizer:hover, .pane-resizer.dragging {
+            background: var(--accent-primary);
+        }
+
+        /* --- Right Sidebar: Inspector / Properties Panel --- */
+        .sidebar-right {
+            width: var(--inspector-width);
+            background: var(--bg-surface);
+            border-left: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow-y: auto;
+            z-index: 20;
+        }
+
+        .panel-header {
+            height: 32px;
+            padding: 0 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: 700;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            background: var(--bg-canvas);
+            flex-shrink: 0;
+        }
+
+        .inspector-content {
+            padding: 12px;
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .component-box {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-        }
-        .component-header {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 6px 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.74rem;
-            font-weight: 700;
-            color: #fff;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-        .component-body {
-            padding: 8px 10px;
+        .prop-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
+        }
+        .prop-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
         }
 
         .prop-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            font-size: 0.74rem;
+            gap: 6px;
         }
-        .prop-label {
-            color: var(--text-muted);
-            width: 85px;
-            flex-shrink: 0;
-        }
-        .prop-inputs-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 4px;
+        .prop-field {
             flex: 1;
-        }
-        .vector-input {
             display: flex;
             align-items: center;
-            gap: 3px;
-        }
-        .vector-input span {
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: var(--text-muted);
-        }
-        .vector-input input { width: 100%; text-align: right; }
-
-        /* ==========================================================================
-           7. VISUAL SCRIPTING & NODE GRAPH
-           ========================================================================== */
-        .node-graph-canvas {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0/18px 18px, #070a12;
-            position: relative;
-            overflow: hidden;
-        }
-        .graph-node {
-            position: absolute;
             background: var(--bg-panel);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            width: 190px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            z-index: 10;
+            border-radius: var(--radius-sm);
+            padding: 3px 6px;
+            gap: 4px;
         }
-        .node-head {
-            padding: 6px 10px;
-            font-size: 0.72rem;
+        .prop-field:focus-within {
+            border-color: var(--border-focus);
+        }
+        .prop-axis {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
             font-weight: 700;
-            color: #000;
-            border-radius: var(--radius-md) var(--radius-md) 0 0;
-            display: flex;
-            justify-content: space-between;
-            cursor: grab;
+            color: var(--text-dim);
+            user-select: none;
         }
-        .node-head.event { background: var(--accent-magenta); color: #fff; }
-        .node-head.action { background: var(--accent-cyan); color: #000; }
-        .node-head.logic { background: var(--accent-purple); color: #fff; }
-        .node-head.math { background: var(--accent-amber); color: #000; }
-        
-        .node-content {
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            font-size: 0.72rem;
+        .prop-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
         }
-        .node-port-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .port {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--text-muted);
-            cursor: crosshair;
-        }
-        .port.active { background: var(--accent-cyan); box-shadow: 0 0 6px var(--accent-cyan); }
 
-        /* ==========================================================================
-           8. SHADER LAB & METABALL PREVIEW DOCK
-           ========================================================================== */
-        .shader-split-view {
+        .color-picker-row {
             display: flex;
-            height: 100%;
+            align-items: center;
             gap: 8px;
         }
-        .shader-code-pane {
+        .color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid var(--border-medium);
+            cursor: pointer;
+        }
+
+        /* --- Bottom Dock: Timeline & Console --- */
+        .bottom-dock {
+            height: var(--bottom-dock-height);
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            z-index: 30;
+            transition: height 0.2s;
+        }
+        .bottom-dock.minimized {
+            height: 30px;
+        }
+
+        .dock-header {
+            height: 30px;
+            background: var(--bg-canvas);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            flex-shrink: 0;
+        }
+
+        .dock-tabs {
+            display: flex;
+            gap: 4px;
+        }
+        .dock-tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 600;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .dock-tab-btn.active {
+            color: var(--text-primary);
+            background: var(--bg-panel);
+        }
+
+        .dock-body {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            position: relative;
+        }
+
+        /* Console Stream */
+        .console-stream {
+            flex: 1;
+            padding: 6px 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+        }
+        .log-item { display: flex; gap: 6px; line-height: 1.4; word-break: break-all; }
+        .log-item.info { color: var(--text-secondary); }
+        .log-item.warn { color: var(--accent-amber); }
+        .log-item.error { color: var(--accent-rose); }
+        .log-item.system { color: var(--accent-primary); }
+
+        .repl-strip {
+            height: 28px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 6px;
+            background: var(--bg-panel);
+        }
+        .repl-strip input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+
+        /* Keyframe Timeline */
+        .timeline-view {
             flex: 1;
             display: flex;
             flex-direction: column;
-        }
-        .shader-preview-pane {
-            width: 240px;
-            background: #000;
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            position: relative;
             overflow: hidden;
         }
-
-        /* ==========================================================================
-           9. TIMELINE & KEYFRAME ANIMATOR
-           ========================================================================== */
-        .timeline-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        .timeline-controls-bar {
+        .timeline-controls {
             height: 32px;
-            background: rgba(0,0,0,0.25);
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 8px;
-            border-bottom: 1px solid var(--border-subtle);
+            padding: 0 10px;
+            gap: 8px;
+            background: var(--bg-surface);
         }
-        .timeline-track-area {
+        .timeline-tracks-area {
             flex: 1;
             display: flex;
             overflow-x: auto;
+            overflow-y: auto;
             position: relative;
-            background: #060911;
+            background: #090b10;
+        }
+        .timeline-track-header {
+            width: 140px;
+            border-right: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        .track-header-cell {
+            height: 24px;
+            padding: 0 8px;
+            font-size: 0.68rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .timeline-ruler-track {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 600px;
+            position: relative;
         }
         .timeline-ruler {
-            height: 20px;
-            background: rgba(255,255,255,0.02);
+            height: 24px;
             border-bottom: 1px solid var(--border-subtle);
-            width: 2000px;
+            background: var(--bg-panel);
             position: relative;
+            cursor: pointer;
         }
-        .time-cursor {
+        .timeline-scrubber {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 2px;
-            background: var(--accent-magenta);
-            z-index: 40;
+            background: var(--accent-rose);
+            z-index: 10;
             pointer-events: none;
         }
+        .timeline-keyframe {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-primary);
+            transform: rotate(45deg);
+            position: absolute;
+            top: 8px;
+            cursor: pointer;
+            border-radius: 1px;
+        }
 
         /* ==========================================================================
-           10. CONSOLE & PROFILER STYLING
+           MODALS & DIALOGS
            ========================================================================== */
-        .console-list {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            font-family: var(--font-code);
-            font-size: 0.74rem;
-        }
-        .log-row {
-            padding: 3px 6px;
-            border-radius: 3px;
-            display: flex;
-            gap: 8px;
-        }
-        .log-row.info { color: var(--text-secondary); }
-        .log-row.warn { color: var(--accent-amber); background: rgba(245, 158, 11, 0.05); }
-        .log-row.error { color: #f87171; background: rgba(239, 68, 68, 0.08); }
-        .log-row.sys { color: var(--accent-cyan); font-weight: 700; }
-
-        /* ==========================================================================
-           11. MODAL WINDOWS
-           ========================================================================== */
-        .nexus-modal-backdrop {
+        .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(2, 4, 8, 0.85);
-            backdrop-filter: blur(12px);
-            z-index: 9999;
+            background: rgba(5, 7, 12, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 999;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-        .nexus-modal-backdrop.active { display: flex; }
-        .nexus-modal {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-glow);
-            border-radius: var(--radius-lg);
+        .modal-overlay.active { display: flex; }
+
+        .modal-card {
             width: 100%;
-            max-width: 600px;
-            padding: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 25px rgba(0, 240, 255, 0.15);
+            max-width: 520px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.7);
+        }
+        .modal-card.lg { max-width: 720px; }
+
+        .modal-title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
         }
 
-        /* AI Prompt Bar */
-        .ai-assistant-dock {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            height: 100%;
-        }
-        .ai-chat-history {
-            flex: 1;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.3);
+        .input-text {
+            width: 100%;
+            background: var(--bg-canvas);
+            border: 1px solid var(--border-subtle);
+            padding: 8px 12px;
             border-radius: var(--radius-sm);
-            padding: 8px;
+            color: #fff;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .input-text:focus { border-color: var(--accent-primary); }
+
+        /* Toast notifications */
+        .toast-deck {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            font-size: 0.74rem;
+            pointer-events: none;
         }
-        .ai-bubble {
-            padding: 6px 10px;
-            border-radius: 8px;
-            max-width: 90%;
-            line-height: 1.4;
+        .toast-msg {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            font-weight: 500;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            pointer-events: auto;
         }
-        .ai-bubble.user { align-self: flex-end; background: rgba(0, 240, 255, 0.15); color: #fff; }
-        .ai-bubble.bot { align-self: flex-start; background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
-
     </style>
 </head>
 <body>
 
     <!-- ==========================================================================
-         TOP MASTER COMMAND BAR
+         TOP COMMAND BAR
          ========================================================================== -->
-    <header class="nexus-topbar">
-        <div class="brand-zone">
-            <div class="brand-logo">
-                <div class="brand-badge">⚡</div>
-                <span>NEXUS <span style="font-size:0.7rem; color:var(--accent-cyan); font-weight:600;">STUDIO v2.0</span></span>
+    <header class="studio-header">
+        <div class="header-left">
+            <a href="index.html" class="brand-badge" title="Studio Dashboard">
+                <div class="brand-glyph">◈</div>
+                <span>Studio</span>
+            </a>
+
+            <input type="text" id="project-name-input" class="project-title-field" value="Liquid Glass & 3D Spatial" spellcheck="false" title="Click to rename project">
+
+            <div class="save-indicator" id="save-status">
+                <div class="save-dot"></div>
+                <span id="save-status-label">Saved</span>
             </div>
-            <input type="text" id="project-title" class="project-name-input" value="Neon Odyssey 3D" spellcheck="false" title="Click to rename project">
         </div>
 
-        <!-- Center Simulation Play Controls -->
-        <div class="playback-controls">
-            <button class="btn btn-play" id="btn-engine-play" onclick="Engine.togglePlayState()" title="Play/Simulate Scene (Ctrl+P)">
-                ▶ PLAY GAME
+        <div class="header-center">
+            <!-- View Mode Switcher -->
+            <div class="segmented-control">
+                <button class="seg-btn active" id="btn-mode-visual" onclick="setWorkspaceMode('visual')">3D Scene</button>
+                <button class="seg-btn" id="btn-mode-split" onclick="setWorkspaceMode('split')">Split</button>
+                <button class="seg-btn" id="btn-mode-code" onclick="setWorkspaceMode('code')">Code</button>
+            </div>
+
+            <div style="width: 1px; height: 18px; background: var(--border-subtle); margin: 0 4px;"></div>
+
+            <!-- Execution controls -->
+            <button class="btn btn-run" id="btn-run-action" onclick="runSandbox()" title="Run Code Sandbox (Ctrl+Enter)">
+                ▶ Run
             </button>
-            <button class="btn btn-icon btn-sm" onclick="Engine.pauseSimulation()" title="Pause Physics/Scripts">⏸</button>
-            <button class="btn btn-icon btn-sm" onclick="Engine.resetScene()" title="Reset to Initial State">↻</button>
+            <button class="btn btn-stop" onclick="stopSandbox()" title="Stop runtime">
+                ⏹ Stop
+            </button>
         </div>
 
-        <!-- Right Quick Actions -->
-        <div style="display:flex; align-items:center; gap:8px;">
-            <div class="hud-stats">
-                <div class="stat-item">FPS: <span id="stat-fps">60</span></div>
-                <div class="stat-item">ENTITIES: <span id="stat-entities">8</span></div>
-                <div class="stat-item">DRAWS: <span id="stat-draws">12</span></div>
+        <div class="header-right">
+            <!-- Add 3D Object Menu -->
+            <div class="dropdown">
+                <button class="btn btn-accent">+ Add Object ▾</button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="createPrimitive('box')"><span>■</span> Cube Mesh</button>
+                    <button class="dropdown-item" onclick="createPrimitive('sphere')"><span>●</span> Sphere Mesh</button>
+                    <button class="dropdown-item" onclick="createPrimitive('cylinder')"><span>⬭</span> Cylinder Mesh</button>
+                    <button class="dropdown-item" onclick="createPrimitive('plane')"><span>▱</span> Ground Plane</button>
+                    <button class="dropdown-item" onclick="createPrimitive('torus')"><span>◎</span> Torus Ring</button>
+                    <div class="dropdown-sep"></div>
+                    <button class="dropdown-item" onclick="createPrimitive('pointlight')"><span>💡</span> Point Light</button>
+                    <button class="dropdown-item" onclick="createPrimitive('dirlight')"><span>☀️</span> Directional Light</button>
+                </div>
             </div>
 
-            <button class="btn btn-sm btn-primary" onclick="openExportModal()" title="Export self-contained HTML game">📦 EXPORT GAME</button>
-            <button class="btn btn-sm" onclick="openProjectsHub()">📂 PROJECTS</button>
-            <button class="btn btn-sm btn-icon" onclick="openSettingsModal()">⚙️</button>
+            <!-- Export Menu -->
+            <div class="dropdown">
+                <button class="btn">Export ▾</button>
+                <div class="dropdown-menu right">
+                    <button class="dropdown-item" onclick="exportStandaloneHTML()"><span>🌐</span> Standalone .HTML</button>
+                    <button class="dropdown-item" onclick="exportProjectJSON()"><span>📦</span> Project .JSON</button>
+                    <div class="dropdown-sep"></div>
+                    <button class="dropdown-item" onclick="copySourceCode()"><span>📋</span> Copy Code</button>
+                </div>
+            </div>
+
+            <button class="btn" onclick="openProjectsModal()" title="Saved Projects">Projects (<span id="project-count">1</span>)</button>
+            <button class="btn btn-accent" onclick="openPublishModal()">Publish</button>
         </div>
     </header>
 
     <!-- ==========================================================================
-         MAIN THREE-COLUMN WORKSPACE
+         MAIN STUDIO WORKSPACE
          ========================================================================== -->
-    <div class="nexus-workspace">
-        <div class="nexus-main-row">
-            
-            <!-- LEFT DOCK: HIERARCHY, ASSETS, PREFABS, AI HELPER -->
-            <aside class="dock-pane dock-left" id="dock-left">
-                <div class="pane-header">
-                    <div class="pane-tabs">
-                        <div class="pane-tab active" onclick="switchLeftTab('hierarchy', this)">SCENE</div>
-                        <div class="pane-tab" onclick="switchLeftTab('assets', this)">ASSETS</div>
-                        <div class="pane-tab" onclick="switchLeftTab('prefabs', this)">PREFABS</div>
-                        <div class="pane-tab" onclick="switchLeftTab('ai', this)">✨ AI</div>
+    <div class="studio-body">
+        
+        <!-- LEFT SIDEBAR: Scene Hierarchy / Files / Starter Library -->
+        <aside class="sidebar-left">
+            <nav class="sidebar-tabs-nav">
+                <button class="sidebar-nav-item active" onclick="switchSidebarTab('hierarchy', this)">Scene</button>
+                <button class="sidebar-nav-item" onclick="switchSidebarTab('files', this)">Files</button>
+                <button class="sidebar-nav-item" onclick="switchSidebarTab('library', this)">Starters</button>
+            </nav>
+
+            <!-- 1. Hierarchy Pane -->
+            <div class="sidebar-pane active" id="pane-hierarchy">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px; padding: 0 4px;">
+                    <span style="font-size:0.68rem; color:var(--text-muted); font-family:var(--font-mono);">SCENE OBJECTS</span>
+                    <button class="btn btn-sm" onclick="deleteSelectedObject()" title="Delete Selected">Delete</button>
+                </div>
+                <div id="hierarchy-list" style="display:flex; flex-direction:column; gap:2px;">
+                    <!-- Populated dynamically by 3D Engine -->
+                </div>
+            </div>
+
+            <!-- 2. Files Pane -->
+            <div class="sidebar-pane" id="pane-files">
+                <div class="tree-node selected" onclick="switchFileTab('index.html')">
+                    <span style="display:flex; align-items:center;"><span class="tree-node-icon">📄</span> index.html</span>
+                </div>
+                <div class="tree-node" onclick="switchFileTab('scene.json')">
+                    <span style="display:flex; align-items:center;"><span class="tree-node-icon">📦</span> scene.json</span>
+                </div>
+            </div>
+
+            <!-- 3. Starter Kits & Visual Blueprints -->
+            <div class="sidebar-pane" id="pane-library">
+                <div class="item-card" onclick="loadStarterTemplate('liquidGlass')">
+                    <div class="item-card-title">Liquid Glass (Addition7)</div>
+                    <div class="item-card-desc">Metaball refraction over typography shader, physics droplets & soft-body springs.</div>
+                </div>
+                <div class="item-card" onclick="loadStarterTemplate('spatial3d')">
+                    <div class="item-card-title">3D Spatial Physics Playground</div>
+                    <div class="item-card-desc">Shadow casting lights, glossy materials, orbit controls & animated objects.</div>
+                </div>
+                <div class="item-card" onclick="loadStarterTemplate('neonRunner')">
+                    <div class="item-card-title">Neon Runner // Overdrive</div>
+                    <div class="item-card-desc">Polished 2D platformer engine with particles, camera tracking & stomp physics.</div>
+                </div>
+                <div class="item-card" onclick="loadStarterTemplate('cosmicReactor')">
+                    <div class="item-card-title">Cosmic Reactor Sandbox</div>
+                    <div class="item-card-desc">350+ glowing physics particles, shockwaves and gravitational orbital flows.</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER WORKSPACE: Visual 3D Viewport + Split Code Editor -->
+        <main class="center-workspace" id="center-workspace">
+            <div class="viewport-stage">
+                
+                <!-- 3D Visual Viewport -->
+                <div class="visual-3d-container" id="visual-3d-container">
+                    <div class="viewport-overlay-tools">
+                        <button class="tool-btn active" id="tool-select" onclick="setGizmoMode('translate')" title="Translate (W)">Move</button>
+                        <button class="tool-btn" id="tool-rotate" onclick="setGizmoMode('rotate')" title="Rotate (E)">Rotate</button>
+                        <button class="tool-btn" id="tool-scale" onclick="setGizmoMode('scale')" title="Scale (R)">Scale</button>
+                        <div style="width:1px; height:14px; background:var(--border-subtle); margin:0 2px;"></div>
+                        <button class="tool-btn" onclick="reset3DCamera()" title="Reset Camera View">⛶ Center</button>
+                    </div>
+                    <canvas id="visual-3d-canvas"></canvas>
+                </div>
+
+                <!-- Resizable Center Divider -->
+                <div class="pane-resizer" id="workspace-resizer"></div>
+
+                <!-- Code Editor View -->
+                <div class="code-container" id="code-container">
+                    <div class="code-tabs-bar">
+                        <div class="code-tabs-list">
+                            <div class="code-tab active" id="code-tab-label">index.html</div>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn btn-sm" onclick="formatCode()">Format</button>
+                        </div>
+                    </div>
+                    <div class="code-editor-area">
+                        <div class="line-numbers" id="line-numbers">1</div>
+                        <textarea id="code-input" class="code-textarea" spellcheck="false"></textarea>
                     </div>
                 </div>
 
-                <!-- TAB 1: SCENE TREE -->
-                <div class="pane-body" id="tab-hierarchy">
+                <!-- Runtime Live Sandbox Frame -->
+                <div class="sandbox-container" id="sandbox-container">
+                    <iframe id="sandbox-iframe" sandbox="allow-scripts allow-forms allow-pointer-lock allow-modals allow-same-origin" allow="fullscreen; autoplay; gamepad"></iframe>
+                </div>
+
+            </div>
+
+            <!-- BOTTOM DOCK: Timeline & Console -->
+            <div class="bottom-dock" id="bottom-dock">
+                <div class="dock-header">
+                    <div class="dock-tabs">
+                        <button class="dock-tab-btn active" onclick="switchDockTab('console', this)">Console (<span id="console-badge">0</span>)</button>
+                        <button class="dock-tab-btn" onclick="switchDockTab('timeline', this)">Animation Timeline</button>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <button class="btn btn-sm" onclick="clearConsoleLogs()">Clear</button>
+                        <button class="btn btn-sm" onclick="toggleBottomDock()" id="btn-dock-toggle">▾</button>
+                    </div>
+                </div>
+
+                <div class="dock-body">
+                    <!-- Tab 1: Console -->
+                    <div id="dock-pane-console" style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+                        <div class="console-stream" id="console-stream">
+                            <div class="log-item system">◈ [Studio Engine] Ready. Use 3D scene visual tools or write custom scripts.</div>
+                        </div>
+                        <div class="repl-strip">
+                            <span style="color:var(--accent-primary); font-family:var(--font-mono); font-size:0.75rem;">❯</span>
+                            <input type="text" id="repl-input" placeholder="Evaluate JavaScript directly in runtime..." onkeydown="handleReplSubmit(event)">
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Timeline -->
+                    <div id="dock-pane-timeline" class="timeline-view" style="display:none;">
+                        <div class="timeline-controls">
+                            <button class="btn btn-sm" onclick="toggleTimelinePlay()" id="btn-timeline-play">▶ Play</button>
+                            <button class="btn btn-sm" onclick="recordKeyframe()">+ Keyframe</button>
+                            <span style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-muted);" id="timeline-time-display">0.00s / 5.00s</span>
+                        </div>
+                        <div class="timeline-tracks-area">
+                            <div class="timeline-track-header">
+                                <div class="track-header-cell">Time (sec)</div>
+                                <div class="track-header-cell">Position X/Y/Z</div>
+                                <div class="track-header-cell">Rotation X/Y/Z</div>
+                                <div class="track-header-cell">Scale X/Y/Z</div>
+                            </div>
+                            <div class="timeline-ruler-track" id="timeline-ruler-track" onclick="seekTimeline(event)">
+                                <div class="timeline-ruler" id="timeline-ruler">
+                                    <div class="timeline-scrubber" id="timeline-scrubber" style="left:0px;"></div>
+                                </div>
+                                <div style="height:24px; border-bottom:1px solid var(--border-subtle); position:relative;" id="track-pos-keys"></div>
+                                <div style="height:24px; border-bottom:1px solid var(--border-subtle); position:relative;" id="track-rot-keys"></div>
+                                <div style="height:24px; border-bottom:1px solid var(--border-subtle); position:relative;" id="track-scl-keys"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- RIGHT SIDEBAR: Properties Inspector -->
+        <aside class="sidebar-right">
+            <div class="panel-header">Properties Inspector</div>
+            <div class="inspector-content" id="inspector-content">
+                
+                <!-- Object Identification -->
+                <div class="prop-group">
+                    <span class="prop-label">Entity</span>
+                    <input type="text" id="prop-object-name" class="input-text" style="margin-bottom:0;" onchange="updateSelectedObjectName(this.value)">
+                </div>
+
+                <!-- Transform: Position -->
+                <div class="prop-group">
+                    <span class="prop-label">Position</span>
+                    <div class="prop-row">
+                        <div class="prop-field"><span class="prop-axis">X</span><input type="number" step="0.1" id="prop-pos-x" class="prop-input" oninput="applyTransformInput()"></div>
+                        <div class="prop-field"><span class="prop-axis">Y</span><input type="number" step="0.1" id="prop-pos-y" class="prop-input" oninput="applyTransformInput()"></div>
+                        <div class="prop-field"><span class="prop-axis">Z</span><input type="number" step="0.1" id="prop-pos-z" class="prop-input" oninput="applyTransformInput()"></div>
+                    </div>
+                </div>
+
+                <!-- Transform: Rotation -->
+                <div class="prop-group">
+                    <span class="prop-label">Rotation (deg)</span>
+                    <div class="prop-row">
+                        <div class="prop-field"><span class="prop-axis">X</span><input type="number" step="1" id="prop-rot-x" class="prop-input" oninput="applyTransformInput()"></div>
+                        <div class="prop-field"><span class="prop-axis">Y</span><input type="number" step="1" id="prop-rot-y" class="prop-input" oninput="applyTransformInput()"></div>
+                        <div class="prop-field"><span class="prop-axis">Z</span><input type="number" step="1" id="prop-rot-z" class="prop-input" oninput="applyTransformInput()"></div>
+                    </div>
+                </div>
+
+                <!-- Transform: Scale -->
+                <div class="prop-group">
+                    <span class="prop-label">Scale</span>
+                    <div class="prop-row">
+                        <div class="prop-field"><span class="prop-axis">X</span><input type="number" step="0.1" id="prop-scale-x" class="prop-input" oninput="applyTransformInput()"></div>
+                        <div class="prop-field"><span class="prop-axis">Y</span><input type="number" step="0.1" id="prop-scale-y" class="prop-input" oninput="applyTransformInput()"></div>
+                        <div class="prop-field"><span class="prop-axis">Z</span><input type="number" step="0.1" id="prop-scale-z" class="prop-input" oninput="applyTransformInput()"></div>
+                    </div>
+                </div>
+
+                <!-- Material & Shading -->
+                <div class="prop-group" id="prop-group-material">
+                    <span class="prop-label">Material Surface</span>
+                    <div class="color-picker-row">
+                        <input type="color" id="prop-mat-color" class="color-preview" onchange="applyMaterialInput()">
+                        <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-secondary);" id="prop-mat-color-hex">#ffffff</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                        <span style="font-size:0.72rem; color:var(--text-muted);">Roughness</span>
+                        <input type="range" min="0" max="1" step="0.05" id="prop-mat-roughness" style="width:110px;" oninput="applyMaterialInput()">
+                    </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">WORLD HIERARCHY</span>
-                        <button class="btn btn-sm btn-primary" onclick="Engine.spawnEntity('Mesh')">+ Add Object</button>
+                        <span style="font-size:0.72rem; color:var(--text-muted);">Metalness</span>
+                        <input type="range" min="0" max="1" step="0.05" id="prop-mat-metalness" style="width:110px;" oninput="applyMaterialInput()">
                     </div>
-                    <div class="scene-tree" id="scene-tree-list"></div>
-                </div>
-
-                <!-- TAB 2: ASSETS & STARTERS -->
-                <div class="pane-body" id="tab-assets" style="display:none;">
-                    <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">ASSET LIBRARY & KITS</span>
-                    <div class="asset-grid">
-                        <div class="asset-card" onclick="Engine.loadTemplate('metaball')">
-                            <div class="asset-card-icon">💧</div>
-                            <div class="asset-card-name">Liquid Glass Metaballs</div>
-                        </div>
-                        <div class="asset-card" onclick="Engine.loadTemplate('platformer3d')">
-                            <div class="asset-card-icon">🏃</div>
-                            <div class="asset-card-name">3D Runner Arena</div>
-                        </div>
-                        <div class="asset-card" onclick="Engine.loadTemplate('space')">
-                            <div class="asset-card-icon">🚀</div>
-                            <div class="asset-card-name">Zero-G Fighter</div>
-                        </div>
-                        <div class="asset-card" onclick="Engine.loadTemplate('particles')">
-                            <div class="asset-card-icon">✨</div>
-                            <div class="asset-card-name">Cosmic Reactor</div>
-                        </div>
+                    <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+                        <input type="checkbox" id="prop-mat-wireframe" onchange="applyMaterialInput()">
+                        <label for="prop-mat-wireframe" style="font-size:0.72rem; color:var(--text-secondary);">Wireframe Mode</label>
                     </div>
                 </div>
 
-                <!-- TAB 3: PREFABS -->
-                <div class="pane-body" id="tab-prefabs" style="display:none;">
-                    <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">REUSABLE PREFABS</span>
-                    <div class="asset-grid" id="prefabs-grid">
-                        <div class="asset-card" onclick="Engine.spawnPrefab('player')">
-                            <div class="asset-card-icon">🤖</div>
-                            <div class="asset-card-name">Hero Character</div>
-                        </div>
-                        <div class="asset-card" onclick="Engine.spawnPrefab('liquidDroplet')">
-                            <div class="asset-card-icon">🔮</div>
-                            <div class="asset-card-name">Refractive Blob</div>
-                        </div>
-                        <div class="asset-card" onclick="Engine.spawnPrefab('spinningCoin')">
-                            <div class="asset-card-icon">🪙</div>
-                            <div class="asset-card-name">Glow Crystal</div>
-                        </div>
-                        <div class="asset-card" onclick="Engine.spawnPrefab('turret')">
-                            <div class="asset-card-icon">🔫</div>
-                            <div class="asset-card-name">Plasma Cannon</div>
-                        </div>
-                    </div>
+                <!-- Light Properties -->
+                <div class="prop-group" id="prop-group-light" style="display:none;">
+                    <span class="prop-label">Light Intensity</span>
+                    <input type="number" step="0.2" min="0" id="prop-light-intensity" class="input-text" oninput="applyLightInput()">
                 </div>
 
-                <!-- TAB 4: INTEGRATED AI ASSISTANT -->
-                <div class="pane-body" id="tab-ai" style="display:none;">
-                    <div class="ai-assistant-dock">
-                        <div class="ai-chat-history" id="ai-chat-history">
-                            <div class="ai-bubble bot">Hello! I am NEXUS AI. Tell me what to generate or modify in the 3D scene (e.g. <i>"Spawn 10 bouncing neon spheres"</i>, <i>"Add liquid glass refraction"</i>, or <i>"Create double jump physics"</i>).</div>
-                        </div>
-                        <div style="display:flex; gap:4px;">
-                            <input type="text" id="ai-prompt-input" style="flex:1;" placeholder="Prompt scene or physics changes..." onkeydown="if(event.key==='Enter') executeAIPrompt()">
-                            <button class="btn btn-sm btn-primary" onclick="executeAIPrompt()">Send</button>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- RESIZER LEFT -->
-            <div class="resizer-v" id="resizer-left"></div>
-
-            <!-- CENTER VIEWPORT -->
-            <main class="viewport-stage">
-                <!-- Floating HUD: Gizmos & Tools -->
-                <div class="viewport-hud">
-                    <div class="hud-tool-pill">
-                        <button class="gizmo-mode-btn active" id="btn-gizmo-translate" onclick="Engine.setGizmoMode('translate')" title="Translate (W)">✛ Move</button>
-                        <button class="gizmo-mode-btn" id="btn-gizmo-rotate" onclick="Engine.setGizmoMode('rotate')" title="Rotate (E)">↻ Rotate</button>
-                        <button class="gizmo-mode-btn" id="btn-gizmo-scale" onclick="Engine.setGizmoMode('scale')" title="Scale (R)">⤢ Scale</button>
-                    </div>
-                    <div class="hud-tool-pill">
-                        <button class="gizmo-mode-btn" onclick="Engine.toggleCameraView()" id="btn-camera-toggle">2D / 3D</button>
-                        <button class="gizmo-mode-btn" onclick="Engine.focusSelected()" title="Focus Camera (F)">🎯 Focus</button>
-                        <button class="gizmo-mode-btn" onclick="Engine.toggleGrid()" title="Toggle Grid Overlay">▦ Grid</button>
-                    </div>
-                </div>
-
-                <!-- Viewport Canvas Container -->
-                <div id="webgl-canvas-container"></div>
-            </main>
-
-            <!-- RESIZER RIGHT -->
-            <div class="resizer-v" id="resizer-right"></div>
-
-            <!-- RIGHT DOCK: LIVE ENTITY INSPECTOR -->
-            <aside class="dock-pane dock-right" id="dock-right">
-                <div class="pane-header">
-                    <span>ENTITY INSPECTOR</span>
-                    <button class="btn btn-sm" onclick="Engine.addComponentToSelected()">+ Component</button>
-                </div>
-
-                <div class="pane-body" id="inspector-body">
-                    <div style="color:var(--text-muted); font-size:0.75rem; text-align:center; margin-top:20px;">
-                        Select an entity in the Viewport or Scene Tree to edit properties.
-                    </div>
-                </div>
-            </aside>
-        </div>
-
-        <!-- RESIZER BOTTOM -->
-        <div class="resizer-h" id="resizer-bottom"></div>
-
-        <!-- BOTTOM WORKSPACE: CONSOLE, CODE, VISUAL SCRIPTING, PARTICLES, SHADERS, PHYSICS, TIMELINE -->
-        <footer class="dock-pane dock-bottom" id="dock-bottom">
-            <div class="pane-header">
-                <div class="pane-tabs">
-                    <div class="pane-tab active" onclick="switchBottomTab('console', this)">📟 CONSOLE</div>
-                    <div class="pane-tab" onclick="switchBottomTab('visualscript', this)">🧩 VISUAL SCRIPTING</div>
-                    <div class="pane-tab" onclick="switchBottomTab('particles', this)">✨ PARTICLE / VFX</div>
-                    <div class="pane-tab" onclick="switchBottomTab('shaderlab', this)">🔮 SHADER LAB (METABALLS)</div>
-                    <div class="pane-tab" onclick="switchBottomTab('physicslab', this)">🪐 PHYSICS LAB</div>
-                    <div class="pane-tab" onclick="switchBottomTab('timeline', this)">🕒 TIMELINE</div>
-                </div>
-                <div>
-                    <button class="btn btn-sm" onclick="clearConsole()">Clear</button>
-                </div>
             </div>
-
-            <!-- TAB: CONSOLE -->
-            <div class="pane-body" id="btab-console">
-                <div class="console-list" id="console-list">
-                    <div class="log-row sys">✦ [NEXUS ENGINE READY] Core WebGL & Fixed-Timestep Physics Engine initialized.</div>
-                </div>
-            </div>
-
-            <!-- TAB: VISUAL SCRIPTING NODE GRAPH -->
-            <div class="pane-body" id="btab-visualscript" style="display:none; padding:0;">
-                <div class="node-graph-canvas" id="node-graph-container">
-                    <!-- Nodes injected via JS -->
-                </div>
-            </div>
-
-            <!-- TAB: PARTICLE / VFX LAB -->
-            <div class="pane-body" id="btab-particles" style="display:none;">
-                <div style="display:flex; gap:12px; height:100%;">
-                    <div style="width:240px; display:flex; flex-direction:column; gap:6px;">
-                        <span style="font-size:0.72rem; font-weight:700; color:#fff;">PARTICLE PRESETS</span>
-                        <button class="btn btn-sm" onclick="Engine.setParticlePreset('nova')">🌟 Cosmic Nova</button>
-                        <button class="btn btn-sm" onclick="Engine.setParticlePreset('fire')">🔥 Cyber Plasma Fire</button>
-                        <button class="btn btn-sm" onclick="Engine.setParticlePreset('sparks')">⚡ Impact Sparks</button>
-                        <button class="btn btn-sm" onclick="Engine.setParticlePreset('liquid')">💧 Fluid Spray</button>
-                    </div>
-                    <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                        <div class="prop-row">
-                            <span class="prop-label">Count:</span>
-                            <input type="range" min="10" max="2000" value="300" oninput="Engine.updateParticleParam('count', this.value)">
-                        </div>
-                        <div class="prop-row">
-                            <span class="prop-label">Speed:</span>
-                            <input type="range" min="0.1" max="10" step="0.1" value="2.5" oninput="Engine.updateParticleParam('speed', this.value)">
-                        </div>
-                        <div class="prop-row">
-                            <span class="prop-label">Life:</span>
-                            <input type="range" min="0.2" max="5" step="0.1" value="1.5" oninput="Engine.updateParticleParam('life', this.value)">
-                        </div>
-                        <div class="prop-row">
-                            <span class="prop-label">Color:</span>
-                            <input type="color" value="#00f0ff" onchange="Engine.updateParticleParam('color', this.value)">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: SHADER LAB (Addition7 Fluid Refraction) -->
-            <div class="pane-body" id="btab-shaderlab" style="display:none;">
-                <div class="shader-split-view">
-                    <div class="shader-code-pane">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                            <span style="font-size:0.72rem; color:var(--text-muted);">Addition7 Liquid Glass Fragment Shader (GLSL):</span>
-                            <button class="btn btn-sm btn-primary" onclick="Engine.compileCustomShader()">⚡ Recompile Shader</button>
-                        </div>
-                        <textarea id="shader-code-editor" style="flex:1; width:100%; resize:none;" spellcheck="false"></textarea>
-                    </div>
-                    <div class="shader-preview-pane">
-                        <div style="position:absolute; top:6px; left:6px; font-size:0.65rem; color:var(--accent-cyan); font-weight:700;">LIVE METABALL BUFFER</div>
-                        <canvas id="metaball-preview-canvas" style="width:100%; height:100%;"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: PHYSICS SANDBOX LAB -->
-            <div class="pane-body" id="btab-physicslab" style="display:none;">
-                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-                    <button class="btn btn-primary" onclick="Engine.applyPhysicsImpulse('explode')">💥 EXPLODE</button>
-                    <button class="btn" onclick="Engine.applyPhysicsImpulse('implode')">🧲 IMPLODE (MAGNET)</button>
-                    <button class="btn" onclick="Engine.setGravityMode('zero')">🪐 ZERO-GRAVITY</button>
-                    <button class="btn" onclick="Engine.setGravityMode('normal')">🌍 EARTH GRAVITY</button>
-                    <button class="btn" onclick="Engine.spawnDropletCluster(12)">💧 SPAWN 12 LIQUID DROPLETS</button>
-                    <button class="btn" onclick="Engine.clearPhysicsForces()">↻ RESET FORCES</button>
-                </div>
-            </div>
-
-            <!-- TAB: TIMELINE -->
-            <div class="pane-body" id="btab-timeline" style="display:none; padding:0;">
-                <div class="timeline-container">
-                    <div class="timeline-controls-bar">
-                        <div style="display:flex; gap:4px;">
-                            <button class="btn btn-sm" onclick="Timeline.togglePlay()">▶ Play</button>
-                            <button class="btn btn-sm" onclick="Timeline.addKeyframe()">+ Keyframe</button>
-                        </div>
-                        <span style="font-size:0.72rem; font-family:var(--font-code); color:var(--accent-cyan);" id="timeline-time-display">00:00.00</span>
-                    </div>
-                    <div class="timeline-track-area" id="timeline-tracks">
-                        <div class="timeline-ruler"></div>
-                        <div class="time-cursor" id="timeline-cursor" style="left: 0px;"></div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        </aside>
     </div>
 
     <!-- ==========================================================================
-         STANDALONE EXPORT & BUILD MODAL
+         PROJECTS MANAGER MODAL
          ========================================================================== -->
-    <div class="nexus-modal-backdrop" id="export-modal">
-        <div class="nexus-modal">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="font-family:var(--font-display); font-size:1.1rem; color:#fff;">📦 Export Standalone Game</h3>
-                <button class="btn btn-sm" onclick="closeExportModal()">✕</button>
+    <div class="modal-overlay" id="projects-modal">
+        <div class="modal-card lg">
+            <div class="modal-title-bar">
+                <div class="modal-title">Project Hub</div>
+                <button class="btn btn-sm" onclick="closeProjectsModal()">✕</button>
             </div>
-            <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:14px;">
-                Export your creation into a 100% self-contained, standalone single HTML file with embedded WebGL Three.js engine, custom shaders, and runtime physics.
+            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                <span style="font-size:0.8rem; color:var(--text-muted);">Continuous local browser storage guarantees your work is preserved.</span>
+                <button class="btn btn-accent" onclick="createNewProject()">+ Create New</button>
+            </div>
+            <div id="projects-list-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; max-height:300px; overflow-y:auto;">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PUBLISH MODAL -->
+    <div class="modal-overlay" id="publish-modal">
+        <div class="modal-card">
+            <div class="modal-title-bar">
+                <div class="modal-title">Publish to Global Network</div>
+                <button class="btn btn-sm" onclick="closePublishModal()">✕</button>
+            </div>
+            <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">
+                Deploy your project live to the public library.
             </p>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <button class="btn btn-primary" onclick="Engine.exportStandaloneHTML()">🌐 Download Standalone .HTML Game</button>
-                <button class="btn" onclick="Engine.exportProjectJSON()">💾 Download Project .JSON Backup</button>
-            </div>
+            <form onsubmit="event.preventDefault(); publishProject();">
+                <label style="font-size:0.72rem; color:var(--text-muted);">Title</label>
+                <input type="text" id="pub-title" class="input-text" required>
+                <label style="font-size:0.72rem; color:var(--text-muted);">Author Tag</label>
+                <input type="text" id="pub-author" class="input-text" required>
+                <label style="font-size:0.72rem; color:var(--text-muted);">Developer Email</label>
+                <input type="email" id="pub-email" class="input-text" required>
+                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+                    <button type="button" class="btn" onclick="closePublishModal()">Cancel</button>
+                    <button type="submit" class="btn btn-accent" id="pub-btn">Publish</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- ==========================================================================
-         PROJECTS HUB MODAL
-         ========================================================================== -->
-    <div class="nexus-modal-backdrop" id="projects-modal">
-        <div class="nexus-modal">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="font-family:var(--font-display); font-size:1.1rem; color:#fff;">📂 Saved Projects</h3>
-                <button class="btn btn-sm" onclick="closeProjectsHub()">✕</button>
-            </div>
-            <div id="projects-list-container" style="display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;"></div>
-            <div style="margin-top:14px; display:flex; justify-content:space-between;">
-                <button class="btn btn-primary" onclick="Engine.createNewProject()">+ Create New Project</button>
-                <button class="btn" onclick="closeProjectsHub()">Close</button>
-            </div>
-        </div>
-    </div>
+    <!-- TOAST DECK -->
+    <div class="toast-deck" id="toast-deck"></div>
 
     <!-- ==========================================================================
-         CORE NEXUS 3D/2D ENGINE & ARCHITECTURE SCRIPT
+         STUDIO JAVASCRIPT ARCHITECTURE
          ========================================================================== -->
     <script>
         /* --------------------------------------------------------------------------
-           1. CORE ENGINE SUBSYSTEM
+           1. CLOUD / SUPABASE CONFIG
            -------------------------------------------------------------------------- */
-        const Engine = {
-            scene: null,
-            camera: null,
-            renderer: null,
-            orbitControls: null,
-            transformControls: null,
-            entities: [],
-            selectedEntity: null,
-            isPlaying: false,
-            isPaused: false,
-            gizmoMode: 'translate',
-            is2D: false,
-            gridHelper: null,
-            liquidMetaballs: [],
-            particles: null,
-            particleConfig: { count: 300, speed: 2.5, life: 1.5, color: '#00f0ff' },
-
-            // Addition7 Fluid Droplet & Physics Constants
-            FIXED_DT_MS: 8,
-            MAX_CATCHUP: 6,
-            MAX_DROPLETS: 40,
-            lastFrameTime: performance.now(),
-            accumulator: 0,
-
-            init() {
-                const container = document.getElementById('webgl-canvas-container');
-                const width = container.clientWidth;
-                const height = container.clientHeight;
-
-                // 1. Scene & Camera Setup
-                this.scene = new THREE.Scene();
-                this.scene.background = new THREE.Color(0x05070e);
-
-                this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-                this.camera.position.set(0, 5, 12);
-
-                // 2. WebGL Renderer
-                this.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-                this.renderer.setSize(width, height);
-                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                this.renderer.shadowMap.enabled = true;
-                container.appendChild(this.renderer.domElement);
-
-                // 3. Orbit Controls
-                this.orbitControls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-                this.orbitControls.enableDamping = true;
-                this.orbitControls.dampingFactor = 0.05;
-
-                // 4. Transform Gizmo Controls
-                this.transformControls = new THREE.TransformControls(this.camera, this.renderer.domElement);
-                this.transformControls.size = 0.75;
-                this.transformControls.addEventListener('dragging-changed', (event) => {
-                    this.orbitControls.enabled = !event.value;
-                    if (!event.value && this.selectedEntity) {
-                        this.syncEntityFromMesh(this.selectedEntity);
-                        renderInspector();
-                    }
-                });
-                this.scene.add(this.transformControls);
-
-                // 5. Lighting & Environment
-                const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-                this.scene.add(ambient);
-
-                const dirLight = new THREE.DirectionalLight(0x00f0ff, 0.8);
-                dirLight.position.set(10, 20, 10);
-                this.scene.add(dirLight);
-
-                const dirLight2 = new THREE.DirectionalLight(0xff0077, 0.5);
-                dirLight2.position.set(-10, -10, -10);
-                this.scene.add(dirLight2);
-
-                // Grid
-                this.gridHelper = new THREE.GridHelper(40, 40, 0x00f0ff, 0x1f293d);
-                this.gridHelper.position.y = -0.01;
-                this.scene.add(this.gridHelper);
-
-                // 6. Raycast Object Selection
-                const raycaster = new THREE.Raycaster();
-                const mouse = new THREE.Vector2();
-
-                container.addEventListener('pointerdown', (e) => {
-                    if (this.transformControls.dragging) return;
-                    const rect = container.getBoundingClientRect();
-                    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-                    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-                    raycaster.setFromCamera(mouse, this.camera);
-                    const meshes = this.entities.map(ent => ent.mesh).filter(m => !!m);
-                    const hits = raycaster.intersectObjects(meshes, true);
-
-                    if (hits.length > 0) {
-                        const topHit = hits[0].object;
-                        const ent = this.entities.find(en => en.mesh === topHit || en.mesh.children.includes(topHit));
-                        if (ent) this.selectEntity(ent);
-                    }
-                });
-
-                // Window Resize
-                window.addEventListener('resize', () => this.onResize());
-
-                // Seed Default Scene & Shaders
-                this.seedDefaultScene();
-                this.initParticleSystem();
-                this.initShaderLab();
-
-                // Start Main Animation Loop
-                requestAnimationFrame((t) => this.loop(t));
-                logConsole("Three.js WebGL Stage & Transform Gizmo Online.", "info");
-            },
-
-            onResize() {
-                const container = document.getElementById('webgl-canvas-container');
-                if (!container) return;
-                const width = container.clientWidth;
-                const height = container.clientHeight;
-                this.camera.aspect = width / height;
-                this.camera.updateProjectionMatrix();
-                this.renderer.setSize(width, height);
-            },
-
-            selectEntity(entity) {
-                this.selectedEntity = entity;
-                if (entity && entity.mesh) {
-                    this.transformControls.attach(entity.mesh);
-                } else {
-                    this.transformControls.detach();
-                }
-                renderSceneTree();
-                renderInspector();
-            },
-
-            setGizmoMode(mode) {
-                this.gizmoMode = mode;
-                this.transformControls.setMode(mode);
-                document.querySelectorAll('.gizmo-mode-btn').forEach(b => b.classList.remove('active'));
-                const btn = document.getElementById(`btn-gizmo-${mode}`);
-                if (btn) btn.classList.add('active');
-            },
-
-            toggleCameraView() {
-                this.is2D = !this.is2D;
-                if (this.is2D) {
-                    this.camera.position.set(0, 0, 15);
-                    this.camera.lookAt(0, 0, 0);
-                    this.orbitControls.enableRotate = false;
-                    document.getElementById('btn-camera-toggle').textContent = "2D Mode";
-                } else {
-                    this.camera.position.set(0, 5, 12);
-                    this.orbitControls.enableRotate = true;
-                    document.getElementById('btn-camera-toggle').textContent = "3D Mode";
-                }
-            },
-
-            focusSelected() {
-                if (!this.selectedEntity || !this.selectedEntity.mesh) return;
-                const p = this.selectedEntity.mesh.position;
-                this.camera.position.set(p.x, p.y + 3, p.z + 6);
-                this.orbitControls.target.copy(p);
-            },
-
-            toggleGrid() {
-                if (this.gridHelper) this.gridHelper.visible = !this.gridHelper.visible;
-            },
-
-            spawnEntity(type = 'Mesh', name = null) {
-                const id = 'ent_' + Date.now() + '_' + Math.floor(Math.random()*1000);
-                const entName = name || `${type}_${this.entities.length + 1}`;
-                
-                const geo = type === 'Sphere' ? new THREE.SphereGeometry(1, 32, 32) :
-                            type === 'Torus' ? new THREE.TorusGeometry(1, 0.4, 16, 50) :
-                            new THREE.BoxGeometry(1.5, 1.5, 1.5);
-
-                const mat = new THREE.MeshStandardMaterial({
-                    color: type === 'Sphere' ? 0xff0077 : 0x00f0ff,
-                    roughness: 0.2,
-                    metalness: 0.8,
-                    wireframe: false
-                });
-
-                const mesh = new THREE.Mesh(geo, mat);
-                mesh.position.set((Math.random() - 0.5) * 6, 1, (Math.random() - 0.5) * 6);
-                mesh.castShadow = true;
-                this.scene.add(mesh);
-
-                const entity = {
-                    id,
-                    name: entName,
-                    type,
-                    mesh,
-                    transform: {
-                        position: { x: mesh.position.x, y: mesh.position.y, z: mesh.position.z },
-                        rotation: { x: 0, y: 0, z: 0 },
-                        scale: { x: 1, y: 1, z: 1 }
-                    },
-                    physics: {
-                        enabled: true,
-                        mass: 1.0,
-                        vx: 0, vy: 0, vz: 0,
-                        bounce: 0.7,
-                        gravity: true
-                    },
-                    material: {
-                        color: '#' + mat.color.getHexString(),
-                        roughness: 0.2,
-                        metalness: 0.8,
-                        glow: false
-                    },
-                    scripts: []
-                };
-
-                this.entities.push(entity);
-                this.selectEntity(entity);
-                renderSceneTree();
-                logConsole(`Spawned entity "${entName}" into scene.`, "info");
-                return entity;
-            },
-
-            syncEntityFromMesh(entity) {
-                if (!entity || !entity.mesh) return;
-                entity.transform.position.x = entity.mesh.position.x;
-                entity.transform.position.y = entity.mesh.position.y;
-                entity.transform.position.z = entity.mesh.position.z;
-
-                entity.transform.rotation.x = entity.mesh.rotation.x;
-                entity.transform.rotation.y = entity.mesh.rotation.y;
-                entity.transform.rotation.z = entity.mesh.rotation.z;
-
-                entity.transform.scale.x = entity.mesh.scale.x;
-                entity.transform.scale.y = entity.mesh.scale.y;
-                entity.transform.scale.z = entity.mesh.scale.z;
-            },
-
-            syncMeshFromEntity(entity) {
-                if (!entity || !entity.mesh) return;
-                entity.mesh.position.set(entity.transform.position.x, entity.transform.position.y, entity.transform.position.z);
-                entity.mesh.rotation.set(entity.transform.rotation.x, entity.transform.rotation.y, entity.transform.rotation.z);
-                entity.mesh.scale.set(entity.transform.scale.x, entity.transform.scale.y, entity.transform.scale.z);
-
-                if (entity.mesh.material) {
-                    entity.mesh.material.color.set(entity.material.color);
-                    entity.mesh.material.roughness = entity.material.roughness;
-                    entity.mesh.material.metalness = entity.material.metalness;
-                }
-            },
-
-            seedDefaultScene() {
-                // Ground Floor
-                const floorGeo = new THREE.PlaneGeometry(30, 30);
-                const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a0f1d, roughness: 0.9, metalness: 0.1 });
-                const floor = new THREE.Mesh(floorGeo, floorMat);
-                floor.rotation.x = -Math.PI / 2;
-                floor.position.y = -0.02;
-                this.scene.add(floor);
-
-                // Default Hero & Objects
-                this.spawnEntity('Mesh', 'CyberCore_Cube');
-                this.spawnEntity('Sphere', 'Energy_Orb');
-                this.spawnEntity('Torus', 'Portal_Ring');
-            },
-
-            /* --------------------------------------------------------------------------
-               2. PARTICLE ENGINE SYSTEM
-               -------------------------------------------------------------------------- */
-            initParticleSystem() {
-                const count = this.particleConfig.count;
-                const geometry = new THREE.BufferGeometry();
-                const positions = new Float32Array(count * 3);
-                const velocities = new Float32Array(count * 3);
-
-                for (let i = 0; i < count * 3; i += 3) {
-                    positions[i] = (Math.random() - 0.5) * 8;
-                    positions[i + 1] = Math.random() * 6;
-                    positions[i + 2] = (Math.random() - 0.5) * 8;
-
-                    velocities[i] = (Math.random() - 0.5) * 0.05;
-                    velocities[i + 1] = Math.random() * 0.04 + 0.01;
-                    velocities[i + 2] = (Math.random() - 0.5) * 0.05;
-                }
-
-                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
-
-                const material = new THREE.PointsMaterial({
-                    size: 0.15,
-                    color: new THREE.Color(this.particleConfig.color),
-                    transparent: true,
-                    opacity: 0.8,
-                    blending: THREE.AdditiveBlending
-                });
-
-                this.particles = new THREE.Points(geometry, material);
-                this.scene.add(this.particles);
-            },
-
-            updateParticles() {
-                if (!this.particles) return;
-                const positions = this.particles.geometry.attributes.position.array;
-                const velocities = this.particles.geometry.attributes.velocity.array;
-
-                for (let i = 0; i < positions.length; i += 3) {
-                    positions[i] += velocities[i] * (this.particleConfig.speed * 0.4);
-                    positions[i + 1] += velocities[i + 1] * (this.particleConfig.speed * 0.4);
-                    positions[i + 2] += velocities[i + 2] * (this.particleConfig.speed * 0.4);
-
-                    if (positions[i + 1] > 8) {
-                        positions[i + 1] = 0;
-                        positions[i] = (Math.random() - 0.5) * 6;
-                        positions[i + 2] = (Math.random() - 0.5) * 6;
-                    }
-                }
-                this.particles.geometry.attributes.position.needsUpdate = true;
-            },
-
-            setParticlePreset(preset) {
-                if (preset === 'fire') {
-                    this.particleConfig.color = '#ff3b00';
-                    this.particleConfig.speed = 3.5;
-                } else if (preset === 'nova') {
-                    this.particleConfig.color = '#00f0ff';
-                    this.particleConfig.speed = 2.0;
-                } else if (preset === 'sparks') {
-                    this.particleConfig.color = '#ffdd00';
-                    this.particleConfig.speed = 6.0;
-                } else if (preset === 'liquid') {
-                    this.particleConfig.color = '#00ff88';
-                    this.particleConfig.speed = 1.2;
-                }
-                this.particles.material.color.set(this.particleConfig.color);
-                logConsole(`Particle Preset set to: ${preset}`, "info");
-            },
-
-            updateParticleParam(param, val) {
-                this.particleConfig[param] = val;
-                if (param === 'color') this.particles.material.color.set(val);
-            },
-
-            /* --------------------------------------------------------------------------
-               3. ADDITION7 LIQUID GLASS & METABALL PIPELINE
-               -------------------------------------------------------------------------- */
-            initShaderLab() {
-                const defaultShader = `// NEXUS Shader Lab - Addition7 Liquid Glass GLSL
-precision highp float;
-uniform vec2 uResolution;
-uniform float uTime;
-uniform vec2 uMouse;
-
-void main() {
-    vec2 uv = gl_FragCoord.xy / uResolution.xy;
-    vec2 p = (uv - 0.5) * vec2(uResolution.x / uResolution.y, 1.0);
-    
-    // Liquid Metaball field calculation
-    float d = length(p);
-    float wave = sin(p.x * 12.0 + uTime * 2.0) * cos(p.y * 12.0 + uTime * 2.0) * 0.08;
-    float metaball = 0.05 / (d + wave + 0.001);
-    
-    // Chromatic Refraction Colors
-    vec3 col = vec3(0.0);
-    col.r = smoothstep(0.4, 0.9, metaball * 1.1);
-    col.g = smoothstep(0.4, 0.9, metaball);
-    col.b = smoothstep(0.4, 0.9, metaball * 1.4);
-    
-    // Glass Fresnel Edge Glow
-    float edge = smoothstep(0.7, 0.85, metaball);
-    col += vec3(0.0, 0.94, 1.0) * edge * 0.6;
-    
-    gl_FragColor = vec4(col, 1.0);
-}`;
-                document.getElementById('shader-code-editor').value = defaultShader;
-                this.renderMetaballCanvasPreview();
-            },
-
-            renderMetaballCanvasPreview() {
-                const canvas = document.getElementById('metaball-preview-canvas');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                canvas.width = 240; canvas.height = 180;
-
-                let t = 0;
-                function anim() {
-                    t += 0.03;
-                    ctx.fillStyle = '#050814';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    // Draw 3 dynamic metaball blobs
-                    for (let i = 0; i < 4; i++) {
-                        const x = canvas.width / 2 + Math.cos(t + i * 1.5) * 50;
-                        const y = canvas.height / 2 + Math.sin(t * 1.2 + i * 1.2) * 35;
-                        const rad = 25 + Math.sin(t + i) * 6;
-
-                        const grd = ctx.createRadialGradient(x, y, 0, x, y, rad);
-                        grd.addColorStop(0, 'rgba(0, 240, 255, 0.9)');
-                        grd.addColorStop(0.6, 'rgba(255, 0, 119, 0.4)');
-                        grd.addColorStop(1, 'rgba(0,0,0,0)');
-                        ctx.fillStyle = grd;
-                        ctx.beginPath();
-                        ctx.arc(x, y, rad, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                    requestAnimationFrame(anim);
-                }
-                anim();
-            },
-
-            compileCustomShader() {
-                logConsole("Shader Lab GLSL compiled & applied to Liquid Surface.", "sys");
-                showNotification("GLSL Shader Recompiled Successfully! 🔮");
-            },
-
-            /* --------------------------------------------------------------------------
-               4. PHYSICS & SIMULATION LOOP (Fixed Timestep)
-               -------------------------------------------------------------------------- */
-            togglePlayState() {
-                this.isPlaying = !this.isPlaying;
-                const btn = document.getElementById('btn-engine-play');
-                if (this.isPlaying) {
-                    btn.textContent = "⏹ STOP GAME";
-                    btn.classList.add('playing');
-                    this.transformControls.detach();
-                    logConsole("Game Simulation Started. Physics & Scripts active.", "sys");
-                } else {
-                    btn.textContent = "▶ PLAY GAME";
-                    btn.classList.remove('playing');
-                    if (this.selectedEntity) this.transformControls.attach(this.selectedEntity.mesh);
-                    logConsole("Game Simulation Stopped.", "info");
-                }
-            },
-
-            pauseSimulation() {
-                this.isPaused = !this.isPaused;
-                logConsole(`Simulation ${this.isPaused ? 'Paused' : 'Resumed'}.`, "warn");
-            },
-
-            resetScene() {
-                this.entities.forEach(ent => {
-                    ent.transform.position.y = Math.max(1, ent.transform.position.y);
-                    ent.physics.vx = 0; ent.physics.vy = 0; ent.physics.vz = 0;
-                    this.syncMeshFromEntity(ent);
-                });
-                logConsole("Scene state reset.", "info");
-            },
-
-            applyPhysicsImpulse(type) {
-                this.entities.forEach(ent => {
-                    if (!ent.physics.enabled) return;
-                    if (type === 'explode') {
-                        ent.physics.vx = (Math.random() - 0.5) * 12;
-                        ent.physics.vy = Math.random() * 10 + 4;
-                        ent.physics.vz = (Math.random() - 0.5) * 12;
-                    } else if (type === 'implode') {
-                        ent.physics.vx = -ent.transform.position.x * 2.5;
-                        ent.physics.vy = 5;
-                        ent.physics.vz = -ent.transform.position.z * 2.5;
-                    }
-                });
-                logConsole(`Applied impulse: ${type.toUpperCase()}`, "info");
-            },
-
-            setGravityMode(mode) {
-                const grav = mode !== 'zero';
-                this.entities.forEach(ent => ent.physics.gravity = grav);
-                logConsole(`Physics Gravity set to: ${mode}`, "info");
-            },
-
-            spawnDropletCluster(count = 8) {
-                for (let i = 0; i < count; i++) {
-                    const drop = this.spawnEntity('Sphere', `LiquidBlob_${i+1}`);
-                    drop.mesh.scale.set(0.5, 0.5, 0.5);
-                    drop.material.color = '#00f0ff';
-                    drop.physics.vy = Math.random() * 4 + 2;
-                    this.syncMeshFromEntity(drop);
-                }
-            },
-
-            clearPhysicsForces() {
-                this.entities.forEach(ent => {
-                    ent.physics.vx = 0; ent.physics.vy = 0; ent.physics.vz = 0;
-                });
-            },
-
-            // Main Animation & Physics Loop
-            loop(now) {
-                requestAnimationFrame((t) => this.loop(t));
-
-                const dt = Math.min(now - this.lastFrameTime, 100);
-                this.lastFrameTime = now;
-
-                if (this.isPlaying && !this.isPaused) {
-                    this.accumulator += dt;
-                    let catchup = 0;
-                    while (this.accumulator >= this.FIXED_DT_MS && catchup < this.MAX_CATCHUP) {
-                        this.fixedPhysicsUpdate();
-                        this.accumulator -= this.FIXED_DT_MS;
-                        catchup++;
-                    }
-                }
-
-                this.orbitControls.update();
-                this.updateParticles();
-                this.renderer.render(this.scene, this.camera);
-            },
-
-            fixedPhysicsUpdate() {
-                const gravityAccel = -0.015;
-                this.entities.forEach(ent => {
-                    if (!ent.physics.enabled) return;
-
-                    if (ent.physics.gravity) {
-                        ent.physics.vy += gravityAccel;
-                    }
-
-                    ent.transform.position.x += ent.physics.vx * 0.05;
-                    ent.transform.position.y += ent.physics.vy * 0.05;
-                    ent.transform.position.z += ent.physics.vz * 0.05;
-
-                    // Ground Floor Collision
-                    if (ent.transform.position.y < 0.75) {
-                        ent.transform.position.y = 0.75;
-                        ent.physics.vy = -ent.physics.vy * ent.physics.bounce;
-                        ent.physics.vx *= 0.95;
-                        ent.physics.vz *= 0.95;
-                    }
-
-                    this.syncMeshFromEntity(ent);
-                });
-            },
-
-            /* --------------------------------------------------------------------------
-               5. PREFABS & TEMPLATES
-               -------------------------------------------------------------------------- */
-            spawnPrefab(prefabKey) {
-                if (prefabKey === 'player') {
-                    const hero = this.spawnEntity('Mesh', 'Hero_Mech');
-                    hero.material.color = '#00ff88';
-                    hero.material.roughness = 0.1;
-                    this.syncMeshFromEntity(hero);
-                } else if (prefabKey === 'liquidDroplet') {
-                    const droplet = this.spawnEntity('Sphere', 'RefractBlob');
-                    droplet.material.color = '#00f0ff';
-                    droplet.physics.bounce = 0.9;
-                    this.syncMeshFromEntity(droplet);
-                } else if (prefabKey === 'spinningCoin') {
-                    const crystal = this.spawnEntity('Torus', 'GlowCrystal');
-                    crystal.material.color = '#fbbf24';
-                    this.syncMeshFromEntity(crystal);
-                } else if (prefabKey === 'turret') {
-                    const turret = this.spawnEntity('Mesh', 'PlasmaCannon');
-                    turret.material.color = '#ff0055';
-                    this.syncMeshFromEntity(turret);
-                }
-            },
-
-            loadTemplate(type) {
-                if (!confirm(`Load starting kit "${type}"? This will reset the workspace.`)) return;
-                this.entities.forEach(ent => this.scene.remove(ent.mesh));
-                this.entities = [];
-                this.seedDefaultScene();
-                if (type === 'metaball') {
-                    this.spawnDropletCluster(10);
-                }
-                renderSceneTree();
-                logConsole(`Loaded Game Template: ${type}`, "sys");
-            },
-
-            /* --------------------------------------------------------------------------
-               6. EXPORTING STANDALONE GAME
-               -------------------------------------------------------------------------- */
-            exportStandaloneHTML() {
-                const gameTitle = document.getElementById('project-title').value || 'My Nexus Game';
-                const serializedEntities = JSON.stringify(this.entities.map(e => ({
-                    name: e.name, type: e.type, transform: e.transform, material: e.material
-                })));
-
-                const standaloneHTML = `<!DOCTYPE html>
+        const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
+        const sbClient = (window.supabase && SUPABASE_URL) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        /* --------------------------------------------------------------------------
+           2. STARTER BLUEPRINTS & TEMPLATES
+           -------------------------------------------------------------------------- */
+        const TEMPLATES = {
+            liquidGlass: `<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>${gameTitle}</title>
-    <style>
-        body { margin: 0; overflow: hidden; background: #000; font-family: sans-serif; }
-        #hud { position: fixed; top: 15px; left: 15px; color: #00f0ff; font-weight: 700; font-size: 14px; text-shadow: 0 0 8px #00f0ff; }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liquid Glass — Metaball Refraction</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#0a0a12; font-family:'Space Grotesk', sans-serif; }
+    #app { width:100%; height:100%; position:relative; }
+    canvas { display:block; }
+    .info {
+      position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+      font:12px/1.4 'Space Grotesk', sans-serif; color:rgba(255,255,255,0.3);
+      pointer-events:none; text-align:center; user-select:none; letter-spacing:0.04em;
+    }
+  </style>
 </head>
 <body>
-    <div id="hud">${gameTitle} // RUNTIME</div>
-    <script>
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x05070e);
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 5, 12);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+  <div id="app"></div>
+  <div class="info">Liquid Glass — Click or Drag to spawn fluid droplets</div>
 
-        const amb = new THREE.AmbientLight(0xffffff, 0.5); scene.add(amb);
-        const light = new THREE.DirectionalLight(0x00f0ff, 0.8); light.position.set(5, 10, 5); scene.add(light);
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\\/script>
+  <script>
+    const MAX_DROPLETS = 40;
+    const FIXED_DT_MS = 8;
+    const MAX_FRAME_DT_MS = 100;
+    const MAX_CATCHUP = 6;
 
-        const floor = new THREE.Mesh(new THREE.PlaneGeometry(40,40), new THREE.MeshStandardMaterial({ color: 0x0c1020 }));
-        floor.rotation.x = -Math.PI / 2; scene.add(floor);
+    const app = document.getElementById("app");
+    const renderer = new THREE.WebGLRenderer({ antialias: false });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    app.appendChild(renderer.domElement);
 
-        const data = ${serializedEntities};
-        const meshes = [];
-        data.forEach(d => {
-            const geo = d.type === 'Sphere' ? new THREE.SphereGeometry(1, 32, 32) :
-                        d.type === 'Torus' ? new THREE.TorusGeometry(1, 0.4, 16, 50) :
-                        new THREE.BoxGeometry(1.5, 1.5, 1.5);
-            const mat = new THREE.MeshStandardMaterial({ color: d.material.color, roughness: 0.2, metalness: 0.8 });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.position.set(d.transform.position.x, d.transform.position.y, d.transform.position.z);
-            scene.add(mesh);
-            meshes.push(mesh);
-        });
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-        function animate(t) {
-            requestAnimationFrame(animate);
-            meshes.forEach((m, idx) => {
-                m.rotation.y += 0.01;
-                m.position.y += Math.sin(t * 0.003 + idx) * 0.005;
-            });
-            renderer.render(scene, camera);
+    // Background Typography Canvas Texture
+    const bgCanvas = document.createElement("canvas");
+    const bgCtx = bgCanvas.getContext("2d");
+    const bgTexture = new THREE.CanvasTexture(bgCanvas);
+    bgTexture.minFilter = THREE.LinearFilter;
+    bgTexture.magFilter = THREE.LinearFilter;
+
+    function drawBackground() {
+      const w = renderer.domElement.width;
+      const h = renderer.domElement.height;
+      bgCanvas.width = w;
+      bgCanvas.height = h;
+
+      const grd = bgCtx.createLinearGradient(0, 0, w * 0.6, h);
+      grd.addColorStop(0, "#e8dbc8");
+      grd.addColorStop(0.35, "#5b8cdb");
+      grd.addColorStop(0.6, "#2d6fd4");
+      grd.addColorStop(1, "#1a3fa0");
+      bgCtx.fillStyle = grd;
+      bgCtx.fillRect(0, 0, w, h);
+
+      bgCtx.save();
+      bgCtx.globalAlpha = 0.35;
+      for (let i = 0; i < 5; i++) {
+        const cx = w * (0.2 + i * 0.18);
+        const cy = h * (0.3 + Math.sin(i * 1.3) * 0.25);
+        const rg = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.35);
+        const hue = 200 + i * 25;
+        rg.addColorStop(0, "hsla(" + hue + ", 80%, 65%, 0.6)");
+        rg.addColorStop(1, "hsla(" + hue + ", 60%, 40%, 0)");
+        bgCtx.fillStyle = rg;
+        bgCtx.fillRect(0, 0, w, h);
+      }
+      bgCtx.restore();
+
+      bgCtx.fillStyle = "#ffffff";
+      bgCtx.textAlign = "center";
+      bgCtx.textBaseline = "middle";
+      const titleSize = Math.round(w * 0.12);
+      bgCtx.font = "700 " + titleSize + "px 'Space Grotesk', sans-serif";
+      bgCtx.fillText("Liquid", w * 0.5, h * 0.38);
+      bgCtx.fillText("Glass", w * 0.5, h * 0.38 + titleSize * 1.05);
+
+      const subSize = Math.round(w * 0.022);
+      bgCtx.font = "500 " + subSize + "px 'Space Grotesk', sans-serif";
+      bgCtx.globalAlpha = 0.55;
+      bgCtx.fillText("Metaball Refraction Demo", w * 0.5, h * 0.38 + titleSize * 2.3);
+      bgCtx.globalAlpha = 1;
+      bgTexture.needsUpdate = true;
+    }
+    drawBackground();
+
+    // Droplet State & Textures
+    const MAX_ENTRIES = MAX_DROPLETS * 2;
+    const dropletBuf = new Float32Array(MAX_ENTRIES * 4);
+    const dropletTex = new THREE.DataTexture(dropletBuf, MAX_ENTRIES, 1, THREE.RGBAFormat, THREE.FloatType);
+    dropletTex.minFilter = THREE.NearestFilter;
+    dropletTex.magFilter = THREE.NearestFilter;
+
+    let drops = [];
+    let uid = 0;
+
+    function spawn(x, y, r, vx = 0, vy = 0) {
+      if (drops.length >= MAX_DROPLETS) return null;
+      const angle = Math.random() * Math.PI * 2;
+      const spd = 0.0003 + Math.random() * 0.0008;
+      const d = {
+        id: uid++, x, y, r, area: Math.PI * r * r,
+        vx: vx || Math.cos(angle) * spd,
+        vy: vy || Math.sin(angle) * spd,
+        alive: true,
+        wanderAngle: Math.random() * Math.PI * 2,
+        wanderSpeed: 0.3 + Math.random() * 0.5,
+        softPrevX: x, softPrevY: y, softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0
+      };
+      drops.push(d);
+      return d;
+    }
+
+    for (let i = 0; i < 12; i++) {
+      spawn((Math.random() - 0.5) * 0.7, (Math.random() - 0.5) * 0.5, 0.03 + Math.random() * 0.05);
+    }
+
+    // Shader Material for Liquid Metaballs
+    const vertSrc = "void main(){ gl_Position = vec4(position, 1.0); }";
+    const fragSrc = \`
+      precision highp float;
+      #define MAX_N \${MAX_ENTRIES}
+      uniform vec2 uRes;
+      uniform sampler2D uData;
+      uniform sampler2D uBg;
+      uniform int uCount;
+
+      void main(){
+        vec2 uv = gl_FragCoord.xy / uRes;
+        float asp = uRes.x / uRes.y;
+        vec2 p = (uv - 0.5) * vec2(asp, 1.0);
+
+        float field = 0.0;
+        vec2 grad = vec2(0.0);
+        vec2 lens = vec2(0.0);
+        float lensW = 0.0;
+
+        for(int i = 0; i < MAX_N; i++){
+          if(i >= uCount) break;
+          vec4 d = texture2D(uData, vec2((float(i)+0.5)/float(MAX_N), 0.5));
+          vec2 c = d.xy;
+          float r = d.z;
+          if(r < 0.001) continue;
+          vec2 delta = p - c;
+          float dSq = dot(delta, delta) + 1e-5;
+          float contrib = r * r / dSq;
+          field += contrib;
+          grad += -2.0 * contrib / dSq * delta;
+          float w = r * r / (dSq + r * r);
+          lens += (c - p) * w;
+          lensW += w;
         }
-        animate(0);
 
-        window.onresize = () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        };
-    <\/script>
+        lens /= (lensW + 0.001);
+        float lensLen = length(lens);
+        float thr = 1.0;
+        float edge = smoothstep(thr - 0.08, thr + 0.03, field);
+
+        float refractStrength = 0.035;
+        float mappedLens = atan(lensLen * 6.0) * refractStrength;
+        vec2 refractDir = (lensLen > 1e-5) ? lens / lensLen : vec2(0.0);
+        float refractMask = smoothstep(thr - 0.2, thr + 1.5, field);
+        vec2 refractedUV = clamp(uv + refractDir * mappedLens * refractMask, 0.001, 0.999);
+
+        vec3 bgClean = texture2D(uBg, uv).rgb;
+        float gradLen = length(grad);
+        float nScale = atan(gradLen * 0.5) * 0.3;
+        vec2 nGrad = (gradLen > 1e-4) ? (grad / gradLen) * nScale : vec2(0.0);
+        vec3 N = normalize(vec3(-nGrad, 1.0));
+        vec3 L = normalize(vec3(0.3, 0.6, 1.0));
+        float diff = max(dot(N, L), 0.0);
+        float spec = pow(max(dot(N, normalize(L + vec3(0.0,0.0,1.0))), 0.0), 180.0);
+
+        float caStr = 0.0018 * edge;
+        vec3 bgCA;
+        bgCA.r = texture2D(uBg, refractedUV + vec2(caStr, caStr * 0.5)).r;
+        bgCA.g = texture2D(uBg, refractedUV).g;
+        bgCA.b = texture2D(uBg, refractedUV - vec2(caStr, caStr * 0.5)).b;
+
+        vec3 glassColor = bgCA * (0.92 + 0.08 * diff) + vec3(1.0) * spec * 0.85;
+        vec3 col = mix(bgClean, glassColor, edge);
+        gl_FragColor = vec4(col, 1.0);
+      }
+    \`;
+
+    const mat = new THREE.ShaderMaterial({
+      vertexShader: vertSrc, fragmentShader: fragSrc,
+      uniforms: {
+        uRes: { value: new THREE.Vector2(renderer.domElement.width, renderer.domElement.height) },
+        uData: { value: dropletTex },
+        uBg: { value: bgTexture },
+        uCount: { value: 0 }
+      }
+    });
+
+    scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
+
+    // Input handlers
+    let aspect = window.innerWidth / window.innerHeight;
+    const mouse = { x: 999, y: 999, active: false, down: false };
+    window.onpointermove = e => {
+      mouse.x = ((e.clientX / window.innerWidth) - 0.5) * aspect;
+      mouse.y = 0.5 - (e.clientY / window.innerHeight);
+      mouse.active = true;
+    };
+    window.onpointerdown = () => { mouse.down = true; spawn(mouse.x, mouse.y, 0.04); };
+    window.onpointerup = () => { mouse.down = false; };
+
+    function animate() {
+      requestAnimationFrame(animate);
+      for (const d of drops) {
+        d.x += d.vx; d.y += d.vy;
+        if (Math.abs(d.x) > aspect * 0.5) d.vx *= -1;
+        if (Math.abs(d.y) > 0.5) d.vy *= -1;
+      }
+      dropletBuf.fill(0);
+      for (let i = 0; i < drops.length; i++) {
+        dropletBuf[i * 4] = drops[i].x;
+        dropletBuf[i * 4 + 1] = drops[i].y;
+        dropletBuf[i * 4 + 2] = drops[i].r;
+        dropletBuf[i * 4 + 3] = 1;
+      }
+      dropletTex.needsUpdate = true;
+      mat.uniforms.uCount.value = drops.length;
+      renderer.render(scene, camera);
+    }
+    animate();
+  <\\/script>
 </body>
-</html>`;
+</html>`,
 
-                const blob = new Blob([standaloneHTML], { type: 'text/html' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `${gameTitle.replace(/\s+/g, '_')}_Standalone.html`;
-                a.click();
-                logConsole(`Exported standalone game "${gameTitle}.html" 📦`, "sys");
-                showNotification("Standalone HTML game downloaded! 🚀");
-            },
+            spatial3d: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>3D Spatial World</title>
+  <style>body { margin:0; overflow:hidden; background:#07080c; }</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\\/script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\\/script>
+</head>
+<body>
+  <script>
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x07080c);
 
-            exportProjectJSON() {
-                const data = {
-                    title: document.getElementById('project-title').value,
-                    entities: this.entities.map(e => ({ name: e.name, type: e.type, transform: e.transform, material: e.material }))
-                };
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `Nexus_Project.json`;
-                a.click();
-            }
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 4, 8);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    // Lights
+    const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+    scene.add(ambient);
+
+    const dirLight = new THREE.DirectionalLight(0x38bdf8, 1.2);
+    dirLight.position.set(5, 10, 5);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
+
+    // Floor
+    const floorGeo = new THREE.PlaneGeometry(20, 20);
+    const floorMat = new THREE.MeshStandardMaterial({ color: 0x11141c, roughness: 0.6 });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // Center Sphere
+    const sphereGeo = new THREE.SphereGeometry(1.2, 32, 32);
+    const sphereMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: 0.2, roughness: 0.1 });
+    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    sphere.position.y = 1.5;
+    sphere.castShadow = true;
+    scene.add(sphere);
+
+    function animate(time) {
+      requestAnimationFrame(animate);
+      sphere.position.y = 1.5 + Math.sin(time * 0.002) * 0.4;
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate(0);
+
+    window.onresize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+  <\\/script>
+</body>
+</html>`
         };
 
         /* --------------------------------------------------------------------------
-           7. UI RENDERING & INSPECTOR
+           3. STUDIO APPLICATION STATE
            -------------------------------------------------------------------------- */
-        function renderSceneTree() {
-            const list = document.getElementById('scene-tree-list');
-            list.innerHTML = '';
+        const STORAGE_MANIFEST = 'afk_studio_manifest_v3';
+        const STORAGE_ACTIVE = 'afk_studio_active_v3';
 
-            Engine.entities.forEach(ent => {
-                const node = document.createElement('div');
-                const isSel = Engine.selectedEntity && Engine.selectedEntity.id === ent.id;
-                node.className = `tree-node ${isSel ? 'selected' : ''}`;
-                node.innerHTML = `
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <span>${ent.type === 'Sphere' ? '🔮' : ent.type === 'Torus' ? '🍩' : '📦'}</span>
-                        <span>${ent.name}</span>
-                    </div>
-                    <button class="btn btn-sm" style="padding:1px 4px; color:#f87171;" onclick="event.stopPropagation(); deleteEntity('${ent.id}')">✕</button>
-                `;
-                node.onclick = () => Engine.selectEntity(ent);
-                list.appendChild(node);
+        let activeProjectId = null;
+        let currentWorkspaceMode = 'visual'; // 'visual' | 'split' | 'code'
+        let currentFile = 'index.html';
+        let isRunning = false;
+        let selectedObject = null;
+        let timelineTime = 0;
+        let timelinePlaying = false;
+        let keyframesData = []; // Array of { time, objId, pos, rot, scl }
+
+        const codeInput = document.getElementById('code-input');
+        const lineNumbers = document.getElementById('line-numbers');
+        const projectNameInput = document.getElementById('project-name-input');
+        const saveStatus = document.getElementById('save-status');
+        const saveStatusLabel = document.getElementById('save-status-label');
+        const visualCanvas = document.getElementById('visual-3d-canvas');
+        const sandboxIframe = document.getElementById('sandbox-iframe');
+        const consoleStream = document.getElementById('console-stream');
+        const consoleBadge = document.getElementById('console-badge');
+
+        /* --------------------------------------------------------------------------
+           4. THREE.JS VISUAL 3D SCENE & GIZMO ENGINE
+           -------------------------------------------------------------------------- */
+        let vScene, vCamera, vRenderer, vOrbit, vTransform;
+        let vObjects = [];
+        let raycaster = new THREE.Raycaster();
+        let mouse = new THREE.Vector2();
+
+        function init3DVisualEngine() {
+            const container = document.getElementById('visual-3d-container');
+            const width = container.clientWidth || window.innerWidth / 2;
+            const height = container.clientHeight || window.innerHeight;
+
+            vScene = new THREE.Scene();
+            vScene.background = new THREE.Color(0x0c0e14);
+
+            vCamera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+            vCamera.position.set(5, 5, 8);
+
+            vRenderer = new THREE.WebGLRenderer({ canvas: visualCanvas, antialias: true });
+            vRenderer.setSize(width, height);
+            vRenderer.shadowMap.enabled = true;
+
+            vOrbit = new THREE.OrbitControls(vCamera, vRenderer.domElement);
+            vOrbit.enableDamping = true;
+            vOrbit.dampingFactor = 0.05;
+
+            // Grid & Ambient
+            const grid = new THREE.GridHelper(20, 20, 0x334155, 0x1e293b);
+            grid.position.y = -0.01;
+            vScene.add(grid);
+
+            const ambLight = new THREE.AmbientLight(0xffffff, 0.4);
+            vScene.add(ambLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            sunLight.position.set(6, 12, 6);
+            sunLight.castShadow = true;
+            vScene.add(sunLight);
+
+            // Transform Gizmo Controls
+            vTransform = new THREE.TransformControls(vCamera, vRenderer.domElement);
+            vTransform.size = 0.75;
+            vScene.add(vTransform);
+
+            vTransform.addEventListener('dragging-changed', (event) => {
+                vOrbit.enabled = !event.value;
+                if (!event.value) syncSelectedObjectToInspector();
             });
 
-            document.getElementById('stat-entities').textContent = Engine.entities.length;
-        }
+            vTransform.addEventListener('change', () => {
+                syncSelectedObjectToInspector();
+            });
 
-        function deleteEntity(id) {
-            const idx = Engine.entities.findIndex(e => e.id === id);
-            if (idx === -1) return;
-            const ent = Engine.entities[idx];
-            if (Engine.selectedEntity && Engine.selectedEntity.id === id) {
-                Engine.selectEntity(null);
+            // Initial Starter Object
+            createPrimitive('box', 'Default_Cube');
+
+            // Viewport Click Raycasting
+            visualCanvas.addEventListener('pointerdown', onViewportPointerDown);
+            window.addEventListener('resize', onVisualResize);
+
+            function renderLoop() {
+                requestAnimationFrame(renderLoop);
+                if (vOrbit.enabled) vOrbit.update();
+                vRenderer.render(vScene, vCamera);
             }
-            Engine.scene.remove(ent.mesh);
-            Engine.entities.splice(idx, 1);
-            renderSceneTree();
-            renderInspector();
-            logConsole(`Deleted entity ${ent.name}`, "warn");
+            renderLoop();
         }
 
-        function renderInspector() {
-            const container = document.getElementById('inspector-body');
-            const ent = Engine.selectedEntity;
-            if (!ent) {
-                container.innerHTML = '<div style="color:var(--text-muted); font-size:0.75rem; text-align:center; margin-top:20px;">No entity selected.</div>';
+        function onVisualResize() {
+            const container = document.getElementById('visual-3d-container');
+            if (!container || !vCamera || !vRenderer) return;
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            if (w === 0 || h === 0) return;
+            vCamera.aspect = w / h;
+            vCamera.updateProjectionMatrix();
+            vRenderer.setSize(w, h);
+        }
+
+        function onViewportPointerDown(event) {
+            const rect = visualCanvas.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, vCamera);
+            const intersects = raycaster.intersectObjects(vObjects, false);
+
+            if (intersects.length > 0) {
+                selectObject(intersects[0].object);
+            }
+        }
+
+        function createPrimitive(type, customName) {
+            let mesh;
+            const name = customName || `${type.charAt(0).toUpperCase() + type.slice(1)}_${vObjects.length + 1}`;
+
+            if (type === 'box') {
+                mesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(1.5, 1.5, 1.5),
+                    new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.2, metalness: 0.1 })
+                );
+                mesh.position.set(0, 0.75, 0);
+            } else if (type === 'sphere') {
+                mesh = new THREE.Mesh(
+                    new THREE.SphereGeometry(1, 32, 32),
+                    new THREE.MeshStandardMaterial({ color: 0x818cf8, roughness: 0.1, metalness: 0.3 })
+                );
+                mesh.position.set(0, 1, 0);
+            } else if (type === 'cylinder') {
+                mesh = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.8, 0.8, 1.8, 32),
+                    new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.3 })
+                );
+                mesh.position.set(0, 0.9, 0);
+            } else if (type === 'plane') {
+                mesh = new THREE.Mesh(
+                    new THREE.PlaneGeometry(8, 8),
+                    new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8 })
+                );
+                mesh.rotation.x = -Math.PI / 2;
+            } else if (type === 'torus') {
+                mesh = new THREE.Mesh(
+                    new THREE.TorusGeometry(1, 0.3, 24, 48),
+                    new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.2 })
+                );
+                mesh.position.set(0, 1.2, 0);
+            } else if (type === 'pointlight') {
+                mesh = new THREE.PointLight(0xffffff, 1, 10);
+                mesh.position.set(0, 3, 0);
+                const helper = new THREE.PointLightHelper(mesh, 0.3);
+                vScene.add(helper);
+            } else if (type === 'dirlight') {
+                mesh = new THREE.DirectionalLight(0xffffff, 1);
+                mesh.position.set(3, 5, 3);
+            }
+
+            mesh.name = name;
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            vScene.add(mesh);
+            vObjects.push(mesh);
+
+            selectObject(mesh);
+            updateHierarchyTree();
+            triggerSave();
+            showToast(`Created ${name}`);
+        }
+
+        function selectObject(obj) {
+            selectedObject = obj;
+            if (obj) {
+                vTransform.attach(obj);
+            } else {
+                vTransform.detach();
+            }
+            syncSelectedObjectToInspector();
+            updateHierarchyTree();
+        }
+
+        function deleteSelectedObject() {
+            if (!selectedObject) return;
+            vTransform.detach();
+            vScene.remove(selectedObject);
+            vObjects = vObjects.filter(o => o !== selectedObject);
+            showToast(`Deleted ${selectedObject.name}`);
+            selectedObject = null;
+            syncSelectedObjectToInspector();
+            updateHierarchyTree();
+            triggerSave();
+        }
+
+        function setGizmoMode(mode) {
+            if (vTransform) vTransform.setMode(mode);
+            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+            if (mode === 'translate') document.getElementById('tool-select').classList.add('active');
+            if (mode === 'rotate') document.getElementById('tool-rotate').classList.add('active');
+            if (mode === 'scale') document.getElementById('tool-scale').classList.add('active');
+        }
+
+        function reset3DCamera() {
+            vCamera.position.set(5, 5, 8);
+            vOrbit.target.set(0, 0, 0);
+            vOrbit.update();
+        }
+
+        function updateHierarchyTree() {
+            const list = document.getElementById('hierarchy-list');
+            list.innerHTML = vObjects.map(obj => `
+                <div class="tree-node ${selectedObject === obj ? 'selected' : ''}" onclick="selectObjectByName('${obj.name}')">
+                    <span style="display:flex; align-items:center;">
+                        <span class="tree-node-icon">${obj.isLight ? '💡' : '■'}</span> ${obj.name}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function selectObjectByName(name) {
+            const found = vObjects.find(o => o.name === name);
+            if (found) selectObject(found);
+        }
+
+        /* --------------------------------------------------------------------------
+           5. INSPECTOR / PROPERTIES SYNCHRONIZATION
+           -------------------------------------------------------------------------- */
+        function syncSelectedObjectToInspector() {
+            if (!selectedObject) {
+                document.getElementById('prop-object-name').value = 'None selected';
                 return;
             }
 
-            container.innerHTML = `
-                <div class="component-box">
-                    <div class="component-header">
-                        <span>ENTITY: ${ent.name}</span>
-                        <span style="font-size:0.68rem; color:var(--accent-cyan);">${ent.type}</span>
-                    </div>
-                    <div class="component-body">
-                        <div class="prop-row">
-                            <span class="prop-label">Name:</span>
-                            <input type="text" value="${ent.name}" style="flex:1;" onchange="ent.name=this.value; renderSceneTree();">
-                        </div>
-                    </div>
-                </div>
+            document.getElementById('prop-object-name').value = selectedObject.name;
 
-                <!-- TRANSFORM COMPONENT -->
-                <div class="component-box">
-                    <div class="component-header">📐 TRANSFORM</div>
-                    <div class="component-body">
-                        <div class="prop-row">
-                            <span class="prop-label">Position:</span>
-                            <div class="prop-inputs-3">
-                                <div class="vector-input"><span>X</span><input type="number" step="0.2" value="${ent.transform.position.x.toFixed(2)}" oninput="Engine.selectedEntity.transform.position.x=parseFloat(this.value); Engine.syncMeshFromEntity(Engine.selectedEntity);"></div>
-                                <div class="vector-input"><span>Y</span><input type="number" step="0.2" value="${ent.transform.position.y.toFixed(2)}" oninput="Engine.selectedEntity.transform.position.y=parseFloat(this.value); Engine.syncMeshFromEntity(Engine.selectedEntity);"></div>
-                                <div class="vector-input"><span>Z</span><input type="number" step="0.2" value="${ent.transform.position.z.toFixed(2)}" oninput="Engine.selectedEntity.transform.position.z=parseFloat(this.value); Engine.syncMeshFromEntity(Engine.selectedEntity);"></div>
-                            </div>
-                        </div>
-                        <div class="prop-row">
-                            <span class="prop-label">Scale:</span>
-                            <div class="prop-inputs-3">
-                                <div class="vector-input"><span>X</span><input type="number" step="0.1" value="${ent.transform.scale.x.toFixed(2)}" oninput="Engine.selectedEntity.transform.scale.x=parseFloat(this.value); Engine.syncMeshFromEntity(Engine.selectedEntity);"></div>
-                                <div class="vector-input"><span>Y</span><input type="number" step="0.1" value="${ent.transform.scale.y.toFixed(2)}" oninput="Engine.selectedEntity.transform.scale.y=parseFloat(this.value); Engine.syncMeshFromEntity(Engine.selectedEntity);"></div>
-                                <div class="vector-input"><span>Z</span><input type="number" step="0.1" value="${ent.transform.scale.z.toFixed(2)}" oninput="Engine.selectedEntity.transform.scale.z=parseFloat(this.value); Engine.syncMeshFromEntity(Engine.selectedEntity);"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            // Position
+            document.getElementById('prop-pos-x').value = selectedObject.position.x.toFixed(2);
+            document.getElementById('prop-pos-y').value = selectedObject.position.y.toFixed(2);
+            document.getElementById('prop-pos-z').value = selectedObject.position.z.toFixed(2);
 
-                <!-- MATERIAL COMPONENT -->
-                <div class="component-box">
-                    <div class="component-header">🎨 MATERIAL</div>
-                    <div class="component-body">
-                        <div class="prop-row">
-                            <span class="prop-label">Color:</span>
-                            <input type="color" value="${ent.material.color}" onchange="Engine.selectedEntity.material.color=this.value; Engine.syncMeshFromEntity(Engine.selectedEntity);">
-                        </div>
-                        <div class="prop-row">
-                            <span class="prop-label">Roughness:</span>
-                            <input type="range" min="0" max="1" step="0.05" value="${ent.material.roughness}" oninput="Engine.selectedEntity.material.roughness=parseFloat(this.value); Engine.syncMeshFromEntity(Engine.selectedEntity);">
-                        </div>
-                        <div class="prop-row">
-                            <span class="prop-label">Metalness:</span>
-                            <input type="range" min="0" max="1" step="0.05" value="${ent.material.metalness}" oninput="Engine.selectedEntity.material.metalness=parseFloat(this.value); Engine.syncMeshFromEntity(Engine.selectedEntity);">
-                        </div>
-                    </div>
-                </div>
+            // Rotation (Degrees)
+            document.getElementById('prop-rot-x').value = THREE.MathUtils.radToDeg(selectedObject.rotation.x).toFixed(0);
+            document.getElementById('prop-rot-y').value = THREE.MathUtils.radToDeg(selectedObject.rotation.y).toFixed(0);
+            document.getElementById('prop-rot-z').value = THREE.MathUtils.radToDeg(selectedObject.rotation.z).toFixed(0);
 
-                <!-- RIGIDBODY PHYSICS COMPONENT -->
-                <div class="component-box">
-                    <div class="component-header">🪐 RIGIDBODY PHYSICS</div>
-                    <div class="component-body">
-                        <div class="prop-row">
-                            <span class="prop-label">Gravity:</span>
-                            <input type="checkbox" ${ent.physics.gravity ? 'checked' : ''} onchange="Engine.selectedEntity.physics.gravity=this.checked;">
-                        </div>
-                        <div class="prop-row">
-                            <span class="prop-label">Bounce:</span>
-                            <input type="range" min="0" max="1" step="0.05" value="${ent.physics.bounce}" oninput="Engine.selectedEntity.physics.bounce=parseFloat(this.value);">
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+            // Scale
+            document.getElementById('prop-scale-x').value = selectedObject.scale.x.toFixed(2);
+            document.getElementById('prop-scale-y').value = selectedObject.scale.y.toFixed(2);
+            document.getElementById('prop-scale-z').value = selectedObject.scale.z.toFixed(2);
 
-        /* --------------------------------------------------------------------------
-           8. VISUAL SCRIPTING NODE GRAPH SETUP
-           -------------------------------------------------------------------------- */
-        function initVisualScriptingGraph() {
-            const container = document.getElementById('node-graph-container');
-            container.innerHTML = `
-                <!-- Node 1: Event OnStart -->
-                <div class="graph-node" style="left: 40px; top: 40px;">
-                    <div class="node-head event"><span>⚡ Event: OnStart</span></div>
-                    <div class="node-content">
-                        <div class="node-port-row">
-                            <span>Execute</span>
-                            <div class="port active"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Node 2: Action Move -->
-                <div class="graph-node" style="left: 280px; top: 40px;">
-                    <div class="node-head action"><span>🚀 Action: Apply Force</span></div>
-                    <div class="node-content">
-                        <div class="node-port-row">
-                            <div class="port active"></div>
-                            <span>Trigger In</span>
-                        </div>
-                        <div class="prop-row">
-                            <span>Force Y:</span>
-                            <input type="number" value="12" style="width:60px;">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Node 3: Event OnCollision -->
-                <div class="graph-node" style="left: 40px; top: 180px;">
-                    <div class="node-head event"><span>💥 Event: OnCollide</span></div>
-                    <div class="node-content">
-                        <div class="node-port-row">
-                            <span>Hit Enemy</span>
-                            <div class="port active"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Node 4: Action Explosion -->
-                <div class="graph-node" style="left: 280px; top: 180px;">
-                    <div class="node-head math"><span>✨ Action: Burst VFX</span></div>
-                    <div class="node-content">
-                        <div class="node-port-row">
-                            <div class="port active"></div>
-                            <span>Trigger In</span>
-                        </div>
-                        <div class="prop-row">
-                            <span>Sparks:</span>
-                            <input type="number" value="40" style="width:60px;">
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        /* --------------------------------------------------------------------------
-           9. AI ASSISTANT NATURAL LANGUAGE PARSER
-           -------------------------------------------------------------------------- */
-        function executeAIPrompt() {
-            const input = document.getElementById('ai-prompt-input');
-            const prompt = input.value.trim();
-            if (!prompt) return;
-
-            const chat = document.getElementById('ai-chat-history');
-            const userMsg = document.createElement('div');
-            userMsg.className = 'ai-bubble user';
-            userMsg.textContent = prompt;
-            chat.appendChild(userMsg);
-            input.value = '';
-
-            setTimeout(() => {
-                const botMsg = document.createElement('div');
-                botMsg.className = 'ai-bubble bot';
-                
-                const lower = prompt.toLowerCase();
-                if (lower.includes('sphere') || lower.includes('ball')) {
-                    Engine.spawnEntity('Sphere', 'AI_Sphere');
-                    botMsg.textContent = "Generated glowing sphere with physics attached!";
-                } else if (lower.includes('explode') || lower.includes('explosion')) {
-                    Engine.applyPhysicsImpulse('explode');
-                    botMsg.textContent = "Triggered explosive impulse across all scene physics bodies!";
-                } else if (lower.includes('droplet') || lower.includes('liquid') || lower.includes('metaball')) {
-                    Engine.spawnDropletCluster(6);
-                    botMsg.textContent = "Injected 6 refractive liquid glass metaballs into the scene!";
-                } else if (lower.includes('zero') || lower.includes('gravity')) {
-                    Engine.setGravityMode('zero');
-                    botMsg.textContent = "Switched environment to zero-gravity physics!";
-                } else {
-                    Engine.spawnEntity('Torus', 'AI_Torus_Object');
-                    botMsg.textContent = `Executed scene directive: "${prompt}". Generated reactive object in 3D viewport.`;
-                }
-
-                chat.appendChild(botMsg);
-                chat.scrollTop = chat.scrollHeight;
-                renderSceneTree();
-            }, 400);
-        }
-
-        /* --------------------------------------------------------------------------
-           10. TIMELINE ENGINE
-           -------------------------------------------------------------------------- */
-        const Timeline = {
-            isPlaying: false,
-            time: 0,
-            togglePlay() {
-                this.isPlaying = !this.isPlaying;
-                logConsole(`Timeline playback: ${this.isPlaying ? 'Started' : 'Paused'}`, "info");
-            },
-            addKeyframe() {
-                const track = document.getElementById('timeline-tracks');
-                const kf = document.createElement('div');
-                kf.style.cssText = `position:absolute; top:25px; left:${Math.random()*400 + 40}px; width:8px; height:8px; background:var(--accent-cyan); transform:rotate(45deg);`;
-                track.appendChild(kf);
-                logConsole("Keyframe added at current playhead position.", "info");
+            // Material
+            if (selectedObject.material) {
+                document.getElementById('prop-group-material').style.display = 'flex';
+                const hex = '#' + selectedObject.material.color.getHexString();
+                document.getElementById('prop-mat-color').value = hex;
+                document.getElementById('prop-mat-color-hex').textContent = hex;
+                document.getElementById('prop-mat-roughness').value = selectedObject.material.roughness || 0;
+                document.getElementById('prop-mat-metalness').value = selectedObject.material.metalness || 0;
+                document.getElementById('prop-mat-wireframe').checked = !!selectedObject.material.wireframe;
+            } else {
+                document.getElementById('prop-group-material').style.display = 'none';
             }
-        };
+        }
+
+        function applyTransformInput() {
+            if (!selectedObject) return;
+            selectedObject.position.x = parseFloat(document.getElementById('prop-pos-x').value) || 0;
+            selectedObject.position.y = parseFloat(document.getElementById('prop-pos-y').value) || 0;
+            selectedObject.position.z = parseFloat(document.getElementById('prop-pos-z').value) || 0;
+
+            selectedObject.rotation.x = THREE.MathUtils.degToRad(parseFloat(document.getElementById('prop-rot-x').value) || 0);
+            selectedObject.rotation.y = THREE.MathUtils.degToRad(parseFloat(document.getElementById('prop-rot-y').value) || 0);
+            selectedObject.rotation.z = THREE.MathUtils.degToRad(parseFloat(document.getElementById('prop-rot-z').value) || 0);
+
+            selectedObject.scale.x = parseFloat(document.getElementById('prop-scale-x').value) || 1;
+            selectedObject.scale.y = parseFloat(document.getElementById('prop-scale-y').value) || 1;
+            selectedObject.scale.z = parseFloat(document.getElementById('prop-scale-z').value) || 1;
+        }
+
+        function applyMaterialInput() {
+            if (!selectedObject || !selectedObject.material) return;
+            const hex = document.getElementById('prop-mat-color').value;
+            selectedObject.material.color.set(hex);
+            document.getElementById('prop-mat-color-hex').textContent = hex;
+            selectedObject.material.roughness = parseFloat(document.getElementById('prop-mat-roughness').value);
+            selectedObject.material.metalness = parseFloat(document.getElementById('prop-mat-metalness').value);
+            selectedObject.material.wireframe = document.getElementById('prop-mat-wireframe').checked;
+        }
+
+        function updateSelectedObjectName(name) {
+            if (selectedObject && name.trim()) {
+                selectedObject.name = name.trim();
+                updateHierarchyTree();
+            }
+        }
 
         /* --------------------------------------------------------------------------
-           11. SYSTEM TAB & MODAL HELPERS
+           6. ANIMATION TIMELINE SEQUENCER
            -------------------------------------------------------------------------- */
-        function switchLeftTab(tabKey, el) {
-            document.querySelectorAll('#dock-left .pane-tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            ['hierarchy', 'assets', 'prefabs', 'ai'].forEach(k => {
-                document.getElementById(`tab-${k}`).style.display = k === tabKey ? 'flex' : 'none';
-            });
+        function recordKeyframe() {
+            if (!selectedObject) {
+                showToast("Select an object to record keyframe");
+                return;
+            }
+            const snap = {
+                time: timelineTime,
+                objName: selectedObject.name,
+                pos: selectedObject.position.clone(),
+                rot: selectedObject.rotation.clone(),
+                scl: selectedObject.scale.clone()
+            };
+            keyframesData.push(snap);
+            renderTimelineKeyMarkers();
+            showToast(`Keyframe recorded @ ${timelineTime.toFixed(2)}s`);
         }
 
-        function switchBottomTab(tabKey, el) {
-            document.querySelectorAll('#dock-bottom .pane-tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            ['console', 'visualscript', 'particles', 'shaderlab', 'physicslab', 'timeline'].forEach(k => {
-                const pane = document.getElementById(`btab-${k}`);
-                if (pane) pane.style.display = k === tabKey ? 'flex' : 'none';
-            });
-            if (tabKey === 'visualscript') initVisualScriptingGraph();
+        function renderTimelineKeyMarkers() {
+            const trackPos = document.getElementById('track-pos-keys');
+            trackPos.innerHTML = keyframesData.map((k, i) => `
+                <div class="timeline-keyframe" style="left: ${k.time * 100}px;" title="Keyframe ${i + 1}"></div>
+            `).join('');
         }
 
-        function logConsole(text, type = 'info') {
-            const list = document.getElementById('console-list');
-            if (!list) return;
-            const row = document.createElement('div');
-            row.className = `log-row ${type}`;
-            row.textContent = `❯ ${text}`;
-            list.appendChild(row);
-            list.scrollTop = list.scrollHeight;
+        function seekTimeline(e) {
+            const rect = document.getElementById('timeline-ruler').getBoundingClientRect();
+            const x = Math.max(0, e.clientX - rect.left);
+            timelineTime = Math.min(5.0, x / 100);
+            document.getElementById('timeline-scrubber').style.left = `${timelineTime * 100}px`;
+            document.getElementById('timeline-time-display').textContent = `${timelineTime.toFixed(2)}s / 5.00s`;
+            applyTimelineInterpolation(timelineTime);
         }
 
-        function clearConsole() {
-            document.getElementById('console-list').innerHTML = '';
+        function applyTimelineInterpolation(t) {
+            if (keyframesData.length < 2) return;
+            const target = keyframesData.find(k => Math.abs(k.time - t) < 0.2);
+            if (target && selectedObject && target.objName === selectedObject.name) {
+                selectedObject.position.copy(target.pos);
+                selectedObject.rotation.copy(target.rot);
+                syncSelectedObjectToInspector();
+            }
         }
 
-        function showNotification(msg) {
-            logConsole(msg, "sys");
+        function toggleTimelinePlay() {
+            timelinePlaying = !timelinePlaying;
+            document.getElementById('btn-timeline-play').textContent = timelinePlaying ? '⏸ Pause' : '▶ Play';
+            if (timelinePlaying) {
+                let start = performance.now();
+                function playLoop(now) {
+                    if (!timelinePlaying) return;
+                    timelineTime = ((now - start) / 1000) % 5.0;
+                    document.getElementById('timeline-scrubber').style.left = `${timelineTime * 100}px`;
+                    document.getElementById('timeline-time-display').textContent = `${timelineTime.toFixed(2)}s / 5.00s`;
+                    applyTimelineInterpolation(timelineTime);
+                    requestAnimationFrame(playLoop);
+                }
+                requestAnimationFrame(playLoop);
+            }
         }
-
-        function openExportModal() { document.getElementById('export-modal').classList.add('active'); }
-        function closeExportModal() { document.getElementById('export-modal').classList.remove('active'); }
-        function openProjectsHub() { document.getElementById('projects-modal').classList.add('active'); }
-        function closeProjectsHub() { document.getElementById('projects-modal').classList.remove('active'); }
 
         /* --------------------------------------------------------------------------
-           12. INITIALIZATION ON LOAD
+           7. WORKSPACE MODES & RESIZING
+           -------------------------------------------------------------------------- */
+        function setWorkspaceMode(mode) {
+            currentWorkspaceMode = mode;
+            document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-mode-${mode}`).classList.add('active');
+
+            const visual = document.getElementById('visual-3d-container');
+            const code = document.getElementById('code-container');
+            const resizer = document.getElementById('workspace-resizer');
+            const sandbox = document.getElementById('sandbox-container');
+
+            if (mode === 'visual') {
+                visual.style.display = 'block';
+                visual.style.flex = '1';
+                code.style.display = 'none';
+                resizer.style.display = 'none';
+                sandbox.style.display = 'none';
+                onVisualResize();
+            } else if (mode === 'split') {
+                visual.style.display = 'block';
+                visual.style.flex = '1';
+                code.style.display = 'flex';
+                code.style.flex = '1';
+                resizer.style.display = 'block';
+                sandbox.style.display = 'none';
+                onVisualResize();
+            } else if (mode === 'code') {
+                visual.style.display = 'none';
+                code.style.display = 'flex';
+                code.style.flex = '1';
+                resizer.style.display = 'none';
+                sandbox.style.display = 'none';
+            }
+        }
+
+        // Resizer drag handler
+        const resizer = document.getElementById('workspace-resizer');
+        let isDraggingResizer = false;
+        resizer.addEventListener('mousedown', () => { isDraggingResizer = true; });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingResizer) return;
+            const container = document.getElementById('center-workspace');
+            const rect = container.getBoundingClientRect();
+            const pct = ((e.clientX - rect.left) / rect.width) * 100;
+            if (pct > 20 && pct < 80) {
+                document.getElementById('visual-3d-container').style.flex = `0 0 ${pct}%`;
+                onVisualResize();
+            }
+        });
+        window.addEventListener('mouseup', () => { isDraggingResizer = false; });
+
+        /* --------------------------------------------------------------------------
+           8. CODE RUNTIME & SANDBOX EXECUTION
+           -------------------------------------------------------------------------- */
+        function runSandbox() {
+            isRunning = true;
+            const code = codeInput.value;
+            const sandbox = document.getElementById('sandbox-container');
+            const visual = document.getElementById('visual-3d-container');
+            const codePane = document.getElementById('code-container');
+
+            // Inject runtime logger bridge
+            const bridge = `
+                <script>
+                    (function(){
+                        const _log = console.log, _err = console.error, _warn = console.warn;
+                        console.log = (...args) => {
+                            _log(...args);
+                            window.parent.postMessage({ type:'LOG', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        console.error = (...args) => {
+                            _err(...args);
+                            window.parent.postMessage({ type:'ERROR', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        console.warn = (...args) => {
+                            _warn(...args);
+                            window.parent.postMessage({ type:'WARN', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        window.onerror = (m, s, l) => {
+                            window.parent.postMessage({ type:'ERROR', text: m + ' (Line ' + l + ')' }, '*');
+                            return false;
+                        };
+                    })();
+                <\\/script>
+            `.replace(/<\\\/script>/g, '<\/script>');
+
+            let html = code;
+            if (html.includes('<head>')) html = html.replace('<head>', '<head>' + bridge);
+            else html = bridge + html;
+
+            const blob = new Blob([html], { type: 'text/html' });
+            sandboxIframe.src = URL.createObjectURL(blob);
+
+            // Display sandbox
+            visual.style.display = 'none';
+            codePane.style.display = 'none';
+            sandbox.style.display = 'block';
+
+            appendConsole('Launched active sandbox instance', 'system');
+            showToast('Sandbox running ▶');
+        }
+
+        function stopSandbox() {
+            isRunning = false;
+            sandboxIframe.src = 'about:blank';
+            document.getElementById('sandbox-container').style.display = 'none';
+            setWorkspaceMode(currentWorkspaceMode);
+            appendConsole('Sandbox execution stopped', 'system');
+            showToast('Sandbox stopped ⏹');
+        }
+
+        // Bridge message listener
+        window.addEventListener('message', (e) => {
+            if (!e.data || !e.data.type) return;
+            if (e.data.type === 'LOG') appendConsole(e.data.text, 'info');
+            if (e.data.type === 'WARN') appendConsole(e.data.text, 'warn');
+            if (e.data.type === 'ERROR') appendConsole(e.data.text, 'error');
+        });
+
+        function appendConsole(text, type = 'info') {
+            const el = document.createElement('div');
+            el.className = `log-item ${type}`;
+            el.textContent = `◈ ${text}`;
+            consoleStream.appendChild(el);
+            consoleStream.scrollTop = consoleStream.scrollHeight;
+            const count = consoleStream.children.length;
+            consoleBadge.textContent = count;
+        }
+
+        function clearConsoleLogs() {
+            consoleStream.innerHTML = '';
+            consoleBadge.textContent = '0';
+        }
+
+        function handleReplSubmit(e) {
+            if (e.key === 'Enter') {
+                const val = e.target.value.trim();
+                if (!val) return;
+                appendConsole(`> ${val}`, 'system');
+                try {
+                    if (sandboxIframe.contentWindow) {
+                        sandboxIframe.contentWindow.eval(val);
+                    }
+                } catch(err) {
+                    appendConsole(err.message, 'error');
+                }
+                e.target.value = '';
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           9. CODE EDITOR ENGINE & SYNTAX HELPERS
+           -------------------------------------------------------------------------- */
+        function updateLineNumbers() {
+            const lines = codeInput.value.split('\n').length;
+            lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join('<br>');
+        }
+
+        codeInput.addEventListener('input', () => {
+            updateLineNumbers();
+            triggerSave();
+        });
+
+        codeInput.addEventListener('scroll', () => {
+            lineNumbers.scrollTop = codeInput.scrollTop;
+        });
+
+        // Tab and hotkeys in editor
+        codeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = codeInput.selectionStart;
+                const end = codeInput.selectionEnd;
+                codeInput.value = codeInput.value.substring(0, start) + "  " + codeInput.value.substring(end);
+                codeInput.selectionStart = codeInput.selectionEnd = start + 2;
+                updateLineNumbers();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                runSandbox();
+            }
+        });
+
+        function formatCode() {
+            let lines = codeInput.value.split('\n');
+            let indent = 0;
+            codeInput.value = lines.map(line => {
+                let trimmed = line.trim();
+                if (trimmed.startsWith('</') || trimmed.startsWith('}') || trimmed.startsWith(']')) {
+                    indent = Math.max(0, indent - 1);
+                }
+                let res = '  '.repeat(indent) + trimmed;
+                if ((trimmed.endsWith('{') || (trimmed.startsWith('<') && !trimmed.startsWith('</') && !trimmed.endsWith('/>') && !trimmed.includes('</'))) && !trimmed.startsWith('<!')) {
+                    indent++;
+                }
+                return res;
+            }).join('\n');
+            updateLineNumbers();
+            showToast("Formatted source code");
+        }
+
+        /* --------------------------------------------------------------------------
+           10. PERSISTENCE & PROJECT MANAGEMENT
+           -------------------------------------------------------------------------- */
+        let autoSaveTimer = null;
+        function triggerSave() {
+            saveStatus.classList.add('saving');
+            saveStatusLabel.textContent = 'Saving...';
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(saveImmediate, 500);
+        }
+
+        function saveImmediate() {
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_MANIFEST) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            if (idx === -1) return;
+
+            manifest[idx].title = projectNameInput.value.trim() || 'Untitled';
+            manifest[idx].code = codeInput.value;
+            manifest[idx].updatedAt = Date.now();
+
+            localStorage.setItem(STORAGE_MANIFEST, JSON.stringify(manifest));
+            saveStatus.classList.remove('saving');
+            saveStatusLabel.textContent = 'Saved';
+        }
+
+        function initProjectEngine() {
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_MANIFEST) || 'null');
+            if (!manifest || manifest.length === 0) {
+                const def = {
+                    id: 'proj_' + Date.now(),
+                    title: 'Liquid Glass (Addition7)',
+                    code: TEMPLATES.liquidGlass.replace(/<\\\/script>/g, '<\/script>'),
+                    updatedAt: Date.now()
+                };
+                manifest = [def];
+                localStorage.setItem(STORAGE_MANIFEST, JSON.stringify(manifest));
+                localStorage.setItem(STORAGE_ACTIVE, def.id);
+            }
+
+            activeProjectId = localStorage.getItem(STORAGE_ACTIVE) || manifest[0].id;
+            const current = manifest.find(p => p.id === activeProjectId) || manifest[0];
+
+            projectNameInput.value = current.title;
+            codeInput.value = current.code;
+            document.getElementById('project-count').textContent = manifest.length;
+            updateLineNumbers();
+        }
+
+        function createNewProject() {
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_MANIFEST) || '[]');
+            const proj = {
+                id: 'proj_' + Date.now(),
+                title: 'New Spatial Project',
+                code: TEMPLATES.spatial3d.replace(/<\\\/script>/g, '<\/script>'),
+                updatedAt: Date.now()
+            };
+            manifest.unshift(proj);
+            localStorage.setItem(STORAGE_MANIFEST, JSON.stringify(manifest));
+            activeProjectId = proj.id;
+            localStorage.setItem(STORAGE_ACTIVE, proj.id);
+
+            projectNameInput.value = proj.title;
+            codeInput.value = proj.code;
+            updateLineNumbers();
+            closeProjectsModal();
+            showToast(`Created "${proj.title}"`);
+        }
+
+        function switchProject(id) {
+            saveImmediate();
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_MANIFEST) || '[]');
+            const target = manifest.find(p => p.id === id);
+            if (!target) return;
+
+            activeProjectId = target.id;
+            localStorage.setItem(STORAGE_ACTIVE, target.id);
+            projectNameInput.value = target.title;
+            codeInput.value = target.code;
+            updateLineNumbers();
+            closeProjectsModal();
+            showToast(`Loaded "${target.title}"`);
+        }
+
+        function loadStarterTemplate(key) {
+            if (!TEMPLATES[key]) return;
+            if (confirm("Load starter template? Current unsaved edits in code tab will be replaced.")) {
+                codeInput.value = TEMPLATES[key].replace(/<\\\/script>/g, '<\/script>');
+                updateLineNumbers();
+                saveImmediate();
+                showToast(`Loaded template: ${key}`);
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           11. EXPORTS & PUBLISHING
+           -------------------------------------------------------------------------- */
+        function exportStandaloneHTML() {
+            const blob = new Blob([codeInput.value], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${projectNameInput.value.replace(/\s+/g, '_').toLowerCase()}.html`;
+            a.click();
+            showToast("Exported HTML web bundle");
+        }
+
+        function exportProjectJSON() {
+            const proj = {
+                title: projectNameInput.value,
+                code: codeInput.value,
+                objects: vObjects.map(o => ({
+                    name: o.name,
+                    pos: o.position,
+                    rot: o.rotation,
+                    scl: o.scale
+                }))
+            };
+            const blob = new Blob([JSON.stringify(proj, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${projectNameInput.value.replace(/\s+/g, '_').toLowerCase()}.studio.json`;
+            a.click();
+            showToast("Exported Project JSON");
+        }
+
+        function copySourceCode() {
+            navigator.clipboard.writeText(codeInput.value);
+            showToast("Copied code to clipboard");
+        }
+
+        async function publishProject() {
+            if (!sbClient) {
+                alert("Database offline");
+                return;
+            }
+            const btn = document.getElementById('pub-btn');
+            btn.textContent = 'Deploying...';
+            btn.disabled = true;
+
+            const record = {
+                title: document.getElementById('pub-title').value,
+                author: document.getElementById('pub-author').value,
+                email: document.getElementById('pub-email').value,
+                html_code: codeInput.value,
+                status: 'live'
+            };
+
+            const { error } = await sbClient.from('games').insert([record]);
+            btn.disabled = false;
+            btn.textContent = 'Publish';
+
+            if (error) {
+                alert("Publish failed: " + error.message);
+            } else {
+                showToast("Project successfully published to arcade!");
+                closePublishModal();
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           12. UI HELPERS & MODALS
+           -------------------------------------------------------------------------- */
+        function switchSidebarTab(tabKey, btn) {
+            document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.sidebar-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById(`pane-${tabKey}`).classList.add('active');
+        }
+
+        function switchDockTab(tabKey, btn) {
+            document.querySelectorAll('.dock-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('dock-pane-console').style.display = tabKey === 'console' ? 'flex' : 'none';
+            document.getElementById('dock-pane-timeline').style.display = tabKey === 'timeline' ? 'flex' : 'none';
+        }
+
+        function toggleBottomDock() {
+            const dock = document.getElementById('bottom-dock');
+            dock.classList.toggle('minimized');
+            document.getElementById('btn-dock-toggle').textContent = dock.classList.contains('minimized') ? '▴' : '▾';
+        }
+
+        function openProjectsModal() {
+            const grid = document.getElementById('projects-list-grid');
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_MANIFEST) || '[]');
+            grid.innerHTML = manifest.map(p => `
+                <div class="item-card" onclick="switchProject('${p.id}')">
+                    <div class="item-card-title">${p.title}</div>
+                    <div class="item-card-desc">Updated ${new Date(p.updatedAt).toLocaleDateString()}</div>
+                </div>
+            `).join('');
+            document.getElementById('projects-modal').classList.add('active');
+        }
+        function closeProjectsModal() { document.getElementById('projects-modal').classList.remove('active'); }
+
+        function openPublishModal() {
+            document.getElementById('pub-title').value = projectNameInput.value;
+            document.getElementById('publish-modal').classList.add('active');
+        }
+        function closePublishModal() { document.getElementById('publish-modal').classList.remove('active'); }
+
+        function showToast(text) {
+            const deck = document.getElementById('toast-deck');
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.textContent = text;
+            deck.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = '0.25s';
+                setTimeout(() => toast.remove(), 250);
+            }, 2200);
+        }
+
+        /* --------------------------------------------------------------------------
+           13. BOOTSTRAP STUDIO
            -------------------------------------------------------------------------- */
         window.addEventListener('DOMContentLoaded', () => {
-            Engine.init();
-            renderSceneTree();
-            renderInspector();
-            initVisualScriptingGraph();
+            initProjectEngine();
+            init3DVisualEngine();
+            setWorkspaceMode('visual');
         });
     </script>
 </body>
