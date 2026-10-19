@@ -14,7 +14,2072 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* ==========================================================================
+        /* ==========================================================================<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio — I’M AFK</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-display: 'Space Grotesk', -apple-system, sans-serif;
+            --font-code: 'JetBrains Mono', "SF Mono", Consolas, Menlo, monospace;
+            
+            --nav-height: 52px;
+            --tab-height: 36px;
+            --status-height: 26px;
+            --sidebar-width: 230px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-pill: 9999px;
+            --transition: 0.15s ease;
+        }
+
+        /* DARK THEME */
+        [data-theme="dark"] {
+            --bg-canvas: #121615;
+            --bg-surface: #18201E;
+            --bg-card: #1D2624;
+            --bg-input: #141A19;
+            --bg-hover: rgba(255, 255, 255, 0.05);
+            --bg-active: #24302D;
+
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+
+            --text-main: #EDF3F1;
+            --text-secondary: #9EB3AD;
+            --text-muted: #6B807A;
+
+            --brand: #5B9287;
+            --brand-hover: #487A70;
+            --brand-soft: rgba(91, 146, 135, 0.18);
+
+            --danger: #E06C75;
+            --warning: #E5C07B;
+            --success: #78BD91;
+
+            --editor-gutter: #141A19;
+            --editor-selection: rgba(91, 146, 135, 0.28);
+            --preview-bg: #FFFFFF;
+        }
+
+        /* LIGHT THEME */
+        [data-theme="light"] {
+            --bg-canvas: #F7F9F8;
+            --bg-surface: #FFFFFF;
+            --bg-card: #F2F6F4;
+            --bg-input: #FFFFFF;
+            --bg-hover: rgba(0, 0, 0, 0.04);
+            --bg-active: #E4ECE8;
+
+            --border: rgba(0, 0, 0, 0.08);
+            --border-strong: rgba(0, 0, 0, 0.16);
+
+            --text-main: #20332F;
+            --text-secondary: #536B66;
+            --text-muted: #859E98;
+
+            --brand: #43766C;
+            --brand-hover: #355E56;
+            --brand-soft: #DDEBE6;
+
+            --danger: #D3455B;
+            --warning: #C1841B;
+            --success: #3A8F62;
+
+            --editor-gutter: #F0F4F2;
+            --editor-selection: rgba(67, 118, 108, 0.18);
+            --preview-bg: #FFFFFF;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            line-height: 1.5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Navigation Bar */
+        .navbar {
+            height: var(--nav-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            flex-shrink: 0;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .nav-left, .nav-center, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            padding-right: 12px;
+            border-right: 1px solid var(--border);
+        }
+
+        .brand-badge {
+            width: 22px;
+            height: 22px;
+            background: var(--brand);
+            color: #FFFFFF;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .site-links {
+            display: flex;
+            list-style: none;
+            gap: 14px;
+        }
+
+        .site-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .site-links a:hover, .site-links a.active {
+            color: var(--text-main);
+        }
+
+        .project-title-input {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 13px;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            width: 140px;
+            transition: var(--transition);
+        }
+
+        .project-title-input:hover {
+            background: var(--bg-hover);
+            border-color: var(--border);
+        }
+
+        .project-title-input:focus {
+            background: var(--bg-input);
+            border-color: var(--brand);
+            outline: none;
+            width: 180px;
+        }
+
+        .save-tag {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+        }
+
+        .save-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            transition: background var(--transition);
+        }
+
+        .save-tag.unsaved .save-dot {
+            background: var(--warning);
+        }
+
+        /* Buttons & Utility Controls */
+        .btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 5px 10px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-hover);
+        }
+
+        .btn-primary {
+            background: var(--brand);
+            border-color: var(--brand);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-hover);
+            color: #FFFFFF;
+        }
+
+        .btn-icon {
+            padding: 5px 8px;
+        }
+
+        .btn-group {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .btn-group .btn {
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            padding: 4px 8px;
+        }
+
+        .btn-group .btn:not(:last-child) {
+            border-right: 1px solid var(--border);
+        }
+
+        .btn-group .btn.active {
+            background: var(--bg-active);
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Dropdowns */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            min-width: 170px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .dropdown.open .dropdown-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .dropdown-item {
+            background: transparent;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            color: var(--text-main);
+            font-size: 12px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .dropdown-item .hint {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--font-code);
+        }
+
+        /* Workspace Layout */
+        .workspace {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: width var(--transition);
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            border-right: none;
+        }
+
+        .sidebar-header {
+            height: var(--tab-height);
+            border-bottom: 1px solid var(--border);
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .file-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+        }
+
+        .file-item.active {
+            background: var(--bg-active);
+            color: var(--text-main);
+            border-left-color: var(--brand);
+            font-weight: 500;
+        }
+
+        .file-item-title {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-icon {
+            font-family: var(--font-code);
+            font-size: 11px;
+            color: var(--text-muted);
+            width: 14px;
+        }
+
+        .file-item.active .file-icon {
+            color: var(--brand);
+        }
+
+        .file-actions {
+            display: none;
+            gap: 2px;
+        }
+
+        .file-item:hover .file-actions {
+            display: flex;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-main);
+            background: var(--bg-hover);
+        }
+
+        /* Editor Section */
+        .editor-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-canvas);
+            min-width: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tabs-bar {
+            height: var(--tab-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+
+        .tabs-list {
+            display: flex;
+            height: 100%;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            background: transparent;
+            border: none;
+            border-right: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: var(--font-code);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+        }
+
+        .tab.active {
+            background: var(--bg-canvas);
+            color: var(--text-main);
+            border-top: 2px solid var(--brand);
+        }
+
+        .tab-close {
+            font-size: 10px;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        .tab-close:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            padding: 5px 10px;
+            position: absolute;
+            top: 42px;
+            right: 16px;
+            z-index: 30;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .search-bar.active {
+            display: flex;
+        }
+
+        .search-input {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: var(--font-code);
+            font-size: 11px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            outline: none;
+            width: 130px;
+        }
+
+        .search-input:focus {
+            border-color: var(--brand);
+        }
+
+        .search-count {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-code);
+        }
+
+        /* Editor Area */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-canvas);
+        }
+
+        .gutter {
+            width: 44px;
+            background: var(--editor-gutter);
+            border-right: 1px solid var(--border);
+            padding: 12px 6px;
+            color: var(--text-muted);
+            font-family: var(--font-code);
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: right;
+            user-select: none;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .code-textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 12px;
+            color: var(--text-main);
+            font-family: var(--font-code);
+            font-size: 12px;
+            line-height: 1.6;
+            resize: none;
+            white-space: pre;
+            tab-size: 2;
+            overflow: auto;
+            caret-color: var(--brand);
+        }
+
+        .code-textarea.wrap-text {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .code-textarea::selection {
+            background: var(--editor-selection);
+        }
+
+        /* Pane Divider */
+        .pane-divider {
+            width: 4px;
+            background: var(--border);
+            cursor: col-resize;
+            transition: background var(--transition);
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        .pane-divider:hover, .pane-divider.dragging {
+            background: var(--brand);
+        }
+
+        /* Preview Pane */
+        .preview-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-canvas);
+            min-width: 250px;
+            overflow: hidden;
+        }
+
+        .preview-toolbar {
+            height: var(--tab-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            flex-shrink: 0;
+        }
+
+        .preview-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-canvas);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preview-viewport {
+            width: 100%;
+            height: 100%;
+            background: var(--preview-bg);
+            border: 1px solid var(--border);
+            transition: width var(--transition), height var(--transition);
+            position: relative;
+        }
+
+        #sandbox-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            background: #FFFFFF;
+        }
+
+        /* Debug Console */
+        .console-drawer {
+            height: 140px;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: height var(--transition);
+        }
+
+        .console-drawer.collapsed {
+            height: var(--status-height);
+        }
+
+        .console-header {
+            height: var(--status-height);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            font-size: 11px;
+            font-family: var(--font-code);
+            color: var(--text-secondary);
+        }
+
+        .console-logs {
+            flex: 1;
+            padding: 6px 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-family: var(--font-code);
+            font-size: 11px;
+            background: var(--bg-canvas);
+        }
+
+        .log-row {
+            display: flex;
+            gap: 8px;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .log-row.info { color: var(--text-secondary); }
+        .log-row.warn { color: var(--warning); }
+        .log-row.error { color: var(--danger); }
+        .log-row.system { color: var(--brand); }
+        .log-row.repl { color: var(--success); }
+
+        .console-repl {
+            height: 28px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            background: var(--bg-surface);
+            padding: 0 8px;
+            gap: 6px;
+        }
+
+        .repl-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-family: var(--font-code);
+            font-size: 11px;
+        }
+
+        /* Status Footer */
+        .statusbar {
+            height: var(--status-height);
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            font-size: 11px;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            flex-shrink: 0;
+            z-index: 40;
+        }
+
+        .statusbar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 16px;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            background: var(--bg-card);
+        }
+
+        .project-row {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .project-row:hover {
+            border-color: var(--border-strong);
+        }
+
+        .project-row.active {
+            border-color: var(--brand);
+            background: var(--brand-soft);
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: fixed;
+            bottom: 32px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 2000;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            color: var(--text-main);
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            .site-links { display: none; }
+            .workspace { flex-direction: column; }
+            .pane-divider { width: 100%; height: 4px; cursor: row-resize; }
+            .sidebar { position: absolute; top: 0; bottom: 0; left: 0; z-index: 60; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="brand-link" title="I’M AFK Hub">
+                <div class="brand-badge">✦</div>
+                <span>I’M AFK</span>
+            </a>
+
+            <ul class="site-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="library.html">Library</a></li>
+                <li><a href="studio.html" class="active">Studio</a></li>
+                <li><a href="submit.html">Submit</a></li>
+                <li><a href="contact.html">Support</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-center">
+            <input type="text" id="project-title-input" class="project-title-input" value="Web Project" spellcheck="false" title="Click to rename project">
+            <div class="save-tag" id="save-tag">
+                <div class="save-dot"></div>
+                <span id="save-status-text">Saved</span>
+            </div>
+
+            <button class="btn btn-primary" onclick="runSandbox()" title="Run Code (Ctrl+Enter)">
+                <span>▶</span> Run
+            </button>
+
+            <button class="btn" id="live-toggle-btn" onclick="toggleLiveReload()" title="Auto-run on code changes">
+                <span>⚡</span> Live: <span id="live-status-text" style="color:var(--success);">On</span>
+            </button>
+        </div>
+
+        <div class="nav-right">
+            <button class="btn" onclick="openProjectsModal()">Projects (<span id="project-count">1</span>)</button>
+            <button class="btn" onclick="openTemplatesModal()">Starters</button>
+
+            <div class="dropdown" id="export-dropdown">
+                <button class="btn" onclick="toggleDropdown('export-dropdown')">Export ▾</button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="exportStandaloneHTML()">
+                        <span>Standalone HTML</span>
+                        <span class="hint">.html</span>
+                    </button>
+                    <button class="dropdown-item" onclick="exportProjectJSON()">
+                        <span>Project Bundle</span>
+                        <span class="hint">.json</span>
+                    </button>
+                    <button class="dropdown-item" onclick="copyCurrentFileCode()">
+                        <span>Copy Code</span>
+                        <span class="hint">Clipboard</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dropdown" id="import-dropdown">
+                <button class="btn" onclick="toggleDropdown('import-dropdown')">Import ▾</button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="document.getElementById('import-file-input').click()">
+                        <span>Open .HTML / .JSON</span>
+                    </button>
+                </div>
+            </div>
+            <input type="file" id="import-file-input" accept=".html,.htm,.json" style="display:none;" onchange="handleImportFile(event)">
+
+            <button class="btn btn-icon" onclick="openSettingsModal()" title="Settings">⚙</button>
+            <button class="btn btn-icon" onclick="toggleTheme()" title="Toggle Theme">◐</button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="workspace" id="workspace-container">
+        
+        <!-- Sidebar: File Tree & Snapshots -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span>Files</span>
+                <div>
+                    <button class="icon-btn" onclick="promptNewFile()" title="New File">+</button>
+                    <button class="icon-btn" onclick="toggleSidebar()" title="Collapse Sidebar">◀</button>
+                </div>
+            </div>
+
+            <div class="file-list" id="file-list-container"></div>
+
+            <div class="sidebar-header" style="border-top:1px solid var(--border);">
+                <span>Snapshots</span>
+                <button class="icon-btn" onclick="takeSnapshot()" title="Save Snapshot">💾</button>
+            </div>
+            <div id="snapshots-list" style="padding: 6px 0; overflow-y: auto; max-height: 120px;"></div>
+        </aside>
+
+        <!-- Code Editor -->
+        <section class="editor-pane" id="editor-pane">
+            <div class="tabs-bar">
+                <div class="tabs-list" id="tabs-container"></div>
+                <div style="display: flex; align-items: center; gap: 4px; padding: 0 8px;">
+                    <button class="icon-btn" onclick="toggleSearchBar()" title="Find / Replace (Ctrl+F)">🔍</button>
+                    <button class="icon-btn" onclick="formatActiveFile()" title="Format Code">⚡</button>
+                </div>
+            </div>
+
+            <!-- Working Search & Replace Bar -->
+            <div class="search-bar" id="search-bar">
+                <input type="text" id="find-input" class="search-input" placeholder="Find..." oninput="updateSearchMatchCount()">
+                <span class="search-count" id="search-count">0 matches</span>
+                <input type="text" id="replace-input" class="search-input" placeholder="Replace...">
+                <button class="btn" style="padding:3px 6px; font-size:11px;" onclick="executeReplace()">Replace</button>
+                <button class="btn" style="padding:3px 6px; font-size:11px;" onclick="executeReplaceAll()">All</button>
+                <button class="icon-btn" onclick="toggleSearchBar()">✕</button>
+            </div>
+
+            <div class="editor-container">
+                <div class="gutter" id="gutter">1</div>
+                <textarea id="code-textarea" class="code-textarea" spellcheck="false" placeholder="Type HTML, CSS, or JS here..."></textarea>
+            </div>
+        </section>
+
+        <!-- Resizable Split Divider -->
+        <div class="pane-divider" id="pane-divider" title="Drag to resize"></div>
+
+        <!-- Live Preview Stage & Console -->
+        <section class="preview-pane" id="preview-pane">
+            <div class="preview-toolbar">
+                <div class="btn-group">
+                    <button class="btn active" id="view-full" onclick="setPreviewViewport('100%', '100%', this)">Full</button>
+                    <button class="btn" id="view-tablet" onclick="setPreviewViewport('768px', '100%', this)">Tablet</button>
+                    <button class="btn" id="view-mobile" onclick="setPreviewViewport('375px', '667px', this)">Mobile</button>
+                </div>
+
+                <div style="display:flex; gap:6px;">
+                    <button class="btn" onclick="runSandbox()" title="Reload preview">↻ Refresh</button>
+                    <button class="btn" onclick="openPreviewNewTab()" title="Open preview in new tab">↗ Popout</button>
+                    <button class="btn btn-icon" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
+                </div>
+            </div>
+
+            <div class="preview-stage">
+                <div class="preview-viewport" id="preview-viewport">
+                    <iframe id="sandbox-frame" sandbox="allow-scripts allow-forms allow-modals allow-same-origin allow-popups" allow="fullscreen; autoplay; gamepad"></iframe>
+                </div>
+            </div>
+
+            <!-- Debug Console -->
+            <div class="console-drawer" id="console-drawer">
+                <div class="console-header">
+                    <span>Console (<span id="console-counter">0</span>)</span>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="icon-btn" onclick="clearConsole()">Clear</button>
+                        <button class="icon-btn" onclick="toggleConsole()" id="console-toggle-btn">▾</button>
+                    </div>
+                </div>
+
+                <div class="console-logs" id="console-logs">
+                    <div class="log-row system">✦ Studio initialized. Preview active.</div>
+                </div>
+
+                <div class="console-repl">
+                    <span style="color:var(--brand); font-family:var(--font-code);">❯</span>
+                    <input type="text" id="repl-input" class="repl-input" placeholder="Evaluate JavaScript..." onkeydown="handleReplKey(event)">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Status Bar -->
+    <footer class="statusbar">
+        <div class="statusbar-item">
+            <button class="icon-btn" onclick="toggleSidebar()" title="Toggle Sidebar">☰</button>
+            <span id="status-cursor">Ln 1, Col 1</span>
+        </div>
+        <div class="statusbar-item">
+            <span id="status-file-info">0 lines</span>
+            <span>•</span>
+            <span id="status-wrap-info">No Wrap</span>
+            <span>•</span>
+            <span id="status-active-type">HTML</span>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- 1. Projects Manager -->
+    <div class="modal-overlay" id="projects-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>Manage Projects</span>
+                <button class="icon-btn" onclick="closeProjectsModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <span style="color:var(--text-secondary); font-size:12px;">Saved locally in your browser.</span>
+                    <button class="btn btn-primary" onclick="createNewProjectPrompt()">+ New</button>
+                </div>
+                <div id="projects-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeProjectsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Starters Modal -->
+    <div class="modal-overlay" id="templates-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>Starter Templates</span>
+                <button class="icon-btn" onclick="closeTemplatesModal()">✕</button>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:8px;">
+                <div class="project-row" onclick="createProjectFromTemplate('vanilla')">
+                    <div>
+                        <div style="font-weight:600;">HTML5 / CSS / JS App</div>
+                        <div style="font-size:12px; color:var(--text-muted);">Standard multi-file template with interactive script.</div>
+                    </div>
+                </div>
+                <div class="project-row" onclick="createProjectFromTemplate('canvas')">
+                    <div>
+                        <div style="font-weight:600;">Interactive 2D Canvas</div>
+                        <div style="font-size:12px; color:var(--text-muted);">60 FPS particle engine with cursor tracking.</div>
+                    </div>
+                </div>
+                <div class="project-row" onclick="createProjectFromTemplate('game')">
+                    <div>
+                        <div style="font-weight:600;">Clicker / Tap Game</div>
+                        <div style="font-size:12px; color:var(--text-muted);">Score tracking, level upgrades, and animations.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeTemplatesModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>Studio Settings</span>
+                <button class="icon-btn" onclick="closeSettingsModal()">✕</button>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+                <div>
+                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:6px;">Line Wrapping</label>
+                    <button class="btn" onclick="toggleLineWrap()" id="wrap-toggle-btn">Toggle Word Wrap</button>
+                </div>
+                <div>
+                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:6px;">Font Size</label>
+                    <div class="btn-group">
+                        <button class="btn" onclick="setEditorFontSize('11px')">11px</button>
+                        <button class="btn active" onclick="setEditorFontSize('12px')">12px</button>
+                        <button class="btn" onclick="setEditorFontSize('14px')">14px</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeSettingsModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        const STORAGE_PROJECTS = 'afk_studio_projects_v3';
+        const STORAGE_ACTIVE_ID = 'afk_studio_active_id_v3';
+
+        const STARTER_TEMPLATES = {
+            vanilla: {
+                title: "Web App Starter",
+                files: [
+                    {
+                        name: "index.html",
+                        path: "index.html",
+                        type: "html",
+                        content: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>App</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <div class="card">\n    <h1>I’M AFK Studio</h1>\n    <p>A fast, calm client-side environment.</p>\n    <button id="btn">Clicks: 0</button>\n  </div>\n  <script src="app.js"><\/script>\n</body>\n</html>`
+                    },
+                    {
+                        name: "style.css",
+                        path: "style.css",
+                        type: "css",
+                        content: `body {\n  margin: 0;\n  background: #121615;\n  color: #EDF3F1;\n  font-family: sans-serif;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 100vh;\n}\n.card {\n  background: #18201E;\n  padding: 24px;\n  border-radius: 12px;\n  text-align: center;\n  border: 1px solid rgba(255,255,255,0.1);\n}\nbutton {\n  background: #5B9287;\n  border: none;\n  color: #fff;\n  padding: 8px 16px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  margin-top: 12px;\n}`
+                    },
+                    {
+                        name: "app.js",
+                        path: "app.js",
+                        type: "js",
+                        content: `let count = 0;\nconst btn = document.getElementById('btn');\nbtn.addEventListener('click', () => {\n  count++;\n  btn.textContent = 'Clicks: ' + count;\n  console.log('Count incremented: ' + count);\n});\nconsole.log('App ready.');`
+                    }
+                ]
+            },
+            canvas: {
+                title: "2D Canvas Animation",
+                files: [
+                    {
+                        name: "index.html",
+                        path: "index.html",
+                        type: "html",
+                        content: `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <style>body{margin:0;background:#0f1413;overflow:hidden;}canvas{display:block;}</style>\n</head>\n<body>\n  <canvas id="c"></canvas>\n  <script>\n    const c = document.getElementById('c'), ctx = c.getContext('2d');\n    let w = c.width = window.innerWidth, h = c.height = window.innerHeight;\n    window.onresize = () => { w = c.width = window.innerWidth; h = c.height = window.innerHeight; };\n    const dots = Array.from({length: 40}, () => ({x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*2, vy: (Math.random()-0.5)*2}));\n    function draw(){\n      ctx.fillStyle = 'rgba(15,20,19,0.2)'; ctx.fillRect(0,0,w,h);\n      ctx.fillStyle = '#5B9287';\n      dots.forEach(d => {\n        d.x += d.vx; d.y += d.vy;\n        if(d.x<0||d.x>w) d.vx*=-1; if(d.y<0||d.y>h) d.vy*=-1;\n        ctx.beginPath(); ctx.arc(d.x, d.y, 3, 0, Math.PI*2); ctx.fill();\n      });\n      requestAnimationFrame(draw);\n    }\n    draw();\n    console.log('Canvas loop started.');\n  <\/script>\n</body>\n</html>`
+                    }
+                ]
+            },
+            game: {
+                title: "Tap Game",
+                files: [
+                    {
+                        name: "index.html",
+                        path: "index.html",
+                        type: "html",
+                        content: `<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body{margin:0;background:#18201E;color:#EDF3F1;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}\n    #score{font-size:2rem;font-weight:bold;margin-bottom:1rem;color:#5B9287;}\n    button{background:#5B9287;border:none;color:white;padding:16px 32px;font-size:1.2rem;border-radius:50px;cursor:pointer;}\n    button:active{transform:scale(0.95);}\n  </style>\n</head>\n<body>\n  <div id="score">0</div>\n  <button onclick="tap()">Tap Me</button>\n  <script>\n    let s = 0;\n    function tap(){\n      s++; document.getElementById('score').innerText = s;\n      console.log('Score: ' + s);\n    }\n  <\/script>\n</body>\n</html>`
+                    }
+                ]
+            }
+        };
+
+        const codeTextarea = document.getElementById('code-textarea');
+        const gutter = document.getElementById('gutter');
+        const projectTitleInput = document.getElementById('project-title-input');
+        const saveTag = document.getElementById('save-tag');
+        const saveStatusText = document.getElementById('save-status-text');
+        const projectCountBadge = document.getElementById('project-count');
+        const fileListContainer = document.getElementById('file-list-container');
+        const tabsContainer = document.getElementById('tabs-container');
+        const sandboxFrame = document.getElementById('sandbox-frame');
+        const consoleLogs = document.getElementById('console-logs');
+        const consoleCounter = document.getElementById('console-counter');
+        const replInput = document.getElementById('repl-input');
+        const previewViewport = document.getElementById('preview-viewport');
+        const statusCursor = document.getElementById('status-cursor');
+        const statusFileInfo = document.getElementById('status-file-info');
+        const statusActiveType = document.getElementById('status-active-type');
+
+        let activeProjectId = null;
+        let activeFilePath = "index.html";
+        let openTabs = ["index.html"];
+        let liveReloadEnabled = true;
+        let autoSaveTimer = null;
+        let autoRunTimer = null;
+        let consoleLogCount = 0;
+        let isWordWrap = false;
+        let activeBlobUrl = null;
+
+        function initStudio() {
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || 'null');
+            if (!manifest || manifest.length === 0) {
+                const defaultProject = {
+                    id: 'proj_' + Date.now(),
+                    title: STARTER_TEMPLATES.vanilla.title,
+                    files: STARTER_TEMPLATES.vanilla.files,
+                    updatedAt: Date.now(),
+                    snapshots: []
+                };
+                manifest = [defaultProject];
+                localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+                localStorage.setItem(STORAGE_ACTIVE_ID, defaultProject.id);
+            }
+
+            activeProjectId = localStorage.getItem(STORAGE_ACTIVE_ID) || manifest[0].id;
+            const project = manifest.find(p => p.id === activeProjectId) || manifest[0];
+            activeProjectId = project.id;
+
+            loadProjectState(project);
+            updateProjectCount();
+            runSandbox();
+        }
+
+        function getActiveProject() {
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            return manifest.find(p => p.id === activeProjectId) || manifest[0];
+        }
+
+        function loadProjectState(project) {
+            projectTitleInput.value = project.title;
+            if (!project.files.some(f => f.path === activeFilePath)) {
+                activeFilePath = project.files[0] ? project.files[0].path : "";
+            }
+            if (!openTabs.includes(activeFilePath) && activeFilePath) {
+                openTabs = [activeFilePath];
+            }
+            renderFileList();
+            renderTabs();
+            loadActiveFileContent();
+            renderSnapshotsList(project.snapshots || []);
+        }
+
+        function saveActiveProject(silent = false) {
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            if (idx === -1) return;
+
+            const file = manifest[idx].files.find(f => f.path === activeFilePath);
+            if (file) {
+                file.content = codeTextarea.value;
+            }
+
+            manifest[idx].title = projectTitleInput.value.trim() || 'Untitled';
+            manifest[idx].updatedAt = Date.now();
+
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            saveTag.classList.remove('unsaved');
+            saveStatusText.textContent = 'Saved';
+
+            if (!silent) showToast('Project saved');
+        }
+
+        function triggerChange() {
+            saveTag.classList.add('unsaved');
+            saveStatusText.textContent = 'Unsaved';
+
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => saveActiveProject(true), 600);
+
+            if (liveReloadEnabled) {
+                clearTimeout(autoRunTimer);
+                autoRunTimer = setTimeout(() => runSandbox(true), 800);
+            }
+        }
+
+        function updateProjectCount() {
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            projectCountBadge.textContent = manifest.length;
+        }
+
+        /* File List & Tabs */
+        function renderFileList() {
+            const project = getActiveProject();
+            if (!project) return;
+
+            fileListContainer.innerHTML = '';
+            project.files.forEach(file => {
+                const item = document.createElement('div');
+                item.className = `file-item ${file.path === activeFilePath ? 'active' : ''}`;
+                const icon = file.type === 'html' ? '<>' : (file.type === 'css' ? '#' : (file.type === 'js' ? 'JS' : '•'));
+
+                item.innerHTML = `
+                    <div class="file-item-title" onclick="switchActiveFile('${file.path}')">
+                        <span class="file-icon">${icon}</span>
+                        <span>${file.name}</span>
+                    </div>
+                    <div class="file-actions">
+                        <button class="icon-btn" onclick="renameFilePrompt('${file.path}', event)" title="Rename">✎</button>
+                        ${project.files.length > 1 ? `<button class="icon-btn" onclick="deleteFile('${file.path}', event)" title="Delete">✕</button>` : ''}
+                    </div>
+                `;
+                fileListContainer.appendChild(item);
+            });
+        }
+
+        function renderTabs() {
+            tabsContainer.innerHTML = '';
+            openTabs.forEach(path => {
+                const file = getActiveProject().files.find(f => f.path === path);
+                if (!file) return;
+
+                const tab = document.createElement('button');
+                tab.className = `tab ${path === activeFilePath ? 'active' : ''}`;
+                tab.onclick = () => switchActiveFile(path);
+                tab.innerHTML = `
+                    <span>${file.name}</span>
+                    <span class="tab-close" onclick="closeTab('${path}', event)">✕</span>
+                `;
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        function switchActiveFile(path) {
+            const project = getActiveProject();
+            const curFile = project.files.find(f => f.path === activeFilePath);
+            if (curFile) curFile.content = codeTextarea.value;
+
+            activeFilePath = path;
+            if (!openTabs.includes(path)) openTabs.push(path);
+
+            renderFileList();
+            renderTabs();
+            loadActiveFileContent();
+        }
+
+        function closeTab(path, e) {
+            if (e) e.stopPropagation();
+            openTabs = openTabs.filter(p => p !== path);
+            if (activeFilePath === path) {
+                activeFilePath = openTabs.length > 0 ? openTabs[openTabs.length - 1] : "";
+            }
+            renderTabs();
+            renderFileList();
+            loadActiveFileContent();
+        }
+
+        function loadActiveFileContent() {
+            const project = getActiveProject();
+            const file = project.files.find(f => f.path === activeFilePath);
+            if (file) {
+                codeTextarea.value = file.content;
+                codeTextarea.disabled = false;
+                statusActiveType.textContent = (file.type || 'TXT').toUpperCase();
+            } else {
+                codeTextarea.value = '';
+                codeTextarea.disabled = true;
+                statusActiveType.textContent = 'NONE';
+            }
+            updateMetrics();
+        }
+
+        function promptNewFile() {
+            const name = prompt("Enter new file name (e.g. style.css, script.js):");
+            if (!name || !name.trim()) return;
+
+            const cleanName = name.trim();
+            const ext = cleanName.split('.').pop().toLowerCase();
+            const type = ext === 'html' ? 'html' : (ext === 'css' ? 'css' : (ext === 'js' ? 'js' : 'txt'));
+
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            if (idx === -1) return;
+
+            if (manifest[idx].files.some(f => f.name === cleanName)) {
+                alert("A file with this name already exists.");
+                return;
+            }
+
+            manifest[idx].files.push({
+                name: cleanName,
+                path: cleanName,
+                type: type,
+                content: ''
+            });
+
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            switchActiveFile(cleanName);
+            showToast(`Created ${cleanName}`);
+        }
+
+        function renameFilePrompt(path, e) {
+            if (e) e.stopPropagation();
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            const file = manifest[idx].files.find(f => f.path === path);
+            if (!file) return;
+
+            const newName = prompt("Rename to:", file.name);
+            if (!newName || !newName.trim() || newName === file.name) return;
+
+            file.name = newName.trim();
+            file.path = newName.trim();
+            file.type = newName.split('.').pop().toLowerCase();
+
+            if (activeFilePath === path) activeFilePath = file.path;
+            openTabs = openTabs.map(t => t === path ? file.path : t);
+
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            renderFileList();
+            renderTabs();
+            showToast("File renamed");
+        }
+
+        function deleteFile(path, e) {
+            if (e) e.stopPropagation();
+            if (!confirm(`Delete ${path}?`)) return;
+
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            manifest[idx].files = manifest[idx].files.filter(f => f.path !== path);
+
+            openTabs = openTabs.filter(t => t !== path);
+            if (activeFilePath === path) {
+                activeFilePath = manifest[idx].files[0] ? manifest[idx].files[0].path : "";
+            }
+
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            renderFileList();
+            renderTabs();
+            loadActiveFileContent();
+            showToast("File deleted");
+        }
+
+        /* Gutter & Editor Events */
+        function updateMetrics() {
+            requestAnimationFrame(() => {
+                const text = codeTextarea.value;
+                const lines = text.split('\n').length;
+                gutter.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join('<br>');
+                statusFileInfo.textContent = `${lines} lines`;
+            });
+        }
+
+        codeTextarea.addEventListener('input', () => {
+            updateMetrics();
+            triggerChange();
+        });
+
+        codeTextarea.addEventListener('scroll', () => {
+            gutter.scrollTop = codeTextarea.scrollTop;
+        });
+
+        codeTextarea.addEventListener('click', updateCursorPos);
+        codeTextarea.addEventListener('keyup', updateCursorPos);
+
+        function updateCursorPos() {
+            const pos = codeTextarea.selectionStart;
+            const lines = codeTextarea.value.substring(0, pos).split('\n');
+            statusCursor.textContent = `Ln ${lines.length}, Col ${lines[lines.length - 1].length + 1}`;
+        }
+
+        /* Full Keyboard Handler: Tab, Shift+Tab, Ctrl+/, Ctrl+S, Ctrl+Enter */
+        codeTextarea.addEventListener('keydown', (e) => {
+            const start = codeTextarea.selectionStart;
+            const end = codeTextarea.selectionEnd;
+            const val = codeTextarea.value;
+
+            // Indentation (Tab and Shift+Tab)
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                if (e.shiftKey) {
+                    // Outdent
+                    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+                    if (val.substring(lineStart, lineStart + 2) === '  ') {
+                        codeTextarea.value = val.substring(0, lineStart) + val.substring(lineStart + 2);
+                        codeTextarea.selectionStart = Math.max(lineStart, start - 2);
+                        codeTextarea.selectionEnd = Math.max(lineStart, end - 2);
+                    }
+                } else {
+                    // Indent 2 spaces
+                    codeTextarea.value = val.substring(0, start) + "  " + val.substring(end);
+                    codeTextarea.selectionStart = codeTextarea.selectionEnd = start + 2;
+                }
+                updateMetrics();
+                triggerChange();
+                return;
+            }
+
+            // Quick Comment Toggle (Ctrl+/ or Cmd+/)
+            if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+                e.preventDefault();
+                const isHtml = activeFilePath.endsWith('.html');
+                const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+                let lineEnd = val.indexOf('\n', end);
+                if (lineEnd === -1) lineEnd = val.length;
+                const lineText = val.substring(lineStart, lineEnd);
+
+                if (isHtml) {
+                    if (lineText.trim().startsWith('<!--') && lineText.trim().endsWith('-->')) {
+                        codeTextarea.value = val.substring(0, lineStart) + lineText.replace('<!--', '').replace('-->', '') + val.substring(lineEnd);
+                    } else {
+                        codeTextarea.value = val.substring(0, lineStart) + `<!-- ${lineText} -->` + val.substring(lineEnd);
+                    }
+                } else {
+                    if (lineText.trim().startsWith('//')) {
+                        codeTextarea.value = val.substring(0, lineStart) + lineText.replace('// ', '').replace('//', '') + val.substring(lineEnd);
+                    } else {
+                        codeTextarea.value = val.substring(0, lineStart) + `// ${lineText}` + val.substring(lineEnd);
+                    }
+                }
+                updateMetrics();
+                triggerChange();
+                return;
+            }
+
+            // Ctrl+Enter: Run
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                runSandbox();
+                return;
+            }
+
+            // Ctrl+S: Snapshot
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                takeSnapshot();
+                return;
+            }
+
+            // Auto-closing quotes and brackets
+            const pairs = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
+            if (pairs[e.key] && start === end) {
+                e.preventDefault();
+                codeTextarea.value = val.substring(0, start) + e.key + pairs[e.key] + val.substring(end);
+                codeTextarea.selectionStart = codeTextarea.selectionEnd = start + 1;
+                updateMetrics();
+                triggerChange();
+            }
+        });
+
+        projectTitleInput.addEventListener('input', triggerChange);
+
+        /* Real Search & Replace Engine */
+        function toggleSearchBar() {
+            const bar = document.getElementById('search-bar');
+            bar.classList.toggle('active');
+            if (bar.classList.contains('active')) {
+                document.getElementById('find-input').focus();
+                updateSearchMatchCount();
+            }
+        }
+
+        function updateSearchMatchCount() {
+            const find = document.getElementById('find-input').value;
+            const countEl = document.getElementById('search-count');
+            if (!find) {
+                countEl.textContent = '0 matches';
+                return;
+            }
+            const regex = new RegExp(escapeRegex(find), 'g');
+            const matches = codeTextarea.value.match(regex);
+            countEl.textContent = matches ? `${matches.length} matches` : '0 matches';
+        }
+
+        function executeReplace() {
+            const find = document.getElementById('find-input').value;
+            const rep = document.getElementById('replace-input').value;
+            if (!find) return;
+
+            const idx = codeTextarea.value.indexOf(find);
+            if (idx !== -1) {
+                codeTextarea.value = codeTextarea.value.substring(0, idx) + rep + codeTextarea.value.substring(idx + find.length);
+                codeTextarea.selectionStart = idx;
+                codeTextarea.selectionEnd = idx + rep.length;
+                updateMetrics();
+                triggerChange();
+                updateSearchMatchCount();
+            }
+        }
+
+        function executeReplaceAll() {
+            const find = document.getElementById('find-input').value;
+            const rep = document.getElementById('replace-input').value;
+            if (!find) return;
+
+            const regex = new RegExp(escapeRegex(find), 'g');
+            codeTextarea.value = codeTextarea.value.replace(regex, rep);
+            updateMetrics();
+            triggerChange();
+            updateSearchMatchCount();
+            showToast('Replaced all matches');
+        }
+
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function formatActiveFile() {
+            const lines = codeTextarea.value.split('\n');
+            let indent = 0;
+            const formatted = lines.map(line => {
+                const t = line.trim();
+                if (t.startsWith('</') || t.startsWith('}') || t.startsWith(']')) indent = Math.max(0, indent - 1);
+                const out = '  '.repeat(indent) + t;
+                if ((t.endsWith('{') || (t.startsWith('<') && !t.startsWith('</') && !t.endsWith('/>') && !t.includes('</'))) && !t.startsWith('<!')) indent++;
+                return out;
+            }).join('\n');
+
+            codeTextarea.value = formatted;
+            updateMetrics();
+            triggerChange();
+            showToast('Code formatted');
+        }
+
+        /* Live Sandbox Bundler (With Memory Leak Fix) */
+        function runSandbox(silent = false) {
+            saveActiveProject(true);
+            const project = getActiveProject();
+            if (!project) return;
+
+            const htmlFile = project.files.find(f => f.path.endsWith('.html')) || project.files[0];
+            if (!htmlFile) return;
+
+            let bundle = htmlFile.content;
+
+            // Bundle CSS
+            project.files.filter(f => f.type === 'css').forEach(css => {
+                bundle = bundle.replace('</head>', `<style>/* ${css.name} */\n${css.content}\n</style></head>`);
+            });
+
+            // Bundle JS
+            project.files.filter(f => f.type === 'js').forEach(js => {
+                bundle = bundle.replace('</body>', `<script>/* ${js.name} */\n${js.content}\n<\/script></body>`);
+            });
+
+            // Console Bridge script
+            const bridge = `
+                <script>
+                    (function(){
+                        const _log = console.log, _warn = console.warn, _err = console.error;
+                        console.log = (...args) => {
+                            _log(...args);
+                            window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'info', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        console.warn = (...args) => {
+                            _warn(...args);
+                            window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'warn', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        console.error = (...args) => {
+                            _err(...args);
+                            window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'error', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
+                        };
+                        window.onerror = (msg, src, lin) => {
+                            window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'error', text: msg + ' (' + lin + ')' }, '*');
+                            return false;
+                        };
+                    })();
+                <\/script>
+            `;
+
+            bundle = bundle.includes('<head>') ? bundle.replace('<head>', '<head>' + bridge) : bridge + bundle;
+
+            // Clean up previous blob to avoid memory leaks
+            if (activeBlobUrl) {
+                URL.revokeObjectURL(activeBlobUrl);
+            }
+
+            const blob = new Blob([bundle], { type: 'text/html' });
+            activeBlobUrl = URL.createObjectURL(blob);
+            sandboxFrame.src = activeBlobUrl;
+
+            if (!silent) appendConsoleLog('Application loaded in sandbox.', 'system');
+        }
+
+        /* Console */
+        window.addEventListener('message', (e) => {
+            if (!e.data || e.data.type !== 'CONSOLE_LOG') return;
+            appendConsoleLog(e.data.text, e.data.level);
+        });
+
+        function appendConsoleLog(text, level = 'info') {
+            consoleLogCount++;
+            consoleCounter.textContent = consoleLogCount;
+
+            const row = document.createElement('div');
+            row.className = `log-row ${level}`;
+            row.textContent = `❯ ${text}`;
+            consoleLogs.appendChild(row);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+        }
+
+        function clearConsole() {
+            consoleLogs.innerHTML = '';
+            consoleLogCount = 0;
+            consoleCounter.textContent = '0';
+        }
+
+        function toggleConsole() {
+            const drawer = document.getElementById('console-drawer');
+            const btn = document.getElementById('console-toggle-btn');
+            drawer.classList.toggle('collapsed');
+            btn.textContent = drawer.classList.contains('collapsed') ? '▴' : '▾';
+        }
+
+        function handleReplKey(e) {
+            if (e.key === 'Enter') {
+                const cmd = replInput.value.trim();
+                if (!cmd) return;
+                appendConsoleLog(cmd, 'repl');
+                try {
+                    sandboxFrame.contentWindow.eval(cmd);
+                } catch(err) {
+                    appendConsoleLog(err.message, 'error');
+                }
+                replInput.value = '';
+            }
+        }
+
+        /* Snapshots */
+        function takeSnapshot() {
+            saveActiveProject(true);
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            if (idx === -1) return;
+
+            if (!manifest[idx].snapshots) manifest[idx].snapshots = [];
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            manifest[idx].snapshots.unshift({
+                id: 'snap_' + Date.now(),
+                label: `Saved at ${time}`,
+                files: JSON.parse(JSON.stringify(manifest[idx].files))
+            });
+
+            if (manifest[idx].snapshots.length > 8) manifest[idx].snapshots.pop();
+
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            renderSnapshotsList(manifest[idx].snapshots);
+            showToast("Snapshot saved");
+        }
+
+        function restoreSnapshot(snapId) {
+            const project = getActiveProject();
+            if (!project || !project.snapshots) return;
+            const snap = project.snapshots.find(s => s.id === snapId);
+            if (!snap || !confirm(`Restore ${snap.label}?`)) return;
+
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            const idx = manifest.findIndex(p => p.id === activeProjectId);
+            manifest[idx].files = JSON.parse(JSON.stringify(snap.files));
+
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            loadProjectState(manifest[idx]);
+            runSandbox();
+            showToast(`Restored: ${snap.label}`);
+        }
+
+        function renderSnapshotsList(snapshots) {
+            const list = document.getElementById('snapshots-list');
+            if (!snapshots || snapshots.length === 0) {
+                list.innerHTML = '<span style="font-size:11px; color:var(--text-muted); padding:0 12px;">No snapshots yet.</span>';
+                return;
+            }
+            list.innerHTML = snapshots.map(s => `
+                <div class="file-item" onclick="restoreSnapshot('${s.id}')">
+                    <span>${s.label}</span>
+                    <span style="font-size:10px; color:var(--text-muted);">Restore</span>
+                </div>
+            `).join('');
+        }
+
+        /* Pane Resizing */
+        const paneDivider = document.getElementById('pane-divider');
+        const editorPane = document.getElementById('editor-pane');
+        const workspaceContainer = document.getElementById('workspace-container');
+        let isResizing = false;
+
+        paneDivider.addEventListener('mousedown', () => {
+            isResizing = true;
+            paneDivider.classList.add('dragging');
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const bounds = workspaceContainer.getBoundingClientRect();
+            const pct = ((e.clientX - bounds.left) / bounds.width) * 100;
+            if (pct > 20 && pct < 80) editorPane.style.flex = `0 0 ${pct}%`;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                paneDivider.classList.remove('dragging');
+            }
+        });
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        }
+
+        function setPreviewViewport(w, h, btn) {
+            document.querySelectorAll('.preview-toolbar .btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            previewViewport.style.width = w;
+            previewViewport.style.height = h;
+        }
+
+        function toggleFullscreen() {
+            if (sandboxFrame.requestFullscreen) sandboxFrame.requestFullscreen();
+            else if (sandboxFrame.webkitRequestFullscreen) sandboxFrame.webkitRequestFullscreen();
+        }
+
+        function openPreviewNewTab() {
+            const project = getActiveProject();
+            const htmlFile = project.files.find(f => f.path.endsWith('.html')) || project.files[0];
+            if (!htmlFile) return;
+
+            const win = window.open();
+            win.document.write(htmlFile.content);
+            win.document.close();
+        }
+
+        function toggleLiveReload() {
+            liveReloadEnabled = !liveReloadEnabled;
+            const statusEl = document.getElementById('live-status-text');
+            statusEl.textContent = liveReloadEnabled ? 'On' : 'Off';
+            statusEl.style.color = liveReloadEnabled ? 'var(--success)' : 'var(--text-muted)';
+            showToast(`Live Reload: ${liveReloadEnabled ? 'On' : 'Off'}`);
+        }
+
+        /* Export & Import */
+        function exportStandaloneHTML() {
+            saveActiveProject(true);
+            const project = getActiveProject();
+            const htmlFile = project.files.find(f => f.path.endsWith('.html')) || project.files[0];
+            if (!htmlFile) return;
+
+            let bundle = htmlFile.content;
+            project.files.filter(f => f.type === 'css').forEach(css => {
+                bundle = bundle.replace('</head>', `<style>\n${css.content}\n</style></head>`);
+            });
+            project.files.filter(f => f.type === 'js').forEach(js => {
+                bundle = bundle.replace('</body>', `<script>\n${js.content}\n<\/script></body>`);
+            });
+
+            const blob = new Blob([bundle], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${(project.title || 'project').toLowerCase().replace(/\s+/g, '_')}.html`;
+            a.click();
+            showToast('Exported Standalone HTML');
+        }
+
+        function exportProjectJSON() {
+            saveActiveProject(true);
+            const project = getActiveProject();
+            const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${(project.title || 'project').toLowerCase().replace(/\s+/g, '_')}.json`;
+            a.click();
+            showToast('Exported Project JSON');
+        }
+
+        function copyCurrentFileCode() {
+            navigator.clipboard.writeText(codeTextarea.value);
+            showToast('Copied to clipboard');
+        }
+
+        function handleImportFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    if (file.name.endsWith('.json')) {
+                        const data = JSON.parse(ev.target.result);
+                        if (!data.files) throw new Error("Invalid bundle");
+                        data.id = 'proj_' + Date.now();
+
+                        const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+                        manifest.unshift(data);
+                        localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+                        switchProject(data.id);
+                        showToast(`Restored: ${data.title}`);
+                    } else {
+                        const newProj = {
+                            id: 'proj_' + Date.now(),
+                            title: file.name.replace(/\.[^/.]+$/, ""),
+                            files: [{ name: "index.html", path: "index.html", type: "html", content: ev.target.result }],
+                            updatedAt: Date.now(),
+                            snapshots: []
+                        };
+                        const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+                        manifest.unshift(newProj);
+                        localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+                        switchProject(newProj.id);
+                        showToast(`Imported ${file.name}`);
+                    }
+                } catch(err) {
+                    alert("Import error: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        /* Projects Modal */
+        function openProjectsModal() {
+            renderProjectsList();
+            document.getElementById('projects-modal').classList.add('active');
+        }
+
+        function closeProjectsModal() {
+            document.getElementById('projects-modal').classList.remove('active');
+        }
+
+        function renderProjectsList() {
+            const container = document.getElementById('projects-list');
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+
+            container.innerHTML = manifest.map(p => `
+                <div class="project-row ${p.id === activeProjectId ? 'active' : ''}" onclick="switchProject('${p.id}')">
+                    <div>
+                        <div style="font-weight:600; font-size:13px;">${p.title}</div>
+                        <div style="font-size:11px; color:var(--text-muted);">${p.files.length} files</div>
+                    </div>
+                    <div style="display:flex; gap:4px;" onclick="event.stopPropagation()">
+                        ${manifest.length > 1 ? `<button class="btn" style="padding:2px 6px; font-size:11px;" onclick="deleteProject('${p.id}')">Delete</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function createNewProjectPrompt() {
+            const title = prompt("Project Name:", "New Project");
+            if (!title) return;
+
+            const newProj = {
+                id: 'proj_' + Date.now(),
+                title: title.trim(),
+                files: JSON.parse(JSON.stringify(STARTER_TEMPLATES.vanilla.files)),
+                updatedAt: Date.now(),
+                snapshots: []
+            };
+
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            manifest.unshift(newProj);
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            switchProject(newProj.id);
+            closeProjectsModal();
+            showToast(`Created: ${title}`);
+        }
+
+        function deleteProject(id) {
+            if (!confirm("Delete this project?")) return;
+            let manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            manifest = manifest.filter(p => p.id !== id);
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+
+            if (activeProjectId === id) switchProject(manifest[0].id);
+            renderProjectsList();
+            updateProjectCount();
+            showToast("Project deleted");
+        }
+
+        function switchProject(id) {
+            saveActiveProject(true);
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            const target = manifest.find(p => p.id === id);
+            if (!target) return;
+
+            activeProjectId = target.id;
+            localStorage.setItem(STORAGE_ACTIVE_ID, target.id);
+            loadProjectState(target);
+            updateProjectCount();
+            runSandbox();
+            closeProjectsModal();
+        }
+
+        /* Starters Modal */
+        function openTemplatesModal() { document.getElementById('templates-modal').classList.add('active'); }
+        function closeTemplatesModal() { document.getElementById('templates-modal').classList.remove('active'); }
+
+        function createProjectFromTemplate(key) {
+            const tpl = STARTER_TEMPLATES[key];
+            if (!tpl) return;
+
+            const newProj = {
+                id: 'proj_' + Date.now(),
+                title: tpl.title,
+                files: JSON.parse(JSON.stringify(tpl.files)),
+                updatedAt: Date.now(),
+                snapshots: []
+            };
+
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+            manifest.unshift(newProj);
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            switchProject(newProj.id);
+            closeTemplatesModal();
+            showToast(`Started: ${tpl.title}`);
+        }
+
+        /* Settings & Theme */
+        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+
+        function toggleDropdown(id) {
+            document.querySelectorAll('.dropdown').forEach(d => {
+                if (d.id !== id) d.classList.remove('open');
+            });
+            document.getElementById(id).classList.toggle('open');
+        }
+
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+            }
+        });
+
+        function toggleTheme() {
+            const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = cur === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('afk_theme', next);
+            showToast(`Theme: ${next}`);
+        }
+
+        function setEditorFontSize(size) {
+            codeTextarea.style.fontSize = size;
+            gutter.style.fontSize = size;
+            showToast(`Font: ${size}`);
+        }
+
+        function toggleLineWrap() {
+            isWordWrap = !isWordWrap;
+            codeTextarea.classList.toggle('wrap-text', isWordWrap);
+            document.getElementById('status-wrap-info').textContent = isWordWrap ? 'Wrap' : 'No Wrap';
+            showToast(`Wrap: ${isWordWrap ? 'Enabled' : 'Disabled'}`);
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('afk_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            initStudio();
+        });
+    </script>
+</body>
+</html>
            DESIGN SYSTEM: ADDITION7-INSPIRED CLEAN ARCHITECTURE
            ========================================================================== */
         :root {
