@@ -1,108 +1,68 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">Submit Project — I’M AFK</title>
+    <title>Submit Project — I’M AFK</title>
     
-    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
-    <!-- Supabase JS Client -->
+    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* ==========================================================================
-           DESIGN SYSTEM: ADDITION7-INSPIRED CLEAN ARCHITECTURE
-           ========================================================================== */
         :root {
             --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             --font-display: 'Space Grotesk', -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             
-            --nav-height: 52px;
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
+            --nav-height: 56px;
+            --radius-sm: 8px;
+            --radius-md: 14px;
             --radius-pill: 9999px;
-
-            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-fast: 0.15s var(--ease-out);
+            --transition: 0.2s ease;
         }
 
-        html[lang="ar"] { 
-            --font-ui: 'Tajawal', system-ui, sans-serif; 
-            --font-display: 'Tajawal', sans-serif;
-        }
-
-        /* DARK THEME (Default) */
+        /* DARK THEME */
         [data-theme="dark"] {
-            --bg-canvas: #090a0d;
-            --bg-surface: #111318;
-            --bg-panel: #16181f;
-            --bg-elevated: #1d202a;
-            --bg-input: #101217;
-            --bg-hover: rgba(255, 255, 255, 0.04);
-            --bg-active: #232734;
+            --bg-canvas: #121615;
+            --bg-surface: rgba(22, 28, 27, 0.85);
+            --bg-card: rgba(28, 36, 34, 0.9);
+            --bg-input: #18201E;
+            --bg-hover: rgba(255, 255, 255, 0.05);
 
             --border: rgba(255, 255, 255, 0.09);
-            --border-subtle: rgba(255, 255, 255, 0.05);
-            --border-strong: rgba(255, 255, 255, 0.16);
-            --border-focus: #3b82f6;
+            --border-strong: rgba(255, 255, 255, 0.18);
 
-            --text-main: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --text-muted: #6b7280;
-            --text-dim: #4b5563;
+            --text-main: #EDF3F1;
+            --text-secondary: #9EB3AD;
+            --text-muted: #6B807A;
 
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --accent-subtle: rgba(59, 130, 246, 0.12);
-            --accent-text: #60a5fa;
-
-            --success: #10b981;
-            --success-subtle: rgba(16, 185, 129, 0.12);
-            --warning: #f59e0b;
-            --danger: #ef4444;
-
-            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
-            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --brand: #5B9287;
+            --brand-hover: #487A70;
+            --brand-soft: rgba(91, 146, 135, 0.18);
         }
 
         /* LIGHT THEME */
         [data-theme="light"] {
-            --bg-canvas: #f8fafc;
-            --bg-surface: #ffffff;
-            --bg-panel: #f1f5f9;
-            --bg-elevated: #e2e8f0;
-            --bg-input: #ffffff;
+            --bg-canvas: #F7F9F8;
+            --bg-surface: rgba(255, 255, 255, 0.85);
+            --bg-card: #FFFFFF;
+            --bg-input: #FFFFFF;
             --bg-hover: rgba(0, 0, 0, 0.04);
-            --bg-active: #e2e8f0;
 
-            --border: rgba(0, 0, 0, 0.09);
-            --border-subtle: rgba(0, 0, 0, 0.05);
-            --border-strong: rgba(0, 0, 0, 0.18);
-            --border-focus: #2563eb;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-strong: rgba(0, 0, 0, 0.16);
 
-            --text-main: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --text-dim: #94a3b8;
+            --text-main: #20332F;
+            --text-secondary: #536B66;
+            --text-muted: #859E98;
 
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --accent-subtle: rgba(37, 99, 235, 0.08);
-            --accent-text: #2563eb;
-
-            --success: #059669;
-            --success-subtle: rgba(5, 150, 105, 0.08);
-            --warning: #d97706;
-            --danger: #dc2626;
-
-            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
-            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --brand: #43766C;
+            --brand-hover: #355E56;
+            --brand-soft: #DDEBE6;
         }
 
         *, *::before, *::after {
@@ -115,8 +75,8 @@
             background-color: var(--bg-canvas);
             color: var(--text-main);
             font-family: var(--font-ui);
-            font-size: 13px;
-            line-height: 1.5;
+            font-size: 14px;
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -124,66 +84,66 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Scrollbars */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+        .content-width {
+            max-width: 780px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-        /* ==========================================================================
-           TOP NAVIGATION
-           ========================================================================== */
+        /* Navigation */
         .navbar {
             position: sticky;
             top: 0;
             z-index: 100;
             height: var(--nav-height);
             background: var(--bg-surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 clamp(16px, 3vw, 32px);
-            flex-shrink: 0;
+            padding: 0 clamp(16px, 4vw, 36px);
         }
 
         .brand-link {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
             color: var(--text-main);
             font-weight: 700;
             font-family: var(--font-display);
-            font-size: 0.95rem;
-            letter-spacing: -0.3px;
+            font-size: 1rem;
         }
+
         .brand-badge {
-            width: 22px;
-            height: 22px;
-            background: var(--text-main);
-            color: var(--bg-surface);
-            border-radius: var(--radius-sm);
+            width: 24px;
+            height: 24px;
+            background: var(--brand);
+            color: #FFFFFF;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            font-weight: 800;
+            font-size: 12px;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 20px;
-            align-items: center;
+            gap: 22px;
         }
+
         .nav-links a {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
-            transition: var(--transition-fast);
+            transition: var(--transition);
         }
+
         .nav-links a:hover, .nav-links a.active {
             color: var(--text-main);
         }
@@ -191,142 +151,132 @@
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        /* Buttons */
         .btn {
-            background: var(--bg-panel);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: var(--radius-sm);
             font-family: var(--font-ui);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            text-decoration: none;
-            transition: var(--transition-fast);
-            white-space: nowrap;
+            transition: var(--transition);
         }
+
         .btn:hover {
-            background: var(--bg-elevated);
             border-color: var(--border-strong);
-            color: var(--text-main);
+            background: var(--bg-hover);
         }
-        .btn:active {
-            transform: translateY(1px);
-        }
+
         .btn-primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #ffffff;
+            background: var(--brand);
+            border-color: var(--brand);
+            color: #FFFFFF;
         }
+
         .btn-primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-            color: #ffffff;
-        }
-        .btn-icon {
-            padding: 6px 8px;
+            background: var(--brand-hover);
+            color: #FFFFFF;
         }
 
-        /* ==========================================================================
-           MAIN CONTENT & SUBMISSION FORM
-           ========================================================================== */
-        .page-container {
-            max-width: 820px;
-            width: 100%;
-            margin: 24px auto 60px;
-            padding: 0 clamp(16px, 3vw, 24px);
+        /* Hero */
+        .hero {
+            padding: 40px 0 24px 0;
+            text-align: center;
         }
 
-        .page-header {
-            margin-bottom: 24px;
-        }
-        .page-title {
+        .hero h1 {
             font-family: var(--font-display);
-            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
             font-weight: 700;
-            letter-spacing: -0.6px;
-            color: var(--text-main);
-            margin-bottom: 6px;
-        }
-        .page-desc {
-            color: var(--text-secondary);
-            font-size: 13px;
+            margin-bottom: 8px;
         }
 
-        /* Studio Gateway Callout */
-        .studio-callout {
-            background: var(--bg-surface);
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Studio Link Banner */
+        .studio-banner {
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 16px 20px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 16px;
             flex-wrap: wrap;
-            gap: 12px;
-            box-shadow: var(--shadow-card);
         }
-        .studio-callout-title {
+
+        .studio-banner-title {
             font-weight: 600;
-            font-size: 13px;
-            color: var(--text-main);
+            font-size: 14px;
             margin-bottom: 2px;
         }
-        .studio-callout-desc {
-            font-size: 12px;
+
+        .studio-banner-desc {
+            font-size: 13px;
             color: var(--text-secondary);
         }
 
         /* Form Card */
         .form-card {
-            background: var(--bg-surface);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 24px;
-            box-shadow: var(--shadow-card);
+            padding: 28px;
+            margin-bottom: 50px;
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
-        .full-width { grid-column: 1 / -1; }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
         }
-        .input-label {
-            font-size: 11px;
+
+        label {
+            font-size: 13px;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: var(--text-main);
         }
 
         .form-input {
             width: 100%;
             background: var(--bg-input);
             border: 1px solid var(--border);
-            padding: 8px 10px;
+            padding: 10px 14px;
             border-radius: var(--radius-sm);
             color: var(--text-main);
             font-family: var(--font-ui);
-            font-size: 12px;
+            font-size: 13px;
             outline: none;
-            transition: var(--transition-fast);
+            transition: var(--transition);
         }
+
         .form-input:focus {
-            border-color: var(--border-focus);
+            border-color: var(--brand);
         }
 
         /* Drop Zone */
@@ -335,345 +285,281 @@
             border-radius: var(--radius-sm);
             padding: 18px;
             text-align: center;
-            background: var(--bg-panel);
+            background: var(--bg-input);
             cursor: pointer;
-            transition: var(--transition-fast);
+            transition: var(--transition);
             margin-bottom: 8px;
         }
+
         .drop-zone:hover {
-            border-color: var(--accent);
-            background: var(--accent-subtle);
+            border-color: var(--brand);
+            background: var(--brand-soft);
         }
+
         .drop-zone-text {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
         }
 
-        /* Code Textarea */
+        .drop-zone-text strong {
+            color: var(--brand);
+        }
+
+        /* Code Box */
         .code-area {
             width: 100%;
-            height: 240px;
-            background: var(--bg-input);
+            height: 220px;
+            background: #141A19;
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             padding: 12px;
-            color: var(--text-main);
+            color: #DDEBE6;
             font-family: var(--font-mono);
             font-size: 12px;
             line-height: 1.5;
             resize: vertical;
             outline: none;
-            transition: var(--transition-fast);
-        }
-        .code-area:focus {
-            border-color: var(--border-focus);
+            transition: var(--transition);
         }
 
-        .code-footer {
+        .code-area:focus {
+            border-color: var(--brand);
+        }
+
+        .code-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 6px;
-            font-size: 11px;
-            font-family: var(--font-mono);
+            font-size: 12px;
             color: var(--text-muted);
         }
 
         .checkbox-row {
-            margin: 18px 0;
+            margin: 20px 0 24px 0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
+
         .checkbox-row input {
-            accent-color: var(--accent);
-            width: 14px;
-            height: 14px;
+            accent-color: var(--brand);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
         }
+
         .checkbox-row label {
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 400;
             color: var(--text-secondary);
             cursor: pointer;
         }
 
-        /* ==========================================================================
-           SANDBOX MODAL
-           ========================================================================== */
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: var(--radius-pill);
+            justify-content: center;
+        }
+
+        /* Sandbox Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(4px);
             z-index: 1000;
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            padding: 20px;
         }
-        .modal-overlay.active { display: flex; }
+
+        .modal-overlay.active {
+            display: flex;
+        }
 
         .modal-window {
             width: 100%;
-            max-width: 900px;
+            max-width: 860px;
             height: 80vh;
             background: var(--bg-surface);
             border: 1px solid var(--border-strong);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: var(--shadow-pop);
         }
 
         .modal-header {
-            padding: 12px 16px;
-            background: var(--bg-panel);
+            padding: 12px 18px;
+            background: var(--bg-card);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
             font-weight: 600;
-            color: var(--text-main);
+            font-size: 14px;
         }
 
         #sandbox-frame {
             flex: 1;
             width: 100%;
             border: none;
-            background: #ffffff;
+            background: #FFFFFF;
         }
 
-        /* ==========================================================================
-           FOOTER
-           ========================================================================== */
-        .footer {
+        /* Footer */
+        footer {
             border-top: 1px solid var(--border);
-            padding: 24px clamp(16px, 3vw, 32px);
+            padding: 24px clamp(16px, 4vw, 36px);
             background: var(--bg-surface);
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
             color: var(--text-muted);
-            font-size: 11px;
             margin-top: auto;
         }
 
-        @media (max-width: 640px) {
-            .navbar { padding: 0 12px; }
+        @media (max-width: 650px) {
             .nav-links { display: none; }
             .form-grid { grid-template-columns: 1fr; }
-            .studio-callout { flex-direction: column; align-items: flex-start; }
-            .footer { flex-direction: column; gap: 8px; text-align: center; }
+            .studio-banner { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation -->
+    <!-- Header Navigation -->
     <header class="navbar">
         <a href="index.html" class="brand-link" title="I’M AFK Hub">
             <div class="brand-badge">✦</div>
-            <span>I’M AFK <span style="font-size:11px; color:var(--text-muted); font-weight:500;">Submit</span></span>
+            <span>I’M AFK</span>
         </a>
 
         <ul class="nav-links">
-            <li><a href="index.html" data-i18n="nav.home">Home</a></li>
-            <li><a href="library.html" data-i18n="nav.library">Library</a></li>
-            <li><a href="studio.html" data-i18n="nav.studio">Studio</a></li>
-            <li><a href="submit.html" class="active" data-i18n="nav.submit">Submit</a></li>
-            <li><a href="contact.html" data-i18n="nav.support">Support</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="library.html">Library</a></li>
+            <li><a href="studio.html">Studio</a></li>
+            <li><a href="submit.html" class="active">Submit</a></li>
+            <li><a href="contact.html">Support</a></li>
         </ul>
 
         <div class="nav-actions">
-            <a href="studio.html" class="btn btn-primary" data-i18n="nav.openStudio">+ Create Project</a>
-            <button type="button" class="btn" id="lang-btn">العربية</button>
-            <button type="button" class="btn btn-icon" id="theme-btn" onclick="toggleTheme()" title="Switch Theme">◐</button>
+            <a href="studio.html" class="btn btn-primary">+ Create Project</a>
+            <button type="button" class="btn" onclick="toggleTheme()" title="Switch Theme">◐</button>
         </div>
     </header>
 
-    <!-- Submission Content -->
-    <main class="page-container">
-        
-        <div class="page-header">
-            <h1 class="page-title" data-i18n="sub.title">Submit Project</h1>
-            <p class="page-desc" data-i18n="sub.lead">Publish your standalone HTML5 creation directly to our network catalog.</p>
-        </div>
+    <div class="content-width">
+        <section class="hero">
+            <h1>Submit a Project</h1>
+            <p>Publish your standalone HTML5 creation directly to the community catalog.</p>
+        </section>
 
-        <!-- Studio Callout Banner -->
-        <div class="studio-callout">
+        <!-- Studio Suggestion Banner -->
+        <div class="studio-banner">
             <div>
-                <div class="studio-callout-title" data-i18n="callout.title">Prefer to write & debug code live?</div>
-                <div class="studio-callout-desc" data-i18n="callout.desc">Open the integrated multi-file code studio with sandbox preview, templates, and snapshot history.</div>
+                <div class="studio-banner-title">Want to build and test code live?</div>
+                <div class="studio-banner-desc">Use the integrated code studio with multi-file support and instant preview.</div>
             </div>
-            <a href="studio.html" class="btn btn-primary" data-i18n="callout.cta">Open Studio ➔</a>
+            <a href="studio.html" class="btn">Open Studio ➔</a>
         </div>
 
-        <!-- Submission Form Card -->
-        <div class="form-card">
+        <!-- Form Card -->
+        <main class="form-card">
             <form id="submissionForm">
                 <div class="form-grid">
                     <div class="input-group">
-                        <label class="input-label" for="game-name" data-i18n="form.name">Project Title *</label>
-                        <input type="text" id="game-name" class="form-input" placeholder="e.g. Minimalist Physics Sim" required>
+                        <label for="game-name">Project Title *</label>
+                        <input type="text" id="game-name" class="form-input" placeholder="e.g. Pixel Runner" required>
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label" for="author" data-i18n="form.author">Author / Studio Credits *</label>
-                        <input type="text" id="author" class="form-input" placeholder="e.g. Studio Vertex / @handle" required>
+                        <label for="author">Author Credits *</label>
+                        <input type="text" id="author" class="form-input" placeholder="Your name or username" required>
                     </div>
 
                     <div class="input-group full-width">
-                        <label class="input-label" for="source" data-i18n="form.source">Repository / Source URL (Optional)</label>
-                        <input type="url" id="source" class="form-input" placeholder="https://github.com/user/project">
+                        <label for="source">Source or Repository URL</label>
+                        <input type="url" id="source" class="form-input" placeholder="https://github.com/... (optional)">
                     </div>
 
                     <div class="input-group full-width">
-                        <label class="input-label" data-i18n="form.code">Standalone HTML5 Code *</label>
+                        <label>HTML5 Code *</label>
                         
                         <div class="drop-zone" id="dropZone">
-                            <span class="drop-zone-text"><strong style="color:var(--accent-text);" data-i18n="form.dropPrompt">Drop .html file here</strong> or click to browse</span>
+                            <span class="drop-zone-text"><strong>Drop .html file here</strong> or click to choose a file</span>
                             <input type="file" id="fileInput" accept=".html,.htm" style="display:none;">
                         </div>
 
                         <textarea id="html-code" class="code-area" placeholder="<!DOCTYPE html>&#10;<html>...</html>" required spellcheck="false"></textarea>
                         
-                        <div class="code-footer">
+                        <div class="code-bar">
                             <span id="code-stats">0 characters | 0 lines</span>
-                            <button type="button" class="btn" id="run-sandbox-btn" style="padding:3px 8px; font-size:11px;" data-i18n="form.test">⚡ Preview Sandbox</button>
+                            <button type="button" class="btn" id="run-sandbox-btn">⚡ Test in Sandbox</button>
                         </div>
                     </div>
 
                     <div class="input-group full-width">
-                        <label class="input-label" for="email" data-i18n="form.email">Contact Email *</label>
-                        <input type="email" id="email" class="form-input" placeholder="dev@domain.com" required>
+                        <label for="email">Contact Email *</label>
+                        <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
                     </div>
                 </div>
 
                 <div class="checkbox-row">
                     <input type="checkbox" id="agree" required>
-                    <label for="agree" data-i18n="form.agree">
-                        I confirm this code is authored by me or licensed under permissive open-source terms.
+                    <label for="agree">
+                        I confirm this code is safe to run and I have permission to share it.
                     </label>
                 </div>
 
-                <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; justify-content: center; padding: 9px;">
-                    <span data-i18n="form.submit">Publish Project to Library ➔</span>
+                <button type="submit" class="btn btn-primary submit-btn" id="submitBtn">
+                    Publish to Library ➔
                 </button>
             </form>
-        </div>
-    </main>
+        </main>
+    </div>
 
-    <!-- Sandbox Preview Modal -->
+    <!-- Preview Modal -->
     <div class="modal-overlay" id="sandbox-modal">
         <div class="modal-window">
             <div class="modal-header">
-                <span data-i18n="modal.previewTitle">Sandbox Preview</span>
-                <button type="button" class="btn btn-icon" id="close-sandbox-btn">✕</button>
+                <span>Sandbox Preview</span>
+                <button type="button" class="btn" id="close-sandbox-btn">✕ Close</button>
             </div>
             <iframe id="sandbox-frame" sandbox="allow-scripts allow-forms allow-pointer-lock allow-modals" allow="fullscreen; autoplay; gamepad"></iframe>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
-        <span>&copy; 2026 I’M AFK &bull; Submission Pipeline</span>
-        <span style="font-family: var(--font-mono);">Addition7 Precision Standard</span>
+    <footer>
+        <span>&copy; 2026 I’M AFK</span>
+        <span>Creator Pipeline</span>
     </footer>
 
-    <!-- ==========================================================================
-         CORE JAVASCRIPT
-         ========================================================================== -->
     <script>
-        /* -------------------------------------------------------------
-           1. INTERNATIONALIZATION (EN & AR)
-        ------------------------------------------------------------- */
-        const I18N = {
-            en: {
-                "meta.title": "Submit Project — I’M AFK",
-                "nav.home": "Home",
-                "nav.library": "Library",
-                "nav.studio": "Studio",
-                "nav.submit": "Submit",
-                "nav.support": "Support",
-                "nav.openStudio": "+ Create Project",
-                "sub.title": "Submit Project",
-                "sub.lead": "Publish your standalone HTML5 creation directly to our network catalog.",
-                "callout.title": "Prefer to write & debug code live?",
-                "callout.desc": "Open the integrated multi-file code studio with sandbox preview, templates, and snapshot history.",
-                "callout.cta": "Open Studio ➔",
-                "form.name": "Project Title *",
-                "form.author": "Author / Studio Credits *",
-                "form.source": "Repository / Source URL (Optional)",
-                "form.code": "Standalone HTML5 Code *",
-                "form.dropPrompt": "Drop .html file here",
-                "form.test": "⚡ Preview Sandbox",
-                "form.email": "Contact Email *",
-                "form.agree": "I confirm this code is authored by me or licensed under permissive open-source terms.",
-                "form.submit": "Publish Project to Library ➔",
-                "modal.previewTitle": "Sandbox Preview"
-            },
-            ar: {
-                "meta.title": "إرسال ونشر مشروع — I’M AFK",
-                "nav.home": "الرئيسية",
-                "nav.library": "المكتبة",
-                "nav.studio": "المحرر",
-                "nav.submit": "إرسال مشروع",
-                "nav.support": "الدعم",
-                "nav.openStudio": "+ مشروع جديد",
-                "sub.title": "نشر مشروع جديد",
-                "sub.lead": "انشر تطبيقك أو لعبتك المبنية بـ HTML5 مباشرة في مكتبة المنصة.",
-                "callout.title": "ترغب في كتابة وبرمجة مشروعك مباشرة؟",
-                "callout.desc": "استخدم محرر واستوديو الكود المتكامل مع معاينة فورية، قوالب جاهزة وحفظ دائم.",
-                "callout.cta": "فتح المحرر ➔",
-                "form.name": "عنوان المشروع *",
-                "form.author": "اسم المطور أو الأستوديو *",
-                "form.source": "رابط المصدر أو المستودع (اختياري)",
-                "form.code": "كود HTML5 الكامل *",
-                "form.dropPrompt": "اسحب ملف .html هنا",
-                "form.test": "⚡ معاينة الصندوق التجريبي",
-                "form.email": "البريد الإلكتروني *",
-                "form.agree": "أؤكد أن هذا الكود من برمجتي أو مرخص برخصة برمجية مفتوحة المصدر.",
-                "form.submit": "نشر المشروع في المكتبة ➔",
-                "modal.previewTitle": "معاينة في الصندوق التجريبي"
-            }
-        };
-
-        let currentLang = 'en';
-        const langBtn = document.getElementById('lang-btn');
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
-            });
-        }
-        langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
-
-        /* -------------------------------------------------------------
-           2. THEME ENGINE
-        ------------------------------------------------------------- */
+        /* Theme Toggle */
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme') || 'dark';
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('afk_studio_theme', next);
+            localStorage.setItem('afk_theme', next);
         }
 
-        const savedTheme = localStorage.getItem('afk_studio_theme') || 'dark';
+        const savedTheme = localStorage.getItem('afk_theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
-        /* -------------------------------------------------------------
-           3. SUPABASE SUBMISSION LOGIC
-        ------------------------------------------------------------- */
+        /* Supabase Client */
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
+        /* Submit Handler */
         document.getElementById('submissionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
@@ -691,7 +577,7 @@
             };
 
             try {
-                if (!sbClient) throw new Error("Database is not configured.");
+                if (!sbClient) throw new Error("Database connection missing.");
                 const { error } = await sbClient.from('games').insert([newGame]);
                 if (error) throw error;
                 alert("Project published successfully! It is now live in the Library.");
@@ -699,13 +585,11 @@
             } catch (err) {
                 alert("Error: " + (err.message || "Failed to publish"));
                 submitBtn.disabled = false;
-                submitBtn.innerText = "Publish Project to Library ➔";
+                submitBtn.innerText = "Publish to Library ➔";
             }
         });
 
-        /* -------------------------------------------------------------
-           4. CODE METRICS & DRAG-AND-DROP HANDLER
-        ------------------------------------------------------------- */
+        /* Code Metrics & File Drop */
         const codeInput = document.getElementById('html-code');
         const statsDisplay = document.getElementById('code-stats');
         const dropZone = document.getElementById('dropZone');
@@ -714,10 +598,10 @@
         function updateCodeStats() {
             const code = codeInput.value;
             const lines = code ? code.split('\n').length : 0;
-            statsDisplay.textContent = `${code.length.toLocaleString()} chars | ${lines} lines`;
+            statsDisplay.textContent = `${code.length.toLocaleString()} characters | ${lines} lines`;
         }
         codeInput.addEventListener('input', updateCodeStats);
-        
+
         dropZone.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => { 
             if (e.target.files.length) readFile(e.target.files[0]); 
@@ -725,7 +609,7 @@
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = 'var(--accent)';
+            dropZone.style.borderColor = 'var(--brand)';
         });
         dropZone.addEventListener('dragleave', () => {
             dropZone.style.borderColor = 'var(--border-strong)';
@@ -749,9 +633,7 @@
             reader.readAsText(file);
         }
 
-        /* -------------------------------------------------------------
-           5. SANDBOX PREVIEW MODAL
-        ------------------------------------------------------------- */
+        /* Sandbox Modal */
         const sandboxModal = document.getElementById('sandbox-modal');
         const sandboxFrame = document.getElementById('sandbox-frame');
 
