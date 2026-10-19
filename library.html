@@ -1,108 +1,67 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="meta.title">Library — I’M AFK</title>
+    <title>Library — I’M AFK</title>
     
-    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
-    <!-- Supabase JS Client -->
+    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* ==========================================================================
-           DESIGN SYSTEM: ADDITION7-INSPIRED CLEAN ARCHITECTURE
-           ========================================================================== */
         :root {
             --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             --font-display: 'Space Grotesk', -apple-system, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
             
-            --nav-height: 52px;
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
+            --nav-height: 56px;
+            --radius-sm: 8px;
+            --radius-md: 14px;
             --radius-pill: 9999px;
-
-            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-fast: 0.15s var(--ease-out);
+            --transition: 0.2s ease;
         }
 
-        html[lang="ar"] { 
-            --font-ui: 'Tajawal', system-ui, sans-serif; 
-            --font-display: 'Tajawal', sans-serif;
-        }
-
-        /* DARK THEME (Default) */
+        /* DARK THEME */
         [data-theme="dark"] {
-            --bg-canvas: #090a0d;
-            --bg-surface: #111318;
-            --bg-panel: #16181f;
-            --bg-elevated: #1d202a;
-            --bg-input: #101217;
-            --bg-hover: rgba(255, 255, 255, 0.04);
-            --bg-active: #232734;
+            --bg-canvas: #121615;
+            --bg-surface: rgba(22, 28, 27, 0.85);
+            --bg-card: rgba(28, 36, 34, 0.9);
+            --bg-input: #18201E;
+            --bg-hover: rgba(255, 255, 255, 0.05);
 
             --border: rgba(255, 255, 255, 0.09);
-            --border-subtle: rgba(255, 255, 255, 0.05);
-            --border-strong: rgba(255, 255, 255, 0.16);
-            --border-focus: #3b82f6;
+            --border-strong: rgba(255, 255, 255, 0.18);
 
-            --text-main: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --text-muted: #6b7280;
-            --text-dim: #4b5563;
+            --text-main: #EDF3F1;
+            --text-secondary: #9EB3AD;
+            --text-muted: #6B807A;
 
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --accent-subtle: rgba(59, 130, 246, 0.12);
-            --accent-text: #60a5fa;
-
-            --success: #10b981;
-            --success-subtle: rgba(16, 185, 129, 0.12);
-            --warning: #f59e0b;
-            --danger: #ef4444;
-
-            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
-            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --brand: #5B9287;
+            --brand-hover: #487A70;
+            --brand-soft: rgba(91, 146, 135, 0.18);
         }
 
         /* LIGHT THEME */
         [data-theme="light"] {
-            --bg-canvas: #f8fafc;
-            --bg-surface: #ffffff;
-            --bg-panel: #f1f5f9;
-            --bg-elevated: #e2e8f0;
-            --bg-input: #ffffff;
+            --bg-canvas: #F7F9F8;
+            --bg-surface: rgba(255, 255, 255, 0.85);
+            --bg-card: #FFFFFF;
+            --bg-input: #FFFFFF;
             --bg-hover: rgba(0, 0, 0, 0.04);
-            --bg-active: #e2e8f0;
 
-            --border: rgba(0, 0, 0, 0.09);
-            --border-subtle: rgba(0, 0, 0, 0.05);
-            --border-strong: rgba(0, 0, 0, 0.18);
-            --border-focus: #2563eb;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-strong: rgba(0, 0, 0, 0.16);
 
-            --text-main: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --text-dim: #94a3b8;
+            --text-main: #20332F;
+            --text-secondary: #536B66;
+            --text-muted: #859E98;
 
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --accent-subtle: rgba(37, 99, 235, 0.08);
-            --accent-text: #2563eb;
-
-            --success: #059669;
-            --success-subtle: rgba(5, 150, 105, 0.08);
-            --warning: #d97706;
-            --danger: #dc2626;
-
-            --shadow-pop: 0 10px 30px -5px rgba(0, 0, 0, 0.12);
-            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --brand: #43766C;
+            --brand-hover: #355E56;
+            --brand-soft: #DDEBE6;
         }
 
         *, *::before, *::after {
@@ -115,8 +74,8 @@
             background-color: var(--bg-canvas);
             color: var(--text-main);
             font-family: var(--font-ui);
-            font-size: 13px;
-            line-height: 1.5;
+            font-size: 14px;
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -124,66 +83,66 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Scrollbars */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+        .content-width {
+            max-width: 1040px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-        /* ==========================================================================
-           TOP NAVIGATION
-           ========================================================================== */
+        /* Navigation */
         .navbar {
             position: sticky;
             top: 0;
             z-index: 100;
             height: var(--nav-height);
             background: var(--bg-surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 clamp(16px, 3vw, 32px);
-            flex-shrink: 0;
+            padding: 0 clamp(16px, 4vw, 36px);
         }
 
         .brand-link {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
             color: var(--text-main);
             font-weight: 700;
             font-family: var(--font-display);
-            font-size: 0.95rem;
-            letter-spacing: -0.3px;
+            font-size: 1rem;
         }
+
         .brand-badge {
-            width: 22px;
-            height: 22px;
-            background: var(--text-main);
-            color: var(--bg-surface);
-            border-radius: var(--radius-sm);
+            width: 24px;
+            height: 24px;
+            background: var(--brand);
+            color: #FFFFFF;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            font-weight: 800;
+            font-size: 12px;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 20px;
-            align-items: center;
+            gap: 22px;
         }
+
         .nav-links a {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
-            transition: var(--transition-fast);
+            transition: var(--transition);
         }
+
         .nav-links a:hover, .nav-links a.active {
             color: var(--text-main);
         }
@@ -191,379 +150,209 @@
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        /* Buttons & Utility Controls */
         .btn {
-            background: var(--bg-panel);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 5px 11px;
+            padding: 7px 14px;
             border-radius: var(--radius-sm);
             font-family: var(--font-ui);
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            transition: var(--transition-fast);
-            white-space: nowrap;
-        }
-        .btn:hover {
-            background: var(--bg-elevated);
-            border-color: var(--border-strong);
-            color: var(--text-main);
-        }
-        .btn:active {
-            transform: translateY(1px);
-        }
-        .btn-primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #ffffff;
-        }
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-            color: #ffffff;
-        }
-        .btn-icon {
-            padding: 5px 8px;
-        }
-
-        /* ==========================================================================
-           TELEMETRY STRIP
-           ========================================================================== */
-        .telemetry-strip {
-            max-width: 1180px;
-            width: 100%;
-            margin: 20px auto 0;
-            padding: 0 clamp(16px, 3vw, 32px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .telemetry-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--success-subtle);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            color: var(--success);
-            padding: 3px 9px;
-            border-radius: var(--radius-pill);
-            font-size: 11px;
-            font-family: var(--font-mono);
-            font-weight: 500;
-        }
-        .pulse-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--success);
-            animation: pulse-ring 2s infinite ease-in-out;
-        }
-        @keyframes pulse-ring {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
-        }
-
-        .telemetry-stats {
-            display: flex;
-            gap: 16px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .telemetry-stats strong { color: var(--text-main); }
-
-        /* ==========================================================================
-           HERO & HEADINGS
-           ========================================================================== */
-        .hero-section {
-            max-width: 1180px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 24px clamp(16px, 3vw, 32px) 16px;
-        }
-        .hero-title {
-            font-family: var(--font-display);
-            font-size: clamp(1.6rem, 3vw, 2.2rem);
-            font-weight: 700;
-            letter-spacing: -0.8px;
-            line-height: 1.2;
-            color: var(--text-main);
-            margin-bottom: 6px;
-        }
-        .hero-desc {
-            color: var(--text-secondary);
             font-size: 13px;
-            max-width: 540px;
-        }
-
-        /* ==========================================================================
-           TRENDING & FEATURED SECTION
-           ========================================================================== */
-        .section-container {
-            max-width: 1180px;
-            width: 100%;
-            margin: 16px auto 0;
-            padding: 0 clamp(16px, 3vw, 32px);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-        }
-        .section-title {
-            font-family: var(--font-display);
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--text-secondary);
-        }
-
-        .trending-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 12px;
-        }
-
-        .trending-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            font-weight: 500;
             cursor: pointer;
-            transition: var(--transition-fast);
-            box-shadow: var(--shadow-card);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
         }
-        .trending-card:hover {
-            background: var(--bg-panel);
+
+        .btn:hover {
             border-color: var(--border-strong);
-            transform: translateY(-1px);
+            background: var(--bg-hover);
         }
 
-        .trending-rank {
-            font-family: var(--font-mono);
+        .btn-primary {
+            background: var(--brand);
+            border-color: var(--brand);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-hover);
+            color: #FFFFFF;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 40px 0 20px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
             font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            margin-right: 14px;
-            width: 24px;
-            flex-shrink: 0;
-        }
-        html[dir="rtl"] .trending-rank {
-            margin-right: 0;
-            margin-left: 14px;
-        }
-        .trending-card:hover .trending-rank {
-            color: var(--accent-text);
+            margin-bottom: 8px;
         }
 
-        /* ==========================================================================
-           CATALOG CONTROLS (SEARCH, SORT, FILTER)
-           ========================================================================== */
-        .controls-panel {
-            max-width: 1180px;
-            width: 100%;
-            margin: 24px auto 0;
-            padding: 0 clamp(16px, 3vw, 32px);
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Subtle Live Activity Bar */
+        .status-strip {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--brand-soft);
+            color: var(--brand);
+            padding: 5px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 14px;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--brand);
+            display: inline-block;
+        }
+
+        /* Search & Filter Controls */
+        .controls-wrap {
+            margin: 28px 0 24px 0;
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .search-sort-row {
+        .search-row {
             display: flex;
             gap: 10px;
-            align-items: center;
         }
 
-        .search-box {
-            position: relative;
-            flex: 1;
-        }
-        .search-icon {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
-            font-size: 12px;
-        }
-        html[dir="rtl"] .search-icon {
-            left: auto;
-            right: 10px;
-        }
         .search-input {
-            width: 100%;
-            background: var(--bg-input);
+            flex: 1;
+            padding: 12px 18px;
+            background-color: var(--bg-card);
             border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
             color: var(--text-main);
-            font-family: var(--font-ui);
-            font-size: 12px;
-            padding: 7px 10px 7px 30px;
-            border-radius: var(--radius-sm);
+            font-size: 14px;
             outline: none;
-            transition: var(--transition-fast);
+            transition: var(--transition);
         }
-        html[dir="rtl"] .search-input {
-            padding: 7px 30px 7px 10px;
-        }
+
         .search-input:focus {
-            border-color: var(--border-focus);
+            border-color: var(--brand);
         }
 
         .select-input {
-            background: var(--bg-input);
+            padding: 0 16px;
+            background-color: var(--bg-card);
             border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
             color: var(--text-main);
-            font-family: var(--font-ui);
-            font-size: 12px;
-            padding: 7px 10px;
-            border-radius: var(--radius-sm);
+            font-size: 13px;
             outline: none;
             cursor: pointer;
-        }
-        .select-input:focus {
-            border-color: var(--border-focus);
         }
 
         .filter-tags {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .filter-tag {
-            background: var(--bg-panel);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text-secondary);
-            padding: 4px 10px;
+            padding: 6px 14px;
             border-radius: var(--radius-pill);
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 12px;
             cursor: pointer;
-            transition: var(--transition-fast);
+            transition: var(--transition);
         }
+
         .filter-tag:hover {
             color: var(--text-main);
             border-color: var(--border-strong);
         }
+
         .filter-tag.active {
-            background: var(--text-main);
-            color: var(--bg-surface);
-            border-color: var(--text-main);
-            font-weight: 600;
+            background: var(--brand);
+            color: #FFFFFF;
+            border-color: var(--brand);
         }
 
-        /* ==========================================================================
-           MAIN CATALOG GRID
-           ========================================================================== */
+        /* Game Catalog Grid */
         .catalog-grid {
-            max-width: 1180px;
-            width: 100%;
-            margin: 16px auto 60px;
-            padding: 0 clamp(16px, 3vw, 32px);
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 14px;
-            flex: 1;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 60px;
         }
 
         .catalog-card {
-            background: var(--bg-surface);
+            background-color: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 180px;
+            min-height: 150px;
             cursor: pointer;
-            transition: var(--transition-fast);
-            box-shadow: var(--shadow-card);
-            position: relative;
-        }
-        .catalog-card:hover {
-            background: var(--bg-panel);
-            border-color: var(--border-strong);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-pop);
+            transition: var(--transition);
         }
 
-        .card-header-row {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 10px;
+        .catalog-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--brand);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
         }
+
         .card-title {
             font-family: var(--font-display);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
-            color: var(--text-main);
-            line-height: 1.3;
-        }
-        .card-badge {
-            font-size: 10px;
-            font-family: var(--font-mono);
-            font-weight: 500;
-            padding: 2px 6px;
-            border-radius: var(--radius-sm);
-            background: var(--bg-elevated);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            text-transform: uppercase;
-            flex-shrink: 0;
+            margin-bottom: 4px;
         }
 
         .card-author {
             font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 12px;
         }
 
-        .card-meta-row {
+        .card-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-top: 16px;
             padding-top: 10px;
-            border-top: 1px solid var(--border-subtle);
-            font-size: 11px;
-            color: var(--text-dim);
-            font-family: var(--font-mono);
+            border-top: 1px solid var(--border);
+            font-size: 12px;
         }
 
-        .play-indicator {
-            font-size: 11px;
+        .card-plays {
+            color: var(--text-muted);
+        }
+
+        .play-btn {
+            color: var(--brand);
             font-weight: 600;
-            color: var(--accent-text);
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
-        /* ==========================================================================
-           FULLSCREEN RUNNER OVERLAY
-           ========================================================================== */
+        /* Dedicated Fullscreen Game Overlay */
         #player-overlay {
             display: none;
             position: fixed;
@@ -572,269 +361,160 @@
             z-index: 1000;
             flex-direction: column;
         }
+
         #player-overlay.active {
             display: flex;
         }
 
-        .player-navbar {
-            height: 44px;
+        .player-bar {
+            height: 48px;
             background: var(--bg-surface);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 14px;
-            flex-shrink: 0;
-            z-index: 10;
+            padding: 0 16px;
         }
 
         .player-title {
             font-family: var(--font-display);
-            font-size: 13px;
             font-weight: 700;
-            color: var(--text-main);
+            font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
 
         .player-actions {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         #game-frame {
             flex: 1;
             width: 100%;
             border: none;
-            background: #ffffff;
+            background: #FFFFFF;
         }
 
-        /* ==========================================================================
-           FOOTER
-           ========================================================================== */
-        .footer {
+        /* Footer */
+        footer {
             border-top: 1px solid var(--border);
-            padding: 24px clamp(16px, 3vw, 32px);
+            padding: 24px clamp(16px, 4vw, 36px);
             background: var(--bg-surface);
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
             color: var(--text-muted);
-            font-size: 11px;
             margin-top: auto;
         }
 
-        @media (max-width: 640px) {
-            .navbar { padding: 0 12px; }
+        @media (max-width: 768px) {
             .nav-links { display: none; }
-            .telemetry-strip { flex-direction: column; align-items: flex-start; }
-            .search-sort-row { flex-direction: column; }
-            .select-input { width: 100%; }
-            .footer { flex-direction: column; gap: 8px; text-align: center; }
+            .search-row { flex-direction: column; }
+            .select-input { padding: 10px 16px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- CATALOG VIEW -->
-    <div id="catalog-view" style="display: flex; flex-direction: column; min-height: 100vh;">
-        
-        <!-- Top Navbar -->
-        <header class="navbar">
-            <a href="index.html" class="brand-link" title="I’M AFK Hub">
-                <div class="brand-badge">✦</div>
-                <span>I’M AFK <span style="font-size:11px; color:var(--text-muted); font-weight:500;">Library</span></span>
-            </a>
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <a href="index.html" class="brand-link" title="I’M AFK Hub">
+            <div class="brand-badge">✦</div>
+            <span>I’M AFK</span>
+        </a>
 
-            <ul class="nav-links">
-                <li><a href="index.html" data-i18n="nav.home">Home</a></li>
-                <li><a href="library.html" class="active" data-i18n="nav.library">Library</a></li>
-                <li><a href="studio.html" data-i18n="nav.studio">Studio</a></li>
-                <li><a href="submit.html" data-i18n="nav.submit">Submit</a></li>
-                <li><a href="contact.html" data-i18n="nav.support">Support</a></li>
-            </ul>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="library.html" class="active">Library</a></li>
+            <li><a href="studio.html">Studio</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="contact.html">Support</a></li>
+        </ul>
 
-            <div class="nav-actions">
-                <a href="studio.html" class="btn btn-primary" data-i18n="nav.openStudio">+ Create Project</a>
-                <button type="button" class="btn" id="lang-btn">العربية</button>
-                <button type="button" class="btn btn-icon" id="theme-btn" onclick="toggleTheme()" title="Switch Theme">◐</button>
-            </div>
-        </header>
-
-        <!-- Live Telemetry Status -->
-        <div class="telemetry-strip">
-            <div class="telemetry-tag">
-                <div class="pulse-dot"></div>
-                <span><strong id="live-players-count">1</strong> <span data-i18n="telemetry.active">Active Users</span></span>
-            </div>
-            <div class="telemetry-stats">
-                <span><span data-i18n="telemetry.plays">Total Plays</span>: <strong id="total-plays-count">0</strong></span>
-                <span><span data-i18n="telemetry.status">Network Status</span>: <strong id="catalog-health" style="color: var(--success);">Connecting...</strong></span>
-            </div>
+        <div class="nav-actions">
+            <a href="studio.html" class="btn btn-primary">+ Create Project</a>
+            <button type="button" class="btn" onclick="toggleTheme()" title="Switch Theme">◐</button>
         </div>
+    </header>
 
-        <!-- Hero Header -->
-        <section class="hero-section">
-            <h1 class="hero-title" data-i18n="lib.title">Curated Web Projects & Games</h1>
-            <p class="hero-desc" data-i18n="lib.lead">Run standalone HTML5 and JavaScript creations directly in your browser with zero latency.</p>
-        </section>
-
-        <!-- Trending Section -->
-        <section class="section-container">
-            <div class="section-header">
-                <span class="section-title" data-i18n="trend.title">Trending & Most Played</span>
-            </div>
-            <div class="trending-grid" id="trending-container">
-                <div style="color: var(--text-muted); font-size: 12px; padding: 12px 0;">Loading trending catalog...</div>
+    <div class="content-width">
+        <section class="hero">
+            <h1>Game Library</h1>
+            <p>Run standalone web games and tools directly in your browser.</p>
+            <div class="status-strip">
+                <span class="pulse-dot"></span>
+                <span><span id="live-players-count">1</span> Online</span>
+                <span>•</span>
+                <span><span id="total-plays-count">0</span> Plays</span>
             </div>
         </section>
 
-        <!-- Search & Filters -->
-        <section class="controls-panel">
-            <div class="search-sort-row">
-                <div class="search-box">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="game-search" class="search-input" placeholder="Search by title or author..." oninput="filterAndSortGames()">
-                </div>
+        <!-- Search & Category Filters -->
+        <section class="controls-wrap">
+            <div class="search-row">
+                <input type="text" id="game-search" class="search-input" placeholder="Search by title or author..." oninput="filterAndSortGames()">
                 <select id="sort-select" class="select-input" onchange="filterAndSortGames()">
-                    <option value="popular">Sort: Most Played</option>
-                    <option value="newest">Sort: Newest</option>
-                    <option value="alpha">Sort: Title (A-Z)</option>
+                    <option value="popular">Most Played</option>
+                    <option value="alpha">Title (A-Z)</option>
                 </select>
             </div>
 
             <div class="filter-tags">
-                <button class="filter-tag active" onclick="setCategoryFilter('all', this)" data-i18n="filter.all">All</button>
-                <button class="filter-tag" onclick="setCategoryFilter('popular', this)" data-i18n="filter.popular">Most Played</button>
-                <button class="filter-tag" onclick="setCategoryFilter('arcade', this)" data-i18n="filter.arcade">Interactive</button>
-                <button class="filter-tag" onclick="setCategoryFilter('classic', this)" data-i18n="filter.classic">Classic</button>
-                <button class="filter-tag" onclick="setCategoryFilter('community', this)" data-i18n="filter.community">Community</button>
+                <button class="filter-tag active" onclick="setCategoryFilter('all', this)">All</button>
+                <button class="filter-tag" onclick="setCategoryFilter('popular', this)">Most Played</button>
+                <button class="filter-tag" onclick="setCategoryFilter('arcade', this)">Arcade</button>
+                <button class="filter-tag" onclick="setCategoryFilter('classic', this)">Classic</button>
+                <button class="filter-tag" onclick="setCategoryFilter('community', this)">Community</button>
             </div>
         </section>
 
-        <!-- Main Catalog Grid -->
+        <!-- Catalog Grid -->
         <main class="catalog-grid" id="game-container">
             <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-                Syncing workspace catalog...
+                Loading library...
             </div>
         </main>
-
-        <!-- Minimal Footer -->
-        <footer class="footer">
-            <span>&copy; 2026 I’M AFK &bull; Web Studio & Hub</span>
-            <span style="font-family: var(--font-mono);">Addition7 Precision Standard</span>
-        </footer>
     </div>
 
-    <!-- FULLSCREEN DEDICATED PLAYER OVERLAY -->
-    <div id="player-overlay">
-        <div class="player-navbar">
-            <div class="player-title">
-                <button class="btn" id="player-back-btn" style="padding: 4px 8px;">← <span data-i18n="player.back">Back</span></button>
-                <span id="player-game-title" style="margin-left: 6px;">Game Title</span>
-            </div>
+    <!-- Footer -->
+    <footer>
+        <span>&copy; 2026 I’M AFK</span>
+        <span>Curated Web Projects</span>
+    </footer>
 
+    <!-- Fullscreen Player Overlay -->
+    <div id="player-overlay">
+        <div class="player-bar">
+            <div class="player-title">
+                <button class="btn" id="player-back-btn">← Back</button>
+                <span id="player-game-title">Game Title</span>
+            </div>
             <div class="player-actions">
-                <button class="btn" id="player-edit-btn" title="Open in I’M AFK Studio">✎ <span data-i18n="player.edit">Open in Studio</span></button>
-                <button class="btn" id="player-reload-btn" title="Restart Application">↻ <span data-i18n="player.reload">Reload</span></button>
-                <button class="btn" id="player-tab-btn" title="Open in New Tab">↗ <span data-i18n="player.newTab">New Tab</span></button>
-                <button class="btn btn-icon" id="player-fullscreen-btn" title="Fullscreen">⛶</button>
+                <button class="btn" id="player-edit-btn">Open in Studio</button>
+                <button class="btn" id="player-reload-btn">Reload</button>
+                <button class="btn" id="player-tab-btn">New Tab</button>
+                <button class="btn" id="player-fullscreen-btn">Fullscreen</button>
             </div>
         </div>
         <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-modals allow-popups" allow="fullscreen; autoplay; gamepad"></iframe>
     </div>
 
-    <!-- ==========================================================================
-         CORE JAVASCRIPT ENGINE
-         ========================================================================== -->
     <script>
-        /* -------------------------------------------------------------
-           1. INTERNATIONALIZATION (EN & AR)
-        ------------------------------------------------------------- */
-        const I18N = {
-            en: {
-                "meta.title": "Library — I’M AFK",
-                "nav.home": "Home",
-                "nav.library": "Library",
-                "nav.studio": "Studio",
-                "nav.submit": "Submit",
-                "nav.support": "Support",
-                "nav.openStudio": "+ Create Project",
-                "telemetry.active": "Active Users",
-                "telemetry.plays": "Total Plays",
-                "telemetry.status": "Network Status",
-                "lib.title": "Curated Web Projects & Games",
-                "lib.lead": "Run standalone HTML5 and JavaScript creations directly in your browser with zero latency.",
-                "trend.title": "Trending & Most Played",
-                "filter.all": "All",
-                "filter.popular": "Most Played",
-                "filter.arcade": "Interactive",
-                "filter.classic": "Classic",
-                "filter.community": "Community",
-                "player.back": "Back",
-                "player.edit": "Open in Studio",
-                "player.reload": "Reload",
-                "player.newTab": "New Tab"
-            },
-            ar: {
-                "meta.title": "مكتبة المشاريع والألعاب — I’M AFK",
-                "nav.home": "الرئيسية",
-                "nav.library": "المكتبة",
-                "nav.studio": "المحرر",
-                "nav.submit": "إرسال مشروع",
-                "nav.support": "الدعم",
-                "nav.openStudio": "+ مشروع جديد",
-                "telemetry.active": "مستخدم نشط",
-                "telemetry.plays": "إجمالي التشغيل",
-                "telemetry.status": "حالة الشبكة",
-                "lib.title": "مكتبة مشاريع وتطبيقات الويب",
-                "lib.lead": "شغّل تطبيقات وألعاب HTML5 و JavaScript مباشرة في متصفحك دون إعلانات.",
-                "trend.title": "الأكثر استخداماً ولعباً",
-                "filter.all": "الكل",
-                "filter.popular": "الأكثر لعباً",
-                "filter.arcade": "تفاعلي",
-                "filter.classic": "كلاسيكي",
-                "filter.community": "المجتمع",
-                "player.back": "رجوع",
-                "player.edit": "فتح في المحرر",
-                "player.reload": "إعادة تحميل",
-                "player.newTab": "نافذة جديدة"
-            }
-        };
-
-        let currentLang = 'en';
-        const langBtn = document.getElementById('lang-btn');
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            langBtn.textContent = lang === 'en' ? 'العربية' : 'English';
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
-            });
-        }
-        langBtn.addEventListener('click', () => setLanguage(currentLang === 'en' ? 'ar' : 'en'));
-
-        /* -------------------------------------------------------------
-           2. THEME ENGINE
-        ------------------------------------------------------------- */
+        /* Theme Toggle */
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme') || 'dark';
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('afk_studio_theme', next);
+            localStorage.setItem('afk_theme', next);
         }
 
-        const savedTheme = localStorage.getItem('afk_studio_theme') || 'dark';
+        const savedTheme = localStorage.getItem('afk_theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
-        /* -------------------------------------------------------------
-           3. SUPABASE CLIENT & LIVE PRESENCE
-        ------------------------------------------------------------- */
+        /* Supabase & GitHub Configuration */
         const SUPABASE_URL = 'https://xtzbbqdlidefzsfiixwm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emJicWRsaWRlZnpzZmlpeHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNjMzMjIsImV4cCI6MjEwMjkzOTMyMn0.jONPEEgyCYsv6lapUgVgeixHyWLYtfadveQZJUPm26Y';
         const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -845,6 +525,7 @@
         let catalog = [];
         let activeCategory = 'all';
 
+        /* Presence Tracker */
         function initPresenceTracker() {
             if (!sbClient) return;
             const channel = sbClient.channel('imafk-live-presence', {
@@ -864,58 +545,15 @@
             });
         }
 
-        /* -------------------------------------------------------------
-           4. BUILT-IN FALLBACK STARTER CREATIONS
-        ------------------------------------------------------------- */
+        /* Built-in Fallbacks */
         const BUILTINS = [
             {
                 id: 'snake_core',
-                title: 'Retro Snake 2D',
+                title: 'Retro Snake',
                 author: 'AFK Core',
                 category: 'classic',
                 play_count: 0,
-                type: 'builtin',
-                html_code: `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { margin: 0; background: #0c0e14; color: #f3f4f6; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
-    canvas { border: 1px solid rgba(255, 255, 255, 0.15); background: #12151e; border-radius: 8px; }
-  </style>
-</head>
-<body>
-  <canvas id="c" width="400" height="400"></canvas>
-  <p style="color: #9ca3af; font-size: 12px; margin-top: 10px;">Arrow Keys to Move</p>
-  <script>
-    const c = document.getElementById("c"), ctx = c.getContext("2d");
-    let snake = [{x: 10, y: 10}], dir = {x: 1, y: 0}, food = {x: 15, y: 15}, score = 0;
-    
-    setInterval(() => {
-      let head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-      if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || snake.some(p => p.x === head.x && p.y === head.y)) {
-        snake = [{x: 10, y: 10}]; dir = {x: 1, y: 0}; score = 0; return;
-      }
-      snake.unshift(head);
-      if (head.x === food.x && head.y === food.y) {
-        score += 10; food = {x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
-      } else snake.pop();
-
-      ctx.fillStyle = "#12151e"; ctx.fillRect(0, 0, 400, 400);
-      ctx.fillStyle = "#ef4444"; ctx.fillRect(food.x * 20, food.y * 20, 18, 18);
-      ctx.fillStyle = "#3b82f6"; snake.forEach(p => ctx.fillRect(p.x * 20, p.y * 20, 18, 18));
-      ctx.fillStyle = "#fff"; ctx.font = "12px monospace"; ctx.fillText("SCORE: " + score, 10, 20);
-    }, 100);
-
-    window.onkeydown = e => {
-      if (e.key === "ArrowUp" && dir.y === 0) dir = {x: 0, y: -1};
-      if (e.key === "ArrowDown" && dir.y === 0) dir = {x: 0, y: 1};
-      if (e.key === "ArrowLeft" && dir.x === 0) dir = {x: -1, y: 0};
-      if (e.key === "ArrowRight" && dir.x === 0) dir = {x: 1, y: 0};
-    };
-  <\/script>
-</body>
-</html>`
+                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#121615;color:#EDF3F1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{background:#18201E;border-radius:10px;}</style></head><body><canvas id="c" width="400" height="400"></canvas><p style="color:#6B807A;font-size:12px;margin-top:10px;">Use arrow keys to move</p><script>const c=document.getElementById("c"),ctx=c.getContext("2d");let snake=[{x:10,y:10}],dir={x:1,y:0},food={x:15,y:15},score=0;setInterval(()=>{let head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};if(head.x<0||head.x>=20||head.y<0||head.y>=20||snake.some(p=>p.x===head.x&&p.y===head.y)){snake=[{x:10,y:10}];dir={x:1,y:0};score=0;return;}snake.unshift(head);if(head.x===food.x&&head.y===food.y){score+=10;food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};}else snake.pop();ctx.fillStyle="#18201E";ctx.fillRect(0,0,400,400);ctx.fillStyle="#ef4444";ctx.fillRect(food.x*20,food.y*20,18,18);ctx.fillStyle="#5B9287";snake.forEach(p=>ctx.fillRect(p.x*20,p.y*20,18,18));ctx.fillStyle="#fff";ctx.font="12px monospace";ctx.fillText("SCORE: "+score,10,20);},100);window.onkeydown=e=>{if(e.key==="ArrowUp"&&dir.y===0)dir={x:0,y:-1};if(e.key==="ArrowDown"&&dir.y===0)dir={x:0,y:1};if(e.key==="ArrowLeft"&&dir.x===0)dir={x:-1,y:0};if(e.key==="ArrowRight"&&dir.x===0)dir={x:1,y:0};};<\/script></body></html>`
             },
             {
                 id: 'pong_core',
@@ -923,61 +561,19 @@
                 author: 'AFK Core',
                 category: 'arcade',
                 play_count: 0,
-                type: 'builtin',
-                html_code: `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { margin: 0; background: #0c0e14; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: monospace; }
-    canvas { border: 1px solid rgba(255, 255, 255, 0.15); background: #12151e; border-radius: 8px; }
-  </style>
-</head>
-<body>
-  <canvas id="c" width="480" height="320"></canvas>
-  <p style="color: #6b7280; font-size: 11px; margin-top: 8px;">Move mouse vertically</p>
-  <script>
-    const c = document.getElementById("c"), ctx = c.getContext("2d");
-    let p1 = 120, p2 = 120, bx = 240, by = 160, vx = 4, vy = 3, s1 = 0, s2 = 0;
-    c.onmousemove = e => { p1 = e.clientY - c.getBoundingClientRect().top - 35; };
-
-    setInterval(() => {
-      bx += vx; by += vy;
-      if (by < 5 || by > 315) vy *= -1;
-      if (bx < 20 && by > p1 && by < p1 + 70) vx = Math.abs(vx) * 1.05;
-      if (bx > 460 && by > p2 && by < p2 + 70) vx = -Math.abs(vx) * 1.05;
-      p2 += (by - (p2 + 35)) * 0.1;
-
-      if (bx < 0) { s2++; reset(); }
-      if (bx > 480) { s1++; reset(); }
-      function reset() { bx = 240; by = 160; vx = (Math.random() > 0.5 ? 4 : -4); vy = (Math.random() - 0.5) * 6; }
-
-      ctx.fillStyle = "#12151e"; ctx.fillRect(0, 0, 480, 320);
-      ctx.fillStyle = "#3b82f6"; ctx.fillRect(10, p1, 8, 70);
-      ctx.fillStyle = "#ef4444"; ctx.fillRect(462, p2, 8, 70);
-      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI * 2); ctx.fill();
-      ctx.fillText(s1 + "   " + s2, 230, 25);
-    }, 1000 / 60);
-  <\/script>
-</body>
-</html>`
+                html_code: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#121615;color:#EDF3F1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;}canvas{background:#18201E;border-radius:10px;}</style></head><body><canvas id="c" width="480" height="320"></canvas><p style="color:#6B807A;font-size:12px;margin-top:8px;">Move mouse vertically</p><script>const c=document.getElementById("c"),ctx=c.getContext("2d");let p1=120,p2=120,bx=240,by=160,vx=4,vy=3,s1=0,s2=0;c.onmousemove=e=>{p1=e.clientY-c.getBoundingClientRect().top-35;};setInterval(()=>{bx+=vx;by+=vy;if(by<5||by>315)vy*=-1;if(bx<20&&by>p1&&by<p1+70)vx=Math.abs(vx)*1.05;if(bx>460&&by>p2&&by<p2+70)vx=-Math.abs(vx)*1.05;p2+=(by-(p2+35))*0.1;if(bx<0){s2++;reset();}if(bx>480){s1++;reset();}function reset(){bx=240;by=160;vx=(Math.random()>0.5?4:-4);vy=(Math.random()-0.5)*6;}ctx.fillStyle="#18201E";ctx.fillRect(0,0,480,320);ctx.fillStyle="#5B9287";ctx.fillRect(10,p1,8,70);ctx.fillStyle="#ef4444";ctx.fillRect(462,p2,8,70);ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(bx,by,6,0,Math.PI*2);ctx.fill();ctx.fillText(s1+"   "+s2,230,25);},1000/60);<\/script></body></html>`
             }
         ];
 
-        /* -------------------------------------------------------------
-           5. DATA SYNC & CATALOG LOADER
-        ------------------------------------------------------------- */
+        /* Load Library */
         async function initLibrary() {
             catalog = [];
-            let isConnected = false;
 
-            // 1. Fetch from Supabase
             if (sbClient) {
                 try {
                     const { data, error } = await sbClient.from('games').select('*').order('created_at', { ascending: false });
                     if (!error && Array.isArray(data)) {
-                        isConnected = true;
-                        data.filter(g => g.status === 'live').forEach((g) => {
+                        data.filter(g => g.status === 'live').forEach(g => {
                             const localPlays = parseInt(localStorage.getItem('afk_plays_' + g.id)) || 0;
                             catalog.push({
                                 id: g.id,
@@ -991,22 +587,20 @@
                         });
                     }
                 } catch (e) {
-                    console.warn("Supabase fetch notice:", e);
+                    console.warn("Supabase notice:", e);
                 }
             }
 
-            // 2. Fetch from GitHub Contents API
             try {
                 const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
                 const files = await res.json();
                 if (Array.isArray(files)) {
-                    isConnected = true;
-                    files.filter(f => f.name.endsWith('.html')).forEach((f) => {
+                    files.filter(f => f.name.endsWith('.html')).forEach(f => {
                         const localPlays = parseInt(localStorage.getItem('afk_plays_' + f.name)) || 0;
                         catalog.push({
                             id: f.name,
                             title: f.name.replace('.html', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                            author: 'GitHub Repo',
+                            author: 'GitHub',
                             category: 'arcade',
                             play_count: localPlays,
                             url: `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${f.name}`,
@@ -1014,11 +608,10 @@
                         });
                     });
                 }
-            } catch(e) {
-                console.warn("GitHub fetch notice:", e);
+            } catch (e) {
+                console.warn("GitHub notice:", e);
             }
 
-            // 3. Fallback to builtins if empty
             if (catalog.length === 0) {
                 BUILTINS.forEach(b => {
                     const localPlays = parseInt(localStorage.getItem('afk_plays_' + b.id)) || 0;
@@ -1026,14 +619,10 @@
                 });
             }
 
-            document.getElementById('catalog-health').textContent = isConnected ? 'Online (Connected)' : 'Local Buffer';
-            
             updatePlaysCounter();
-            renderTrending();
             filterAndSortGames();
             initPresenceTracker();
 
-            // Direct URL Query parameter launch: ?play=Title
             const params = new URLSearchParams(window.location.search);
             const playParam = params.get('play');
             if (playParam) {
@@ -1047,45 +636,15 @@
             document.getElementById('total-plays-count').textContent = total.toLocaleString();
         }
 
-        async function recordPlay(game) {
+        function recordPlay(game) {
             game.play_count = (game.play_count || 0) + 1;
             localStorage.setItem('afk_plays_' + (game.id || game.title), game.play_count);
-            
             updatePlaysCounter();
-            renderTrending();
             filterAndSortGames();
 
             if (sbClient && game.id && game.type === 'supabase') {
-                try {
-                    await sbClient.from('games').update({ play_count: game.play_count }).eq('id', game.id);
-                } catch(e){}
+                sbClient.from('games').update({ play_count: game.play_count }).eq('id', game.id).catch(() => {});
             }
-        }
-
-        /* -------------------------------------------------------------
-           6. RENDER TRENDING & CATALOG
-        ------------------------------------------------------------- */
-        function renderTrending() {
-            const container = document.getElementById('trending-container');
-            const topList = [...catalog].sort((a, b) => (b.play_count || 0) - (a.play_count || 0)).slice(0, 3);
-
-            container.innerHTML = '';
-            topList.forEach((game, idx) => {
-                const card = document.createElement('div');
-                card.className = 'trending-card';
-                card.innerHTML = `
-                    <div style="display: flex; align-items: center; overflow: hidden;">
-                        <span class="trending-rank">0${idx + 1}</span>
-                        <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <div style="font-weight: 600; font-size: 13px; color: var(--text-main);">${game.title}</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">${game.author} &bull; ${(game.play_count || 0).toLocaleString()} plays</div>
-                        </div>
-                    </div>
-                    <button class="btn" style="margin-left: 8px;">Run ▶</button>
-                `;
-                card.onclick = () => launchGame(game);
-                container.appendChild(card);
-            });
         }
 
         function setCategoryFilter(cat, btn) {
@@ -1119,7 +678,7 @@
             }
 
             if (list.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No projects found matching your search.</div>`;
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No games found matching your search.</div>`;
                 return;
             }
 
@@ -1129,15 +688,12 @@
                 card.className = 'catalog-card';
                 card.innerHTML = `
                     <div>
-                        <div class="card-header-row">
-                            <h3 class="card-title">${game.title}</h3>
-                            <span class="card-badge">${game.category || 'App'}</span>
-                        </div>
-                        <div class="card-author">By ${game.author}</div>
+                        <h3 class="card-title">${game.title}</h3>
+                        <div class="card-author">${game.author}</div>
                     </div>
-                    <div class="card-meta-row">
-                        <span>${(game.play_count || 0).toLocaleString()} plays</span>
-                        <span class="play-indicator">Run ▶</span>
+                    <div class="card-footer">
+                        <span class="card-plays">${(game.play_count || 0).toLocaleString()} plays</span>
+                        <span class="play-btn">Play ➔</span>
                     </div>
                 `;
                 card.onclick = () => launchGame(game);
@@ -1145,9 +701,7 @@
             });
         }
 
-        /* -------------------------------------------------------------
-           7. PLAYER CONTROLLER
-        ------------------------------------------------------------- */
+        /* Player Controller */
         const playerOverlay = document.getElementById('player-overlay');
         const gameFrame = document.getElementById('game-frame');
         const playerGameTitle = document.getElementById('player-game-title');
@@ -1205,7 +759,6 @@
             else if (gameFrame.webkitRequestFullscreen) gameFrame.webkitRequestFullscreen();
         };
 
-        // Open directly into I’M AFK Studio
         document.getElementById('player-edit-btn').onclick = () => {
             if (!currentActiveGame || !currentActiveGame.html_code) {
                 window.location.href = 'studio.html';
@@ -1229,7 +782,6 @@
             window.location.href = 'studio.html';
         };
 
-        // Initialize Library
         initLibrary();
     </script>
 </body>
