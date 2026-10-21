@@ -1170,6 +1170,7 @@
         async function initLibrary() {
             catalog = [];
 
+            // 1. Fetch from Supabase
             if (sbClient) {
                 try {
                     const { data, error } = await sbClient.from('games').select('*').order('created_at', { ascending: false });
@@ -1192,27 +1193,39 @@
                 }
             }
 
+            // 2. Fetch from GitHub Repository / Domain Games Folder
+            let githubLoaded = false;
             try {
-                const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`);
-                const files = await res.json();
-                if (Array.isArray(files)) {
-                    files.filter(f => f.name.endsWith('.html')).forEach(f => {
-                        const localPlays = parseInt(localStorage.getItem('afk_plays_' + f.name)) || 0;
-                        catalog.push({
-                            id: f.name,
-                            title: f.name.replace('.html', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                            author: 'GitHub',
-                            category: 'arcade',
-                            play_count: localPlays,
-                            url: `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/games/${f.name}`,
-                            type: 'github'
+                const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/games`, {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' }
+                });
+                
+                if (res.ok) {
+                    const files = await res.json();
+                    if (Array.isArray(files)) {
+                        files.filter(f => f.name.endsWith('.html')).forEach(f => {
+                            const localPlays = parseInt(localStorage.getItem('afk_plays_' + f.name)) || 0;
+                            catalog.push({
+                                id: f.name,
+                                title: f.name.replace('.html', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                                author: 'GitHub',
+                                category: 'arcade',
+                                play_count: localPlays,
+                                // Relative path: loads directly from https://imafk.run.place/games/<filename>.html
+                                url: `games/${f.name}`,
+                                type: 'github'
+                            });
                         });
-                    });
+                        githubLoaded = true;
+                    }
+                } else {
+                    console.warn("GitHub API notice (Rate limit or network):", res.status);
                 }
             } catch (e) {
-                console.warn("GitHub notice:", e);
+                console.warn("GitHub fetch error:", e);
             }
 
+            // 3. Fallback to built-ins if catalog is empty
             if (catalog.length === 0) {
                 BUILTINS.forEach(b => {
                     const localPlays = parseInt(localStorage.getItem('afk_plays_' + b.id)) || 0;
@@ -1224,6 +1237,7 @@
             filterAndSortGames();
             initPresenceTracker();
 
+            // Auto-play via URL param (e.g. ?play=Retro%20Snake)
             const params = new URLSearchParams(window.location.search);
             const playParam = params.get('play');
             if (playParam) {
@@ -1395,8 +1409,13 @@
             gameFrame.srcdoc = '';
             gameFrame.src = 'about:blank';
             setTimeout(() => {
-                if (currentActiveGame.html_code) gameFrame.srcdoc = currentActiveGame.html_code;
-                else if (currentActiveGame.url) gameFrame.src = currentActiveGame.url;
+                if (currentActiveGame.html_code) {
+                    gameFrame.removeAttribute('src');
+                    gameFrame.srcdoc = currentActiveGame.html_code;
+                } else if (currentActiveGame.url) {
+                    gameFrame.removeAttribute('srcdoc');
+                    gameFrame.src = currentActiveGame.url;
+                }
             }, 80);
         };
 
@@ -1415,8 +1434,29 @@
             else if (gameFrame.webkitRequestFullscreen) gameFrame.webkitRequestFullscreen();
         };
 
-        document.getElementById('player-edit-btn').onclick = () => {
-            if (!currentActiveGame || !currentActiveGame.html_code) {
+        // Open in Studio (handles both direct Supabase code AND GitHub URL code)
+        document.getElementById('player-edit-btn').onclick = async () => {
+            if (!currentActiveGame) {
+                window.location.href = 'studio.html';
+                return;
+            }
+
+            let code = currentActiveGame.html_code;
+
+            // If it's a GitHub game, fetch its source code on the fly
+            if (!code && currentActiveGame.url) {
+                try {
+                    const res = await fetch(currentActiveGame.url);
+                    if (res.ok) {
+                        code = await res.text();
+                        currentActiveGame.html_code = code; // cache for session
+                    }
+                } catch (e) {
+                    console.warn("Could not fetch remote game source:", e);
+                }
+            }
+
+            if (!code) {
                 window.location.href = 'studio.html';
                 return;
             }
@@ -1426,7 +1466,7 @@
                 id: 'proj_' + Date.now(),
                 title: currentActiveGame.title,
                 files: [
-                    { name: "index.html", path: "index.html", type: "html", content: currentActiveGame.html_code }
+                    { name: "index.html", path: "index.html", type: "html", content: code }
                 ],
                 updatedAt: Date.now(),
                 snapshots: []
