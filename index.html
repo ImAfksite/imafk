@@ -3,81 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I’M AFK</title>
+    <title>I’M AFK — Play Instantly. Code Freely.</title>
     
+    <!-- Typography: Inter + Space Grotesk with system SF font fallbacks -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Three.js for Physics Fluid Canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
+        /* ==========================================================================
+           DESIGN SYSTEM TOKENS (Foundation for Homepage & Future Phases)
+           ========================================================================== */
         :root {
-            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --font-display: 'Space Grotesk', -apple-system, sans-serif;
-            
-            --nav-height: 56px;
-            --radius-sm: 8px;
-            --radius-md: 14px;
+            /* Typography */
+            --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+            --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Space Grotesk", sans-serif;
+
+            /* Spacing Tokens */
+            --space-2xs: 4px;
+            --space-xs: 8px;
+            --space-sm: 12px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --space-4xl: 96px;
+
+            /* Radii (Apple Continuous Pebble Curves) */
+            --radius-xs: 8px;
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 26px;
+            --radius-xl: 34px;
             --radius-pill: 9999px;
-            --transition: 0.2s ease;
+
+            /* Transitions & Easing */
+            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+            --duration-fast: 160ms;
+            --duration-normal: 260ms;
+            --duration-slow: 450ms;
+
+            /* Layout */
+            --content-max-width: 1100px;
+            --header-island-h: 52px;
         }
 
-        /* DARK THEME (Calm Slate) */
-        [data-theme="dark"] {
-            --bg-canvas: #121615;
-            --bg-surface: rgba(22, 28, 27, 0.78);
-            --bg-card: rgba(28, 36, 34, 0.85);
-            --bg-hover: rgba(255, 255, 255, 0.06);
-
-            --border: rgba(255, 255, 255, 0.1);
-            --border-strong: rgba(255, 255, 255, 0.2);
-
-            --text-main: #EDF3F1;
-            --text-secondary: #9EB3AD;
-            --text-muted: #6B807A;
-
-            --brand: #5B9287;
-            --brand-hover: #487A70;
-            --brand-soft: rgba(91, 146, 135, 0.18);
-        }
-
-        /* LIGHT THEME (Calm Sage / Off-White) */
+        /* --------------------------------------------------------------------------
+           THEME: LIGHT (Sunlit Mist, Sea Salt & River Stone)
+           -------------------------------------------------------------------------- */
         [data-theme="light"] {
-            --bg-canvas: #F7F9F8;
-            --bg-surface: rgba(255, 255, 255, 0.82);
-            --bg-card: rgba(255, 255, 255, 0.92);
-            --bg-hover: rgba(0, 0, 0, 0.04);
+            --bg-body: #F4F6F5;
+            --bg-canvas-top: #F9FBFA;
+            --bg-canvas-mid: #E8EFEA;
+            --bg-canvas-bottom: #DCE7E1;
 
-            --border: rgba(0, 0, 0, 0.08);
-            --border-strong: rgba(0, 0, 0, 0.16);
+            /* Liquid Glass Layering */
+            --glass-surface: rgba(255, 255, 255, 0.68);
+            --glass-surface-hover: rgba(255, 255, 255, 0.85);
+            --glass-surface-active: rgba(255, 255, 255, 0.95);
+            --glass-dock: rgba(246, 249, 247, 0.75);
 
-            --text-main: #20332F;
-            --text-secondary: #536B66;
-            --text-muted: #859E98;
+            /* Specular Highlights & Borders */
+            --glass-border: rgba(255, 255, 255, 0.82);
+            --glass-border-outer: rgba(45, 68, 60, 0.08);
+            --glass-specular-top: rgba(255, 255, 255, 0.95);
+            --glass-inner-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9);
 
-            --brand: #43766C;
-            --brand-hover: #355E56;
-            --brand-soft: #DDEBE6;
+            /* Elevation Shadows */
+            --shadow-subtle: 0 4px 14px -3px rgba(32, 48, 42, 0.05);
+            --shadow-float: 0 16px 36px -8px rgba(25, 42, 36, 0.08), 0 3px 8px -2px rgba(25, 42, 36, 0.04);
+            --shadow-lift: 0 24px 48px -12px rgba(22, 40, 34, 0.14), 0 8px 16px -4px rgba(22, 40, 34, 0.06);
+
+            /* Typography Colors */
+            --text-primary: #192623;
+            --text-secondary: #4A635B;
+            --text-tertiary: #78928A;
+            --text-inverse: #FFFFFF;
+
+            /* Nature Accents (Forest Sage & Dew) */
+            --accent-brand: #2E6858;
+            --accent-brand-hover: #225144;
+            --accent-brand-soft: rgba(46, 104, 88, 0.11);
+            --accent-ring: rgba(46, 104, 88, 0.28);
+            
+            --tag-pill-bg: rgba(46, 104, 88, 0.09);
+            --tag-pill-text: #235547;
+            --watermark-color: rgba(30, 52, 45, 0.045);
         }
 
+        /* --------------------------------------------------------------------------
+           THEME: DARK (Obsidian Mineral, Dark Moss & Deep Water)
+           -------------------------------------------------------------------------- */
+        [data-theme="dark"] {
+            --bg-body: #0E1312;
+            --bg-canvas-top: #131A18;
+            --bg-canvas-mid: #16221F;
+            --bg-canvas-bottom: #0D1412;
+
+            /* Liquid Glass Layering */
+            --glass-surface: rgba(26, 35, 33, 0.65);
+            --glass-surface-hover: rgba(34, 46, 43, 0.78);
+            --glass-surface-active: rgba(42, 58, 54, 0.9);
+            --glass-dock: rgba(18, 26, 24, 0.78);
+
+            /* Specular Highlights & Borders */
+            --glass-border: rgba(255, 255, 255, 0.11);
+            --glass-border-outer: rgba(0, 0, 0, 0.35);
+            --glass-specular-top: rgba(255, 255, 255, 0.16);
+            --glass-inner-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+
+            /* Elevation Shadows */
+            --shadow-subtle: 0 4px 14px -3px rgba(0, 0, 0, 0.3);
+            --shadow-float: 0 18px 40px -10px rgba(0, 0, 0, 0.55), 0 4px 10px -2px rgba(0, 0, 0, 0.3);
+            --shadow-lift: 0 28px 56px -14px rgba(0, 0, 0, 0.75), 0 8px 18px -4px rgba(0, 0, 0, 0.4);
+
+            /* Typography Colors */
+            --text-primary: #F0F6F4;
+            --text-secondary: #9EB5AE;
+            --text-tertiary: #688078;
+            --text-inverse: #0E1312;
+
+            /* Nature Accents (Luminous Sage Dew) */
+            --accent-brand: #5EB89F;
+            --accent-brand-hover: #76C7AF;
+            --accent-brand-soft: rgba(94, 184, 159, 0.16);
+            --accent-ring: rgba(94, 184, 159, 0.36);
+            
+            --tag-pill-bg: rgba(94, 184, 159, 0.14);
+            --tag-pill-text: #8AE3C9;
+            --watermark-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ==========================================================================
+           RESET & DOCUMENT LEVEL BASE
+           ========================================================================== */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            color-scheme: dark light;
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-canvas);
-            color: var(--text-main);
-            font-family: var(--font-ui);
-            font-size: 14px;
-            line-height: 1.6;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 14.5px;
+            line-height: 1.55;
             min-height: 100vh;
             overflow-x: hidden;
+            text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Keyboard Focus Accessibility */
+        :focus-visible {
+            outline: 2px solid var(--accent-brand);
+            outline-offset: 3px;
+        }
+
+        /* ==========================================================================
+           BACKGROUND LIQUID WEBGL CANVAS
+           ========================================================================== */
         #webgl-canvas {
             position: fixed;
             top: 0;
@@ -85,437 +183,973 @@
             width: 100vw;
             height: 100vh;
             z-index: 0;
+            pointer-events: none;
         }
 
-        .content-layer {
+        /* ==========================================================================
+           APP SHELL & LAYOUT
+           ========================================================================== */
+        .app-shell {
             position: relative;
             z-index: 1;
-            pointer-events: none;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            justify-content: space-between;
         }
 
-        .interactive {
-            pointer-events: auto;
+        .content-wrap {
+            max-width: var(--content-max-width);
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        /* Top Navigation */
-        .navbar {
+        /* ==========================================================================
+           FLOATING ISLAND COMPONENT STYLES
+           ========================================================================== */
+        .island {
+            background: var(--glass-surface);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-inner-shadow), var(--shadow-float);
+            border-radius: var(--radius-lg);
+            transition: transform var(--duration-normal) var(--ease-spring),
+                        box-shadow var(--duration-normal) var(--ease-spring),
+                        background-color var(--duration-normal) var(--ease-spring),
+                        border-color var(--duration-normal) var(--ease-spring);
+        }
+
+        /* ==========================================================================
+           1. FLOATING NAVIGATION BAR ISLAND
+           ========================================================================== */
+        .nav-island-outer {
             position: sticky;
-            top: 0;
-            height: var(--nav-height);
-            background: var(--bg-surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
+            top: 18px;
+            z-index: 100;
+            padding: 0 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-island {
+            width: 100%;
+            max-width: 980px;
+            height: var(--header-island-h);
+            background: var(--glass-dock);
+            backdrop-filter: blur(32px) saturate(190%);
+            -webkit-backdrop-filter: blur(32px) saturate(190%);
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-inner-shadow), var(--shadow-float);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 clamp(16px, 4vw, 36px);
+            padding: 0 8px 0 14px;
         }
 
+        /* Brand Badge */
         .brand-link {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
             text-decoration: none;
-            color: var(--text-main);
-            font-weight: 700;
+            color: var(--text-primary);
             font-family: var(--font-display);
-            font-size: 1rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: -0.015em;
             cursor: pointer;
+            border-radius: var(--radius-pill);
+            padding: 4px 6px 4px 2px;
+            transition: opacity var(--duration-fast) var(--ease-smooth);
         }
 
-        .brand-badge {
-            width: 24px;
-            height: 24px;
-            background: var(--brand);
-            color: #FFFFFF;
-            border-radius: 6px;
+        .brand-link:hover {
+            opacity: 0.85;
+        }
+
+        .brand-gem {
+            width: 28px;
+            height: 28px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, var(--accent-brand), var(--text-secondary));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+            transition: transform var(--duration-normal) var(--ease-spring);
         }
 
-        .nav-links {
+        .brand-link:hover .brand-gem {
+            transform: scale(1.06) rotate(3deg);
+        }
+
+        /* Navigation Links List */
+        .nav-items {
             display: flex;
+            align-items: center;
             list-style: none;
-            gap: 22px;
+            gap: 2px;
         }
 
-        .nav-links a {
+        .nav-items a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 13.5px;
             font-weight: 500;
-            transition: var(--transition);
+            padding: 7px 15px;
+            border-radius: var(--radius-pill);
+            transition: color var(--duration-fast) var(--ease-smooth),
+                        background-color var(--duration-fast) var(--ease-smooth);
         }
 
-        .nav-links a:hover {
-            color: var(--text-main);
+        .nav-items a:hover {
+            color: var(--text-primary);
+            background: var(--accent-brand-soft);
         }
 
-        .nav-actions {
+        .nav-items a.active {
+            color: var(--text-primary);
+            background: rgba(120, 150, 140, 0.12);
+        }
+
+        /* Header Right Utility Controls */
+        .nav-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        /* Buttons */
-        .btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 7px 14px;
-            border-radius: var(--radius-sm);
-            font-family: var(--font-ui);
-            font-size: 13px;
-            font-weight: 500;
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-pill);
             cursor: pointer;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: var(--transition);
+            justify-content: center;
+            transition: background var(--duration-fast) var(--ease-smooth),
+                        color var(--duration-fast) var(--ease-smooth),
+                        transform var(--duration-fast) var(--ease-spring);
         }
 
-        .btn:hover {
-            border-color: var(--border-strong);
-            background: var(--bg-hover);
+        .icon-btn:hover {
+            background: var(--accent-brand-soft);
+            color: var(--text-primary);
+            transform: scale(1.05);
+        }
+
+        .icon-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile Hamburger Island Toggle */
+        .mobile-toggle {
+            display: none;
+        }
+
+        /* Buttons Foundation */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            font-family: var(--font-sans);
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1;
+            padding: 9px 18px;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all var(--duration-normal) var(--ease-spring);
+        }
+
+        .btn svg {
+            transition: transform var(--duration-fast) var(--ease-spring);
+        }
+
+        .btn:hover svg {
+            transform: translateX(2px);
+        }
+
+        .btn:active {
+            transform: scale(0.97);
         }
 
         .btn-primary {
-            background: var(--brand);
-            border-color: var(--brand);
+            background: var(--accent-brand);
             color: #FFFFFF;
+            box-shadow: 0 4px 14px -3px var(--accent-ring);
         }
 
         .btn-primary:hover {
-            background: var(--brand-hover);
-            border-color: var(--brand-hover);
-            color: #FFFFFF;
+            background: var(--accent-brand-hover);
+            box-shadow: 0 6px 18px -2px var(--accent-ring);
+            transform: translateY(-1px);
         }
 
-        /* Hero */
+        .btn-glass {
+            background: var(--glass-surface);
+            border-color: var(--glass-border);
+            color: var(--text-primary);
+            box-shadow: var(--glass-inner-shadow), var(--shadow-subtle);
+        }
+
+        .btn-glass:hover {
+            background: var(--glass-surface-hover);
+            border-color: var(--glass-specular-top);
+            transform: translateY(-1px);
+        }
+
+        /* ==========================================================================
+           2. HERO SECTION
+           ========================================================================== */
         .hero {
-            padding: 70px 20px 40px;
+            padding: 80px 20px 48px;
             text-align: center;
-            max-width: 780px;
-            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .badge {
+        .pill-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: var(--brand-soft);
-            color: var(--brand);
-            padding: 4px 14px;
+            gap: 8px;
+            background: var(--tag-pill-bg);
+            color: var(--tag-pill-text);
+            border: 1px solid var(--accent-ring);
+            padding: 5px 14px;
             border-radius: var(--radius-pill);
             font-size: 12px;
             font-weight: 600;
-            margin-bottom: 16px;
+            letter-spacing: 0.02em;
+            margin-bottom: 22px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .pill-badge .indicator-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: var(--accent-brand);
+            box-shadow: 0 0 8px var(--accent-brand);
+            animation: pulse-dot 2.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.45; transform: scale(0.85); }
         }
 
         .hero h1 {
             font-family: var(--font-display);
-            font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+            font-size: clamp(2.6rem, 5.8vw, 4.2rem);
             font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.15;
-            margin-bottom: 14px;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+            max-width: 820px;
+            margin-bottom: 20px;
+            background: linear-gradient(175deg, var(--text-primary) 60%, var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            font-size: 1.05rem;
+            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
             color: var(--text-secondary);
-            max-width: 540px;
-            margin: 0 auto 28px;
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 580px;
+            margin-bottom: 34px;
         }
 
         .hero-actions {
             display: flex;
-            gap: 12px;
+            align-items: center;
             justify-content: center;
+            gap: 14px;
             flex-wrap: wrap;
-            margin-bottom: 36px;
+            margin-bottom: 50px;
         }
 
         .hero-actions .btn {
-            padding: 10px 22px;
+            padding: 13px 26px;
+            font-size: 14.5px;
+        }
+
+        /* Live Feature Floating Strip */
+        .telemetry-strip {
+            display: inline-flex;
+            align-items: center;
+            gap: 28px;
+            padding: 10px 28px;
             border-radius: var(--radius-pill);
+            background: var(--glass-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-subtle);
         }
 
-        /* Simplified stats */
-        .stats-bar {
+        .telemetry-item {
             display: flex;
-            justify-content: center;
-            gap: 32px;
-            border-top: 1px solid var(--border);
-            padding-top: 20px;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
-        .stat-item {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .stat-item strong {
-            display: block;
-            color: var(--text-main);
+        .telemetry-item span:first-child {
             font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
 
-        /* Main Cards Grid */
-        .section-wrap {
-            max-width: 1040px;
-            width: 100%;
-            margin: 0 auto 50px;
-            padding: 0 20px;
+        .telemetry-item span:last-child {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            font-weight: 500;
         }
 
-        .cards-grid {
+        .telemetry-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--glass-border);
+        }
+
+        /* ==========================================================================
+           3. MAIN GATEWAY ISLANDS (CARDS GRID)
+           ========================================================================== */
+        .gateway-section {
+            margin-bottom: 54px;
+        }
+
+        .gateway-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: 20px;
         }
 
-        .hub-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            text-decoration: none;
-            color: inherit;
+        .gateway-card {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 170px;
-            transition: var(--transition);
+            padding: 30px 28px;
+            min-height: 230px;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
         }
 
-        .hub-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--border-strong);
+        .gateway-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 100% 0%, var(--accent-brand-soft), transparent 60%);
+            opacity: 0;
+            transition: opacity var(--duration-normal) var(--ease-smooth);
+            pointer-events: none;
         }
 
-        .hub-num {
+        .gateway-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lift);
+            border-color: var(--glass-specular-top);
+        }
+
+        .gateway-card:hover::before {
+            opacity: 1;
+        }
+
+        .gateway-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .gateway-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            background: var(--tag-pill-bg);
+            color: var(--accent-brand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform var(--duration-fast) var(--ease-spring);
+        }
+
+        .gateway-card:hover .gateway-icon {
+            transform: scale(1.08);
+        }
+
+        .gateway-tag {
             font-size: 11px;
-            font-weight: 600;
-            color: var(--brand);
-            margin-bottom: 8px;
-            display: block;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
         }
 
-        .hub-card h3 {
+        .gateway-body h2 {
             font-family: var(--font-display);
-            font-size: 1.1rem;
-            margin-bottom: 6px;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            color: var(--text-primary);
         }
 
-        .hub-card p {
+        .gateway-body p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .gateway-footer {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--accent-brand);
+        }
+
+        .gateway-footer svg {
+            transition: transform var(--duration-fast) var(--ease-spring);
+        }
+
+        .gateway-card:hover .gateway-footer svg {
+            transform: translateX(4px);
+        }
+
+        /* ==========================================================================
+           4. AMBIENT SECONDARY FEATURE ISLANDS
+           ========================================================================== */
+        .ambient-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .ambient-card {
+            padding: 24px 28px;
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .ambient-icon-badge {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 10px;
+            background: var(--accent-brand-soft);
+            color: var(--accent-brand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .ambient-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.02rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+        }
+
+        .ambient-card p {
             font-size: 13px;
             color: var(--text-secondary);
             line-height: 1.5;
         }
 
-        .hub-action {
-            margin-top: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--brand);
-        }
-
-        /* Simple Info Grid */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .info-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 20px 24px;
-        }
-
-        .info-card h4 {
-            font-family: var(--font-display);
-            font-size: 0.95rem;
-            margin-bottom: 6px;
-        }
-
-        .info-card p {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 24px clamp(16px, 4vw, 36px);
-            background: var(--bg-surface);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            color: var(--text-muted);
+        /* ==========================================================================
+           5. FLOATING BOTTOM DOCK FOOTER
+           ========================================================================== */
+        .footer-outer {
+            padding: 0 16px 24px;
             margin-top: auto;
         }
 
-        footer a {
+        .footer-island {
+            max-width: var(--content-max-width);
+            margin: 0 auto;
+            background: var(--glass-dock);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 18px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            color: var(--text-tertiary);
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #34C759;
+            box-shadow: 0 0 6px rgba(52, 199, 89, 0.6);
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .footer-links a {
             color: var(--text-secondary);
             text-decoration: none;
-            margin-left: 14px;
+            transition: color var(--duration-fast) var(--ease-smooth);
         }
 
-        footer a:hover {
-            color: var(--text-main);
+        .footer-links a:hover {
+            color: var(--text-primary);
         }
 
-        @media (max-width: 768px) {
-            .cards-grid, .info-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-            .stats-bar { gap: 18px; }
+        /* ==========================================================================
+           MOBILE MENU DRAWER (Apple Modal Sheet)
+           ========================================================================== */
+        .mobile-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--duration-normal) var(--ease-smooth);
+        }
+
+        .mobile-drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            background: var(--glass-surface-active);
+            backdrop-filter: blur(36px) saturate(200%);
+            -webkit-backdrop-filter: blur(36px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lift);
+            border-radius: var(--radius-xl);
+            padding: 24px 20px;
+            z-index: 201;
+            transform: translateY(115%);
+            transition: transform var(--duration-normal) var(--ease-spring);
+        }
+
+        .mobile-drawer-overlay.active .mobile-drawer {
+            transform: translateY(0);
+        }
+
+        .mobile-drawer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .mobile-drawer-nav a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            background: rgba(120, 150, 140, 0.08);
+        }
+
+        /* ==========================================================================
+           RESPONSIVE BREAKPOINTS (Mobile First Polish)
+           ========================================================================== */
+        @media (max-width: 900px) {
+            .gateway-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .ambient-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .nav-items {
+                display: none;
+            }
+            .mobile-toggle {
+                display: inline-flex;
+            }
+            .hero {
+                padding: 48px 14px 34px;
+            }
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .hero-actions .btn {
+                width: 100%;
+            }
+            .telemetry-strip {
+                flex-wrap: wrap;
+                gap: 14px 20px;
+                border-radius: var(--radius-md);
+            }
+            .telemetry-divider {
+                display: none;
+            }
+            .footer-island {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+            .footer-left {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+
+        /* Accessibility: Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Liquid Background Canvas -->
-    <canvas id="webgl-canvas"></canvas>
+    <!-- Liquid Glass Dewdrop Background Canvas -->
+    <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 
-    <div class="content-layer">
+    <div class="app-shell">
         
-        <!-- Header -->
-        <header class="navbar interactive">
-            <a href="index.html" class="brand-link" id="main-brand-logo" title="I’M AFK Hub">
-                <div class="brand-badge">✦</div>
-                <span>I’M AFK</span>
-            </a>
+        <!-- 1. FLOATING NAVIGATION BAR ISLAND -->
+        <header class="nav-island-outer">
+            <nav class="nav-island" aria-label="Main Navigation">
+                
+                <!-- Brand Anchor & Secret Trigger -->
+                <a href="index.html" class="brand-link" id="main-brand-logo" title="I’M AFK Hub">
+                    <div class="brand-gem" aria-hidden="true">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                    </div>
+                    <span>I’M AFK</span>
+                </a>
 
-            <ul class="nav-links">
-                <li><a href="library.html">Library</a></li>
-                <li><a href="studio.html">Studio</a></li>
-                <li><a href="submit.html">Submit</a></li>
-                <li><a href="contact.html">Support</a></li>
-            </ul>
+                <!-- Desktop Navigation Links -->
+                <ul class="nav-items">
+                    <li><a href="library.html">Library</a></li>
+                    <li><a href="studio.html">Studio</a></li>
+                    <li><a href="submit.html">Submit</a></li>
+                    <li><a href="contact.html">Support</a></li>
+                </ul>
 
-            <div class="nav-actions">
-                <a href="studio.html" class="btn btn-primary">+ Create Project</a>
-                <button type="button" class="btn" onclick="toggleTheme()" title="Switch Theme">◐</button>
-            </div>
+                <!-- Utility Controls -->
+                <div class="nav-controls">
+                    <a href="studio.html" class="btn btn-primary" style="padding: 7px 15px; font-size: 13px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>New Project</span>
+                    </a>
+
+                    <!-- Theme Toggle Button -->
+                    <button type="button" class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle visual theme" title="Switch Day/Night Light">
+                        <svg id="theme-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+
+                    <!-- Mobile Drawer Toggle -->
+                    <button type="button" class="icon-btn mobile-toggle" id="mobile-menu-btn" aria-label="Open Navigation Menu">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
         </header>
 
-        <!-- Hero -->
-        <main>
+        <!-- MAIN HOMEPAGE CONTENT -->
+        <main class="content-wrap">
+            
+            <!-- 2. HERO SECTION -->
             <section class="hero">
-                <div class="badge interactive">Gaming Platform</div>
-                <h1>Beta </h1>
-                <p>Play HTML5 creations or build directly in the integrated multi-file code studio with live preview.</p>
-
-                <div class="hero-actions interactive">
-                    <a href="library.html" class="btn btn-primary">Browse Library ➔</a>
-                    <a href="studio.html" class="btn">Open Studio ↗</a>
+                <div class="pill-badge">
+                    <span class="indicator-dot" aria-hidden="true"></span>
+                    <span>Client-Side Sandbox • v2.6 Ready</span>
                 </div>
 
-                <div class="stats-bar interactive">
-                    <div class="stat-item">
-                        <strong>Client-Side</strong>
-                        Runs in browser
+                <h1>Play instantly.<br>Code without barriers.</h1>
+                
+                <p>An effortless browser playground for HTML5 mini-games and experiments. Zero installations, zero tracking, crafted entirely for pure play and creation.</p>
+
+                <div class="hero-actions">
+                    <a href="library.html" class="btn btn-primary">
+                        <span>Explore Library</span>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <a href="studio.html" class="btn btn-glass">
+                        <span>Launch Studio Sandbox</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Telemetry Status Strip -->
+                <div class="telemetry-strip" role="status" aria-label="System attributes">
+                    <div class="telemetry-item">
+                        <span>100% In-Browser</span>
+                        <span>Zero server latency</span>
                     </div>
-                    <div class="stat-item">
-                        <strong>100% Free</strong>
-                        No account
+                    <div class="telemetry-divider" aria-hidden="true"></div>
+                    <div class="telemetry-item">
+                        <span>Private & Local</span>
+                        <span>No cookies or tracking</span>
                     </div>
-                    <div class="stat-item">
-                        <strong>Zero Lag</strong>
-                        Instant play
+                    <div class="telemetry-divider" aria-hidden="true"></div>
+                    <div class="telemetry-item">
+                        <span>Instant Boot</span>
+                        <span>Direct client execution</span>
                     </div>
                 </div>
             </section>
 
-            <!-- Cards -->
-            <section class="section-wrap interactive">
-                <div class="cards-grid">
+            <!-- 3. GATEWAY DESTINATION ISLANDS -->
+            <section class="gateway-section" aria-label="Core Destinations">
+                <div class="gateway-grid">
                     
-                    <a href="library.html" class="hub-card">
+                    <!-- Destination 1: Library -->
+                    <a href="library.html" class="island gateway-card">
                         <div>
-                            <span class="hub-num">01 / PLAY</span>
-                            <h3>Game Library</h3>
-                            <p>Explore and run curated HTML5 mini-games and experiments directly in your browser.</p>
+                            <div class="gateway-header">
+                                <div class="gateway-icon" aria-hidden="true">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                                        <path d="M6 12h4m-2-2v4"></path>
+                                        <line x1="15" y1="11" x2="15.01" y2="11"></line>
+                                        <line x1="18" y1="13" x2="18.01" y2="13"></line>
+                                    </svg>
+                                </div>
+                                <span class="gateway-tag">01 / Entertainment</span>
+                            </div>
+                            <div class="gateway-body">
+                                <h2>Game Library</h2>
+                                <p>Curated HTML5 creations and micro-experiments, optimized for instant play without registration.</p>
+                            </div>
                         </div>
-                        <div class="hub-action">Open Library ➔</div>
+                        <div class="gateway-footer">
+                            <span>Browse titles</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
                     </a>
 
-                    <a href="studio.html" class="hub-card">
+                    <!-- Destination 2: Studio Sandbox -->
+                    <a href="studio.html" class="island gateway-card">
                         <div>
-                            <span class="hub-num">02 / BUILD</span>
-                            <h3>Code Studio</h3>
-                            <p>Full HTML/CSS/JS sandbox with multi-file support, real-time preview, and auto-save.</p>
+                            <div class="gateway-header">
+                                <div class="gateway-icon" aria-hidden="true">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="16 18 22 12 16 6"></polyline>
+                                        <polyline points="8 6 2 12 8 18"></polyline>
+                                    </svg>
+                                </div>
+                                <span class="gateway-tag">02 / Development</span>
+                            </div>
+                            <div class="gateway-body">
+                                <h2>Code Studio</h2>
+                                <p>Complete HTML, CSS, and JS editor with real-time multi-file previews and persistent local caching.</p>
+                            </div>
                         </div>
-                        <div class="hub-action">Launch Studio ↗</div>
+                        <div class="gateway-footer">
+                            <span>Open studio sandbox</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
                     </a>
 
-                    <a href="submit.html" class="hub-card">
+                    <!-- Destination 3: Community Submit -->
+                    <a href="submit.html" class="island gateway-card">
                         <div>
-                            <span class="hub-num">03 / SHARE</span>
-                            <h3>Submit Project</h3>
-                            <p>Send in your own creations to be hosted and featured in the community library.</p>
+                            <div class="gateway-header">
+                                <div class="gateway-icon" aria-hidden="true">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                </div>
+                                <span class="gateway-tag">03 / Community</span>
+                            </div>
+                            <div class="gateway-body">
+                                <h2>Submit Creation</h2>
+                                <p>Share your games or web prototypes with the community to be permanently hosted on I’M AFK.</p>
+                            </div>
                         </div>
-                        <div class="hub-action">Send Code ➔</div>
+                        <div class="gateway-footer">
+                            <span>Send code package</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
                     </a>
 
                 </div>
+            </section>
 
-                <div class="info-grid">
-                    <div class="info-card">
-                        <h4>Interactive Background</h4>
-                        <p>Move your mouse across the screen to push fluid droplets, or click and drag to spawn new ones.</p>
+            <!-- 4. AMBIENT SECONDARY FEATURE ISLANDS -->
+            <section class="ambient-grid" aria-label="Platform Highlights">
+                <div class="island ambient-card">
+                    <div class="ambient-icon-badge" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                        </svg>
                     </div>
+                    <div>
+                        <h3>Fluid Dewdrop Surface</h3>
+                        <p>Interact with the live liquid canvas behind this page. Move your pointer to disperse droplets or click and hold to generate new liquid glass beads.</p>
+                    </div>
+                </div>
 
-                    <div class="info-card">
-                        <h4>Private & Local</h4>
-                        <p>Your studio projects save directly to your browser's local memory. No tracking and no ads.</p>
+                <div class="island ambient-card">
+                    <div class="ambient-icon-badge" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Private Browser Sandbox</h3>
+                        <p>Projects compiled in the Code Studio save strictly to your local storage. No telemetry, no third-party scripts, and no surveillance.</p>
                     </div>
                 </div>
             </section>
         </main>
 
-        <!-- Footer -->
-        <footer class="interactive">
-            <span>&copy; 2026 I’M AFK</span>
-            <div>
-                <a href="library.html">Library</a>
-                <a href="studio.html">Studio</a>
-                <a href="submit.html">Submit</a>
-                <a href="contact.html">Support</a>
-                <a href="tos.html">Terms</a>
+        <!-- 5. FLOATING BOTTOM DOCK FOOTER -->
+        <footer class="footer-outer">
+            <div class="footer-island">
+                <div class="footer-left">
+                    <span>&copy; 2026 I’M AFK</span>
+                    <span class="status-indicator">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        <span>Engine Operational</span>
+                    </span>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="library.html">Library</a>
+                    <a href="studio.html">Studio</a>
+                    <a href="submit.html">Submit</a>
+                    <a href="contact.html">Support</a>
+                    <a href="tos.html">Terms</a>
+                </div>
             </div>
         </footer>
     </div>
 
-    <!-- WebGL Liquid Physics -->
+    <!-- MOBILE MODAL SHEET -->
+    <div class="mobile-drawer-overlay" id="mobile-drawer-overlay" aria-hidden="true">
+        <div class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
+            <ul class="mobile-drawer-nav">
+                <li><a href="library.html">Game Library <span>➔</span></a></li>
+                <li><a href="studio.html">Code Studio <span>↗</span></a></li>
+                <li><a href="submit.html">Submit Project <span>➔</span></a></li>
+                <li><a href="contact.html">Support <span>➔</span></a></li>
+                <li><a href="tos.html">Terms of Service <span>➔</span></a></li>
+            </ul>
+            <button type="button" class="btn btn-glass" id="close-drawer-btn" style="width: 100%;">Close Menu</button>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         WEBGL LIQUID PHYSICS (Calm Dewdrop Refraction on Frosted Substrate)
+         ========================================================================== -->
     <script>
-        const MAX_DROPLETS = 32;
+        const MAX_DROPLETS = 28;
         const FIXED_DT_MS = 8;
         const MAX_FRAME_DT_MS = 100;
-        const MAX_CATCHUP = 6;
 
         const canvas = document.getElementById("webgl-canvas");
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false });
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false, powerPreference: "high-performance" });
         renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         const scene = new THREE.Scene();
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-        /* Calm Background Gradient Texture */
+        /* Background Canvas Texture with Organic Mineral Gradients */
         const bgCanvas = document.createElement("canvas");
         const bgCtx = bgCanvas.getContext("2d");
         const bgTexture = new THREE.CanvasTexture(bgCanvas);
@@ -525,32 +1159,32 @@
         function drawBackground() {
             const w = renderer.domElement.width;
             const h = renderer.domElement.height;
+            if (w === 0 || h === 0) return;
             bgCanvas.width = w;
             bgCanvas.height = h;
 
-            // Soothing sage/slate tones
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const grd = bgCtx.createLinearGradient(0, 0, w * 0.7, h);
-            
+            const grd = bgCtx.createLinearGradient(0, 0, w * 0.85, h);
+
             if (isDark) {
-                grd.addColorStop(0, "#192220");
-                grd.addColorStop(0.5, "#1f2f2c");
-                grd.addColorStop(1, "#141c1a");
+                grd.addColorStop(0, "#121A18");
+                grd.addColorStop(0.5, "#162320");
+                grd.addColorStop(1, "#0D1311");
             } else {
-                grd.addColorStop(0, "#EBF2EE");
-                grd.addColorStop(0.5, "#D5E4DE");
-                grd.addColorStop(1, "#C2D6CF");
+                grd.addColorStop(0, "#F7FAF8");
+                grd.addColorStop(0.5, "#E6EEEA");
+                grd.addColorStop(1, "#D6E3DD");
             }
-            
+
             bgCtx.fillStyle = grd;
             bgCtx.fillRect(0, 0, w, h);
 
-            // Centered clean watermark text
-            bgCtx.fillStyle = isDark ? "rgba(255,255,255,0.08)" : "rgba(32,51,47,0.07)";
+            // Watermark Typography in Background
+            const titleSize = Math.round(Math.min(w * 0.09, 110));
+            bgCtx.fillStyle = isDark ? "rgba(255, 255, 255, 0.038)" : "rgba(26, 42, 36, 0.035)";
             bgCtx.textAlign = "center";
             bgCtx.textBaseline = "middle";
-            const titleSize = Math.round(w * 0.08);
-            bgCtx.font = `700 ${titleSize}px 'Space Grotesk', sans-serif`;
+            bgCtx.font = `700 ${titleSize}px -apple-system, BlinkMacSystemFont, 'Space Grotesk', sans-serif`;
             bgCtx.fillText("I’M AFK", w * 0.5, h * 0.5);
 
             bgTexture.needsUpdate = true;
@@ -559,7 +1193,7 @@
         document.fonts.ready.then(drawBackground);
         drawBackground();
 
-        /* Droplet buffer */
+        /* Droplets Data Texture Buffer */
         const MAX_ENTRIES = MAX_DROPLETS * 2;
         const dropletBuf = new Float32Array(MAX_ENTRIES * 4);
         const dropletTex = new THREE.DataTexture(dropletBuf, MAX_ENTRIES, 1, THREE.RGBAFormat, THREE.FloatType);
@@ -573,26 +1207,22 @@
         function spawn(x, y, r, vx = 0, vy = 0) {
             if (drops.length >= MAX_DROPLETS) return null;
             const angle = Math.random() * Math.PI * 2;
-            const spd = 0.0003 + Math.random() * 0.0006;
+            const spd = 0.00025 + Math.random() * 0.00045;
             const d = {
                 id: uid++,
                 x, y, r,
-                area: Math.PI * r * r,
                 vx: vx || Math.cos(angle) * spd,
                 vy: vy || Math.sin(angle) * spd,
-                alive: true,
                 wanderAngle: Math.random() * Math.PI * 2,
-                wanderSpeed: 0.3 + Math.random() * 0.4,
-                softPrevX: x, softPrevY: y,
-                softOffX: 0, softOffY: 0,
-                softVelX: 0, softVelY: 0
+                wanderSpeed: 0.2 + Math.random() * 0.35
             };
             drops.push(d);
             return d;
         }
 
-        for (let i = 0; i < 10; i++) {
-            spawn((Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.4, 0.03 + Math.random() * 0.04);
+        // Initial calm dewdrops
+        for (let i = 0; i < 9; i++) {
+            spawn((Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.45, 0.035 + Math.random() * 0.03);
         }
 
         const vertSrc = `void main(){ gl_Position = vec4(position, 1.0); }`;
@@ -603,6 +1233,7 @@
             uniform sampler2D uData;
             uniform sampler2D uBg;
             uniform int uCount;
+            uniform float uIsDark;
 
             void main(){
                 vec2 uv = gl_FragCoord.xy / uRes;
@@ -615,7 +1246,7 @@
 
                 for(int i = 0; i < MAX_N; i++){
                     if(i >= uCount) break;
-                    vec4 d = texture2D(uData, vec2((float(i)+0.5)/float(MAX_N), 0.5));
+                    vec4 d = texture2D(uData, vec2((float(i) + 0.5) / float(MAX_N), 0.5));
                     vec2 c = d.xy;
                     float r = d.z;
                     if(r < 0.001) continue;
@@ -632,23 +1263,27 @@
                 lens /= (lensW + 0.001);
                 float lensLen = length(lens);
                 float thr = 1.0;
-                float edge = smoothstep(thr - 0.08, thr + 0.03, field);
+                float edge = smoothstep(thr - 0.08, thr + 0.02, field);
 
-                float refractStrength = 0.03;
-                float mappedLens = atan(lensLen * 5.0) * refractStrength;
+                // High-fidelity dewdrop refraction lens
+                float refractStrength = 0.032;
+                float mappedLens = atan(lensLen * 5.5) * refractStrength;
                 vec2 refractDir = (lensLen > 1e-5) ? lens / lensLen : vec2(0.0);
                 vec2 refractedUV = clamp(uv + refractDir * mappedLens * edge, 0.001, 0.999);
 
                 vec3 bgClean = texture2D(uBg, uv).rgb;
                 vec3 bgGlass = texture2D(uBg, refractedUV).rgb;
 
-                float rim = smoothstep(thr + 0.5, thr, field) * edge;
-                vec3 glassColor = bgGlass + vec3(1.0) * rim * 0.25;
+                // Delicate specular rim
+                float rim = smoothstep(thr + 0.45, thr, field) * edge;
+                vec3 highlight = (uIsDark > 0.5) ? vec3(0.9, 1.0, 0.95) : vec3(1.0, 1.0, 1.0);
+                vec3 glassColor = bgGlass + highlight * rim * 0.22;
 
                 gl_FragColor = vec4(mix(bgClean, glassColor, edge), 1.0);
             }
         `;
 
+        const isDarkInitial = document.documentElement.getAttribute('data-theme') === 'dark';
         const mat = new THREE.ShaderMaterial({
             vertexShader: vertSrc,
             fragmentShader: fragSrc,
@@ -656,7 +1291,8 @@
                 uRes: { value: new THREE.Vector2(renderer.domElement.width, renderer.domElement.height) },
                 uData: { value: dropletTex },
                 uBg: { value: bgTexture },
-                uCount: { value: 0 }
+                uCount: { value: 0 },
+                uIsDark: { value: isDarkInitial ? 1.0 : 0.0 }
             }
         });
         scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
@@ -670,7 +1306,8 @@
             mouse.x = ((e.clientX - rect.left) / rect.width - 0.5) * aspect;
             mouse.y = 0.5 - (e.clientY - rect.top) / rect.height;
             mouse.active = true;
-        });
+        }, { passive: true });
+
         window.addEventListener("pointerdown", () => { mouse.down = true; });
         window.addEventListener("pointerup", () => { mouse.down = false; });
         window.addEventListener("pointerleave", () => { mouse.active = false; mouse.down = false; });
@@ -683,16 +1320,16 @@
             drawBackground();
         });
 
-        const DAMP = 0.992;
-        const MOUSE_R = 0.16;
-        const MOUSE_F = 0.0035;
-        const BOUNCE = 0.4;
+        const DAMP = 0.993;
+        const MOUSE_R = 0.17;
+        const MOUSE_F = 0.003;
+        const BOUNCE = 0.45;
 
         function applyPhysics() {
             for (const d of drops) {
                 d.wanderAngle += (Math.random() - 0.5) * d.wanderSpeed;
-                d.vx += Math.cos(d.wanderAngle) * 0.00003 - d.x * 0.00001;
-                d.vy += Math.sin(d.wanderAngle) * 0.00003 - d.y * 0.00001;
+                d.vx += Math.cos(d.wanderAngle) * 0.000025 - d.x * 0.000008;
+                d.vy += Math.sin(d.wanderAngle) * 0.000025 - d.y * 0.000008;
 
                 if (mouse.active) {
                     const dx = d.x - mouse.x;
@@ -724,8 +1361,8 @@
             if (!mouse.down || !mouse.active) return;
             spawnCD -= FIXED_DT_MS;
             if (spawnCD <= 0 && drops.length < MAX_DROPLETS) {
-                spawnCD = 130;
-                spawn(mouse.x + (Math.random() - 0.5) * 0.02, mouse.y + (Math.random() - 0.5) * 0.02, 0.025 + Math.random() * 0.015);
+                spawnCD = 140;
+                spawn(mouse.x + (Math.random() - 0.5) * 0.02, mouse.y + (Math.random() - 0.5) * 0.02, 0.026 + Math.random() * 0.018);
             }
         }
 
@@ -743,9 +1380,19 @@
             mat.uniforms.uCount.value = n;
         }
 
+        let isRunning = true;
+        document.addEventListener("visibilitychange", () => {
+            isRunning = !document.hidden;
+            if (isRunning) last = performance.now();
+        });
+
         let last = performance.now();
         let acc = 0;
         function loop() {
+            if (!isRunning) {
+                requestAnimationFrame(loop);
+                return;
+            }
             const now = performance.now();
             const dt = Math.min(now - last, MAX_FRAME_DT_MS);
             last = now;
@@ -761,25 +1408,96 @@
         }
         loop();
 
-        /* Theme Toggle */
+        /* ==========================================================================
+           THEME SWITCHER WITH ICON MORPHING
+           ========================================================================== */
+        const themeIcon = document.getElementById("theme-icon");
+
+        function updateThemeIcon(theme) {
+            if (!themeIcon) return;
+            if (theme === 'dark') {
+                // Sun Icon (tap to switch to light)
+                themeIcon.innerHTML = `
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                `;
+            } else {
+                // Moon Icon (tap to switch to dark)
+                themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+            }
+        }
+
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme') || 'dark';
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('afk_theme', next);
+            if (mat && mat.uniforms.uIsDark) {
+                mat.uniforms.uIsDark.value = (next === 'dark') ? 1.0 : 0.0;
+            }
+            updateThemeIcon(next);
             drawBackground();
         }
 
-        const savedTheme = localStorage.getItem('afk_theme') || 'dark';
+        // Read saved theme or fallback to user OS preference
+        const savedTheme = localStorage.getItem('afk_theme') || 
+            (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', savedTheme);
+        if (mat && mat.uniforms.uIsDark) {
+            mat.uniforms.uIsDark.value = (savedTheme === 'dark') ? 1.0 : 0.0;
+        }
+        updateThemeIcon(savedTheme);
 
-        /* Admin Trigger */
+        /* ==========================================================================
+           MOBILE MODAL DRAWER
+           ========================================================================== */
+        const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+        const drawerOverlay = document.getElementById("mobile-drawer-overlay");
+        const closeDrawerBtn = document.getElementById("close-drawer-btn");
+
+        function openDrawer() {
+            drawerOverlay.classList.add("active");
+            drawerOverlay.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeDrawer() {
+            drawerOverlay.classList.remove("active");
+            drawerOverlay.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+        }
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener("click", openDrawer);
+        if (closeDrawerBtn) closeDrawerBtn.addEventListener("click", closeDrawer);
+        if (drawerOverlay) {
+            drawerOverlay.addEventListener("click", (e) => {
+                if (e.target === drawerOverlay) closeDrawer();
+            });
+        }
+
+        /* ==========================================================================
+           PRESERVED ADMIN SHORTCUTS
+           ========================================================================== */
         let logoClicks = 0;
-        document.getElementById('main-brand-logo').addEventListener('click', () => {
-            logoClicks++;
-            if (logoClicks === 3) window.location.href = 'admin.html';
-            setTimeout(() => logoClicks = 0, 1000);
-        });
+        const brandLogo = document.getElementById('main-brand-logo');
+        if (brandLogo) {
+            brandLogo.addEventListener('click', (e) => {
+                logoClicks++;
+                if (logoClicks === 3) {
+                    e.preventDefault();
+                    window.location.href = 'admin.html';
+                }
+                setTimeout(() => logoClicks = 0, 1000);
+            });
+        }
+
         window.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
                 window.location.href = 'admin.html';
