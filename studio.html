@@ -2,123 +2,122 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Studio — I’M AFK</title>
     <link rel="icon" type="image/png" href="icon.png">
+    
+    <!-- PWA / Web App Capabilities -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AFK Studio">
+    <meta name="theme-color" content="#050807">
+    
     <!-- Typography: Inter + Space Grotesk + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           DESIGN SYSTEM TOKENS (Shared Foundation)
+           DESIGN TOKENS — MACOS LIQUID GLASS SYSTEM
            ========================================================================== */
         :root {
             --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
             --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Space Grotesk", sans-serif;
             --font-code: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 
-            --radius-xs: 6px;
-            --radius-sm: 10px;
-            --radius-md: 16px;
-            --radius-lg: 22px;
+            --radius-xs: 8px;
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 26px;
             --radius-pill: 9999px;
 
-            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-            --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
-            --duration-fast: 150ms;
-            --duration-normal: 240ms;
+            --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.55);
+            --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-fast: 160ms;
+            --duration-normal: 260ms;
 
-            --nav-height: 52px;
-            --tab-height: 38px;
-            --status-height: 28px;
-            --sidebar-width: 240px;
+            --nav-height: 54px;
+            --tab-height: 40px;
+            --status-height: 30px;
+            --sidebar-width: 250px;
         }
 
-        /* --------------------------------------------------------------------------
-           THEME: LIGHT (Sunlit Mist, Sea Salt & River Stone)
-           -------------------------------------------------------------------------- */
+        /* ---------------- Theme: Dark ---------------- */
+        [data-theme="dark"] {
+            --bg-canvas: #050807;
+            --bg-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 30, 26, 0.72) 45%, rgba(8, 16, 13, 0.9) 100%);
+            --bg-dock: linear-gradient(180deg, rgba(20, 32, 28, 0.86) 0%, rgba(10, 16, 14, 0.95) 100%);
+            --bg-card: rgba(22, 34, 30, 0.75);
+            --bg-input: rgba(10, 16, 14, 0.85);
+            --bg-hover: rgba(255, 255, 255, 0.06);
+            --bg-active: rgba(56, 225, 166, 0.16);
+
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-border-strong: rgba(56, 225, 166, 0.35);
+            --glass-specular: inset 1.5px 1.5px 1px 0 rgba(255, 255, 255, 0.22), inset -1px -1px 1px 1px rgba(56, 225, 166, 0.12);
+
+            --shadow-subtle: 0 4px 14px -3px rgba(0, 0, 0, 0.5);
+            --shadow-float: 0 16px 36px -8px rgba(0, 0, 0, 0.75);
+            --shadow-lift: 0 24px 48px -12px rgba(0, 0, 0, 0.9), 0 0 24px rgba(56, 225, 166, 0.18);
+
+            --text-primary: #F2F8F5;
+            --text-secondary: #9DB5AC;
+            --text-tertiary: #5D7970;
+            --text-inverse: #050807;
+
+            --accent-brand: #38E1A6;
+            --accent-brand-hover: #5CF0BC;
+            --accent-brand-soft: rgba(56, 225, 166, 0.15);
+            --accent-glow: rgba(56, 225, 166, 0.28);
+
+            --danger: #F87171;
+            --warning: #FBBF24;
+            --success: #34D399;
+
+            --editor-gutter: #080D0B;
+            --editor-selection: rgba(56, 225, 166, 0.25);
+            --preview-bg: #FFFFFF;
+        }
+
+        /* ---------------- Theme: Light ---------------- */
         [data-theme="light"] {
-            --bg-canvas: #F4F6F5;
-            --bg-surface: rgba(255, 255, 255, 0.85);
-            --bg-dock: rgba(246, 249, 247, 0.92);
-            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-canvas: #F0F6F3;
+            --bg-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 248, 244, 0.75) 50%, rgba(230, 242, 236, 0.85) 100%);
+            --bg-dock: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 247, 243, 0.88) 100%);
+            --bg-card: rgba(255, 255, 255, 0.95);
             --bg-input: #FFFFFF;
             --bg-hover: rgba(0, 0, 0, 0.04);
-            --bg-active: rgba(46, 104, 88, 0.1);
+            --bg-active: rgba(23, 107, 82, 0.12);
 
-            --glass-border: rgba(0, 0, 0, 0.08);
-            --glass-border-strong: rgba(0, 0, 0, 0.16);
-            --glass-specular: rgba(255, 255, 255, 0.9);
-            --glass-inner-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-border-strong: rgba(23, 107, 82, 0.28);
+            --glass-specular: inset 1.5px 1.5px 1.5px 0 rgba(255, 255, 255, 1), inset -1px -1px 1px 0 rgba(23, 107, 82, 0.08);
 
-            --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-float: 0 12px 32px -6px rgba(25, 42, 36, 0.08);
-            --shadow-lift: 0 20px 40px -10px rgba(22, 40, 34, 0.14);
+            --shadow-subtle: 0 4px 12px -2px rgba(20, 48, 38, 0.06);
+            --shadow-float: 0 16px 36px -6px rgba(20, 48, 38, 0.1);
+            --shadow-lift: 0 24px 48px -10px rgba(18, 44, 35, 0.18), 0 0 20px rgba(23, 107, 82, 0.14);
 
-            --text-primary: #192623;
-            --text-secondary: #4A635B;
-            --text-tertiary: #78928A;
+            --text-primary: #121F1B;
+            --text-secondary: #405B52;
+            --text-tertiary: #759288;
             --text-inverse: #FFFFFF;
 
-            --accent-brand: #2E6858;
-            --accent-brand-hover: #225144;
-            --accent-brand-soft: rgba(46, 104, 88, 0.12);
-            --accent-ring: rgba(46, 104, 88, 0.28);
+            --accent-brand: #176B52;
+            --accent-brand-hover: #0F4F3C;
+            --accent-brand-soft: rgba(23, 107, 82, 0.12);
+            --accent-glow: rgba(23, 107, 82, 0.22);
 
-            --danger: #D3455B;
-            --warning: #C1841B;
-            --success: #288C5A;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --success: #10B981;
 
-            --editor-gutter: #EFF3F1;
-            --editor-selection: rgba(46, 104, 88, 0.18);
+            --editor-gutter: #E8F0EC;
+            --editor-selection: rgba(23, 107, 82, 0.18);
             --preview-bg: #FFFFFF;
         }
 
-        /* --------------------------------------------------------------------------
-           THEME: DARK (Obsidian Mineral, Dark Moss & Deep Water)
-           -------------------------------------------------------------------------- */
-        [data-theme="dark"] {
-            --bg-canvas: #0C100F;
-            --bg-surface: rgba(22, 30, 28, 0.78);
-            --bg-dock: rgba(18, 25, 23, 0.88);
-            --bg-card: rgba(28, 38, 35, 0.8);
-            --bg-input: #121816;
-            --bg-hover: rgba(255, 255, 255, 0.06);
-            --bg-active: rgba(94, 184, 159, 0.16);
-
-            --glass-border: rgba(255, 255, 255, 0.09);
-            --glass-border-strong: rgba(255, 255, 255, 0.18);
-            --glass-specular: rgba(255, 255, 255, 0.14);
-            --glass-inner-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
-
-            --shadow-subtle: 0 4px 14px -3px rgba(0, 0, 0, 0.4);
-            --shadow-float: 0 16px 36px -8px rgba(0, 0, 0, 0.6);
-            --shadow-lift: 0 24px 48px -12px rgba(0, 0, 0, 0.8);
-
-            --text-primary: #F0F6F4;
-            --text-secondary: #9EB5AE;
-            --text-tertiary: #688078;
-            --text-inverse: #0C100F;
-
-            --accent-brand: #5EB89F;
-            --accent-brand-hover: #76C7AF;
-            --accent-brand-soft: rgba(94, 184, 159, 0.16);
-            --accent-ring: rgba(94, 184, 159, 0.36);
-
-            --danger: #E06C75;
-            --warning: #E5C07B;
-            --success: #5EC992;
-
-            --editor-gutter: #101514;
-            --editor-selection: rgba(94, 184, 159, 0.25);
-            --preview-bg: #FFFFFF;
-        }
-
-        /* ==========================================================================
-           RESET & DOCUMENT BASE
-           ========================================================================== */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -137,6 +136,8 @@
             flex-direction: column;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            user-select: none;
         }
 
         :focus-visible {
@@ -146,8 +147,7 @@
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--glass-border-strong); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
 
         /* ==========================================================================
            1. TOP COMMAND DOCK (macOS SEQUOIA STYLE NAVIGATION)
@@ -155,9 +155,10 @@
         .navbar-island {
             height: var(--nav-height);
             background: var(--bg-dock);
-            backdrop-filter: blur(28px) saturate(180%);
-            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            backdrop-filter: blur(34px) saturate(210%);
+            -webkit-backdrop-filter: blur(34px) saturate(210%);
             border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -165,6 +166,11 @@
             flex-shrink: 0;
             gap: 12px;
             z-index: 50;
+            -webkit-app-region: drag; /* macOS PWA Draggable Header */
+        }
+
+        .navbar-island * {
+            -webkit-app-region: no-drag;
         }
 
         .nav-cluster-left,
@@ -175,7 +181,6 @@
             gap: 8px;
         }
 
-        /* Brand Anchor */
         .brand-link {
             display: flex;
             align-items: center;
@@ -188,24 +193,29 @@
             letter-spacing: -0.01em;
             padding-right: 12px;
             border-right: 1px solid var(--glass-border);
+            transition: transform var(--duration-fast) var(--ease-spring);
         }
 
+        .brand-link:hover { transform: scale(1.04); }
+
         .brand-gem {
-            width: 24px;
-            height: 24px;
-            border-radius: 7px;
-            background: linear-gradient(135deg, var(--accent-brand), var(--text-secondary));
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent-brand), #1E5C4B);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+            box-shadow: 0 2px 8px var(--accent-glow);
+            font-size: 11px;
+            font-weight: 800;
         }
 
         .site-links {
             display: flex;
             list-style: none;
-            gap: 4px;
+            gap: 2px;
         }
 
         .site-links a {
@@ -213,48 +223,46 @@
             text-decoration: none;
             font-size: 12.5px;
             font-weight: 500;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: var(--radius-pill);
-            transition: all var(--duration-fast) var(--ease-smooth);
+            transition: all var(--duration-fast) var(--ease-spring);
         }
 
         .site-links a:hover {
             color: var(--text-primary);
             background: var(--accent-brand-soft);
+            transform: scale(1.04);
         }
 
         .site-links a.active {
             color: var(--text-primary);
             background: var(--bg-active);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
             font-weight: 600;
         }
 
-        /* Project Title Renamer Pill */
         .project-title-input {
             background: var(--bg-input);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular);
             color: var(--text-primary);
             font-family: var(--font-sans);
             font-weight: 600;
             font-size: 13px;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: var(--radius-pill);
             width: 140px;
+            outline: none;
             transition: all var(--duration-fast) var(--ease-spring);
         }
 
-        .project-title-input:hover {
-            border-color: var(--glass-border-strong);
-        }
-
+        .project-title-input:hover { border-color: var(--glass-border-strong); }
         .project-title-input:focus {
-            outline: none;
             border-color: var(--accent-brand);
-            box-shadow: 0 0 0 3px var(--accent-ring);
-            width: 190px;
+            box-shadow: 0 0 0 3px var(--accent-glow), var(--glass-specular);
+            width: 200px;
         }
 
-        /* Live Save Telemetry Pill */
         .save-pill {
             display: inline-flex;
             align-items: center;
@@ -262,10 +270,11 @@
             font-size: 11.5px;
             font-family: var(--font-code);
             color: var(--text-tertiary);
-            background: var(--bg-hover);
-            padding: 4px 10px;
+            background: var(--bg-surface);
+            padding: 5px 12px;
             border-radius: var(--radius-pill);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular);
         }
 
         .save-dot {
@@ -274,7 +283,7 @@
             border-radius: 50%;
             background: var(--success);
             box-shadow: 0 0 6px var(--success);
-            transition: background var(--duration-fast) var(--ease-smooth);
+            transition: background var(--duration-fast) var(--ease-snappy);
         }
 
         .save-pill.unsaved .save-dot {
@@ -282,19 +291,20 @@
             box-shadow: 0 0 6px var(--warning);
         }
 
-        /* Control Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             background: var(--bg-card);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-subtle);
             color: var(--text-primary);
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: var(--radius-pill);
             font-family: var(--font-sans);
             font-size: 12.5px;
-            font-weight: 500;
+            font-weight: 600;
             line-height: 1;
             cursor: pointer;
             text-decoration: none;
@@ -305,37 +315,41 @@
         .btn:hover {
             background: var(--bg-hover);
             border-color: var(--glass-border-strong);
-            transform: translateY(-1px);
+            transform: translateY(-1px) scale(1.03);
         }
 
-        .btn:active {
-            transform: scale(0.97);
-        }
+        .btn:active { transform: scale(0.96); }
 
         .btn-primary {
-            background: var(--accent-brand);
-            border-color: var(--accent-brand);
+            background: linear-gradient(135deg, var(--accent-brand) 0%, #1D8A68 100%);
+            border-color: transparent;
             color: #FFFFFF;
-            box-shadow: 0 2px 10px -2px var(--accent-ring);
-            font-weight: 600;
+            box-shadow: 0 4px 14px var(--accent-glow);
         }
 
         .btn-primary:hover {
-            background: var(--accent-brand-hover);
-            border-color: var(--accent-brand-hover);
+            background: linear-gradient(135deg, var(--accent-brand-hover) 0%, #157356 100%);
+            box-shadow: 0 6px 18px var(--accent-glow);
             color: #FFFFFF;
         }
 
         .btn-icon {
-            padding: 6px 9px;
+            padding: 7px 10px;
             border-radius: var(--radius-pill);
         }
 
-        /* Segmented Button Groups */
+        .btn-pwa-install {
+            display: none;
+            background: linear-gradient(135deg, #10B981, var(--accent-brand));
+            color: #050807;
+            font-weight: 700;
+        }
+
         .btn-group {
             display: inline-flex;
             background: var(--bg-input);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular);
             border-radius: var(--radius-pill);
             padding: 2px;
         }
@@ -343,42 +357,36 @@
         .btn-group .btn {
             background: transparent;
             border: none;
+            box-shadow: none;
             border-radius: var(--radius-pill);
-            padding: 4px 10px;
+            padding: 5px 11px;
             font-size: 12px;
             color: var(--text-secondary);
         }
 
-        .btn-group .btn:hover {
-            transform: none;
-            color: var(--text-primary);
-        }
-
+        .btn-group .btn:hover { transform: none; color: var(--text-primary); }
         .btn-group .btn.active {
             background: var(--bg-card);
             color: var(--text-primary);
-            font-weight: 600;
-            box-shadow: var(--shadow-subtle);
+            font-weight: 700;
+            box-shadow: var(--shadow-subtle), var(--glass-specular);
         }
 
-        /* Dropdown Islands */
-        .dropdown {
-            position: relative;
-        }
-
+        /* Dropdowns */
+        .dropdown { position: relative; }
         .dropdown-menu {
             display: none;
             position: absolute;
             top: calc(100% + 6px);
             right: 0;
-            background: var(--bg-surface);
-            backdrop-filter: blur(28px) saturate(180%);
-            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            background: var(--bg-dock);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-lift);
             border-radius: var(--radius-md);
-            padding: 5px;
-            min-width: 180px;
-            box-shadow: var(--shadow-lift);
+            padding: 6px;
+            min-width: 210px;
             z-index: 100;
         }
 
@@ -390,29 +398,31 @@
         }
 
         @keyframes fadeInMenu {
-            from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+            from { opacity: 0; transform: translateY(-6px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .dropdown-item {
             background: transparent;
             border: none;
-            padding: 7px 12px;
+            padding: 8px 12px;
             border-radius: var(--radius-sm);
             color: var(--text-primary);
             font-size: 12.5px;
             font-family: var(--font-sans);
+            font-weight: 500;
             text-align: left;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: background var(--duration-fast) var(--ease-smooth);
+            transition: all var(--duration-fast) var(--ease-spring);
         }
 
         .dropdown-item:hover {
             background: var(--accent-brand-soft);
             color: var(--accent-brand);
+            transform: translateX(2px);
         }
 
         .dropdown-item .hint {
@@ -422,7 +432,7 @@
         }
 
         /* ==========================================================================
-           2. WORKSPACE LAYOUT & FLOATING PANES
+           2. WORKSPACE LAYOUT
            ========================================================================== */
         .workspace {
             flex: 1;
@@ -436,9 +446,10 @@
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-surface);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
             border-right: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular);
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
@@ -447,10 +458,7 @@
             z-index: 10;
         }
 
-        .sidebar.collapsed {
-            width: 0;
-            border-right: none;
-        }
+        .sidebar.collapsed { width: 0; border-right: none; }
 
         .sidebar-header {
             height: var(--tab-height);
@@ -484,17 +492,19 @@
             font-size: 12.5px;
             color: var(--text-secondary);
             cursor: pointer;
-            transition: all var(--duration-fast) var(--ease-smooth);
+            transition: all var(--duration-fast) var(--ease-spring);
         }
 
         .file-item:hover {
             background: var(--bg-hover);
             color: var(--text-primary);
+            transform: translateX(2px);
         }
 
         .file-item.active {
             background: var(--bg-active);
             color: var(--text-primary);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
             font-weight: 600;
         }
 
@@ -509,41 +519,33 @@
 
         .file-icon {
             font-family: var(--font-code);
-            font-size: 10.5px;
+            font-size: 11px;
             color: var(--text-tertiary);
-            width: 14px;
+            width: 16px;
             text-align: center;
         }
 
-        .file-item.active .file-icon {
-            color: var(--accent-brand);
-        }
-
-        .file-actions {
-            display: none;
-            gap: 2px;
-        }
-
-        .file-item:hover .file-actions {
-            display: flex;
-        }
+        .file-item.active .file-icon { color: var(--accent-brand); }
+        .file-actions { display: none; gap: 2px; }
+        .file-item:hover .file-actions { display: flex; }
 
         .icon-btn {
             background: transparent;
             border: none;
             color: var(--text-tertiary);
-            padding: 3px 5px;
-            border-radius: 4px;
+            padding: 4px 6px;
+            border-radius: 6px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all var(--duration-fast) var(--ease-smooth);
+            transition: all var(--duration-fast) var(--ease-spring);
         }
 
         .icon-btn:hover {
             color: var(--text-primary);
             background: var(--bg-hover);
+            transform: scale(1.1);
         }
 
         /* Editor Section */
@@ -557,7 +559,6 @@
             position: relative;
         }
 
-        /* Pebble Tabs Bar */
         .tabs-bar {
             height: var(--tab-height);
             background: var(--bg-surface);
@@ -582,7 +583,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 5px 12px;
+            padding: 6px 14px;
             background: transparent;
             border: 1px solid transparent;
             border-radius: var(--radius-pill);
@@ -590,20 +591,16 @@
             font-family: var(--font-code);
             font-size: 11.5px;
             cursor: pointer;
-            transition: all var(--duration-fast) var(--ease-smooth);
+            transition: all var(--duration-fast) var(--ease-spring);
         }
 
-        .tab:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-        }
-
+        .tab:hover { background: var(--bg-hover); color: var(--text-primary); }
         .tab.active {
             background: var(--bg-card);
             color: var(--text-primary);
             border-color: var(--glass-border);
-            box-shadow: var(--shadow-subtle);
-            font-weight: 500;
+            box-shadow: var(--glass-specular), var(--shadow-subtle);
+            font-weight: 600;
         }
 
         .tab-close {
@@ -611,57 +608,13 @@
             padding: 1px 4px;
             border-radius: var(--radius-pill);
             color: var(--text-tertiary);
-            transition: all var(--duration-fast) var(--ease-smooth);
+            transition: all var(--duration-fast) var(--ease-spring);
         }
 
         .tab-close:hover {
             background: var(--bg-hover);
             color: var(--text-primary);
-        }
-
-        /* Floating Search & Replace Overlay Island */
-        .search-bar {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-surface);
-            backdrop-filter: blur(28px) saturate(180%);
-            -webkit-backdrop-filter: blur(28px) saturate(180%);
-            border: 1px solid var(--glass-border-strong);
-            padding: 8px 12px;
-            position: absolute;
-            top: 48px;
-            right: 18px;
-            z-index: 30;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lift);
-        }
-
-        .search-bar.active {
-            display: flex;
-            animation: fadeInMenu 180ms var(--ease-spring);
-        }
-
-        .search-input {
-            background: var(--bg-input);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            font-family: var(--font-code);
-            font-size: 11.5px;
-            padding: 5px 8px;
-            border-radius: var(--radius-sm);
-            outline: none;
-            width: 130px;
-        }
-
-        .search-input:focus {
-            border-color: var(--accent-brand);
-        }
-
-        .search-count {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            font-family: var(--font-code);
+            transform: scale(1.15);
         }
 
         /* Editor Area */
@@ -674,7 +627,7 @@
         }
 
         .gutter {
-            width: 46px;
+            width: 48px;
             background: var(--editor-gutter);
             border-right: 1px solid var(--glass-border);
             padding: 14px 8px;
@@ -696,36 +649,31 @@
             padding: 14px;
             color: var(--text-primary);
             font-family: var(--font-code);
-            font-size: 12px;
+            font-size: 12.5px;
             line-height: 1.6;
             resize: none;
             white-space: pre;
             tab-size: 2;
             overflow: auto;
             caret-color: var(--accent-brand);
+            user-select: text;
         }
 
-        .code-textarea.wrap-text {
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
+        .code-textarea.wrap-text { white-space: pre-wrap; word-break: break-all; }
+        .code-textarea::selection { background: var(--editor-selection); }
 
-        .code-textarea::selection {
-            background: var(--editor-selection);
-        }
-
-        /* Pane Resizer */
         .pane-divider {
             width: 5px;
             background: var(--glass-border);
             cursor: col-resize;
-            transition: background var(--duration-fast) var(--ease-smooth);
+            transition: background var(--duration-fast) var(--ease-snappy);
             z-index: 20;
             flex-shrink: 0;
         }
 
         .pane-divider:hover, .pane-divider.dragging {
             background: var(--accent-brand);
+            box-shadow: 0 0 10px var(--accent-glow);
         }
 
         /* Preview Stage */
@@ -755,7 +703,7 @@
             align-items: center;
             justify-content: center;
             background: var(--bg-canvas);
-            padding: 12px;
+            padding: 14px;
             overflow: hidden;
             position: relative;
         }
@@ -765,8 +713,8 @@
             height: 100%;
             background: var(--preview-bg);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-float);
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-float);
             transition: width var(--duration-normal) var(--ease-spring),
                         height var(--duration-normal) var(--ease-spring);
             position: relative;
@@ -781,22 +729,21 @@
             background: #FFFFFF;
         }
 
-        /* Debug Console Drawer */
+        /* Debug Console */
         .console-drawer {
             height: 140px;
             background: var(--bg-surface);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
             border-top: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular);
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
             transition: height var(--duration-normal) var(--ease-spring);
         }
 
-        .console-drawer.collapsed {
-            height: var(--status-height);
-        }
+        .console-drawer.collapsed { height: var(--status-height); }
 
         .console-header {
             height: var(--status-height);
@@ -817,32 +764,27 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
             font-family: var(--font-code);
-            font-size: 11px;
+            font-size: 11.5px;
             background: var(--bg-canvas);
+            user-select: text;
         }
 
-        .log-row {
-            display: flex;
-            gap: 8px;
-            word-break: break-all;
-            line-height: 1.4;
-        }
-
+        .log-row { display: flex; gap: 8px; word-break: break-all; line-height: 1.4; }
         .log-row.info { color: var(--text-secondary); }
         .log-row.warn { color: var(--warning); }
         .log-row.error { color: var(--danger); }
-        .log-row.system { color: var(--accent-brand); }
+        .log-row.system { color: var(--accent-brand); font-weight: 600; }
         .log-row.repl { color: var(--success); }
 
         .console-repl {
-            height: 30px;
+            height: 32px;
             border-top: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
             background: var(--bg-dock);
-            padding: 0 10px;
+            padding: 0 12px;
             gap: 8px;
         }
 
@@ -853,7 +795,7 @@
             outline: none;
             color: var(--text-primary);
             font-family: var(--font-code);
-            font-size: 11px;
+            font-size: 11.5px;
         }
 
         /* Status Footer */
@@ -861,6 +803,7 @@
             height: var(--status-height);
             background: var(--bg-dock);
             border-top: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -872,84 +815,136 @@
             z-index: 40;
         }
 
-        .statusbar-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .statusbar-item { display: flex; align-items: center; gap: 10px; }
 
         /* ==========================================================================
-           3. MODAL SHEETS (Apple Sheet Style)
+           3. COMMAND PALETTE (Spotlight Quick Launcher)
            ========================================================================== */
+        .palette-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 2000;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 14vh;
+        }
+
+        .palette-overlay.active { display: flex; }
+
+        .palette-box {
+            width: 100%;
+            max-width: 540px;
+            background: var(--bg-dock);
+            backdrop-filter: blur(34px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-lift);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: fadeInMenu 180ms var(--ease-spring);
+        }
+
+        .palette-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 15px;
+            outline: none;
+        }
+
+        .palette-list {
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .palette-item {
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+
+        .palette-item:hover, .palette-item.selected {
+            background: var(--accent-brand-soft);
+            color: var(--accent-brand);
+        }
+
+        /* Modals & Toasts */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 16px;
             opacity: 0;
-            transition: opacity var(--duration-normal) var(--ease-smooth);
+            transition: opacity var(--duration-normal) var(--ease-snappy);
         }
 
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
+        .modal-overlay.active { display: flex; opacity: 1; }
 
         .modal-box {
             width: 100%;
             max-width: 520px;
-            background: var(--bg-surface);
-            backdrop-filter: blur(32px) saturate(180%);
-            -webkit-backdrop-filter: blur(32px) saturate(180%);
+            background: var(--bg-dock);
+            backdrop-filter: blur(34px) saturate(200%);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-lift);
             border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: var(--shadow-lift);
             transform: scale(0.96);
             transition: transform var(--duration-normal) var(--ease-spring);
         }
 
-        .modal-overlay.active .modal-box {
-            transform: scale(1);
-        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
 
         .modal-header {
-            padding: 14px 18px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-family: var(--font-display);
             font-weight: 700;
-            font-size: 14.5px;
-            color: var(--text-primary);
+            font-size: 15px;
         }
 
-        .modal-body {
-            padding: 18px;
-            max-height: 65vh;
-            overflow-y: auto;
-        }
-
+        .modal-body { padding: 20px; max-height: 65vh; overflow-y: auto; }
         .modal-footer {
-            padding: 12px 18px;
+            padding: 14px 20px;
             border-top: 1px solid var(--glass-border);
             display: flex;
             justify-content: flex-end;
             gap: 8px;
-            background: var(--bg-dock);
+            background: var(--bg-surface);
         }
 
         .project-row {
             background: var(--bg-card);
             border: 1px solid var(--glass-border);
-            padding: 12px 14px;
+            box-shadow: var(--glass-specular);
+            padding: 12px 16px;
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
@@ -959,20 +954,12 @@
             transition: all var(--duration-fast) var(--ease-spring);
         }
 
-        .project-row:hover {
-            border-color: var(--glass-border-strong);
-            transform: translateY(-1px);
-        }
+        .project-row:hover { border-color: var(--glass-border-strong); transform: translateY(-2px); }
+        .project-row.active { border-color: var(--accent-brand); background: var(--accent-brand-soft); }
 
-        .project-row.active {
-            border-color: var(--accent-brand);
-            background: var(--accent-brand-soft);
-        }
-
-        /* Toast Notifications */
         .toast-container {
             position: fixed;
-            bottom: 38px;
+            bottom: 40px;
             right: 18px;
             display: flex;
             flex-direction: column;
@@ -982,21 +969,19 @@
         }
 
         .toast {
-            background: var(--bg-surface);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            background: var(--bg-dock);
+            backdrop-filter: blur(28px);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-float);
             color: var(--text-primary);
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: var(--radius-pill);
             font-size: 12px;
-            font-weight: 500;
-            box-shadow: var(--shadow-float);
+            font-weight: 600;
             pointer-events: auto;
             animation: fadeInMenu 180ms var(--ease-spring);
         }
 
-        /* Responsive */
         @media (max-width: 820px) {
             .site-links { display: none; }
             .workspace { flex-direction: column; }
@@ -1007,15 +992,21 @@
 </head>
 <body>
 
+    <!-- Inline SVG Liquid Glass Displacement Filter -->
+    <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+        <defs>
+            <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.035 0.035" numOctaves="1" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
     <!-- 1. TOP COMMAND DOCK (macOS SEQUOIA STYLE NAVIGATION) -->
     <header class="navbar-island">
         <div class="nav-cluster-left">
             <a href="index.html" class="brand-link" title="I’M AFK Hub">
-                <div class="brand-gem" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                </div>
+                <div class="brand-gem" aria-hidden="true">★</div>
                 <span>I’M AFK</span>
             </a>
 
@@ -1025,6 +1016,7 @@
                 <li><a href="studio.html" class="active">Studio</a></li>
                 <li><a href="submit.html">Submit</a></li>
                 <li><a href="contact.html">Support</a></li>
+                <li><a href="about.html">Lore</a></li>
             </ul>
         </div>
 
@@ -1048,69 +1040,59 @@
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                 </svg>
                 <span>Live:</span>
-                <span id="live-status-text" style="color:var(--success); font-weight:600;">On</span>
+                <span id="live-status-text" style="color:var(--success); font-weight:700;">On</span>
             </button>
         </div>
 
         <div class="nav-cluster-right">
-            <button class="btn" onclick="openProjectsModal()">
-                <span>Projects</span>
-                <span style="opacity: 0.6;">(<span id="project-count">1</span>)</span>
+            <!-- PWA Desktop Install Button (Shows when browser supports install) -->
+            <button class="btn btn-pwa-install" id="pwa-install-btn" onclick="installPWA()">
+                <span>📲 Install Desktop App</span>
             </button>
-            <button class="btn" onclick="openTemplatesModal()">Starters</button>
 
-            <!-- Export Dropdown -->
-            <div class="dropdown" id="export-dropdown">
-                <button class="btn" onclick="toggleDropdown('export-dropdown')">
-                    <span>Export</span>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
+            <button class="btn" onclick="openProjectsModal()">
+                <span>Projects (<span id="project-count">1</span>)</span>
+            </button>
+
+            <!-- File System Access Dropdown -->
+            <div class="dropdown" id="fs-dropdown">
+                <button class="btn" onclick="toggleDropdown('fs-dropdown')">
+                    <span>File</span>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="openLocalFolder()">
+                        <span>Open Local Folder...</span>
+                        <span class="hint">Disk</span>
+                    </button>
+                    <button class="dropdown-item" onclick="openLocalFile()">
+                        <span>Open Local File...</span>
+                        <span class="hint">Disk</span>
+                    </button>
+                    <button class="dropdown-item" onclick="saveToDisk()">
+                        <span>Save to Hard Drive</span>
+                        <span class="hint">Ctrl+S</span>
+                    </button>
+                    <hr style="border:none; border-top:1px solid var(--glass-border); margin:4px 0;">
                     <button class="dropdown-item" onclick="exportStandaloneHTML()">
-                        <span>Standalone HTML</span>
-                        <span class="hint">.html</span>
+                        <span>Export Single .HTML</span>
                     </button>
                     <button class="dropdown-item" onclick="exportProjectJSON()">
-                        <span>Project Bundle</span>
-                        <span class="hint">.json</span>
-                    </button>
-                    <button class="dropdown-item" onclick="copyCurrentFileCode()">
-                        <span>Copy Code</span>
-                        <span class="hint">Clipboard</span>
+                        <span>Export Project Bundle</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Import Dropdown -->
-            <div class="dropdown" id="import-dropdown">
-                <button class="btn" onclick="toggleDropdown('import-dropdown')">
-                    <span>Import</span>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </button>
-                <div class="dropdown-menu">
-                    <button class="dropdown-item" onclick="document.getElementById('import-file-input').click()">
-                        <span>Open .HTML / .JSON</span>
-                    </button>
-                </div>
-            </div>
-            <input type="file" id="import-file-input" accept=".html,.htm,.json" style="display:none;" onchange="handleImportFile(event)">
-
-            <button class="btn btn-icon" onclick="openSettingsModal()" title="Studio Settings" aria-label="Settings">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
+            <button class="btn btn-icon" onclick="openPalette()" title="Command Spotlight (Ctrl+K)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </button>
-            <button class="btn btn-icon" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle visual theme">
-                <svg id="theme-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                </svg>
+
+            <button class="btn btn-icon" onclick="openSettingsModal()" title="Settings">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </button>
+
+            <button class="btn btn-icon" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">
+                <svg id="theme-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line></svg>
             </button>
         </div>
     </header>
@@ -1123,17 +1105,8 @@
             <div class="sidebar-header">
                 <span>Files</span>
                 <div>
-                    <button class="icon-btn" onclick="promptNewFile()" title="New File">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                    </button>
-                    <button class="icon-btn" onclick="toggleSidebar()" title="Collapse Sidebar">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </button>
+                    <button class="icon-btn" onclick="promptNewFile()" title="New File">+</button>
+                    <button class="icon-btn" onclick="toggleSidebar()" title="Collapse">◀</button>
                 </div>
             </div>
 
@@ -1141,49 +1114,23 @@
 
             <div class="sidebar-header" style="border-top:1px solid var(--glass-border);">
                 <span>Snapshots</span>
-                <button class="icon-btn" onclick="takeSnapshot()" title="Save Snapshot">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                        <polyline points="7 3 7 8 15 8"></polyline>
-                    </svg>
-                </button>
+                <button class="icon-btn" onclick="takeSnapshot()" title="Save Snapshot">💾</button>
             </div>
             <div id="snapshots-list" style="padding: 6px 0; overflow-y: auto; max-height: 120px;"></div>
         </aside>
 
-        <!-- Code Editor -->
+        <!-- Code Editor Pane -->
         <section class="editor-pane" id="editor-pane">
             <div class="tabs-bar">
                 <div class="tabs-list" id="tabs-container"></div>
                 <div style="display: flex; align-items: center; gap: 4px;">
-                    <button class="icon-btn" onclick="toggleSearchBar()" title="Find / Replace (Ctrl+F)">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </button>
-                    <button class="icon-btn" onclick="formatActiveFile()" title="Format Code">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                        </svg>
-                    </button>
+                    <button class="icon-btn" onclick="formatActiveFile()" title="Format Code">✨</button>
                 </div>
             </div>
 
-            <!-- Floating Search & Replace Bar -->
-            <div class="search-bar" id="search-bar">
-                <input type="text" id="find-input" class="search-input" placeholder="Find..." oninput="updateSearchMatchCount()">
-                <span class="search-count" id="search-count">0 matches</span>
-                <input type="text" id="replace-input" class="search-input" placeholder="Replace...">
-                <button class="btn" style="padding:3px 8px; font-size:11px;" onclick="executeReplace()">Replace</button>
-                <button class="btn" style="padding:3px 8px; font-size:11px;" onclick="executeReplaceAll()">All</button>
-                <button class="icon-btn" onclick="toggleSearchBar()">✕</button>
-            </div>
-
-            <div class="editor-container">
+            <div class="editor-container" id="editor-drop-zone">
                 <div class="gutter" id="gutter">1</div>
-                <textarea id="code-textarea" class="code-textarea" spellcheck="false" placeholder="Type HTML, CSS, or JS here..."></textarea>
+                <textarea id="code-textarea" class="code-textarea" spellcheck="false" placeholder="Type HTML, CSS, or JS here... (You can also drag files from your desktop)"></textarea>
             </div>
         </section>
 
@@ -1200,29 +1147,8 @@
                 </div>
 
                 <div style="display:flex; gap:6px;">
-                    <button class="btn" onclick="runSandbox()" title="Reload preview">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="23 4 23 10 17 10"></polyline>
-                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-                        </svg>
-                        <span>Refresh</span>
-                    </button>
-                    <button class="btn" onclick="openPreviewNewTab()" title="Open preview in new tab">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                        <span>Popout</span>
-                    </button>
-                    <button class="btn btn-icon" onclick="toggleFullscreen()" title="Fullscreen">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <polyline points="9 21 3 21 3 15"></polyline>
-                            <line x1="21" y1="3" x2="14" y2="10"></line>
-                            <line x1="3" y1="21" x2="10" y2="14"></line>
-                        </svg>
-                    </button>
+                    <button class="btn" onclick="runSandbox()" title="Reload preview">↻ Refresh</button>
+                    <button class="btn" onclick="openPreviewNewTab()" title="Open preview in new tab">↗ Popout</button>
                 </div>
             </div>
 
@@ -1238,16 +1164,12 @@
                     <span>Console (<span id="console-counter">0</span>)</span>
                     <div style="display: flex; gap: 6px;">
                         <button class="icon-btn" onclick="clearConsole()">Clear</button>
-                        <button class="icon-btn" onclick="toggleConsole()" id="console-toggle-btn">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </button>
+                        <button class="icon-btn" onclick="toggleConsole()" id="console-toggle-btn">▼</button>
                     </div>
                 </div>
 
                 <div class="console-logs" id="console-logs">
-                    <div class="log-row system">✦ Studio initialized. Live client sandbox active.</div>
+                    <div class="log-row system">✦ AFK Desktop Web App active. Offline File System Ready.</div>
                 </div>
 
                 <div class="console-repl">
@@ -1258,16 +1180,18 @@
         </section>
     </div>
 
-    <!-- 3. STATUS BAR -->
+    <!-- 3. SPOTLIGHT COMMAND PALETTE -->
+    <div class="palette-overlay" id="palette-overlay" onclick="closePaletteOnBackdrop(event)">
+        <div class="palette-box">
+            <input type="text" id="palette-input" class="palette-input" placeholder="Type a command or file name... (e.g. Run, Export, Format)" oninput="filterPalette(this.value)">
+            <div class="palette-list" id="palette-list"></div>
+        </div>
+    </div>
+
+    <!-- 4. STATUS BAR -->
     <footer class="statusbar">
         <div class="statusbar-item">
-            <button class="icon-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
+            <button class="icon-btn" onclick="toggleSidebar()" title="Toggle Sidebar">☰</button>
             <span id="status-cursor">Ln 1, Col 1</span>
         </div>
         <div class="statusbar-item">
@@ -1275,12 +1199,11 @@
             <span>•</span>
             <span id="status-wrap-info">No Wrap</span>
             <span>•</span>
-            <span id="status-active-type">HTML</span>
+            <span id="status-fs-mode" style="color:var(--accent-brand);">Local VFS</span>
         </div>
     </footer>
 
-    <!-- 4. MODALS (Apple Modal Sheets) -->
-    <!-- Projects Manager -->
+    <!-- Projects & Settings Modals -->
     <div class="modal-overlay" id="projects-modal">
         <div class="modal-box">
             <div class="modal-header">
@@ -1300,56 +1223,22 @@
         </div>
     </div>
 
-    <!-- Starters Modal -->
-    <div class="modal-overlay" id="templates-modal">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span>Starter Templates</span>
-                <button class="icon-btn" onclick="closeTemplatesModal()">✕</button>
-            </div>
-            <div class="modal-body" style="display:flex; flex-direction:column; gap:8px;">
-                <div class="project-row" onclick="createProjectFromTemplate('vanilla')">
-                    <div>
-                        <div style="font-weight:600; font-size:13.5px; color:var(--text-primary);">HTML5 / CSS / JS App</div>
-                        <div style="font-size:12px; color:var(--text-secondary);">Standard multi-file template with interactive script.</div>
-                    </div>
-                </div>
-                <div class="project-row" onclick="createProjectFromTemplate('canvas')">
-                    <div>
-                        <div style="font-weight:600; font-size:13.5px; color:var(--text-primary);">Interactive 2D Canvas</div>
-                        <div style="font-size:12px; color:var(--text-secondary);">60 FPS particle loop with pointer acceleration.</div>
-                    </div>
-                </div>
-                <div class="project-row" onclick="createProjectFromTemplate('game')">
-                    <div>
-                        <div style="font-weight:600; font-size:13.5px; color:var(--text-primary);">Clicker / Tap Game</div>
-                        <div style="font-size:12px; color:var(--text-secondary);">Score tracking, state persistence, and responsive UI.</div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeTemplatesModal()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
     <div class="modal-overlay" id="settings-modal">
         <div class="modal-box">
             <div class="modal-header">
-                <span>Studio Settings</span>
+                <span>Studio Web App Settings</span>
                 <button class="icon-btn" onclick="closeSettingsModal()">✕</button>
             </div>
             <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
                 <div>
-                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:6px; color:var(--text-primary);">Line Wrapping</label>
+                    <label style="font-size:12px; font-weight:700; display:block; margin-bottom:6px;">Line Wrapping</label>
                     <button class="btn" onclick="toggleLineWrap()" id="wrap-toggle-btn">Toggle Word Wrap</button>
                 </div>
                 <div>
-                    <label style="font-size:12px; font-weight:600; display:block; margin-bottom:6px; color:var(--text-primary);">Editor Font Size</label>
+                    <label style="font-size:12px; font-weight:700; display:block; margin-bottom:6px;">Font Size</label>
                     <div class="btn-group">
                         <button class="btn" onclick="setEditorFontSize('11px')">11px</button>
-                        <button class="btn active" onclick="setEditorFontSize('12px')">12px</button>
+                        <button class="btn active" onclick="setEditorFontSize('12.5px')">12.5px</button>
                         <button class="btn" onclick="setEditorFontSize('14px')">14px</button>
                     </div>
                 </div>
@@ -1363,59 +1252,11 @@
     <div class="toast-container" id="toast-container"></div>
 
     <!-- ==========================================================================
-         APPLICATION SCRIPTS
-         ========================================================================== -->
+         APPLICATION SCRIPTS (PWA + FILE SYSTEM API + IDE ENGINE)
+         ========================================================================== */
     <script>
         const STORAGE_PROJECTS = 'afk_studio_projects_v3';
         const STORAGE_ACTIVE_ID = 'afk_studio_active_id_v3';
-
-        const STARTER_TEMPLATES = {
-            vanilla: {
-                title: "Web App Starter",
-                files: [
-                    {
-                        name: "index.html",
-                        path: "index.html",
-                        type: "html",
-                        content: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>App</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <div class="card">\n    <h1>I’M AFK Studio</h1>\n    <p>A fast, calm client-side environment.</p>\n    <button id="btn">Clicks: 0</button>\n  </div>\n  <script src="app.js"><\/script>\n</body>\n</html>`
-                    },
-                    {
-                        name: "style.css",
-                        path: "style.css",
-                        type: "css",
-                        content: `body {\n  margin: 0;\n  background: #0E1312;\n  color: #F0F6F4;\n  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 100vh;\n}\n.card {\n  background: rgba(255, 255, 255, 0.05);\n  backdrop-filter: blur(20px);\n  border: 1px solid rgba(255, 255, 255, 0.1);\n  padding: 32px;\n  border-radius: 18px;\n  text-align: center;\n  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);\n}\nh1 { margin: 0 0 8px 0; font-size: 1.5rem; }\np { color: #9EB5AE; margin-bottom: 20px; font-size: 0.95rem; }\nbutton {\n  background: #5EB89F;\n  border: none;\n  color: #0E1312;\n  padding: 10px 20px;\n  border-radius: 9999px;\n  cursor: pointer;\n  font-weight: 600;\n  transition: transform 0.15s ease;\n}\nbutton:active { transform: scale(0.96); }`
-                    },
-                    {
-                        name: "app.js",
-                        path: "app.js",
-                        type: "js",
-                        content: `let count = 0;\nconst btn = document.getElementById('btn');\nbtn.addEventListener('click', () => {\n  count++;\n  btn.textContent = 'Clicks: ' + count;\n  console.log('Count incremented: ' + count);\n});\nconsole.log('App ready in live sandbox.');`
-                    }
-                ]
-            },
-            canvas: {
-                title: "2D Canvas Animation",
-                files: [
-                    {
-                        name: "index.html",
-                        path: "index.html",
-                        type: "html",
-                        content: `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <style>body{margin:0;background:#0C100F;overflow:hidden;}canvas{display:block;}</style>\n</head>\n<body>\n  <canvas id="c"></canvas>\n  <script>\n    const c = document.getElementById('c'), ctx = c.getContext('2d');\n    let w = c.width = window.innerWidth, h = c.height = window.innerHeight;\n    window.onresize = () => { w = c.width = window.innerWidth; h = c.height = window.innerHeight; };\n    const dots = Array.from({length: 45}, () => ({x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*2, vy: (Math.random()-0.5)*2}));\n    function draw(){\n      ctx.fillStyle = 'rgba(12,16,15,0.2)'; ctx.fillRect(0,0,w,h);\n      ctx.fillStyle = '#5EB89F';\n      dots.forEach(d => {\n        d.x += d.vx; d.y += d.vy;\n        if(d.x<0||d.x>w) d.vx*=-1; if(d.y<0||d.y>h) d.vy*=-1;\n        ctx.beginPath(); ctx.arc(d.x, d.y, 3.5, 0, Math.PI*2); ctx.fill();\n      });\n      requestAnimationFrame(draw);\n    }\n    draw();\n    console.log('Canvas loop started.');\n  <\/script>\n</body>\n</html>`
-                    }
-                ]
-            },
-            game: {
-                title: "Tap Game",
-                files: [
-                    {
-                        name: "index.html",
-                        path: "index.html",
-                        type: "html",
-                        content: `<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body{margin:0;background:#0E1312;color:#F0F6F4;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}\n    #score{font-size:2.8rem;font-weight:700;margin-bottom:1.5rem;color:#5EB89F;}\n    button{background:#5EB89F;border:none;color:#0E1312;padding:16px 36px;font-size:1.1rem;font-weight:700;border-radius:9999px;cursor:pointer;transition:transform 0.15s ease;box-shadow:0 8px 24px rgba(94,184,159,0.3);}\n    button:active{transform:scale(0.94);}\n  </style>\n</head>\n<body>\n  <div id="score">0</div>\n  <button onclick="tap()">Tap to Score</button>\n  <script>\n    let s = 0;\n    function tap(){\n      s++; document.getElementById('score').innerText = s;\n      console.log('Score: ' + s);\n    }\n  <\/script>\n</body>\n</html>`
-                    }
-                ]
-            }
-        };
 
         const codeTextarea = document.getElementById('code-textarea');
         const gutter = document.getElementById('gutter');
@@ -1432,7 +1273,6 @@
         const previewViewport = document.getElementById('preview-viewport');
         const statusCursor = document.getElementById('status-cursor');
         const statusFileInfo = document.getElementById('status-file-info');
-        const statusActiveType = document.getElementById('status-active-type');
 
         let activeProjectId = null;
         let activeFilePath = "index.html";
@@ -1443,14 +1283,279 @@
         let consoleLogCount = 0;
         let isWordWrap = false;
         let activeBlobUrl = null;
+        
+        // Native Desktop File System Handle
+        let localFileHandle = null;
+        let localDirHandle = null;
 
+        /* --------------------------------------------------------------------------
+           1. PWA REGISTRATION & WEB APP MANIFEST
+           -------------------------------------------------------------------------- */
+        let deferredInstallPrompt = null;
+        const pwaBtn = document.getElementById('pwa-install-btn');
+
+        // Dynamically inject standalone PWA manifest
+        const manifestObj = {
+            name: "I’M AFK Web Studio",
+            short_name: "AFK Studio",
+            start_url: window.location.href,
+            display: "standalone",
+            background_color: "#050807",
+            theme_color: "#14201C",
+            icons: [{ src: "icon.png", sizes: "192x192 512x512", type: "image/png" }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = URL.createObjectURL(manifestBlob);
+        document.head.appendChild(manifestLink);
+
+        // Catch PWA Install Prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            pwaBtn.style.display = 'inline-flex';
+        });
+
+        async function installPWA() {
+            if (!deferredInstallPrompt) return;
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            if (outcome === 'accepted') {
+                pwaBtn.style.display = 'none';
+                showToast("Studio installed as Web App!");
+            }
+            deferredInstallPrompt = null;
+        }
+
+        /* --------------------------------------------------------------------------
+           2. NATIVE FILE SYSTEM ACCESS API (Direct Hard Drive Editing)
+           -------------------------------------------------------------------------- */
+        async function openLocalFolder() {
+            if (!('showDirectoryPicker' in window)) {
+                alert("File System Access API is not supported in this browser. Please use Chrome, Edge, or Brave.");
+                return;
+            }
+            try {
+                localDirHandle = await window.showDirectoryPicker();
+                const folderName = localDirHandle.name;
+                const newFiles = [];
+
+                for await (const entry of localDirHandle.values()) {
+                    if (entry.kind === 'file') {
+                        const file = await entry.getFile();
+                        const text = await file.text();
+                        const ext = file.name.split('.').pop().toLowerCase();
+                        newFiles.push({
+                            name: file.name,
+                            path: file.name,
+                            type: ext,
+                            content: text,
+                            handle: entry
+                        });
+                    }
+                }
+
+                if (newFiles.length === 0) {
+                    alert("No files found in folder.");
+                    return;
+                }
+
+                const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
+                const newProj = {
+                    id: 'proj_' + Date.now(),
+                    title: `📁 ${folderName}`,
+                    files: newFiles,
+                    updatedAt: Date.now(),
+                    snapshots: []
+                };
+                manifest.unshift(newProj);
+                localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+                
+                document.getElementById('status-fs-mode').textContent = `📁 ${folderName}`;
+                switchProject(newProj.id);
+                showToast(`Loaded workspace from disk: ${folderName}`);
+            } catch (err) {
+                if (err.name !== 'AbortError') console.error(err);
+            }
+        }
+
+        async function openLocalFile() {
+            if (!('showOpenFilePicker' in window)) {
+                alert("File System Access is not supported in this browser.");
+                return;
+            }
+            try {
+                const [handle] = await window.showOpenFilePicker();
+                localFileHandle = handle;
+                const file = await handle.getFile();
+                const text = await file.text();
+
+                const project = getActiveProject();
+                const ext = file.name.split('.').pop().toLowerCase();
+                project.files.push({
+                    name: file.name,
+                    path: file.name,
+                    type: ext,
+                    content: text,
+                    handle: handle
+                });
+
+                saveActiveProject(true);
+                switchActiveFile(file.name);
+                showToast(`Opened from disk: ${file.name}`);
+            } catch (err) {
+                if (err.name !== 'AbortError') console.error(err);
+            }
+        }
+
+        async function saveToDisk() {
+            const project = getActiveProject();
+            const currentFile = project.files.find(f => f.path === activeFilePath);
+
+            try {
+                let handle = currentFile && currentFile.handle ? currentFile.handle : localFileHandle;
+                
+                if (!handle && 'showSaveFilePicker' in window) {
+                    handle = await window.showSaveFilePicker({ suggestedName: activeFilePath });
+                }
+
+                if (handle) {
+                    const writable = await handle.createWritable();
+                    await writable.write(codeTextarea.value);
+                    await writable.close();
+                    showToast(`Saved to hard drive: ${handle.name || activeFilePath}`);
+                    saveTag.classList.remove('unsaved');
+                    saveStatusText.textContent = 'Saved to Disk';
+                    return;
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+            // Fallback to normal download
+            exportStandaloneHTML();
+        }
+
+        /* --------------------------------------------------------------------------
+           3. OS DRAG & DROP INGESTION
+           -------------------------------------------------------------------------- */
+        const dropZone = document.getElementById('editor-drop-zone');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.border = '2px dashed var(--accent-brand)';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.border = 'none';
+        });
+
+        dropZone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dropZone.style.border = 'none';
+
+            if (e.dataTransfer.files.length > 0) {
+                for (const file of e.dataTransfer.files) {
+                    const text = await file.text();
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const project = getActiveProject();
+
+                    project.files.push({
+                        name: file.name,
+                        path: file.name,
+                        type: ext,
+                        content: text
+                    });
+                    saveActiveProject(true);
+                    switchActiveFile(file.name);
+                    showToast(`Ingested file: ${file.name}`);
+                }
+            }
+        });
+
+        /* --------------------------------------------------------------------------
+           4. SPOTLIGHT COMMAND PALETTE (Ctrl+K or Ctrl+Shift+P)
+           -------------------------------------------------------------------------- */
+        const paletteOverlay = document.getElementById('palette-overlay');
+        const paletteList = document.getElementById('palette-list');
+
+        const COMMANDS = [
+            { label: "▶ Run Application", action: runSandbox, hint: "Ctrl+Enter" },
+            { label: "💾 Save to Local Disk", action: saveToDisk, hint: "Ctrl+S" },
+            { label: "📁 Open Local Folder", action: openLocalFolder, hint: "Hard Drive" },
+            { label: "✨ Format Active File", action: formatActiveFile, hint: "Beautify" },
+            { label: "📤 Export Standalone HTML", action: exportStandaloneHTML, hint: "Download" },
+            { label: "🌓 Toggle Light / Dark Theme", action: toggleTheme, hint: "Visual" },
+            { label: "📑 Take Project Snapshot", action: takeSnapshot, hint: "Bookmark" }
+        ];
+
+        function openPalette() {
+            paletteOverlay.classList.add('active');
+            document.getElementById('palette-input').focus();
+            filterPalette('');
+        }
+
+        function closePalette() {
+            paletteOverlay.classList.remove('active');
+        }
+
+        function closePaletteOnBackdrop(e) {
+            if (e.target === paletteOverlay) closePalette();
+        }
+
+        function filterPalette(query) {
+            const q = query.toLowerCase().trim();
+            paletteList.innerHTML = '';
+
+            // Add Actions
+            COMMANDS.filter(c => c.label.toLowerCase().includes(q)).forEach(cmd => {
+                const item = document.createElement('div');
+                item.className = 'palette-item';
+                item.innerHTML = `<span>${cmd.label}</span><span style="font-size:11px; color:var(--text-tertiary);">${cmd.hint}</span>`;
+                item.onclick = () => { cmd.action(); closePalette(); };
+                paletteList.appendChild(item);
+            });
+
+            // Add Files
+            const project = getActiveProject();
+            project.files.filter(f => f.name.toLowerCase().includes(q)).forEach(f => {
+                const item = document.createElement('div');
+                item.className = 'palette-item';
+                item.innerHTML = `<span>📄 Open: ${f.name}</span><span style="font-size:11px; color:var(--text-tertiary);">File</span>`;
+                item.onclick = () => { switchActiveFile(f.path); closePalette(); };
+                paletteList.appendChild(item);
+            });
+        }
+
+        /* --------------------------------------------------------------------------
+           5. CORE STUDIO ENGINE & LIVE EXECUTION
+           -------------------------------------------------------------------------- */
         function initStudio() {
             let manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || 'null');
             if (!manifest || manifest.length === 0) {
                 const defaultProject = {
                     id: 'proj_' + Date.now(),
-                    title: STARTER_TEMPLATES.vanilla.title,
-                    files: STARTER_TEMPLATES.vanilla.files,
+                    title: "Web App",
+                    files: [
+                        {
+                            name: "index.html",
+                            path: "index.html",
+                            type: "html",
+                            content: `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <title>App</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <div class="card">\n    <h1>I’M AFK Web Studio</h1>\n    <p>A full standalone desktop web app environment.</p>\n    <button id="btn">Click me: 0</button>\n  </div>\n  <script src="app.js"><\/script>\n</body>\n</html>`
+                        },
+                        {
+                            name: "style.css",
+                            path: "style.css",
+                            type: "css",
+                            content: `body { margin:0; background:#050807; color:#F2F8F5; font-family:sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }\n.card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:32px; border-radius:20px; text-align:center; }\nbutton { background:#38E1A6; border:none; color:#050807; padding:10px 20px; border-radius:999px; font-weight:700; cursor:pointer; }`
+                        },
+                        {
+                            name: "app.js",
+                            path: "app.js",
+                            type: "js",
+                            content: `let count = 0;\ndocument.getElementById('btn').onclick = () => {\n  count++;\n  document.getElementById('btn').innerText = 'Click me: ' + count;\n  console.log('Clicked: ' + count);\n};\nconsole.log('App ready in Web App mode.');`
+                        }
+                    ],
                     updatedAt: Date.now(),
                     snapshots: []
                 };
@@ -1493,9 +1598,7 @@
             if (idx === -1) return;
 
             const file = manifest[idx].files.find(f => f.path === activeFilePath);
-            if (file) {
-                file.content = codeTextarea.value;
-            }
+            if (file) file.content = codeTextarea.value;
 
             manifest[idx].title = projectTitleInput.value.trim() || 'Untitled';
             manifest[idx].updatedAt = Date.now();
@@ -1504,7 +1607,7 @@
             saveTag.classList.remove('unsaved');
             saveStatusText.textContent = 'Saved';
 
-            if (!silent) showToast('Project saved');
+            if (!silent) showToast('Saved');
         }
 
         function triggerChange() {
@@ -1525,7 +1628,6 @@
             projectCountBadge.textContent = manifest.length;
         }
 
-        /* File Tree & Tabs */
         function renderFileList() {
             const project = getActiveProject();
             if (!project) return;
@@ -1534,16 +1636,13 @@
             project.files.forEach(file => {
                 const item = document.createElement('div');
                 item.className = `file-item ${file.path === activeFilePath ? 'active' : ''}`;
-                const icon = file.type === 'html' ? '&lt;&gt;' : (file.type === 'css' ? '#' : (file.type === 'js' ? 'JS' : '•'));
-
                 item.innerHTML = `
                     <div class="file-item-title" onclick="switchActiveFile('${file.path}')">
-                        <span class="file-icon">${icon}</span>
+                        <span class="file-icon">${file.type === 'html' ? '&lt;&gt;' : (file.type === 'css' ? '#' : (file.type === 'js' ? 'JS' : '•'))}</span>
                         <span>${file.name}</span>
                     </div>
                     <div class="file-actions">
-                        <button class="icon-btn" onclick="renameFilePrompt('${file.path}', event)" title="Rename">✎</button>
-                        ${project.files.length > 1 ? `<button class="icon-btn" onclick="deleteFile('${file.path}', event)" title="Delete">✕</button>` : ''}
+                        ${project.files.length > 1 ? `<button class="icon-btn" onclick="deleteFile('${file.path}', event)">✕</button>` : ''}
                     </div>
                 `;
                 fileListContainer.appendChild(item);
@@ -1559,10 +1658,7 @@
                 const tab = document.createElement('button');
                 tab.className = `tab ${path === activeFilePath ? 'active' : ''}`;
                 tab.onclick = () => switchActiveFile(path);
-                tab.innerHTML = `
-                    <span>${file.name}</span>
-                    <span class="tab-close" onclick="closeTab('${path}', event)">✕</span>
-                `;
+                tab.innerHTML = `<span>${file.name}</span><span class="tab-close" onclick="closeTab('${path}', event)">✕</span>`;
                 tabsContainer.appendChild(tab);
             });
         }
@@ -1597,88 +1693,41 @@
             if (file) {
                 codeTextarea.value = file.content;
                 codeTextarea.disabled = false;
-                statusActiveType.textContent = (file.type || 'TXT').toUpperCase();
             } else {
                 codeTextarea.value = '';
                 codeTextarea.disabled = true;
-                statusActiveType.textContent = 'NONE';
             }
             updateMetrics();
         }
 
         function promptNewFile() {
-            const name = prompt("Enter new file name (e.g. style.css, script.js):");
+            const name = prompt("File name (e.g. style.css, script.js):");
             if (!name || !name.trim()) return;
 
             const cleanName = name.trim();
             const ext = cleanName.split('.').pop().toLowerCase();
-            const type = ext === 'html' ? 'html' : (ext === 'css' ? 'css' : (ext === 'js' ? 'js' : 'txt'));
+            const project = getActiveProject();
 
-            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-            const idx = manifest.findIndex(p => p.id === activeProjectId);
-            if (idx === -1) return;
-
-            if (manifest[idx].files.some(f => f.name === cleanName)) {
-                alert("A file with this name already exists.");
-                return;
-            }
-
-            manifest[idx].files.push({
-                name: cleanName,
-                path: cleanName,
-                type: type,
-                content: ''
-            });
-
-            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            project.files.push({ name: cleanName, path: cleanName, type: ext, content: '' });
+            saveActiveProject(true);
             switchActiveFile(cleanName);
-            showToast(`Created ${cleanName}`);
-        }
-
-        function renameFilePrompt(path, e) {
-            if (e) e.stopPropagation();
-            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-            const idx = manifest.findIndex(p => p.id === activeProjectId);
-            const file = manifest[idx].files.find(f => f.path === path);
-            if (!file) return;
-
-            const newName = prompt("Rename to:", file.name);
-            if (!newName || !newName.trim() || newName === file.name) return;
-
-            file.name = newName.trim();
-            file.path = newName.trim();
-            file.type = newName.split('.').pop().toLowerCase();
-
-            if (activeFilePath === path) activeFilePath = file.path;
-            openTabs = openTabs.map(t => t === path ? file.path : t);
-
-            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
-            renderFileList();
-            renderTabs();
-            showToast("File renamed");
         }
 
         function deleteFile(path, e) {
             if (e) e.stopPropagation();
             if (!confirm(`Delete ${path}?`)) return;
 
-            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-            const idx = manifest.findIndex(p => p.id === activeProjectId);
-            manifest[idx].files = manifest[idx].files.filter(f => f.path !== path);
-
+            const project = getActiveProject();
+            project.files = project.files.filter(f => f.path !== path);
             openTabs = openTabs.filter(t => t !== path);
-            if (activeFilePath === path) {
-                activeFilePath = manifest[idx].files[0] ? manifest[idx].files[0].path : "";
-            }
+            activeFilePath = project.files[0] ? project.files[0].path : "";
 
-            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
+            saveActiveProject(true);
             renderFileList();
             renderTabs();
             loadActiveFileContent();
-            showToast("File deleted");
         }
 
-        /* Editor Metrics & Real-time Gutter */
         function updateMetrics() {
             requestAnimationFrame(() => {
                 const text = codeTextarea.value;
@@ -1688,15 +1737,8 @@
             });
         }
 
-        codeTextarea.addEventListener('input', () => {
-            updateMetrics();
-            triggerChange();
-        });
-
-        codeTextarea.addEventListener('scroll', () => {
-            gutter.scrollTop = codeTextarea.scrollTop;
-        });
-
+        codeTextarea.addEventListener('input', () => { updateMetrics(); triggerChange(); });
+        codeTextarea.addEventListener('scroll', () => { gutter.scrollTop = codeTextarea.scrollTop; });
         codeTextarea.addEventListener('click', updateCursorPos);
         codeTextarea.addEventListener('keyup', updateCursorPos);
 
@@ -1706,139 +1748,53 @@
             statusCursor.textContent = `Ln ${lines.length}, Col ${lines[lines.length - 1].length + 1}`;
         }
 
-        /* Keyboard Handler: Tab, Shift+Tab, Ctrl+/, Ctrl+S, Ctrl+Enter, Auto-closing */
-        codeTextarea.addEventListener('keydown', (e) => {
-            const start = codeTextarea.selectionStart;
-            const end = codeTextarea.selectionEnd;
-            const val = codeTextarea.value;
+        // Global Desktop Shortcuts
+        window.addEventListener('keydown', (e) => {
+            const isCmd = e.ctrlKey || e.metaKey;
 
-            // Indentation
-            if (e.key === 'Tab') {
+            // Command Palette (Ctrl/Cmd + K or Ctrl/Cmd + Shift + P)
+            if ((isCmd && e.key === 'k') || (isCmd && e.shiftKey && (e.key === 'P' || e.key === 'p'))) {
                 e.preventDefault();
-                if (e.shiftKey) {
-                    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
-                    if (val.substring(lineStart, lineStart + 2) === '  ') {
-                        codeTextarea.value = val.substring(0, lineStart) + val.substring(lineStart + 2);
-                        codeTextarea.selectionStart = Math.max(lineStart, start - 2);
-                        codeTextarea.selectionEnd = Math.max(lineStart, end - 2);
-                    }
-                } else {
-                    codeTextarea.value = val.substring(0, start) + "  " + val.substring(end);
-                    codeTextarea.selectionStart = codeTextarea.selectionEnd = start + 2;
-                }
-                updateMetrics();
-                triggerChange();
+                openPalette();
                 return;
             }
 
-            // Comment Toggle
-            if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+            // Save to Disk or Project (Ctrl/Cmd + S)
+            if (isCmd && (e.key === 's' || e.key === 'S')) {
                 e.preventDefault();
-                const isHtml = activeFilePath.endsWith('.html');
-                const lineStart = val.lastIndexOf('\n', start - 1) + 1;
-                let lineEnd = val.indexOf('\n', end);
-                if (lineEnd === -1) lineEnd = val.length;
-                const lineText = val.substring(lineStart, lineEnd);
-
-                if (isHtml) {
-                    if (lineText.trim().startsWith('<!--') && lineText.trim().endsWith('-->')) {
-                        codeTextarea.value = val.substring(0, lineStart) + lineText.replace('<!--', '').replace('-->', '') + val.substring(lineEnd);
-                    } else {
-                        codeTextarea.value = val.substring(0, lineStart) + `<!-- ${lineText} -->` + val.substring(lineEnd);
-                    }
-                } else {
-                    if (lineText.trim().startsWith('//')) {
-                        codeTextarea.value = val.substring(0, lineStart) + lineText.replace('// ', '').replace('//', '') + val.substring(lineEnd);
-                    } else {
-                        codeTextarea.value = val.substring(0, lineStart) + `// ${lineText}` + val.substring(lineEnd);
-                    }
-                }
-                updateMetrics();
-                triggerChange();
+                saveToDisk();
                 return;
             }
 
-            // Ctrl+Enter Run
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            // Run (Ctrl/Cmd + Enter)
+            if (isCmd && e.key === 'Enter') {
                 e.preventDefault();
                 runSandbox();
                 return;
             }
 
-            // Ctrl+S Snapshot
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                takeSnapshot();
-                return;
+            // Escape closes overlays
+            if (e.key === 'Escape') {
+                closePalette();
+                closeProjectsModal();
+                closeSettingsModal();
             }
+        });
 
-            // Auto-closing pairs
-            const pairs = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
-            if (pairs[e.key] && start === end) {
+        // Tab & Indenting in Editor
+        codeTextarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
                 e.preventDefault();
-                codeTextarea.value = val.substring(0, start) + e.key + pairs[e.key] + val.substring(end);
-                codeTextarea.selectionStart = codeTextarea.selectionEnd = start + 1;
+                const start = codeTextarea.selectionStart;
+                const end = codeTextarea.selectionEnd;
+                codeTextarea.value = codeTextarea.value.substring(0, start) + "  " + codeTextarea.value.substring(end);
+                codeTextarea.selectionStart = codeTextarea.selectionEnd = start + 2;
                 updateMetrics();
                 triggerChange();
             }
         });
 
         projectTitleInput.addEventListener('input', triggerChange);
-
-        /* Search & Replace Engine */
-        function toggleSearchBar() {
-            const bar = document.getElementById('search-bar');
-            bar.classList.toggle('active');
-            if (bar.classList.contains('active')) {
-                document.getElementById('find-input').focus();
-                updateSearchMatchCount();
-            }
-        }
-
-        function updateSearchMatchCount() {
-            const find = document.getElementById('find-input').value;
-            const countEl = document.getElementById('search-count');
-            if (!find) {
-                countEl.textContent = '0 matches';
-                return;
-            }
-            const regex = new RegExp(escapeRegex(find), 'g');
-            const matches = codeTextarea.value.match(regex);
-            countEl.textContent = matches ? `${matches.length} matches` : '0 matches';
-        }
-
-        function executeReplace() {
-            const find = document.getElementById('find-input').value;
-            const rep = document.getElementById('replace-input').value;
-            if (!find) return;
-
-            const idx = codeTextarea.value.indexOf(find);
-            if (idx !== -1) {
-                codeTextarea.value = codeTextarea.value.substring(0, idx) + rep + codeTextarea.value.substring(idx + find.length);
-                codeTextarea.selectionStart = idx;
-                codeTextarea.selectionEnd = idx + rep.length;
-                updateMetrics();
-                triggerChange();
-                updateSearchMatchCount();
-            }
-        }
-
-        function executeReplaceAll() {
-            const find = document.getElementById('find-input').value;
-            const rep = document.getElementById('replace-input').value;
-            if (!find) return;
-
-            const regex = new RegExp(escapeRegex(find), 'g');
-            codeTextarea.value = codeTextarea.value.replace(regex, rep);
-            updateMetrics();
-            triggerChange();
-            updateSearchMatchCount();
-            showToast('Replaced all matches');
-        }
-
-        function escapeRegex(str) {
-            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
 
         function formatActiveFile() {
             const lines = codeTextarea.value.split('\n');
@@ -1857,7 +1813,9 @@
             showToast('Code formatted');
         }
 
-        /* Live Sandbox Bundler (With Memory Leak Fix) */
+        /* --------------------------------------------------------------------------
+           6. COMPILER & ISOLATED SANDBOX
+           -------------------------------------------------------------------------- */
         function runSandbox(silent = false) {
             saveActiveProject(true);
             const project = getActiveProject();
@@ -1868,47 +1826,27 @@
 
             let bundle = htmlFile.content;
 
-            // Bundle CSS
             project.files.filter(f => f.type === 'css').forEach(css => {
                 bundle = bundle.replace('</head>', `<style>/* ${css.name} */\n${css.content}\n</style></head>`);
             });
 
-            // Bundle JS
             project.files.filter(f => f.type === 'js').forEach(js => {
                 bundle = bundle.replace('</body>', `<script>/* ${js.name} */\n${js.content}\n<\/script></body>`);
             });
 
-            // Console Bridge
             const bridge = `
                 <script>
                     (function(){
                         const _log = console.log, _warn = console.warn, _err = console.error;
-                        console.log = (...args) => {
-                            _log(...args);
-                            window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'info', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
-                        };
-                        console.warn = (...args) => {
-                            _warn(...args);
-                            window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'warn', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
-                        };
-                        console.error = (...args) => {
-                            _err(...args);
-                            window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'error', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
-                        };
-                        window.onerror = (msg, src, lin) => {
-                            window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'error', text: msg + ' (' + lin + ')' }, '*');
-                            return false;
-                        };
+                        console.log = (...args) => { _log(...args); window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'info', text: args.join(' ') }, '*'); };
+                        console.warn = (...args) => { _warn(...args); window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'warn', text: args.join(' ') }, '*'); };
+                        console.error = (...args) => { _err(...args); window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'error', text: args.join(' ') }, '*'); };
                     })();
                 <\/script>
             `;
-
             bundle = bundle.includes('<head>') ? bundle.replace('<head>', '<head>' + bridge) : bridge + bundle;
 
-            // Prevent memory leaks
-            if (activeBlobUrl) {
-                URL.revokeObjectURL(activeBlobUrl);
-            }
+            if (activeBlobUrl) URL.revokeObjectURL(activeBlobUrl);
 
             const blob = new Blob([bundle], { type: 'text/html' });
             activeBlobUrl = URL.createObjectURL(blob);
@@ -1917,16 +1855,13 @@
             if (!silent) appendConsoleLog('Application bundle recompiled.', 'system');
         }
 
-        /* Console Listeners & REPL */
         window.addEventListener('message', (e) => {
-            if (!e.data || e.data.type !== 'CONSOLE_LOG') return;
-            appendConsoleLog(e.data.text, e.data.level);
+            if (e.data && e.data.type === 'CONSOLE_LOG') appendConsoleLog(e.data.text, e.data.level);
         });
 
         function appendConsoleLog(text, level = 'info') {
             consoleLogCount++;
             consoleCounter.textContent = consoleLogCount;
-
             const row = document.createElement('div');
             row.className = `log-row ${level}`;
             row.textContent = `❯ ${text}`;
@@ -1941,12 +1876,7 @@
         }
 
         function toggleConsole() {
-            const drawer = document.getElementById('console-drawer');
-            const btn = document.getElementById('console-toggle-btn');
-            drawer.classList.toggle('collapsed');
-            btn.innerHTML = drawer.classList.contains('collapsed') 
-                ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>`
-                : `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+            document.getElementById('console-drawer').classList.toggle('collapsed');
         }
 
         function handleReplKey(e) {
@@ -1954,52 +1884,74 @@
                 const cmd = replInput.value.trim();
                 if (!cmd) return;
                 appendConsoleLog(cmd, 'repl');
-                try {
-                    sandboxFrame.contentWindow.eval(cmd);
-                } catch(err) {
-                    appendConsoleLog(err.message, 'error');
-                }
+                try { sandboxFrame.contentWindow.eval(cmd); }
+                catch(err) { appendConsoleLog(err.message, 'error'); }
                 replInput.value = '';
             }
         }
 
-        /* Snapshots */
-        function takeSnapshot() {
-            saveActiveProject(true);
-            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-            const idx = manifest.findIndex(p => p.id === activeProjectId);
-            if (idx === -1) return;
+        /* --------------------------------------------------------------------------
+           7. WORKSPACE CONTROLS & EXPORTS
+           -------------------------------------------------------------------------- */
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
 
-            if (!manifest[idx].snapshots) manifest[idx].snapshots = [];
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-            manifest[idx].snapshots.unshift({
-                id: 'snap_' + Date.now(),
-                label: `Saved at ${time}`,
-                files: JSON.parse(JSON.stringify(manifest[idx].files))
-            });
-
-            if (manifest[idx].snapshots.length > 8) manifest[idx].snapshots.pop();
-
-            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
-            renderSnapshotsList(manifest[idx].snapshots);
-            showToast("Snapshot saved");
+        function setPreviewViewport(w, h, btn) {
+            document.querySelectorAll('.preview-toolbar .btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            previewViewport.style.width = w;
+            previewViewport.style.height = h;
         }
 
-        function restoreSnapshot(snapId) {
+        function openPreviewNewTab() {
             const project = getActiveProject();
-            if (!project || !project.snapshots) return;
-            const snap = project.snapshots.find(s => s.id === snapId);
-            if (!snap || !confirm(`Restore snapshot: ${snap.label}?`)) return;
+            const htmlFile = project.files.find(f => f.path.endsWith('.html')) || project.files[0];
+            if (!htmlFile) return;
+            const win = window.open();
+            win.document.write(htmlFile.content);
+            win.document.close();
+        }
 
-            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-            const idx = manifest.findIndex(p => p.id === activeProjectId);
-            manifest[idx].files = JSON.parse(JSON.stringify(snap.files));
+        function toggleLiveReload() {
+            liveReloadEnabled = !liveReloadEnabled;
+            document.getElementById('live-status-text').textContent = liveReloadEnabled ? 'On' : 'Off';
+            showToast(`Live Auto-Run: ${liveReloadEnabled ? 'On' : 'Off'}`);
+        }
 
-            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
-            loadProjectState(manifest[idx]);
-            runSandbox();
-            showToast(`Restored: ${snap.label}`);
+        function exportStandaloneHTML() {
+            const project = getActiveProject();
+            const htmlFile = project.files.find(f => f.path.endsWith('.html')) || project.files[0];
+            if (!htmlFile) return;
+
+            let bundle = htmlFile.content;
+            project.files.filter(f => f.type === 'css').forEach(css => bundle = bundle.replace('</head>', `<style>\n${css.content}\n</style></head>`));
+            project.files.filter(f => f.type === 'js').forEach(js => bundle = bundle.replace('</body>', `<script>\n${js.content}\n<\/script></body>`));
+
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([bundle], { type: 'text/html' }));
+            a.download = `${project.title.toLowerCase().replace(/\s+/g, '_')}.html`;
+            a.click();
+            showToast('Exported Standalone HTML');
+        }
+
+        function exportProjectJSON() {
+            const project = getActiveProject();
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' }));
+            a.download = `${project.title.toLowerCase().replace(/\s+/g, '_')}.json`;
+            a.click();
+            showToast('Exported Project Bundle');
+        }
+
+        /* Snapshots */
+        function takeSnapshot() {
+            const project = getActiveProject();
+            if (!project.snapshots) project.snapshots = [];
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            project.snapshots.unshift({ id: 'snap_' + Date.now(), label: `Snapshot at ${time}`, files: JSON.parse(JSON.stringify(project.files)) });
+            if (project.snapshots.length > 6) project.snapshots.pop();
+            saveActiveProject(true);
+            renderSnapshotsList(project.snapshots);
+            showToast("Snapshot saved");
         }
 
         function renderSnapshotsList(snapshots) {
@@ -2011,169 +1963,45 @@
             list.innerHTML = snapshots.map(s => `
                 <div class="file-item" onclick="restoreSnapshot('${s.id}')">
                     <span>${s.label}</span>
-                    <span style="font-size:10.5px; color:var(--accent-brand); font-weight:600;">Restore</span>
+                    <span style="font-size:10px; color:var(--accent-brand); font-weight:700;">Restore</span>
                 </div>
             `).join('');
         }
 
-        /* Pane Resizing */
-        const paneDivider = document.getElementById('pane-divider');
-        const editorPane = document.getElementById('editor-pane');
-        const workspaceContainer = document.getElementById('workspace-container');
-        let isResizing = false;
-
-        paneDivider.addEventListener('mousedown', () => {
-            isResizing = true;
-            paneDivider.classList.add('dragging');
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isResizing) return;
-            const bounds = workspaceContainer.getBoundingClientRect();
-            const pct = ((e.clientX - bounds.left) / bounds.width) * 100;
-            if (pct > 20 && pct < 80) editorPane.style.flex = `0 0 ${pct}%`;
-        });
-
-        window.addEventListener('mouseup', () => {
-            if (isResizing) {
-                isResizing = false;
-                paneDivider.classList.remove('dragging');
-            }
-        });
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-        }
-
-        function setPreviewViewport(w, h, btn) {
-            document.querySelectorAll('.preview-toolbar .btn').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-            previewViewport.style.width = w;
-            previewViewport.style.height = h;
-        }
-
-        function toggleFullscreen() {
-            if (sandboxFrame.requestFullscreen) sandboxFrame.requestFullscreen();
-            else if (sandboxFrame.webkitRequestFullscreen) sandboxFrame.webkitRequestFullscreen();
-        }
-
-        function openPreviewNewTab() {
+        function restoreSnapshot(snapId) {
             const project = getActiveProject();
-            const htmlFile = project.files.find(f => f.path.endsWith('.html')) || project.files[0];
-            if (!htmlFile) return;
-
-            const win = window.open();
-            win.document.write(htmlFile.content);
-            win.document.close();
-        }
-
-        function toggleLiveReload() {
-            liveReloadEnabled = !liveReloadEnabled;
-            const statusEl = document.getElementById('live-status-text');
-            statusEl.textContent = liveReloadEnabled ? 'On' : 'Off';
-            statusEl.style.color = liveReloadEnabled ? 'var(--success)' : 'var(--text-tertiary)';
-            showToast(`Live Reload: ${liveReloadEnabled ? 'On' : 'Off'}`);
-        }
-
-        /* Export & Import */
-        function exportStandaloneHTML() {
+            const snap = project.snapshots.find(s => s.id === snapId);
+            if (!snap || !confirm(`Restore ${snap.label}?`)) return;
+            project.files = JSON.parse(JSON.stringify(snap.files));
             saveActiveProject(true);
-            const project = getActiveProject();
-            const htmlFile = project.files.find(f => f.path.endsWith('.html')) || project.files[0];
-            if (!htmlFile) return;
-
-            let bundle = htmlFile.content;
-            project.files.filter(f => f.type === 'css').forEach(css => {
-                bundle = bundle.replace('</head>', `<style>\n${css.content}\n</style></head>`);
-            });
-            project.files.filter(f => f.type === 'js').forEach(js => {
-                bundle = bundle.replace('</body>', `<script>\n${js.content}\n<\/script></body>`);
-            });
-
-            const blob = new Blob([bundle], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `${(project.title || 'project').toLowerCase().replace(/\s+/g, '_')}.html`;
-            a.click();
-            showToast('Exported Standalone HTML');
+            loadProjectState(project);
+            runSandbox();
+            showToast("Restored snapshot");
         }
 
-        function exportProjectJSON() {
-            saveActiveProject(true);
-            const project = getActiveProject();
-            const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `${(project.title || 'project').toLowerCase().replace(/\s+/g, '_')}.json`;
-            a.click();
-            showToast('Exported Project JSON');
+        /* Modals & Dropdowns */
+        function openProjectsModal() { renderProjectsList(); document.getElementById('projects-modal').classList.add('active'); }
+        function closeProjectsModal() { document.getElementById('projects-modal').classList.remove('active'); }
+        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+
+        function toggleDropdown(id) {
+            document.querySelectorAll('.dropdown').forEach(d => { if (d.id !== id) d.classList.remove('open'); });
+            document.getElementById(id).classList.toggle('open');
         }
 
-        function copyCurrentFileCode() {
-            navigator.clipboard.writeText(codeTextarea.value);
-            showToast('Copied to clipboard');
-        }
-
-        function handleImportFile(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                try {
-                    if (file.name.endsWith('.json')) {
-                        const data = JSON.parse(ev.target.result);
-                        if (!data.files) throw new Error("Invalid project bundle");
-                        data.id = 'proj_' + Date.now();
-
-                        const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-                        manifest.unshift(data);
-                        localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
-                        switchProject(data.id);
-                        showToast(`Restored: ${data.title}`);
-                    } else {
-                        const newProj = {
-                            id: 'proj_' + Date.now(),
-                            title: file.name.replace(/\.[^/.]+$/, ""),
-                            files: [{ name: "index.html", path: "index.html", type: "html", content: ev.target.result }],
-                            updatedAt: Date.now(),
-                            snapshots: []
-                        };
-                        const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-                        manifest.unshift(newProj);
-                        localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
-                        switchProject(newProj.id);
-                        showToast(`Imported ${file.name}`);
-                    }
-                } catch(err) {
-                    alert("Import error: " + err.message);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        /* Projects Modal */
-        function openProjectsModal() {
-            renderProjectsList();
-            document.getElementById('projects-modal').classList.add('active');
-        }
-
-        function closeProjectsModal() {
-            document.getElementById('projects-modal').classList.remove('active');
-        }
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+        });
 
         function renderProjectsList() {
             const container = document.getElementById('projects-list');
             const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-
             container.innerHTML = manifest.map(p => `
                 <div class="project-row ${p.id === activeProjectId ? 'active' : ''}" onclick="switchProject('${p.id}')">
                     <div>
-                        <div style="font-weight:600; font-size:13px; color:var(--text-primary);">${p.title}</div>
+                        <div style="font-weight:700; font-size:13px;">${p.title}</div>
                         <div style="font-size:11px; color:var(--text-tertiary);">${p.files.length} files</div>
-                    </div>
-                    <div style="display:flex; gap:4px;" onclick="event.stopPropagation()">
-                        ${manifest.length > 1 ? `<button class="btn" style="padding:3px 8px; font-size:11px;" onclick="deleteProject('${p.id}')">Delete</button>` : ''}
                     </div>
                 </div>
             `).join('');
@@ -2182,107 +2010,27 @@
         function createNewProjectPrompt() {
             const title = prompt("Project Name:", "New Project");
             if (!title) return;
-
+            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
             const newProj = {
                 id: 'proj_' + Date.now(),
                 title: title.trim(),
-                files: JSON.parse(JSON.stringify(STARTER_TEMPLATES.vanilla.files)),
+                files: [{ name: "index.html", path: "index.html", type: "html", content: "<h1>Hello World</h1>" }],
                 updatedAt: Date.now(),
                 snapshots: []
             };
-
-            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
             manifest.unshift(newProj);
             localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
             switchProject(newProj.id);
             closeProjectsModal();
-            showToast(`Created: ${title}`);
-        }
-
-        function deleteProject(id) {
-            if (!confirm("Delete this project?")) return;
-            let manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-            manifest = manifest.filter(p => p.id !== id);
-            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
-
-            if (activeProjectId === id) switchProject(manifest[0].id);
-            renderProjectsList();
-            updateProjectCount();
-            showToast("Project deleted");
         }
 
         function switchProject(id) {
-            saveActiveProject(true);
-            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-            const target = manifest.find(p => p.id === id);
-            if (!target) return;
-
-            activeProjectId = target.id;
-            localStorage.setItem(STORAGE_ACTIVE_ID, target.id);
-            loadProjectState(target);
+            activeProjectId = id;
+            localStorage.setItem(STORAGE_ACTIVE_ID, id);
+            loadProjectState(getActiveProject());
             updateProjectCount();
             runSandbox();
             closeProjectsModal();
-        }
-
-        /* Starters Modal */
-        function openTemplatesModal() { document.getElementById('templates-modal').classList.add('active'); }
-        function closeTemplatesModal() { document.getElementById('templates-modal').classList.remove('active'); }
-
-        function createProjectFromTemplate(key) {
-            const tpl = STARTER_TEMPLATES[key];
-            if (!tpl) return;
-
-            const newProj = {
-                id: 'proj_' + Date.now(),
-                title: tpl.title,
-                files: JSON.parse(JSON.stringify(tpl.files)),
-                updatedAt: Date.now(),
-                snapshots: []
-            };
-
-            const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
-            manifest.unshift(newProj);
-            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
-            switchProject(newProj.id);
-            closeTemplatesModal();
-            showToast(`Started: ${tpl.title}`);
-        }
-
-        /* Settings & Theme */
-        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
-        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
-
-        function toggleDropdown(id) {
-            document.querySelectorAll('.dropdown').forEach(d => {
-                if (d.id !== id) d.classList.remove('open');
-            });
-            document.getElementById(id).classList.toggle('open');
-        }
-
-        window.addEventListener('click', (e) => {
-            if (!e.target.closest('.dropdown')) {
-                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
-            }
-        });
-
-        const themeIcon = document.getElementById("theme-icon");
-
-        function updateThemeIcon(theme) {
-            if (!themeIcon) return;
-            if (theme === 'dark') {
-                themeIcon.innerHTML = `
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                `;
-            } else {
-                themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
-            }
         }
 
         function toggleTheme() {
@@ -2290,7 +2038,6 @@
             const next = cur === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('afk_theme', next);
-            updateThemeIcon(next);
             showToast(`Theme: ${next}`);
         }
 
@@ -2316,10 +2063,24 @@
             setTimeout(() => toast.remove(), 2200);
         }
 
+        // Draggable Resizer
+        const paneDivider = document.getElementById('pane-divider');
+        const editorPane = document.getElementById('editor-pane');
+        const workspaceContainer = document.getElementById('workspace-container');
+        let isResizing = false;
+
+        paneDivider.addEventListener('mousedown', () => { isResizing = true; paneDivider.classList.add('dragging'); });
+        window.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const bounds = workspaceContainer.getBoundingClientRect();
+            const pct = ((e.clientX - bounds.left) / bounds.width) * 100;
+            if (pct > 20 && pct < 80) editorPane.style.flex = `0 0 ${pct}%`;
+        });
+        window.addEventListener('mouseup', () => { if (isResizing) { isResizing = false; paneDivider.classList.remove('dragging'); } });
+
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('afk_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
             initStudio();
         });
     </script>
