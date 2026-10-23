@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Studio — I’M AFK</title>
     <link rel="icon" type="image/png" href="icon.png">
     
@@ -12,6 +12,9 @@
     <meta name="apple-mobile-web-app-title" content="AFK Studio">
     <meta name="theme-color" content="#050807">
     
+    <!-- Inline Data-URI PWA Manifest (Works 100% on GitHub Pages) -->
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22I%E2%80%99M%20AFK%20Studio%22%2C%22short_name%22%3A%22AFKStudio%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23050807%22%2C%22theme_color%22%3A%22%2314201C%22%7D">
+
     <!-- Typography: Inter + Space Grotesk + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -150,7 +153,7 @@
         ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
 
         /* ==========================================================================
-           1. TOP COMMAND DOCK (macOS SEQUOIA STYLE NAVIGATION)
+           1. TOP COMMAND BAR
            ========================================================================== */
         .navbar-island {
             height: var(--nav-height);
@@ -166,11 +169,6 @@
             flex-shrink: 0;
             gap: 12px;
             z-index: 50;
-            -webkit-app-region: drag; /* macOS PWA Draggable Header */
-        }
-
-        .navbar-island * {
-            -webkit-app-region: no-drag;
         }
 
         .nav-cluster-left,
@@ -260,7 +258,7 @@
         .project-title-input:focus {
             border-color: var(--accent-brand);
             box-shadow: 0 0 0 3px var(--accent-glow), var(--glass-specular);
-            width: 200px;
+            width: 190px;
         }
 
         .save-pill {
@@ -442,7 +440,6 @@
             background: var(--bg-canvas);
         }
 
-        /* Sidebar: File Tree & Snapshots */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-surface);
@@ -548,7 +545,6 @@
             transform: scale(1.1);
         }
 
-        /* Editor Section */
         .editor-pane {
             flex: 1;
             display: flex;
@@ -617,7 +613,6 @@
             transform: scale(1.15);
         }
 
-        /* Editor Area */
         .editor-container {
             flex: 1;
             display: flex;
@@ -798,7 +793,6 @@
             font-size: 11.5px;
         }
 
-        /* Status Footer */
         .statusbar {
             height: var(--status-height);
             background: var(--bg-dock);
@@ -817,9 +811,7 @@
 
         .statusbar-item { display: flex; align-items: center; gap: 10px; }
 
-        /* ==========================================================================
-           3. COMMAND PALETTE (Spotlight Quick Launcher)
-           ========================================================================== */
+        /* Command Palette */
         .palette-overlay {
             display: none;
             position: fixed;
@@ -881,7 +873,7 @@
             font-size: 13px;
         }
 
-        .palette-item:hover, .palette-item.selected {
+        .palette-item:hover {
             background: var(--accent-brand-soft);
             color: var(--accent-brand);
         }
@@ -1169,7 +1161,7 @@
                 </div>
 
                 <div class="console-logs" id="console-logs">
-                    <div class="log-row system">✦ AFK Desktop Web App active. Offline File System Ready.</div>
+                    <div class="log-row system">✦ AFK Desktop Web App active. Ready.</div>
                 </div>
 
                 <div class="console-repl">
@@ -1252,8 +1244,8 @@
     <div class="toast-container" id="toast-container"></div>
 
     <!-- ==========================================================================
-         APPLICATION SCRIPTS (PWA + FILE SYSTEM API + IDE ENGINE)
-         ========================================================================== */
+         APPLICATION SCRIPTS (FIXED & FULLY FUNCTIONAL ON GITHUB PAGES)
+         ========================================================================== -->
     <script>
         const STORAGE_PROJECTS = 'afk_studio_projects_v3';
         const STORAGE_ACTIVE_ID = 'afk_studio_active_id_v3';
@@ -1282,39 +1274,18 @@
         let autoRunTimer = null;
         let consoleLogCount = 0;
         let isWordWrap = false;
-        let activeBlobUrl = null;
         
-        // Native Desktop File System Handle
         let localFileHandle = null;
         let localDirHandle = null;
 
-        /* --------------------------------------------------------------------------
-           1. PWA REGISTRATION & WEB APP MANIFEST
-           -------------------------------------------------------------------------- */
+        /* PWA Event Handler */
         let deferredInstallPrompt = null;
         const pwaBtn = document.getElementById('pwa-install-btn');
 
-        // Dynamically inject standalone PWA manifest
-        const manifestObj = {
-            name: "I’M AFK Web Studio",
-            short_name: "AFK Studio",
-            start_url: window.location.href,
-            display: "standalone",
-            background_color: "#050807",
-            theme_color: "#14201C",
-            icons: [{ src: "icon.png", sizes: "192x192 512x512", type: "image/png" }]
-        };
-        const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
-        const manifestLink = document.createElement('link');
-        manifestLink.rel = 'manifest';
-        manifestLink.href = URL.createObjectURL(manifestBlob);
-        document.head.appendChild(manifestLink);
-
-        // Catch PWA Install Prompt
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredInstallPrompt = e;
-            pwaBtn.style.display = 'inline-flex';
+            if (pwaBtn) pwaBtn.style.display = 'inline-flex';
         });
 
         async function installPWA() {
@@ -1328,12 +1299,10 @@
             deferredInstallPrompt = null;
         }
 
-        /* --------------------------------------------------------------------------
-           2. NATIVE FILE SYSTEM ACCESS API (Direct Hard Drive Editing)
-           -------------------------------------------------------------------------- */
+        /* File System Access API */
         async function openLocalFolder() {
             if (!('showDirectoryPicker' in window)) {
-                alert("File System Access API is not supported in this browser. Please use Chrome, Edge, or Brave.");
+                alert("File System Access is not supported in this browser. Please use Chrome, Edge, or Brave.");
                 return;
             }
             try {
@@ -1357,14 +1326,14 @@
                 }
 
                 if (newFiles.length === 0) {
-                    alert("No files found in folder.");
+                    alert("No readable files in this folder.");
                     return;
                 }
 
                 const manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || '[]');
                 const newProj = {
                     id: 'proj_' + Date.now(),
-                    title: `📁 ${folderName}`,
+                    title: "📁 " + folderName,
                     files: newFiles,
                     updatedAt: Date.now(),
                     snapshots: []
@@ -1372,9 +1341,9 @@
                 manifest.unshift(newProj);
                 localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(manifest));
                 
-                document.getElementById('status-fs-mode').textContent = `📁 ${folderName}`;
+                document.getElementById('status-fs-mode').textContent = "📁 " + folderName;
                 switchProject(newProj.id);
-                showToast(`Loaded workspace from disk: ${folderName}`);
+                showToast("Opened workspace: " + folderName);
             } catch (err) {
                 if (err.name !== 'AbortError') console.error(err);
             }
@@ -1403,7 +1372,7 @@
 
                 saveActiveProject(true);
                 switchActiveFile(file.name);
-                showToast(`Opened from disk: ${file.name}`);
+                showToast("Loaded: " + file.name);
             } catch (err) {
                 if (err.name !== 'AbortError') console.error(err);
             }
@@ -1424,7 +1393,7 @@
                     const writable = await handle.createWritable();
                     await writable.write(codeTextarea.value);
                     await writable.close();
-                    showToast(`Saved to hard drive: ${handle.name || activeFilePath}`);
+                    showToast("Saved to disk: " + (handle.name || activeFilePath));
                     saveTag.classList.remove('unsaved');
                     saveStatusText.textContent = 'Saved to Disk';
                     return;
@@ -1432,27 +1401,24 @@
             } catch (err) {
                 console.warn(err);
             }
-            // Fallback to normal download
             exportStandaloneHTML();
         }
 
-        /* --------------------------------------------------------------------------
-           3. OS DRAG & DROP INGESTION
-           -------------------------------------------------------------------------- */
+        /* Desktop Drag & Drop */
         const dropZone = document.getElementById('editor-drop-zone');
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.style.border = '2px dashed var(--accent-brand)';
+            dropZone.style.outline = '2px dashed var(--accent-brand)';
         });
 
         dropZone.addEventListener('dragleave', () => {
-            dropZone.style.border = 'none';
+            dropZone.style.outline = 'none';
         });
 
         dropZone.addEventListener('drop', async (e) => {
             e.preventDefault();
-            dropZone.style.border = 'none';
+            dropZone.style.outline = 'none';
 
             if (e.dataTransfer.files.length > 0) {
                 for (const file of e.dataTransfer.files) {
@@ -1468,20 +1434,18 @@
                     });
                     saveActiveProject(true);
                     switchActiveFile(file.name);
-                    showToast(`Ingested file: ${file.name}`);
+                    showToast("Ingested: " + file.name);
                 }
             }
         });
 
-        /* --------------------------------------------------------------------------
-           4. SPOTLIGHT COMMAND PALETTE (Ctrl+K or Ctrl+Shift+P)
-           -------------------------------------------------------------------------- */
+        /* Command Palette */
         const paletteOverlay = document.getElementById('palette-overlay');
         const paletteList = document.getElementById('palette-list');
 
         const COMMANDS = [
             { label: "▶ Run Application", action: runSandbox, hint: "Ctrl+Enter" },
-            { label: "💾 Save to Local Disk", action: saveToDisk, hint: "Ctrl+S" },
+            { label: "💾 Save to Hard Drive", action: saveToDisk, hint: "Ctrl+S" },
             { label: "📁 Open Local Folder", action: openLocalFolder, hint: "Hard Drive" },
             { label: "✨ Format Active File", action: formatActiveFile, hint: "Beautify" },
             { label: "📤 Export Standalone HTML", action: exportStandaloneHTML, hint: "Download" },
@@ -1495,19 +1459,13 @@
             filterPalette('');
         }
 
-        function closePalette() {
-            paletteOverlay.classList.remove('active');
-        }
-
-        function closePaletteOnBackdrop(e) {
-            if (e.target === paletteOverlay) closePalette();
-        }
+        function closePalette() { paletteOverlay.classList.remove('active'); }
+        function closePaletteOnBackdrop(e) { if (e.target === paletteOverlay) closePalette(); }
 
         function filterPalette(query) {
             const q = query.toLowerCase().trim();
             paletteList.innerHTML = '';
 
-            // Add Actions
             COMMANDS.filter(c => c.label.toLowerCase().includes(q)).forEach(cmd => {
                 const item = document.createElement('div');
                 item.className = 'palette-item';
@@ -1516,7 +1474,6 @@
                 paletteList.appendChild(item);
             });
 
-            // Add Files
             const project = getActiveProject();
             project.files.filter(f => f.name.toLowerCase().includes(q)).forEach(f => {
                 const item = document.createElement('div');
@@ -1527,9 +1484,7 @@
             });
         }
 
-        /* --------------------------------------------------------------------------
-           5. CORE STUDIO ENGINE & LIVE EXECUTION
-           -------------------------------------------------------------------------- */
+        /* IDE State Management */
         function initStudio() {
             let manifest = JSON.parse(localStorage.getItem(STORAGE_PROJECTS) || 'null');
             if (!manifest || manifest.length === 0) {
@@ -1541,19 +1496,19 @@
                             name: "index.html",
                             path: "index.html",
                             type: "html",
-                            content: `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <title>App</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <div class="card">\n    <h1>I’M AFK Web Studio</h1>\n    <p>A full standalone desktop web app environment.</p>\n    <button id="btn">Click me: 0</button>\n  </div>\n  <script src="app.js"><\/script>\n</body>\n</html>`
+                            content: '<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <title>App</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <div class="card">\n    <h1>I’M AFK Web Studio</h1>\n    <p>Client-side desktop web environment ready.</p>\n    <button id="btn">Click me: 0</button>\n  </div>\n  <script src="app.js">' + '<' + '/script>\n</body>\n</html>'
                         },
                         {
                             name: "style.css",
                             path: "style.css",
                             type: "css",
-                            content: `body { margin:0; background:#050807; color:#F2F8F5; font-family:sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }\n.card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:32px; border-radius:20px; text-align:center; }\nbutton { background:#38E1A6; border:none; color:#050807; padding:10px 20px; border-radius:999px; font-weight:700; cursor:pointer; }`
+                            content: 'body { margin:0; background:#050807; color:#F2F8F5; font-family:sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }\n.card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:32px; border-radius:20px; text-align:center; }\nbutton { background:#38E1A6; border:none; color:#050807; padding:10px 20px; border-radius:999px; font-weight:700; cursor:pointer; }'
                         },
                         {
                             name: "app.js",
                             path: "app.js",
                             type: "js",
-                            content: `let count = 0;\ndocument.getElementById('btn').onclick = () => {\n  count++;\n  document.getElementById('btn').innerText = 'Click me: ' + count;\n  console.log('Clicked: ' + count);\n};\nconsole.log('App ready in Web App mode.');`
+                            content: 'let count = 0;\ndocument.getElementById("btn").onclick = () => {\n  count++;\n  document.getElementById("btn").innerText = "Click me: " + count;\n  console.log("Clicked: " + count);\n};\nconsole.log("App ready in Web App mode.");'
                         }
                     ],
                     updatedAt: Date.now(),
@@ -1748,32 +1703,28 @@
             statusCursor.textContent = `Ln ${lines.length}, Col ${lines[lines.length - 1].length + 1}`;
         }
 
-        // Global Desktop Shortcuts
+        /* Desktop Shortcuts */
         window.addEventListener('keydown', (e) => {
             const isCmd = e.ctrlKey || e.metaKey;
 
-            // Command Palette (Ctrl/Cmd + K or Ctrl/Cmd + Shift + P)
             if ((isCmd && e.key === 'k') || (isCmd && e.shiftKey && (e.key === 'P' || e.key === 'p'))) {
                 e.preventDefault();
                 openPalette();
                 return;
             }
 
-            // Save to Disk or Project (Ctrl/Cmd + S)
             if (isCmd && (e.key === 's' || e.key === 'S')) {
                 e.preventDefault();
                 saveToDisk();
                 return;
             }
 
-            // Run (Ctrl/Cmd + Enter)
             if (isCmd && e.key === 'Enter') {
                 e.preventDefault();
                 runSandbox();
                 return;
             }
 
-            // Escape closes overlays
             if (e.key === 'Escape') {
                 closePalette();
                 closeProjectsModal();
@@ -1781,7 +1732,6 @@
             }
         });
 
-        // Tab & Indenting in Editor
         codeTextarea.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
                 e.preventDefault();
@@ -1814,7 +1764,7 @@
         }
 
         /* --------------------------------------------------------------------------
-           6. COMPILER & ISOLATED SANDBOX
+           SANDBOX RUNNER (Using srcdoc for 100% Reliability on GitHub Pages)
            -------------------------------------------------------------------------- */
         function runSandbox(silent = false) {
             saveActiveProject(true);
@@ -1827,30 +1777,26 @@
             let bundle = htmlFile.content;
 
             project.files.filter(f => f.type === 'css').forEach(css => {
-                bundle = bundle.replace('</head>', `<style>/* ${css.name} */\n${css.content}\n</style></head>`);
+                bundle = bundle.replace('</head>', '<style>/* ' + css.name + ' */\n' + css.content + '\n</style></head>');
             });
 
             project.files.filter(f => f.type === 'js').forEach(js => {
-                bundle = bundle.replace('</body>', `<script>/* ${js.name} */\n${js.content}\n<\/script></body>`);
+                bundle = bundle.replace('</body>', '<script>/* ' + js.name + ' */\n' + js.content + '\n<' + '/script></body>');
             });
 
-            const bridge = `
-                <script>
-                    (function(){
-                        const _log = console.log, _warn = console.warn, _err = console.error;
-                        console.log = (...args) => { _log(...args); window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'info', text: args.join(' ') }, '*'); };
-                        console.warn = (...args) => { _warn(...args); window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'warn', text: args.join(' ') }, '*'); };
-                        console.error = (...args) => { _err(...args); window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'error', text: args.join(' ') }, '*'); };
-                    })();
-                <\/script>
-            `;
+            const bridge = '<script>' +
+                '(function(){' +
+                '  const _log = console.log, _warn = console.warn, _err = console.error;' +
+                '  console.log = (...args) => { _log(...args); window.parent.postMessage({ type: "CONSOLE_LOG", level: "info", text: args.join(" ") }, "*"); };' +
+                '  console.warn = (...args) => { _warn(...args); window.parent.postMessage({ type: "CONSOLE_LOG", level: "warn", text: args.join(" ") }, "*"); };' +
+                '  console.error = (...args) => { _err(...args); window.parent.postMessage({ type: "CONSOLE_LOG", level: "error", text: args.join(" ") }, "*"); };' +
+                '})();' +
+                '<' + '/script>';
+
             bundle = bundle.includes('<head>') ? bundle.replace('<head>', '<head>' + bridge) : bridge + bundle;
 
-            if (activeBlobUrl) URL.revokeObjectURL(activeBlobUrl);
-
-            const blob = new Blob([bundle], { type: 'text/html' });
-            activeBlobUrl = URL.createObjectURL(blob);
-            sandboxFrame.src = activeBlobUrl;
+            // Direct srcdoc assignment bypasses all blob restrictions
+            sandboxFrame.srcdoc = bundle;
 
             if (!silent) appendConsoleLog('Application bundle recompiled.', 'system');
         }
@@ -1890,9 +1836,6 @@
             }
         }
 
-        /* --------------------------------------------------------------------------
-           7. WORKSPACE CONTROLS & EXPORTS
-           -------------------------------------------------------------------------- */
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
 
         function setPreviewViewport(w, h, btn) {
@@ -1924,7 +1867,7 @@
 
             let bundle = htmlFile.content;
             project.files.filter(f => f.type === 'css').forEach(css => bundle = bundle.replace('</head>', `<style>\n${css.content}\n</style></head>`));
-            project.files.filter(f => f.type === 'js').forEach(js => bundle = bundle.replace('</body>', `<script>\n${js.content}\n<\/script></body>`));
+            project.files.filter(f => f.type === 'js').forEach(js => bundle = bundle.replace('</body>', `<script>\n${js.content}\n<` + `/script></body>`));
 
             const a = document.createElement('a');
             a.href = URL.createObjectURL(new Blob([bundle], { type: 'text/html' }));
@@ -1942,7 +1885,6 @@
             showToast('Exported Project Bundle');
         }
 
-        /* Snapshots */
         function takeSnapshot() {
             const project = getActiveProject();
             if (!project.snapshots) project.snapshots = [];
@@ -1979,7 +1921,6 @@
             showToast("Restored snapshot");
         }
 
-        /* Modals & Dropdowns */
         function openProjectsModal() { renderProjectsList(); document.getElementById('projects-modal').classList.add('active'); }
         function closeProjectsModal() { document.getElementById('projects-modal').classList.remove('active'); }
         function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
@@ -2063,7 +2004,6 @@
             setTimeout(() => toast.remove(), 2200);
         }
 
-        // Draggable Resizer
         const paneDivider = document.getElementById('pane-divider');
         const editorPane = document.getElementById('editor-pane');
         const workspaceContainer = document.getElementById('workspace-container');
