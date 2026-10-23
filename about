@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — I’M AFK</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    
+    <!-- Typography: Inter + Space Grotesk + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <style> 
+        /* ==========================================================================
+           DESIGN TOKENS — MACOS LIQUID GLASS SYSTEM
+           ========================================================================== */
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+            --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Space Grotesk", sans-serif;
+            --font-code: "JetBrains Mono", monospace;
+
+            --radius-xs: 8px;
+            --radius-sm: 14px;
+            --radius-md: 20px;
+            --radius-lg: 28px;
+            --radius-xl: 36px;
+            --radius-pill: 9999px;
+
+            --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.55);
+            --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 340ms;
+
+            --content-max-width: 1080px;
+            --header-island-h: 54px;
+        }
+
+        /* ---------------- Theme: Dark (Deep Obsidian Void) ---------------- */
+        [data-theme="dark"] {
+            --bg-body: #050807;
+            --bg-radial: radial-gradient(circle at 50% 30%, rgba(56, 225, 166, 0.14) 0%, rgba(5, 8, 7, 0) 70%);
+
+            --glass-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 30, 26, 0.65) 45%, rgba(8, 16, 13, 0.88) 100%);
+            --glass-surface-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.15) 0%, rgba(26, 42, 36, 0.78) 50%, rgba(12, 22, 18, 0.94) 100%);
+            --glass-dock: linear-gradient(180deg, rgba(20, 32, 28, 0.84) 0%, rgba(10, 16, 14, 0.94) 100%);
+
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-border-hover: rgba(56, 225, 166, 0.38);
+            --glass-specular: inset 1.5px 1.5px 1px 0 rgba(255, 255, 255, 0.22), inset -1px -1px 1px 1px rgba(56, 225, 166, 0.12);
+
+            --shadow-float: 0 20px 48px -10px rgba(0, 0, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.4);
+            --shadow-lift: 0 28px 64px -12px rgba(0, 0, 0, 0.85), 0 0 26px rgba(56, 225, 166, 0.2);
+
+            --text-primary: #F2F8F5;
+            --text-secondary: #9DB5AC;
+            --text-tertiary: #5D7970;
+
+            --accent-brand: #38E1A6;
+            --accent-brand-hover: #5CF0BC;
+            --accent-brand-soft: rgba(56, 225, 166, 0.15);
+            --accent-glow: rgba(56, 225, 166, 0.28);
+            
+            --tag-pill-bg: linear-gradient(135deg, rgba(56, 225, 166, 0.16) 0%, rgba(20, 48, 38, 0.3) 100%);
+            --tag-pill-text: #70F2C2;
+            --terminal-bg: rgba(9, 14, 12, 0.92);
+        }
+
+        /* ---------------- Theme: Light (Clean Paper Stream) ---------------- */
+        [data-theme="light"] {
+            --bg-body: #F0F6F3;
+            --bg-radial: radial-gradient(circle at 50% 30%, rgba(23, 107, 82, 0.12) 0%, rgba(240, 246, 243, 0) 70%);
+
+            --glass-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 248, 244, 0.68) 50%, rgba(230, 242, 236, 0.78) 100%);
+            --glass-surface-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 252, 248, 0.88) 50%, rgba(235, 246, 240, 0.94) 100%);
+            --glass-dock: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 247, 243, 0.85) 100%);
+
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-border-hover: rgba(23, 107, 82, 0.28);
+            --glass-specular: inset 1.5px 1.5px 1.5px 0 rgba(255, 255, 255, 1), inset -1px -1px 1px 0 rgba(23, 107, 82, 0.08);
+
+            --shadow-float: 0 20px 42px -8px rgba(20, 48, 38, 0.1), 0 3px 10px rgba(20, 48, 38, 0.04);
+            --shadow-lift: 0 28px 56px -10px rgba(18, 44, 35, 0.16), 0 0 24px rgba(23, 107, 82, 0.15);
+
+            --text-primary: #121F1B;
+            --text-secondary: #405B52;
+            --text-tertiary: #759288;
+
+            --accent-brand: #176B52;
+            --accent-brand-hover: #0F4F3C;
+            --accent-brand-soft: rgba(23, 107, 82, 0.12);
+            --accent-glow: rgba(23, 107, 82, 0.22);
+            
+            --tag-pill-bg: linear-gradient(135deg, rgba(23, 107, 82, 0.12) 0%, rgba(255, 255, 255, 0.7) 100%);
+            --tag-pill-text: #135A45;
+            --terminal-bg: rgba(255, 255, 255, 0.92);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            color-scheme: dark light;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: var(--bg-radial);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 14.5px;
+            line-height: 1.55;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Water and Swimming Fish Canvas */
+        #water-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: auto;
+        }
+
+        .app-shell {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .app-shell * {
+            pointer-events: auto;
+        }
+
+        .content-wrap {
+            max-width: var(--content-max-width);
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px 24px 60px;
+        }
+
+        /* Glass Island Primitive */
+        .island {
+            position: relative;
+            background: var(--glass-surface);
+            backdrop-filter: blur(28px) saturate(200%);
+            -webkit-backdrop-filter: blur(28px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-float);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: border-color var(--duration-normal) var(--ease-spring),
+                        box-shadow var(--duration-normal) var(--ease-spring);
+        }
+
+        .island::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(4px);
+            filter: url(#glass-distortion);
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .island > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ==========================================================================
+           💥 THE CENTRAL GENESIS ISLAND (Pops out everything on click/load)
+           ========================================================================== */
+        #genesis-island-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+            pointer-events: none;
+            transition: all 0.6s var(--ease-bounce);
+        }
+
+        .genesis-island {
+            background: var(--glass-dock);
+            border: 1.5px solid var(--accent-brand);
+            box-shadow: var(--glass-specular), 0 0 35px var(--accent-glow);
+            padding: 16px 28px;
+            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            pointer-events: auto;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--text-primary);
+            backdrop-filter: blur(34px);
+            animation: pulseGenesis 2s infinite ease-in-out;
+            transition: all 0.4s var(--ease-bounce);
+        }
+
+        .genesis-island:hover {
+            transform: scale(1.08);
+            box-shadow: var(--glass-specular), 0 0 60px var(--accent-brand);
+        }
+
+        @keyframes pulseGenesis {
+            0%, 100% { transform: scale(1); box-shadow: var(--glass-specular), 0 0 25px var(--accent-glow); }
+            50% { transform: scale(1.04); box-shadow: var(--glass-specular), 0 0 50px var(--accent-brand); }
+        }
+
+        body.system-ejected #genesis-island-container {
+            opacity: 0;
+            transform: translate(-50%, -350%) scale(0.2);
+            pointer-events: none;
+        }
+
+        .shockwave-ring {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-brand);
+            box-shadow: 0 0 40px var(--accent-brand);
+            pointer-events: none;
+            z-index: 998;
+            opacity: 0;
+        }
+
+        .shockwave-active {
+            animation: fireShockwave 0.8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes fireShockwave {
+            0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; border-width: 6px; }
+            100% { transform: translate(-50%, -50%) scale(15); opacity: 0; border-width: 1px; }
+        }
+
+        /* Pop-out kinetic physics */
+        .pop-item {
+            opacity: 0;
+            transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(0.08);
+            filter: blur(16px);
+            transition: none;
+        }
+
+        body.system-ejected .pop-item {
+            opacity: 1;
+            transform: translate(0px, 0px) scale(1);
+            filter: blur(0px);
+            transition: transform 0.85s var(--ease-bounce),
+                        opacity 0.6s var(--ease-snappy),
+                        filter 0.5s ease;
+            transition-delay: var(--delay, 0s);
+        }
+
+        /* Navigation Island */
+        .nav-island-outer {
+            position: sticky;
+            top: 18px;
+            z-index: 100;
+            padding: 0 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-island {
+            width: 100%;
+            max-width: 980px;
+            height: var(--header-island-h);
+            background: var(--glass-dock);
+            backdrop-filter: blur(34px) saturate(210%);
+            -webkit-backdrop-filter: blur(34px) saturate(210%);
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-float);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px 0 14px;
+        }
+
+        .brand-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.96rem;
+            border-radius: var(--radius-pill);
+            padding: 4px 8px;
+            transition: transform var(--duration-fast) var(--ease-spring);
+        }
+
+        .brand-link:hover { transform: scale(1.04); }
+
+        .brand-gem {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-brand), #1E5C4B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .nav-items {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 4px;
+        }
+
+        .nav-items a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            padding: 7px 16px;
+            border-radius: var(--radius-pill);
+            transition: all var(--duration-fast) var(--ease-spring);
+        }
+
+        .nav-items a:hover {
+            color: var(--text-primary);
+            background: var(--accent-brand-soft);
+            transform: scale(1.05);
+        }
+
+        .nav-items a.active {
+            color: var(--text-primary);
+            background: rgba(120, 160, 140, 0.16);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--duration-fast) var(--ease-spring);
+        }
+
+        .icon-btn:hover {
+            background: var(--accent-brand-soft);
+            color: var(--text-primary);
+            transform: scale(1.12);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 9px 18px;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all var(--duration-normal) var(--ease-spring);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-brand) 0%, #1D8A68 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 22px var(--accent-glow);
+        }
+
+        .btn-glass {
+            background: var(--glass-surface);
+            backdrop-filter: blur(20px);
+            border-color: var(--glass-border);
+            color: var(--text-primary);
+            box-shadow: var(--glass-specular);
+        }
+
+        .btn-glass:hover {
+            background: var(--glass-surface-hover);
+            transform: translateY(-2px) scale(1.04);
+            border-color: var(--glass-border-hover);
+        }
+
+        /* ==========================================================================
+           2. GEN-ALPHA BRAINROT BENTO GRID
+           ========================================================================== */
+        .holo-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        /* Tile 1: Bro Didn't Lock In (The Origin Lore) */
+        .origin-island {
+            padding: 36px 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 310px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(18, 32, 27, 0.75) 60%, rgba(8, 14, 12, 0.9) 100%);
+        }
+
+        .origin-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: var(--tag-pill-bg);
+            color: var(--tag-pill-text);
+            border-radius: var(--radius-pill);
+            font-size: 11.5px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            width: fit-content;
+            margin-bottom: 16px;
+        }
+
+        .origin-island h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 3.8vw, 2.7rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.12;
+            margin-bottom: 12px;
+            background: linear-gradient(175deg, var(--text-primary) 60%, var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .origin-island p {
+            color: var(--text-secondary);
+            font-size: 14.5px;
+            line-height: 1.55;
+            max-width: 520px;
+        }
+
+        .origin-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 26px;
+            flex-wrap: wrap;
+        }
+
+        /* Tile 2: Brainrot Terminal */
+        .terminal-island {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: var(--terminal-bg);
+            font-family: var(--font-code);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+        }
+
+        .terminal-dots { display: flex; gap: 6px; }
+        .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .t-red { background: #FF5F56; }
+        .t-yel { background: #FFBD2E; }
+        .t-grn { background: var(--accent-brand); }
+
+        .terminal-logs {
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .log-accent { color: var(--accent-brand); font-weight: 700; }
+        .log-warn { color: #F59E0B; }
+
+        /* Tile 3: The Aura Calculator */
+        .sloth-island {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            grid-column: 1 / -1;
+        }
+
+        .sloth-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .sloth-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .sloth-meter-bar {
+            width: 100%;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-pill);
+            overflow: hidden;
+            position: relative;
+            margin: 16px 0;
+            border: 1px solid var(--glass-border);
+        }
+
+        .sloth-meter-fill {
+            height: 100%;
+            width: 92%;
+            background: linear-gradient(90deg, #EC4899, #8B5CF6, var(--accent-brand));
+            border-radius: var(--radius-pill);
+            transition: width 0.4s var(--ease-spring);
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+        .sloth-range-slider {
+            width: 100%;
+            cursor: ew-resize;
+            accent-color: var(--accent-brand);
+        }
+
+        .sloth-verdict {
+            font-family: var(--font-code);
+            font-size: 13.5px;
+            color: var(--accent-brand);
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        /* Tile 4: The Fish Zoomies & Toy Controls */
+        .toy-island {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .toy-island h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .toy-island p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .toy-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Tile 5: The Brainrot Synthesizer */
+        .brainrot-island {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brainrot-text {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.35;
+            min-height: 60px;
+            margin: 12px 0;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Floating Aura Popup text */
+        .floating-aura {
+            position: fixed;
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 18px;
+            color: var(--accent-brand);
+            text-shadow: 0 0 10px var(--accent-brand);
+            pointer-events: none;
+            z-index: 10000;
+            animation: floatUpAura 0.9s ease-out forwards;
+        }
+
+        @keyframes floatUpAura {
+            0% { transform: translate(-50%, 0) scale(0.8); opacity: 1; }
+            100% { transform: translate(-50%, -70px) scale(1.3); opacity: 0; }
+        }
+
+        /* Footer */
+        .footer-outer {
+            padding: 0 16px 28px;
+            margin-top: auto;
+        }
+
+        .footer-island {
+            max-width: var(--content-max-width);
+            margin: 0 auto;
+            background: var(--glass-dock);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-specular), var(--shadow-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            color: var(--text-tertiary);
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all var(--duration-fast) var(--ease-spring);
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+            transform: scale(1.06);
+        }
+
+        @media (max-width: 840px) {
+            .holo-grid { grid-template-columns: 1fr; }
+            .sloth-island { grid-column: 1; }
+        }
+
+        @media (max-width: 650px) {
+            .nav-items { display: none; }
+            .origin-island h1 { font-size: 1.8rem; }
+            .toy-controls { grid-template-columns: 1fr; }
+            .footer-island { flex-direction: column; gap: 12px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Inline SVG Liquid Glass Displacement Filter -->
+    <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+        <defs>
+            <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.035 0.035" numOctaves="1" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- 🌊 ANIMATED WATER AND FISH CANVAS -->
+    <canvas id="water-canvas" aria-hidden="true"></canvas>
+
+    <!-- 💥 SHOCKWAVE BURST RING -->
+    <div class="shockwave-ring" id="shockwave"></div>
+
+    <!-- 💥 THE CENTRAL GENESIS ISLAND (Click to Pop Out Everything) -->
+    <div id="genesis-island-container">
+        <div class="genesis-island" onclick="triggerPopOutSequence()">
+            <span style="font-size: 22px;">💀</span>
+            <span>CHAT IS THIS REAL? • TAP TO RELEASE AURA</span>
+        </div>
+    </div>
+
+    <!-- MAIN APP SHELL -->
+    <div class="app-shell">
+        
+        <!-- 1. FLOATING NAVIGATION BAR ISLAND (Pops to top) -->
+        <header class="nav-island-outer pop-item" id="nav-item">
+            <nav class="nav-island" aria-label="Main Navigation">
+                
+                <a href="index.html" class="brand-link" id="main-brand-logo" title="I’M AFK Hub">
+                    <div class="brand-gem" aria-hidden="true">★</div>
+                    <span>I’M AFK</span>
+                </a>
+
+                <ul class="nav-items">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="library.html">Library</a></li>
+                    <li><a href="studio.html">Studio</a></li>
+                    <li><a href="submit.html">Submit</a></li>
+                    <li><a href="contact.html">Support</a></li>
+                    <li><a href="about.html" class="active">Aura</a></li>
+                </ul>
+
+                <div class="nav-controls">
+                    <!-- Replay Island Pop Button -->
+                    <button type="button" class="btn btn-glass" style="padding: 5px 12px; font-size: 11px;" onclick="replayPopOutSequence()" title="Re-pack into Island & Pop Out again">
+                        <span>💥 Re-Poop UI</span>
+                    </button>
+
+                    <!-- Theme Toggle -->
+                    <button type="button" class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Switch Theme">
+                        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- 2. UNIQUE GEN-ALPHA BRAINROT ARCHIVE -->
+        <main class="content-wrap">
+            <div class="holo-grid">
+                
+                <!-- Tile 1: Bro Didn't Lock In (The Origin Lore) -->
+                <article class="island origin-island pop-item" id="origin-item">
+                    <div>
+                        <div class="origin-tag">🔥 +100,000 AURA • NO CAP ON GOD</div>
+                        <h1>Bro literally coded fish physics instead of studying.</h1>
+                        <p>Chat, is this real? In late 2024, our solo developer was supposed to lock in for finals. Instead of studying, he went full goblin mode, fanum taxed 90 hours of sleep, and coded this entire liquid glass gaming platform in Ohio. We are so cooked.</p>
+                    </div>
+                    <div class="origin-footer">
+                        <button type="button" class="btn btn-primary" onclick="addAuraBurst(event, '+10,000 AURA')">
+                            <span>🗿 Lock In (+10k Aura)</span>
+                        </button>
+                        <span style="font-size:12px; color:var(--text-tertiary); font-family:var(--font-code);">// Mewing streak unbroken</span>
+                    </div>
+                </article>
+
+                <!-- Tile 2: Brainrot Terminal -->
+                <div class="island terminal-island pop-item" id="terminal-item">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="t-dot t-red"></span>
+                            <span class="t-dot t-yel"></span>
+                            <span class="t-dot t-grn"></span>
+                        </div>
+                        <span style="font-size:11px; color:var(--text-tertiary);">lowtaper-v69.sh</span>
+                    </div>
+                    <div class="terminal-logs">
+                        <div><span class="log-accent">✓</span> Skibidi toilet check: <span style="color:#FFF;">Blocked</span></div>
+                        <div><span class="log-accent">✓</span> Rizz level: <span class="log-warn">Unstoppable</span></div>
+                        <div><span class="log-accent">✓</span> Fanum tax applied to load times: <span class="log-accent">0ms</span></div>
+                        <div><span class="log-accent">✓</span> Homework status: <span style="color:#EF4444;">Completely Ignored</span></div>
+                        <div><span class="log-accent">➜</span> Kai Cenat & Baby Gronk: <span style="color:#FFF;">Stunned</span></div>
+                    </div>
+                    <div style="margin-top:16px;">
+                        <button type="button" class="btn btn-glass" style="width:100%; font-size:11.5px; font-family:var(--font-code);" onclick="cookMoreBrainrot()">
+                            💀 Inject Unhinged SLOP
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tile 3: The Aura Calculator -->
+                <div class="island sloth-island pop-item" id="sloth-item">
+                    <div class="sloth-top">
+                        <div class="sloth-title"> The Official Aura Calculator</div>
+                        <span style="font-family:var(--font-code); font-size:12px; color:var(--accent-brand);" id="aura-score">+90,000 AURA</span>
+                    </div>
+                    <p style="font-size:13px; color:var(--text-secondary);">Slide to calculate how much aura you have based on what you are doing right now:</p>
+                    <div class="sloth-meter-bar">
+                        <div class="sloth-meter-fill" id="aura-fill"></div>
+                    </div>
+                    <input type="range" min="0" max="100" value="90" class="sloth-range-slider" id="aura-slider" oninput="updateAuraMeter(this.value)">
+                    <div class="sloth-verdict" id="aura-verdict">"Playing HTML5 mini games with camera off while teacher is explaining fractions."</div>
+                </div>
+
+                <!-- Tile 4: The Fish Zoomies & Toy Controls -->
+                <div class="island toy-island pop-item" id="toy-item">
+                    <div>
+                        <h3>🐟 Fish Control Center</h3>
+                        <p>The fish in the background aren't just chilling—they're fully controllable NPCs. Mess with them:</p>
+                    </div>
+                    <div class="toy-controls">
+                        <button type="button" class="btn btn-glass" id="zoomies-btn" onclick="toggleZoomies()">
+                            <span>⚡ Zoomies Mode</span>
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="dropMegaFood(event)">
+                            <span>🍞 Feed Frenzy</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tile 5: Brainrot Synthesizer -->
+                <div class="island brainrot-island pop-item" id="brainrot-item">
+                    <div style="font-size:11px; font-weight:800; color:var(--accent-brand); text-transform:uppercase; letter-spacing:0.05em; font-family:var(--font-code);">
+                        Daily Brainrot Dialogue
+                    </div>
+                    <div class="brainrot-text" id="brainrot-quote">
+                        "Erm, what the sigma? Who let bro cook this entire website?"
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" class="btn btn-glass" style="flex:1;" onclick="rollBrainrot()">🎲 New Yap</button>
+                        <button type="button" class="btn btn-primary" style="flex:1;" onclick="copyBrainrot(this)">📋 Copy Yap</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- 3. FOOTER (Pops to bottom) -->
+        <footer class="footer-outer pop-item" id="footer-item">
+            <div class="footer-island">
+                <span>&copy; 2026 I’M AFK &bull; Bro really read the whole footer. +500 Aura.</span>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="library.html">Library</a>
+                    <a href="studio.html">Studio</a>
+                    <a href="submit.html">Submit</a>
+                    <a href="contact.html">Support</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ==========================================================================
+         WATER RIPPLES, HYPER-INTERACTIVE KOI & AURA LOGIC
+         ========================================================================== -->
+    <script>
+        /* --------------------------------------------------------------------------
+           1. WATER SIMULATION WITH ZOOMIES KOI & FRENZY FEEDING
+           -------------------------------------------------------------------------- */
+        const canvas = document.getElementById('water-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const mouse = { x: width / 2, y: height / 2 };
+        let ripples = [];
+        let foods = [];
+        let isZoomies = false;
+
+        window.addEventListener('pointermove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            if (Math.random() < 0.25) addRipple(mouse.x, mouse.y, 16, 0.25);
+        });
+
+        window.addEventListener('pointerdown', (e) => {
+            addRipple(e.clientX, e.clientY, 35, 0.6);
+            foods.push({ x: e.clientX, y: e.clientY, life: 180 });
+        });
+
+        function addRipple(x, y, maxR, alpha) {
+            ripples.push({ x, y, r: 0, maxR: maxR || 35, alpha: alpha || 0.4 });
+        }
+
+        class KoiFish {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.targetX = this.x;
+                this.targetY = this.y;
+                this.angle = Math.random() * Math.PI * 2;
+                this.baseSpeed = 1.4 + Math.random() * 1.2;
+                this.speed = this.baseSpeed;
+                this.length = 44 + Math.random() * 16;
+                this.segments = 9;
+                this.spine = [];
+                for (let i = 0; i < this.segments; i++) {
+                    this.spine.push({ x: this.x, y: this.y });
+                }
+                this.wiggle = Math.random() * Math.PI * 2;
+                this.colorType = Math.random();
+            }
+
+            update() {
+                this.speed = isZoomies ? this.baseSpeed * 3.4 : this.baseSpeed;
+
+                // Target food or wander wildly
+                if (foods.length > 0) {
+                    this.targetX = foods[0].x;
+                    this.targetY = foods[0].y;
+                    if (Math.hypot(this.x - foods[0].x, this.y - foods[0].y) < 18) {
+                        foods[0].life -= 25;
+                        addRipple(this.x, this.y, 24, 0.5);
+                    }
+                } else if (Math.random() < (isZoomies ? 0.08 : 0.02) || Math.hypot(this.x - this.targetX, this.y - this.targetY) < 40) {
+                    this.targetX = Math.random() * width;
+                    this.targetY = Math.random() * height;
+                }
+
+                const targetAngle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+                let diff = targetAngle - this.angle;
+                while (diff < -Math.PI) diff += Math.PI * 2;
+                while (diff > Math.PI) diff -= Math.PI * 2;
+                this.angle += diff * (isZoomies ? 0.1 : 0.04);
+
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed;
+                this.wiggle += this.speed * 0.2;
+
+                // Spine follow-through
+                this.spine[0] = { x: this.x, y: this.y };
+                const segDist = this.length / this.segments;
+                for (let i = 1; i < this.segments; i++) {
+                    const prev = this.spine[i - 1];
+                    const curr = this.spine[i];
+                    const dx = curr.x - prev.x;
+                    const dy = curr.y - prev.y;
+                    const d = Math.hypot(dx, dy) || 1;
+                    curr.x = prev.x + (dx / d) * segDist;
+                    curr.y = prev.y + (dy / d) * segDist;
+                }
+
+                if (Math.random() < (isZoomies ? 0.2 : 0.03)) {
+                    addRipple(this.x, this.y, isZoomies ? 28 : 14, isZoomies ? 0.35 : 0.15);
+                }
+            }
+
+            draw() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                let bodyColor, finColor;
+
+                if (this.colorType > 0.5) {
+                    bodyColor = isDark ? (isZoomies ? '#38E1A6' : 'rgba(56, 225, 166, 0.75)') : 'rgba(23, 107, 82, 0.75)';
+                    finColor = isDark ? 'rgba(56, 225, 166, 0.35)' : 'rgba(23, 107, 82, 0.25)';
+                } else {
+                    bodyColor = isDark ? (isZoomies ? '#F59E0B' : 'rgba(245, 158, 11, 0.8)') : 'rgba(217, 119, 6, 0.75)';
+                    finColor = isDark ? 'rgba(245, 158, 11, 0.35)' : 'rgba(217, 119, 6, 0.25)';
+                }
+
+                ctx.save();
+                if (isZoomies) {
+                    ctx.shadowBlur = 14;
+                    ctx.shadowColor = bodyColor;
+                }
+
+                // Tapered body
+                for (let i = 0; i < this.segments - 1; i++) {
+                    const p1 = this.spine[i];
+                    const p2 = this.spine[i + 1];
+                    const widthFactor = Math.sin((i / this.segments) * Math.PI) * (this.length * 0.22);
+
+                    ctx.strokeStyle = bodyColor;
+                    ctx.lineWidth = Math.max(2, widthFactor);
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+
+                // Head
+                ctx.fillStyle = bodyColor;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.length * 0.14, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Dorsal & tail fins
+                const tail = this.spine[this.segments - 1];
+                const tailWiggle = Math.sin(this.wiggle * 1.3) * (isZoomies ? 14 : 7);
+                ctx.fillStyle = finColor;
+                ctx.beginPath();
+                ctx.ellipse(tail.x, tail.y, this.length * 0.26, this.length * 0.09, this.angle + tailWiggle * 0.08, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        const fishes = [];
+        for (let i = 0; i < 8; i++) {
+            fishes.push(new KoiFish());
+        }
+
+        function toggleZoomies() {
+            isZoomies = !isZoomies;
+            const btn = document.getElementById('zoomies-btn');
+            if (isZoomies) {
+                btn.classList.add('btn-primary');
+                btn.classList.remove('btn-glass');
+                btn.innerHTML = `<span>🔥 ZOOMIES ACTIVE</span>`;
+                addAuraBurst(null, '🐟 FISH WENT SICKO MODE');
+            } else {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-glass');
+                btn.innerHTML = `<span>⚡ Zoomies Mode</span>`;
+            }
+        }
+
+        function dropMegaFood(e) {
+            for (let i = 0; i < 18; i++) {
+                const fx = width / 2 + (Math.random() - 0.5) * 240;
+                const fy = height / 2 + (Math.random() - 0.5) * 180;
+                foods.push({ x: fx, y: fy, life: 260 });
+                addRipple(fx, fy, 28, 0.45);
+            }
+            addAuraBurst(e, '+5,000 FISH AURA');
+        }
+
+        function renderWater() {
+            ctx.clearRect(0, 0, width, height);
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+            // Ripples
+            for (let i = ripples.length - 1; i >= 0; i--) {
+                const r = ripples[i];
+                r.r += isZoomies ? 1.6 : 0.9;
+                r.alpha -= 0.007;
+
+                if (r.alpha <= 0 || r.r >= r.maxR) {
+                    ripples.splice(i, 1);
+                    continue;
+                }
+
+                ctx.strokeStyle = isDark ? `rgba(56, 225, 166, ${r.alpha * 0.6})` : `rgba(23, 107, 82, ${r.alpha * 0.5})`;
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Pellets
+            for (let i = foods.length - 1; i >= 0; i--) {
+                const f = foods[i];
+                f.life--;
+                if (f.life <= 0) {
+                    foods.splice(i, 1);
+                    continue;
+                }
+                ctx.fillStyle = isDark ? '#38E1A6' : '#D97706';
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            fishes.forEach(fish => {
+                fish.update();
+                fish.draw();
+            });
+
+            requestAnimationFrame(renderWater);
+        }
+        renderWater();
+
+        /* --------------------------------------------------------------------------
+           2. ISLAND POP-OUT ANIMATION FROM DEAD CENTER
+           -------------------------------------------------------------------------- */
+        const popItems = [
+            { id: 'nav-item', delay: '0.08s' },
+            { id: 'origin-item', delay: '0.16s' },
+            { id: 'terminal-item', delay: '0.24s' },
+            { id: 'sloth-item', delay: '0.32s' },
+            { id: 'toy-item', delay: '0.40s' },
+            { id: 'brainrot-item', delay: '0.48s' },
+            { id: 'footer-item', delay: '0.54s' }
+        ];
+
+        function calculateCenterTrajectories() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            popItems.forEach(item => {
+                const el = document.getElementById(item.id);
+                if (!el) return;
+
+                const rect = el.getBoundingClientRect();
+                const itemCenterX = rect.left + rect.width / 2;
+                const itemCenterY = rect.top + rect.height / 2;
+
+                const dx = centerX - itemCenterX;
+                const dy = centerY - itemCenterY;
+
+                el.style.setProperty('--dx', `${dx}px`);
+                el.style.setProperty('--dy', `${dy}px`);
+                el.style.setProperty('--delay', item.delay);
+            });
+        }
+
+        function triggerPopOutSequence() {
+            const shockwave = document.getElementById('shockwave');
+            shockwave.classList.remove('shockwave-active');
+            void shockwave.offsetWidth;
+            shockwave.classList.add('shockwave-active');
+
+            addRipple(window.innerWidth / 2, window.innerHeight / 2, 130, 0.85);
+
+            calculateCenterTrajectories();
+            document.body.classList.add('system-ejected');
+        }
+
+        function replayPopOutSequence() {
+            document.body.classList.remove('system-ejected');
+            setTimeout(() => {
+                triggerPopOutSequence();
+            }, 600);
+        }
+
+        window.addEventListener('load', () => {
+            calculateCenterTrajectories();
+            setTimeout(triggerPopOutSequence, 450);
+        });
+
+        window.addEventListener('resize', () => {
+            if (!document.body.classList.contains('system-ejected')) {
+                calculateCenterTrajectories();
+            }
+        });
+
+        /* --------------------------------------------------------------------------
+           3. GEN ALPHA BRAINROT YAP GENERATOR
+           -------------------------------------------------------------------------- */
+        const yaps = [
+            "\"Erm, what the sigma? Who let bro cook this entire website?\"",
+            "\"Chat, Baby Gronk just fanum taxed my homework while I was feeding the fish.\"",
+            "\"Bro is edging his screentime limit just to watch 2D koi fish swim in circles.\"",
+            "\"Bro really coded multi-layer liquid glass refraction instead of studying for the math exam.\"",
+            "\"+1,000,000 AURA: You locked in on the about page and completely ignored real life.\"",
+            "\"Kai Cenat reacted to this website and lost all his aura in Ohio.\"",
+            "\"Bro is mewing in silence at 3:00 AM inspecting CSS box-shadows.\""
+        ];
+        let yapIdx = 0;
+
+        function rollBrainrot() {
+            yapIdx = (yapIdx + 1) % yaps.length;
+            const textEl = document.getElementById('brainrot-quote');
+            textEl.style.opacity = '0';
+            setTimeout(() => {
+                textEl.textContent = yaps[yapIdx];
+                textEl.style.opacity = '1';
+            }, 180);
+        }
+
+        function copyBrainrot(btn) {
+            const text = document.getElementById('brainrot-quote').textContent;
+            navigator.clipboard.writeText(text);
+            const original = btn.textContent;
+            btn.textContent = "✅ Copied Yap!";
+            setTimeout(() => btn.textContent = original, 1800);
+        }
+
+        function cookMoreBrainrot() {
+            const logs = document.querySelector('.terminal-logs');
+            const funnyLines = [
+                "🔥 Fanum Tax level: 100% Critical",
+                "💀 Bro is so cooked on god",
+                "🗿 Mewing streak: +10,000 Aura",
+                "🚨 Kai Cenat detected in sector 4",
+                "⚡ GigaChad protocol initialized"
+            ];
+            const newLog = document.createElement('div');
+            newLog.style.color = '#38E1A6';
+            newLog.textContent = `➜ [YAP]: ${funnyLines[Math.floor(Math.random() * funnyLines.length)]}`;
+            logs.appendChild(newLog);
+            if (logs.children.length > 7) logs.removeChild(logs.children[0]);
+        }
+
+        /* --------------------------------------------------------------------------
+           4. AURA METER LOGIC
+           -------------------------------------------------------------------------- */
+        const auraTiers = [
+            { max: 20, score: "-50,000 AURA", text: "\"Studying for an exam right now (L rizz, extremely cooked).\"" },
+            { max: 50, score: "+10,000 AURA", text: "\"Watching Subway Surfers gameplay while reading this paragraph.\"" },
+            { max: 80, score: "+50,000 AURA", text: "\"Playing mini-games on mute during a Zoom call (Sigma grindset).\"" },
+            { max: 99, score: "+90,000 AURA", text: "\"Avoided all chores, mewing in dark mode, feeding digital fish.\"" },
+            { max: 100, score: "+999,999 AURA", text: "\"ASCENDED RIZZLER: You have unlocked the infinite Ohio Sigma aura.\"" }
+        ];
+
+        function updateAuraMeter(val) {
+            document.getElementById('aura-fill').style.width = `${val}%`;
+            const tier = auraTiers.find(t => val <= t.max) || auraTiers[auraTiers.length - 1];
+            document.getElementById('aura-score').textContent = tier.score;
+            document.getElementById('aura-verdict').textContent = tier.text;
+        }
+
+        /* --------------------------------------------------------------------------
+           5. FLOATING AURA POPUP BURST
+           -------------------------------------------------------------------------- */
+        function addAuraBurst(e, text) {
+            const el = document.createElement('div');
+            el.className = 'floating-aura';
+            el.textContent = text || '+1,000 AURA';
+
+            const x = e ? e.clientX : window.innerWidth / 2;
+            const y = e ? e.clientY : window.innerHeight / 2;
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 900);
+        }
+
+        /* --------------------------------------------------------------------------
+           6. THEME TOGGLE
+           -------------------------------------------------------------------------- */
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('afk_theme', next);
+        }
+
+        const savedTheme = localStorage.getItem('afk_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</body>
+</html>
